@@ -56,8 +56,7 @@ fn should_parse_every_entry_of_real_7z_listing() {
     let bin = sidecar();
     assert!(bin.is_file(), "fetch sidecars first: {}", bin.display());
 
-    let work =
-        std::env::temp_dir().join(format!("quarkzip-e2e-{}", std::process::id()));
+    let work = std::env::temp_dir().join(format!("quarkzip-e2e-{}", std::process::id()));
     let _ = std::fs::remove_dir_all(&work);
     let src = work.join("src");
     std::fs::create_dir_all(src.join("pics")).unwrap();
@@ -69,12 +68,7 @@ fn should_parse_every_entry_of_real_7z_listing() {
     let archive = work.join("fixture.7z");
     run(
         &bin,
-        &[
-            "a",
-            archive.to_str().unwrap(),
-            "notes.txt",
-            "pics",
-        ],
+        &["a", archive.to_str().unwrap(), "notes.txt", "pics"],
         &src,
     );
 
@@ -83,10 +77,7 @@ fn should_parse_every_entry_of_real_7z_listing() {
     let paths: Vec<&str> = entries.iter().map(|e| e.path.as_str()).collect();
 
     for expected in ["notes.txt", "pics", "pics/a = b.png", "pics/café.txt"] {
-        assert!(
-            paths.contains(&expected),
-            "missing {expected} in {paths:?}"
-        );
+        assert!(paths.contains(&expected), "missing {expected} in {paths:?}");
     }
     let notes = entries.iter().find(|e| e.path == "notes.txt").unwrap();
     assert_eq!(notes.size, Some(14));

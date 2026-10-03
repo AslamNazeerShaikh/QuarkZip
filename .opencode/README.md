@@ -10,6 +10,7 @@ Model: `opencode/muse-spark-1.3-contributor-free` via OpenCode Zen (reasoning ef
 ├── opencode.json              # Main configuration (model, agents, skills, commands, MCP)
 ├── agents/                    # Agent definitions
 │   ├── tauri-app-assistant.md # Main coach (default)
+│   ├── rust-developer.md      # PRIMARY for Rust (strict quality rules)
 │   ├── code-reviewer.md       # Tauri/React/Rust review checklist
 │   ├── test-writer.md         # Test strategy (harness proposed on demand)
 │   └── documentation-writer.md# Keeps README + docs/7zz-binaries.md in sync
@@ -46,6 +47,7 @@ Model: `opencode/muse-spark-1.3-contributor-free` via OpenCode Zen (reasoning ef
 | Agent | Purpose |
 |-------|---------|
 | `tauri-app-assistant` | Main coach (default): features, 7zz wiring, UI |
+| `rust-developer` | PRIMARY for Rust: strict quality rules (use for all `src-tauri/` work) |
 | `code-reviewer` | Reviews against the checklist (argv safety, streaming, virtualization) |
 | `test-writer` | Proposes harness on demand, writes tests |
 | `documentation-writer` | Keeps root `README.md` + `docs/7zz-binaries.md` in sync |

@@ -15,6 +15,7 @@ Visual 7-Zip archive manager for macOS (first), then Windows/Linux. Tauri 2 + Re
 
 - Frontend: React + Tailwind v4 (`src/main.tsx` entry, `src/App.tsx`, `src/index.css` with `@import "tailwindcss"`); `tsconfig.json` uses `jsx: react-jsx` + `vite/client` types.
 - Backend: Tauri commands in `src-tauri/src/lib.rs` (`#[tauri::command]` + `generate_handler!`); keep `main.rs` as the thin launcher.
+- Rust authority: `rust-developer` is the PRIMARY agent whenever Rust is written or modified — switch to it (`> agent rust-developer`); its rules come from the enforced Rust quality guide in `.opencode/agents/rust-developer.md`.
 - 7zz access only via the sidecar (`externalBin: binaries/7zz`): spawn with explicit args, never shell-string interpolation; stream stdout (`-bsp1`) for progress, support cancel/timeout; extract nested archives to `$TEMP` only.
 - Large archives: stream `7zz l -slt` output line-by-line, virtualize lists (never full DOM render), never block the UI thread.
 - Never install toolchains, packages, or tools automatically — give copy-pasteable commands instead.

@@ -22,7 +22,9 @@ fn copy_sidecar_for_dev() {
     }
     // OUT_DIR = target/debug/build/<pkg>-<hash>/out → exe dir is 3 levels up.
     let out = std::path::PathBuf::from(std::env::var("OUT_DIR").expect("OUT_DIR"));
-    let exe_dir = out.ancestors().nth(3)
+    let exe_dir = out
+        .ancestors()
+        .nth(3)
         .expect("exe dir above OUT_DIR")
         .to_path_buf();
     let dest_dir = exe_dir.join("binaries");

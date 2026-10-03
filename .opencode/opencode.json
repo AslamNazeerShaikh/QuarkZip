@@ -24,6 +24,7 @@
     "default": "tauri-app-assistant",
     "list": [
       "tauri-app-assistant",
+      "rust-developer",
       "code-reviewer",
       "test-writer",
       "documentation-writer"
