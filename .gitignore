@@ -1,0 +1,30 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+vendor/7zz-cache
+
+# 7zz sidecar binaries are fetched at build time (see scripts/fetch-7zz.sh).
+# To check them in instead, delete the two lines below.
+src-tauri/binaries/7zz-*
+src-tauri/binaries/*.exe
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
