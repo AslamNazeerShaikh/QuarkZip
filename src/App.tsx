@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
+import { FileText, FolderOpen, PackageOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import ThemeSwitch from "./ThemeSwitch";
 import { useTheme } from "./useTheme";
@@ -84,8 +85,9 @@ export default function App() {
         <button
           type="button"
           onClick={() => void openArchive()}
-          className="rounded-lg bg-[var(--qz-primary)] px-5 py-2 font-medium text-white dark:text-[var(--qz-bg)]"
+          className="flex items-center gap-2 rounded-lg bg-[var(--qz-primary)] px-5 py-2 font-medium text-white dark:text-[var(--qz-bg)]"
         >
+          <PackageOpen size={18} aria-hidden />
           {loading ? "Reading…" : "Open archive"}
         </button>
         {error && (
@@ -99,17 +101,26 @@ export default function App() {
           </p>
         )}
         <ul className="w-full max-w-2xl divide-y divide-[var(--qz-border)] rounded-lg border border-[var(--qz-border)] bg-[var(--qz-surface)]">
-          {entries.map((entry) => (
-            <li
-              key={entry.path}
-              className="flex items-baseline justify-between gap-4 px-4 py-1.5 text-sm"
-            >
-              <span className="truncate">{entry.path}</span>
-              <span className="shrink-0 text-xs text-[var(--qz-muted)]">
-                {entry.size === null ? "—" : `${entry.size} B`}
-              </span>
-            </li>
-          ))}
+          {entries.map((entry) => {
+            const isFolder = entry.size === null || entry.size === 0;
+            const Icon = isFolder ? FolderOpen : FileText;
+            return (
+              <li
+                key={entry.path}
+                className="flex items-center gap-3 px-4 py-1.5 text-sm"
+              >
+                <Icon
+                  size={16}
+                  aria-hidden
+                  className="shrink-0 text-[var(--qz-muted)]"
+                />
+                <span className="flex-1 truncate">{entry.path}</span>
+                <span className="shrink-0 text-xs text-[var(--qz-muted)]">
+                  {entry.size === null ? "—" : `${entry.size} B`}
+                </span>
+              </li>
+            );
+          })}
         </ul>
       </main>
       <ThemeSwitch choice={choice} onChange={setChoice} />
