@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+/* Class-based dark mode: `.dark` on <html> drives `dark:` variants,
+   so the UI can switch statically (Light/Dark) or follow the OS (System). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Graceful theme cross-fade for the app shell. */
+html,
+body,
+header,
+main,
+div {
+  transition:
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    color 0.35s ease;
+}

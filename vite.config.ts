@@ -13,7 +13,7 @@ export default defineConfig(() => ({
     environment: "jsdom",
     setupFiles: ["./src/test-setup.ts"],
     coverage: {
-      provider: "v8",
+      provider: "istanbul",
       reporter: ["text", "lcov"],
     },
   },
