@@ -25,7 +25,7 @@ const COLUMNS: Column[] = [
     header: "Type",
     width: "w-24",
     align: "left",
-    value: (r) => fileKind(r.path, r.size).label,
+    value: (r) => fileKind(r.path, r.is_folder).label,
   },
   {
     key: "size",
@@ -195,7 +195,7 @@ export default function ArchiveTable({ data }: { data: ArchiveEntry[] }) {
         >
           {visible.map((entry, offset) => {
             const index = startIndex + offset;
-            const kind = fileKind(entry.path, entry.size);
+            const kind = fileKind(entry.path, entry.is_folder);
             const Icon = kind.icon;
             const isSelected = selected.has(entry.path);
             return (

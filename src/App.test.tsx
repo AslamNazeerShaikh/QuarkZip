@@ -24,7 +24,7 @@ vi.mock("@tauri-apps/api/core", () => ({
     if (cmd === "drag_window") return Promise.resolve();
     if (cmd === "list_archive") {
       return Promise.resolve([
-        { path: "dropped.txt", size: 10, modified: null },
+        { path: "dropped.txt", size: 10, modified: null, is_folder: false },
       ]);
     }
     return Promise.reject(`unexpected command ${cmd}`);

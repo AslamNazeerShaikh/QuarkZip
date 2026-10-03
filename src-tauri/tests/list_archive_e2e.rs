@@ -81,6 +81,42 @@ fn should_parse_every_entry_of_real_7z_listing() {
     }
     let notes = entries.iter().find(|e| e.path == "notes.txt").unwrap();
     assert_eq!(notes.size, Some(14));
+    assert!(!notes.is_folder);
+
+    let _ = std::fs::remove_dir_all(&work);
+}
+
+#[test]
+fn should_mark_only_directories_as_folders() {
+    let bin = sidecar();
+    assert!(bin.is_file(), "fetch sidecars first: {}", bin.display());
+
+    let work = std::env::temp_dir().join(format!("quarkzip-e2e-dir-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&work);
+    let src = work.join("src");
+    std::fs::create_dir_all(src.join("sub")).unwrap();
+    std::fs::write(src.join("empty.txt"), "").unwrap();
+    std::fs::write(src.join("full.txt"), "hi").unwrap();
+
+    let archive = work.join("dirs.7z");
+    run(
+        &bin,
+        &[
+            "a",
+            archive.to_str().unwrap(),
+            "sub",
+            "empty.txt",
+            "full.txt",
+        ],
+        &src,
+    );
+
+    let slt = run(&bin, &["l", "-slt", archive.to_str().unwrap()], &src);
+    let entries = quarkzip_lib::archive::parse_list_slt(&slt);
+    let flag = |name: &str| entries.iter().find(|e| e.path == name).unwrap().is_folder;
+    assert!(flag("sub"), "directory must be folder");
+    assert!(!flag("empty.txt"), "0-byte file must NOT be folder");
+    assert!(!flag("full.txt"), "file must NOT be folder");
 
     let _ = std::fs::remove_dir_all(&work);
 }

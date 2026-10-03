@@ -8,10 +8,14 @@
 pub struct ArchiveEntry {
     /// Path inside the archive.
     pub path: String,
-    /// Unpacked size in bytes (`None` for folders).
+    /// Unpacked size in bytes (`None` when 7zz reports no Size line).
+    /// NOTE: `Some(0)` is an empty *file*, not a folder — use `is_folder`.
     pub size: Option<u64>,
     /// Last-modified timestamp as reported by 7zz (`None` when absent).
     pub modified: Option<String>,
+    /// True for directories, read from the `Attributes` field (`D` flag).
+    /// Never infer folders from size: empty files also report `Size = 0`.
+    pub is_folder: bool,
 }
 
 /// Argv for `7zz l -slt <archive>` (technical listing, stable to parse).
@@ -45,23 +49,28 @@ pub fn test_args(archive: &str, password: Option<&str>) -> Vec<String> {
 /// Parse `7zz l -slt` output into entries.
 ///
 /// Blocks are separated by blank lines; each line is `Key = Value`.
-/// Only `Path`, `Size` and `Modified` are read; values may themselves
-/// contain ` = `, so split on the first occurrence only.
+/// Only `Path`, `Size`, `Modified` and `Attributes` are read; values may
+/// themselves contain ` = `, so split on the first occurrence only.
+/// Folders come from `Attributes` (DOS `D` flag or unix `d` prefix),
+/// never from size — empty files legitimately report `Size = 0`.
 pub fn parse_list_slt(output: &str) -> Vec<ArchiveEntry> {
     let mut entries = Vec::new();
     let mut path: Option<String> = None;
     let mut size: Option<u64> = None;
     let mut modified: Option<String> = None;
+    let mut is_folder = false;
 
     let flush = |path: &mut Option<String>,
                  size: &mut Option<u64>,
                  modified: &mut Option<String>,
+                 is_folder: &mut bool,
                  entries: &mut Vec<ArchiveEntry>| {
         if let Some(p) = path.take() {
             entries.push(ArchiveEntry {
                 path: p,
                 size: size.take(),
                 modified: modified.take(),
+                is_folder: std::mem::replace(is_folder, false),
             });
         }
     };
@@ -69,7 +78,13 @@ pub fn parse_list_slt(output: &str) -> Vec<ArchiveEntry> {
     for line in output.lines() {
         let line = line.trim_end();
         if line.trim().is_empty() {
-            flush(&mut path, &mut size, &mut modified, &mut entries);
+            flush(
+                &mut path,
+                &mut size,
+                &mut modified,
+                &mut is_folder,
+                &mut entries,
+            );
             continue;
         }
         let Some((key, value)) = line.split_once(" = ") else {
@@ -77,16 +92,38 @@ pub fn parse_list_slt(output: &str) -> Vec<ArchiveEntry> {
         };
         match key.trim() {
             "Path" => {
-                flush(&mut path, &mut size, &mut modified, &mut entries);
+                flush(
+                    &mut path,
+                    &mut size,
+                    &mut modified,
+                    &mut is_folder,
+                    &mut entries,
+                );
                 path = Some(value.to_string());
             }
             "Size" => size = value.trim().parse().ok(),
             "Modified" => modified = Some(value.to_string()),
+            "Attributes" => is_folder = attributes_is_folder(value),
             _ => {}
         }
     }
-    flush(&mut path, &mut size, &mut modified, &mut entries);
+    flush(
+        &mut path,
+        &mut size,
+        &mut modified,
+        &mut is_folder,
+        &mut entries,
+    );
     entries
+}
+
+/// True when a 7zz `Attributes` value marks a directory: DOS `D` flag
+/// (`D ...`, `AD ...`) or a unix permission string (`drwxr-xr-x`).
+fn attributes_is_folder(attrs: &str) -> bool {
+    match attrs.split_whitespace().next() {
+        Some(first) => first.contains('D') || first.starts_with('d'),
+        None => false,
+    }
 }
 
 #[cfg(test)]
@@ -129,13 +166,20 @@ mod tests {
 Path = notes.txt
 Size = 128
 Modified = 2026-09-03 15:30:00
+Attributes = A -rw-r--r--
 
 Path = pics
 Size = 0
+Attributes = D drwxr-xr-x
+
+Path = empty.txt
+Size = 0
+Attributes = A -rw-r--r--
 
 Path = pics/a = b.png
 Size = 2048
 Modified = 2026-09-04 10:00:00
+Attributes = A -rw-r--r--
 ";
         assert_eq!(
             parse_list_slt(output),
@@ -144,19 +188,38 @@ Modified = 2026-09-04 10:00:00
                     path: "notes.txt".to_string(),
                     size: Some(128),
                     modified: Some("2026-09-03 15:30:00".to_string()),
+                    is_folder: false,
                 },
                 ArchiveEntry {
                     path: "pics".to_string(),
                     size: Some(0),
                     modified: None,
+                    is_folder: true,
+                },
+                ArchiveEntry {
+                    path: "empty.txt".to_string(),
+                    size: Some(0),
+                    modified: None,
+                    is_folder: false,
                 },
                 ArchiveEntry {
                     path: "pics/a = b.png".to_string(),
                     size: Some(2048),
                     modified: Some("2026-09-04 10:00:00".to_string()),
+                    is_folder: false,
                 },
             ]
         );
+    }
+
+    #[test]
+    fn should_detect_folders_from_attributes() {
+        assert!(attributes_is_folder("D drwxr-xr-x"));
+        assert!(attributes_is_folder("D"));
+        assert!(attributes_is_folder("drwxr-xr-x"));
+        assert!(!attributes_is_folder("A -rw-r--r--"));
+        assert!(!attributes_is_folder("A"));
+        assert!(!attributes_is_folder(""));
     }
 
     #[test]

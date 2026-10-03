@@ -108,9 +108,11 @@ const EXTENSIONS: Record<string, { label?: string; icon: LucideIcon }> = {
 };
 
 /// Classify an archive entry for display: folder vs file, matching icon,
-/// and short type label. Folders are entries with no reported size.
-export function fileKind(path: string, size: number | null): FileKind {
-  if (size === null || size === 0) {
+/// and short type label. Folder-ness comes from 7zz `Attributes`
+/// (surfaced as `is_folder`) — never from size, since empty files
+/// legitimately report `Size = 0`.
+export function fileKind(path: string, isFolder: boolean): FileKind {
+  if (isFolder) {
     return { label: "Folder", icon: Folder, isFolder: true };
   }
   const dot = path.lastIndexOf(".");

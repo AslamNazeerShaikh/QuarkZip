@@ -11,6 +11,7 @@ export interface ArchiveEntry {
   path: string;
   size: number | null;
   modified: string | null;
+  is_folder: boolean;
 }
 
 export default function App() {

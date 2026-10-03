@@ -5,9 +5,9 @@ import type { ArchiveEntry } from "./App";
 import ArchiveTable from "./ArchiveTable";
 
 const DATA: ArchiveEntry[] = [
-  { path: "b.txt", size: 200, modified: null },
-  { path: "a.txt", size: 100, modified: null },
-  { path: "c.txt", size: 300, modified: null },
+  { path: "b.txt", size: 200, modified: null, is_folder: false },
+  { path: "a.txt", size: 100, modified: null, is_folder: false },
+  { path: "c.txt", size: 300, modified: null, is_folder: false },
 ];
 
 describe("ArchiveTable", () => {
