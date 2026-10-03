@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "",
+        "title": "QuarkZip",
         "width": 990,
         "height": 660,
         "minWidth": 990,

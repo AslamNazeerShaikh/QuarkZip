@@ -14,3 +14,35 @@ export function formatSize(bytes: number): string {
   const rounded = Math.round(value * 10) / 10;
   return `${Number.isInteger(rounded) ? rounded.toFixed(0) : rounded}${units[unit]}`;
 }
+
+/// Format a `Date` in the system's local time zone with AM/PM
+/// (`Oct 3, 2026, 9:39:45 PM`). `en-US` keeps the shape (and AM/PM)
+/// deterministic across system locales.
+export function formatDateTimeLocal(date: Date): string {
+  return date.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
+}
+const MODIFIED_RE =
+  /^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2})(?:\.\d+)?)?)?$/;
+
+/// Format a 7zz `Modified` stamp (`2026-10-03 21:39:45.966`) in the system's
+/// local time zone with AM/PM (`Oct 3, 2026, 9:39:45 PM`). 7zz stamps carry
+/// no offset, so the fields are read as local wall time; `en-US` keeps the
+/// shape (and AM/PM) deterministic across system locales. Returns `—` for
+/// null/blank and the raw string when it does not parse.
+export function formatModified(raw: string | null): string {
+  if (raw === null || raw.trim() === "") return "—";
+  const m = raw.trim().match(MODIFIED_RE);
+  if (!m) return raw;
+  const [, y, mo, d, h = "0", mi = "0", s = "0"] = m;
+  const date = new Date(+y, +mo - 1, +d, +h, +mi, +s);
+  if (Number.isNaN(date.getTime())) return raw;
+  return formatDateTimeLocal(date);
+}

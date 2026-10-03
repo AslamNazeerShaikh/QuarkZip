@@ -31,6 +31,21 @@ describe("ArchiveTable", () => {
     expect(rows()[0]).toContain("c.txt");
   });
 
+  it("should_show_serial_index_and_local_time", () => {
+    render(
+      <ArchiveTable
+        data={[
+          { path: "a.txt", size: 1, modified: "2026-10-03 21:39:45", is_folder: false },
+        ]}
+        page={0}
+        pageSize={100}
+      />,
+    );
+    expect(screen.getByText("#")).toBeInTheDocument();
+    expect(screen.getByText("1")).toBeInTheDocument();
+    expect(screen.getByText("Oct 3, 2026, 9:39:45 PM")).toBeInTheDocument();
+  });
+
   it("should_show_empty_state_when_no_data", () => {
     render(<ArchiveTable data={[]} page={0} pageSize={100} />);
     expect(screen.getByText("No entries")).toBeInTheDocument();

@@ -44,7 +44,10 @@ Supporting scales (all from the reference):
 | Tertiary / hint | 12px (`text-xs`), `--qz-faint` |
 
 Numbers: comma thousands via `toLocaleString("en-US")`, sizes via
-`formatSize` (IEC `KiB…`), `·` joins meta, never `|` or `/`.
+`formatSize` (IEC `KiB…`), stamps via `formatModified`/`formatDateTimeLocal`
+(system time zone, AM/PM, `en-US` shape), `·` joins meta, never `|` or `/`.
+Window title follows the open archive: `QuarkZip — <file>` (plain `QuarkZip`
+otherwise; `setWindowTitle`, best-effort).
 
 ## Components (`src/components/ui/` + feature components)
 
@@ -58,10 +61,14 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
 - `Badge`: StatusPill language — 999px, 11px/600, 6px dot + text.
   Variants neutral/success/info/warning/danger, AA pairs in color-system doc.
 - `Separator`: 1px `--qz-border`, no verticals.
-- `ArchiveTable`: card container (13px radius), 11px uppercase headers,
+- `ArchiveTable`: card container (13px radius), checkbox + `#` serial column
+  (1-based across the sorted dataset, stable under paging), 11px uppercase
+  headers synced with their cells (Name left; Type/Size/Modified centered
+  both axes), Modified fixed at `w-64` showing the full local stamp
+  (`formatModified`: system time zone, AM/PM, raw stamp on hover),
   horizontal separators only, checkbox multi-select with soft primary-tint
-  selection, right-aligned tabular totals, native slim scrollbar
-  (`.scroll-slim`), empty state centered on both axes,
+  selection, native slim scrollbar (`.scroll-slim`), empty state centered on
+  both axes,
   reference empty state (16px icon + 14px gray text + 12px hint).
 - `Pagination` / `ThemeSwitch`: solid surface, 10px radius, card shadow,
   8px inner radii. Segmented behavior (sliding indicator) preserved.
@@ -71,11 +78,14 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   `Extract` CTA + inline `role="status"` result; right = `Pagination` +
   `ThemeSwitch`. Extract runs `extract_archive` (`7zz x -o<dest> -y`).
 - `ArchiveOverview`: the 50% overview card — centered empty state
-  (icon tile + title + description + primary CTA + hint), metadata in
-  4-column grids once open (micro-label + 14px medium value, block centered
+  (icon tile + title + description + primary CTA + hint); once open, the
+  header shows the full file path (`break-all`, never truncated) with a
+  copy-to-clipboard button (checkmark + "Copied!" feedback), then the
+  entry count and status badges; metadata in
+  4-column grids (micro-label + 14px medium value, block centered
   on both axes via `m-auto`), progressbar with
   `aria-valuenow` for the compression ratio. Columns: Name flexes, Modified
-  is fixed at `w-56`.
+  is fixed at `w-64`.
 
 ## Layout
 

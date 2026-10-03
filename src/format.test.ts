@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatSize } from "./format";
+import { formatModified, formatSize } from "./format";
 
 describe("formatSize", () => {
   it("should_show_bytes_without_prefix", () => {
@@ -24,5 +24,27 @@ describe("formatSize", () => {
   it("should_show_dash_for_unknown_sizes", () => {
     expect(formatSize(-1)).toBe("—");
     expect(formatSize(NaN)).toBe("—");
+  });
+});
+
+describe("formatModified", () => {
+  it("should_format_stamp_in_local_time_with_am_pm", () => {
+    // Fields are local wall time, so the round-trip is TZ-independent.
+    expect(formatModified("2026-10-03 21:39:45.9666222")).toBe(
+      "Oct 3, 2026, 9:39:45 PM",
+    );
+    expect(formatModified("2026-10-03 08:05:04")).toBe("Oct 3, 2026, 8:05:04 AM");
+    expect(formatModified("2026-10-03 00:00:00")).toBe(
+      "Oct 3, 2026, 12:00:00 AM",
+    );
+  });
+
+  it("should_show_dash_for_missing_stamps", () => {
+    expect(formatModified(null)).toBe("—");
+    expect(formatModified("")).toBe("—");
+  });
+
+  it("should_pass_through_unparseable_stamps", () => {
+    expect(formatModified("yesterday")).toBe("yesterday");
   });
 });

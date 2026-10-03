@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { dirname } from "@tauri-apps/api/path";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { Download, FolderOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import ArchiveTable from "./ArchiveTable";
@@ -46,6 +47,23 @@ const STATUS_STYLE: Record<ExtractStatus["kind"], string> = {
   err: "text-[var(--qz-danger)]",
 };
 
+function basename(path: string): string {
+  const parts = path.split(/[/\\]/).filter(Boolean);
+  return parts[parts.length - 1] ?? path;
+}
+
+/// Window title follows the open archive; best-effort (mocked backends
+/// reject, and the static `tauri.conf.json` title covers cold start).
+async function setWindowTitle(archive: string | null): Promise<void> {
+  try {
+    await getCurrentWindow().setTitle(
+      archive ? `QuarkZip — ${basename(archive)}` : "QuarkZip",
+    );
+  } catch {
+    /* non-Tauri runtimes (tests, browser): ignore */
+  }
+}
+
 export default function App() {
   const { choice, setChoice } = useTheme();
   const [archive, setArchive] = useState<string | null>(null);
@@ -79,6 +97,7 @@ export default function App() {
       const list = await invoke<ArchiveEntry[]>("list_archive", { path });
       setArchive(path);
       setEntries(list);
+      void setWindowTitle(path);
       // Details are best-effort: the table must work even if the
       // summary parse fails (or the backend predates `info_archive`).
       try {
@@ -99,6 +118,7 @@ export default function App() {
       setEntries([]);
       setInfo(null);
       setDest("");
+      void setWindowTitle(null);
     } finally {
       setLoading(false);
     }

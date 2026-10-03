@@ -1,6 +1,7 @@
-import { Archive, FolderLock, PackageOpen } from "lucide-react";
+import { Archive, Check, Copy, FolderLock, PackageOpen } from "lucide-react";
 import type { ReactNode } from "react";
-import { formatSize } from "./format";
+import { useEffect, useRef, useState } from "react";
+import { formatDateTimeLocal, formatSize } from "./format";
 import { Badge } from "./components/ui/badge";
 import { Button } from "./components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./components/ui/card";
@@ -29,22 +30,11 @@ export interface ArchiveInfo {
   extra: Record<string, string>;
 }
 
-function basename(path: string): string {
-  const parts = path.split(/[/\\]/).filter(Boolean);
-  return parts[parts.length - 1] ?? path;
-}
-
 function formatEpoch(secs: number | null): string {
   if (secs === null || secs === undefined) return "—";
   const d = new Date(secs * 1000);
   if (Number.isNaN(d.getTime())) return "—";
-  return d.toLocaleString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return formatDateTimeLocal(d);
 }
 
 function Meta({ label, value }: { label: string; value: ReactNode }) {
@@ -76,6 +66,35 @@ export default function ArchiveOverview({
   loading: boolean;
   onOpen: () => void;
 }) {
+  const [copied, setCopied] = useState(false);
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    return () => {
+      if (copyTimer.current) clearTimeout(copyTimer.current);
+    };
+  }, []);
+
+  async function copyPath(path: string) {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(path);
+      } else {
+        // Fallback for runtimes without the async clipboard API.
+        const area = document.createElement("textarea");
+        area.value = path;
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+      }
+      setCopied(true);
+      if (copyTimer.current) clearTimeout(copyTimer.current);
+      copyTimer.current = setTimeout(() => setCopied(false), 1500);
+    } catch {
+      /* clipboard unavailable: stay silent, keep the path visible */
+    }
+  }
+
   return (
     <Card className="flex min-h-0 flex-[1_1_50%] flex-col overflow-hidden">
       {!archive ? (
@@ -104,10 +123,29 @@ export default function ArchiveOverview({
               <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-[var(--qz-primary-soft)]">
                 <Archive size={18} aria-hidden className="text-[var(--qz-primary)]" />
               </span>
-              <div className="min-w-0">
-                <CardTitle className="truncate">{basename(archive)}</CardTitle>
-                <CardDescription className="truncate" title={archive}>
-                  File Path: {archive} · {entryCount.toLocaleString("en-US")} entries
+              <div className="min-w-0 flex-1">
+                <div className="flex items-start gap-2">
+                  <CardTitle className="min-w-0 flex-1 break-all">
+                    {archive}
+                  </CardTitle>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => void copyPath(archive)}
+                    aria-label="Copy file path"
+                    title={copied ? "Copied!" : "Copy file path"}
+                    className="shrink-0"
+                  >
+                    {copied ? (
+                      <Check size={16} aria-hidden className="text-[var(--qz-success)]" />
+                    ) : (
+                      <Copy size={16} aria-hidden />
+                    )}
+                  </Button>
+                </div>
+                <CardDescription>
+                  {entryCount.toLocaleString("en-US")} entries
+                  {copied ? " · Copied!" : ""}
                 </CardDescription>
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   <Badge variant="info">{(info?.container_format ?? "…").toUpperCase()}</Badge>

@@ -2,7 +2,7 @@ import { ArrowDown, ArrowUp, ArrowUpDown, PackageOpen } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ArchiveEntry } from "./App";
 import { fileKind } from "./fileKind";
-import { formatSize } from "./format";
+import { formatModified, formatSize } from "./format";
 
 export const ROW_HEIGHT = 36;
 const OVERSCAN = 10;
@@ -14,7 +14,7 @@ interface Column {
   key: SortKey;
   header: string;
   width: string;
-  align: "left" | "right";
+  align: "left" | "center";
   value: (row: ArchiveEntry) => string | number;
 }
 
@@ -24,21 +24,21 @@ const COLUMNS: Column[] = [
     key: "type",
     header: "Type",
     width: "w-24",
-    align: "left",
+    align: "center",
     value: (r) => fileKind(r.path, r.is_folder).label,
   },
   {
     key: "size",
     header: "Size",
     width: "w-28",
-    align: "right",
+    align: "center",
     value: (r) => r.size ?? -1,
   },
   {
     key: "modified",
     header: "Modified",
-    width: "w-56",
-    align: "right",
+    width: "w-64",
+    align: "center",
     value: (r) => r.modified ?? "",
   },
 ];
@@ -111,6 +111,8 @@ export default function ArchiveTable({
   const visible = pageRows.slice(startIndex, startIndex + visibleCount);
 
   const totalH = pageRows.length * ROW_HEIGHT;
+  // 1-based serial across the whole sorted dataset, stable under paging.
+  const rowBase = pageSize === "all" ? 0 : page * (pageSize as number);
 
   const allSelected = pageRows.length > 0 && pageRows.every((r) => selected.has(r.path));
 
@@ -160,6 +162,12 @@ export default function ArchiveTable({
               className="h-3.5 w-3.5 accent-[var(--qz-primary)]"
             />
           </div>
+          <div
+            aria-hidden
+            className="flex h-full w-12 shrink-0 items-center justify-center px-2 text-[11px] font-semibold tracking-wide text-[var(--qz-faint)] uppercase select-none"
+          >
+            #
+          </div>
           {COLUMNS.map((column) => (
             <button
               key={column.key}
@@ -168,7 +176,7 @@ export default function ArchiveTable({
               className={`flex h-full cursor-pointer items-center gap-1 px-4 text-[11px] font-semibold tracking-wide text-[var(--qz-faint)] uppercase select-none ${
                 column.key === "path"
                   ? "min-w-0 flex-1"
-                  : `${column.width} shrink-0 ${column.align === "right" ? "justify-end" : ""}`
+                  : `${column.width} shrink-0 justify-center`
               }`}
             >
               {column.header}
@@ -224,6 +232,9 @@ export default function ArchiveTable({
                       className="h-3.5 w-3.5 accent-[var(--qz-primary)]"
                     />
                   </div>
+                  <div className="flex w-12 shrink-0 items-center justify-center px-2 text-[var(--qz-faint)] tabular-nums">
+                    {rowBase + index + 1}
+                  </div>
                   <div className="flex h-full min-w-0 flex-1 items-center px-4">
                     <span className="flex min-w-0 items-center gap-3">
                       <Icon
@@ -234,14 +245,17 @@ export default function ArchiveTable({
                       <span className="truncate leading-5">{entry.path}</span>
                     </span>
                   </div>
-                  <div className="flex h-full w-24 shrink-0 items-center px-4 text-[var(--qz-muted)]">
+                  <div className="flex h-full w-24 shrink-0 items-center justify-center px-4 text-[var(--qz-muted)]">
                     {kind.label}
                   </div>
-                  <div className="flex h-full w-28 shrink-0 items-center justify-end overflow-hidden px-4">
+                  <div className="flex h-full w-28 shrink-0 items-center justify-center overflow-hidden px-4 tabular-nums">
                     {entry.size === null ? "—" : formatSize(entry.size)}
                   </div>
-                  <div className="flex h-full w-56 shrink-0 items-center justify-end overflow-hidden px-4 text-[var(--qz-muted)]">
-                    <span className="truncate whitespace-nowrap">{entry.modified ?? "—"}</span>
+                  <div
+                    className="flex h-full w-64 shrink-0 items-center justify-center overflow-hidden px-4 text-[var(--qz-muted)]"
+                    title={entry.modified ?? undefined}
+                  >
+                    <span className="truncate whitespace-nowrap tabular-nums">{formatModified(entry.modified)}</span>
                   </div>
                 </div>
               );

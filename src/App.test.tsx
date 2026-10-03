@@ -76,12 +76,12 @@ describe("drag and drop", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("should_prefix_path_with_file_path_label", async () => {
+  it("should_show_full_path_when_archive_open", async () => {
     render(<App />);
     dragHandlers[dragHandlers.length - 1]?.({
       payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
     });
-    expect(await screen.findByText(/File Path:/)).toBeInTheDocument();
+    expect(await screen.findByText("/tmp/dropped.zip")).toBeInTheDocument();
   });
 
   it("should_show_footer_actions_when_archive_open", async () => {
