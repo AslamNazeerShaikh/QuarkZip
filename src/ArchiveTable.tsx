@@ -150,7 +150,7 @@ export default function ArchiveTable({ data }: { data: ArchiveEntry[] }) {
   }
 
   return (
-    <div className="relative w-full min-w-0 flex-1">
+    <div className="relative min-h-0 w-full min-w-0 flex-1">
       <div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-lg border border-[var(--qz-border)] bg-[var(--qz-surface)] text-[13px]">
         <div className="flex h-9 shrink-0 items-center">
           <div className="flex w-10 shrink-0 items-center justify-center">
@@ -265,7 +265,7 @@ export default function ArchiveTable({ data }: { data: ArchiveEntry[] }) {
             const ratio = (e.clientY - rect.top) / rect.height;
             scrollTo(ratio * totalH - viewportH / 2);
           }}
-          className="absolute top-10 right-[-14px] bottom-1 w-2.5 cursor-pointer group/track"
+          className="absolute top-10 -right-3.5 bottom-1 w-2.5 cursor-pointer group/track"
         >
           <div
             role="presentation"
