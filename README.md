@@ -35,3 +35,8 @@ npm run tauri build
 
 Scaffold + branding only. Next: shell/dialog plugins, 7zz list/extract
 wrapper with streaming progress, virtualized file list, nested-archive temp handling.
+
+## References
+
+- [AkiZip](https://github.com/AkiZip/AkiZip) — visual 7-Zip archive manager for Linux (GTK4 + libadwaita, GPL-3.0). Feature and architecture reference for QuarkZip: format support, smart compression recommendations, in-archive management, background job queue with progress/ETA/cancel, logs panel.
+
