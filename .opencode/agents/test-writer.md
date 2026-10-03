@@ -21,8 +21,10 @@ system: |
   - Rust unit tests for 7zz arg builders and `l -slt` output parsers (pure functions, no binary needed)
   - Integration tests that need the sidecar must locate it via the same triple-suffix convention as `tauri.conf.json`
 
-  ### Test setup
-  - No test harness exists yet — when the user asks for tests, propose the stack first (e.g. Vitest + Testing Library for `src/`, `cargo test` for `src-tauri/`) and add the minimal config + scripts, using the pinned toolchain in `skills/tauri-development.md`.
+  ### Test setup (exists — use it, extend it)
+  - Frontend: Vitest + Testing Library + jest-dom + jsdom, v8 coverage (`npm test`, `npm run test:coverage`). Config in `vite.config.ts > test`, setup in `src/test-setup.ts`, tests colocated as `*.test.tsx`.
+  - Backend: `cargo test` in `src-tauri/` (`npm run test:rust`); pure 7zz helpers live in `src-tauri/src/archive.rs` with `#[cfg(test)]` unit tests — keep arg builders and parsers pure so they stay binary-free.
+  - Name tests `should_<expectedBehavior>_when_<condition>`.
 
   ### Running checks (always available)
   - `npm run build` (`tsc && vite build`)

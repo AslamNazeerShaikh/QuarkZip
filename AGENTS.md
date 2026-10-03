@@ -7,6 +7,7 @@ Visual 7-Zip archive manager for macOS (first), then Windows/Linux. Tauri 2 + Re
 - Node 20+, Rust stable, Xcode CLT (macOS). npm only (no pnpm).
 - `npm install` → `npm run tauri dev` (dev window); `npm run build` = `tsc && vite build`; `npm run tauri build` = installer.
 - Rust: `cargo check` / `cargo build` run inside `src-tauri/`.
+- Tests: `npm test` (Vitest + Testing Library, `npm run test:coverage` for v8 report), `npm run test:rust` (`cargo test` in `src-tauri/`).
 - 7zz sidecars: `./scripts/fetch-7zz.sh` (pinned 7-Zip 26.03, fetch-at-build, gitignored) — see `docs/7zz-binaries.md`. Never commit binaries without removing the `.gitignore` exception deliberately.
 - Full agent/skill/command inventory lives in `.opencode/README.md`; config in `.opencode/opencode.json`.
 
