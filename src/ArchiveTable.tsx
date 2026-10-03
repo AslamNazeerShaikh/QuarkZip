@@ -144,7 +144,7 @@ export default function ArchiveTable({ data }: { data: ArchiveEntry[] }) {
   }
 
   return (
-    <div className="w-full max-w-2xl overflow-hidden rounded-lg border border-[var(--qz-border)] bg-[var(--qz-surface)] text-[13px]">
+    <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden rounded-lg border border-[var(--qz-border)] bg-[var(--qz-surface)] text-[13px]">
       <div className="flex h-9 items-center">
         <div className="flex w-10 shrink-0 items-center justify-center">
           <input
@@ -186,7 +186,7 @@ export default function ArchiveTable({ data }: { data: ArchiveEntry[] }) {
         }}
         onMouseUp={() => setMarquee(null)}
         onMouseLeave={() => setMarquee(null)}
-        className="scroll-slim max-h-96 overflow-auto"
+        className="scroll-slim min-h-0 flex-1 overflow-auto"
         style={{ scrollbarGutter: "stable" }}
       >
         <div

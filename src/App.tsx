@@ -67,7 +67,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--qz-bg)] text-[var(--qz-text)]">
+    <div className="flex h-screen flex-col overflow-hidden bg-[var(--qz-bg)] text-[var(--qz-text)]">
       <header
         data-tauri-drag-region
         onMouseDown={(e) => {
@@ -75,7 +75,7 @@ export default function App() {
         }}
         className="h-14 shrink-0 cursor-default select-none"
       />
-      <main className="relative flex flex-1 flex-col items-center gap-4 px-8 pb-8">
+      <main className="relative flex min-h-0 flex-1 flex-col px-4 pb-4">
         {dragging && (
           <div className="pointer-events-none absolute inset-3 z-10 flex items-center justify-center rounded-3xl border-[1.5px] border-dotted border-[var(--qz-primary)] bg-[var(--qz-primary)]/10">
             <p className="font-medium text-[var(--qz-text)]">
@@ -84,14 +84,16 @@ export default function App() {
           </div>
         )}
         {!archive && (
-          <button
-            type="button"
-            onClick={() => void openArchive()}
-            className="flex items-center gap-2 rounded-lg bg-[var(--qz-primary)] px-5 py-2 font-medium text-white dark:text-[var(--qz-bg)]"
-          >
-            <PackageOpen size={18} aria-hidden />
-            {loading ? "Reading…" : "Open archive"}
-          </button>
+          <div className="flex flex-1 flex-col items-center justify-center gap-4">
+            <button
+              type="button"
+              onClick={() => void openArchive()}
+              className="flex items-center gap-2 rounded-lg bg-[var(--qz-primary)] px-5 py-2 font-medium text-white dark:text-[var(--qz-bg)]"
+            >
+              <PackageOpen size={18} aria-hidden />
+              {loading ? "Reading…" : "Open archive"}
+            </button>
+          </div>
         )}
         {error && (
           <p role="alert" className="text-sm text-[var(--qz-primary)]">
@@ -99,7 +101,7 @@ export default function App() {
           </p>
         )}
         {archive && (
-          <p className="w-full max-w-2xl truncate text-xs text-[var(--qz-muted)]">
+          <p className="w-full truncate text-xs text-[var(--qz-muted)]">
             File Path: {archive} — {entries.length.toLocaleString("en-US")}{" "}
             entries
           </p>
