@@ -7,6 +7,7 @@
 /* QuarkZip brand tokens — Palette 1 (rose) + Palette 5 (mist neutrals).
    Surfaces reference vars so Light/Dark flips stay in one place. */
 :root {
+  --qz-font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --qz-bg: #fff0f3;
   --qz-surface: #ffffff;
   --qz-border: #ffccd5;
@@ -28,7 +29,45 @@
   --qz-accent: #ff8fa3;
 }
 
-/* Graceful theme cross-fade for the app shell. */
+/* Base type: Inter everywhere, 14px app density. */
+html {
+  font-family: var(--qz-font);
+  font-size: 14px;
+}
+
+body {
+  font-family: var(--qz-font);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Floating auto-hide scrollbars: transparent track (detached from the table
+   edge), thumb fades in on hover and thickens via a shrinking transparent
+   border. Firefox falls back to thin + transparent track. */
+.scroll-slim {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+.scroll-slim:hover {
+  scrollbar-color: var(--qz-muted) transparent;
+}
+.scroll-slim::-webkit-scrollbar {
+  width: 10px;
+  background: transparent;
+}
+.scroll-slim::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-slim::-webkit-scrollbar-thumb {
+  background: transparent;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  border-radius: 8px;
+}
+.scroll-slim:hover::-webkit-scrollbar-thumb {
+  background-color: var(--qz-muted);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
 html,
 body,
 header,
