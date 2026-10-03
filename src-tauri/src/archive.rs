@@ -57,7 +57,7 @@ pub fn parse_list_slt(output: &str) -> Vec<ArchiveEntry> {
     let mut size: Option<u64> = None;
     let mut modified: Option<String> = None;
 
-    let mut flush = |path: &mut Option<String>,
+    let flush = |path: &mut Option<String>,
                      size: &mut Option<u64>,
                      modified: &mut Option<String>,
                      entries: &mut Vec<ArchiveEntry>| {
