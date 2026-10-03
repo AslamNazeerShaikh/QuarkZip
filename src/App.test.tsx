@@ -4,8 +4,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
 
 type DragEvent =
-  | { payload: { type: "hover"; paths: string[] } }
-  | { payload: { type: "cancel" } }
+  | { payload: { type: "over" | "enter"; paths: string[] } }
+  | { payload: { type: "leave" } }
   | { payload: { type: "drop"; paths: string[] } };
 
 const dragHandlers: Array<(e: DragEvent) => void> = [];
@@ -56,13 +56,13 @@ describe("App blank canvas", () => {
 describe("drag and drop", () => {
   it("should_show_overlay_when_file_hovers", async () => {
     render(<App />);
-    dragHandlers.at(-1)?.({ payload: { type: "hover", paths: [] } });
+    dragHandlers[dragHandlers.length - 1]?.({ payload: { type: "over", paths: [] } });
     expect(await screen.findByText("Drop to open archive")).toBeInTheDocument();
   });
 
   it("should_list_dropped_archive_when_file_dropped", async () => {
     render(<App />);
-    dragHandlers.at(-1)?.({
+    dragHandlers[dragHandlers.length - 1]?.({
       payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
     });
     expect(await screen.findByText("dropped.txt")).toBeInTheDocument();

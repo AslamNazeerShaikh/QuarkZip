@@ -40,9 +40,9 @@ export default function App() {
     let unlisten: (() => void) | undefined;
     getCurrentWebview()
       .onDragDropEvent((event) => {
-        if (event.payload.type === "hover") {
+        if (event.payload.type === "over" || event.payload.type === "enter") {
           setDragging(true);
-        } else if (event.payload.type === "cancel") {
+        } else if (event.payload.type === "leave") {
           setDragging(false);
         } else if (event.payload.type === "drop") {
           setDragging(false);
