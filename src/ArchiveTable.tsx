@@ -30,7 +30,7 @@ const COLUMNS: Column[] = [
   {
     key: "size",
     header: "Size",
-    width: "w-28",
+    width: "w-32",
     align: "center",
     value: (r) => r.size ?? -1,
   },
@@ -266,8 +266,10 @@ export default function ArchiveTable({
                   <div className="flex h-full w-24 shrink-0 items-center justify-center px-4 text-[var(--qz-muted)]">
                     {kind.label}
                   </div>
-                  <div className="flex h-full w-28 shrink-0 items-center justify-center overflow-hidden px-4 tabular-nums">
-                    {entry.size === null ? "—" : formatSize(entry.size)}
+                  <div className="flex h-full w-32 shrink-0 items-center justify-center overflow-hidden px-4 tabular-nums">
+                    <span className="whitespace-nowrap">
+                      {entry.size === null ? "—" : formatSize(entry.size)}
+                    </span>
                   </div>
                   <div
                     className="flex h-full w-64 shrink-0 items-center justify-center overflow-hidden px-4 text-[var(--qz-muted)]"
