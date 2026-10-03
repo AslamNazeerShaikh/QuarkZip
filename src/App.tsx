@@ -3,6 +3,7 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { FileText, FolderOpen, PackageOpen } from "lucide-react";
 import { useEffect, useState } from "react";
+import { formatSize } from "./format";
 import ThemeSwitch from "./ThemeSwitch";
 import { useTheme } from "./useTheme";
 
@@ -118,7 +119,7 @@ export default function App() {
                 />
                 <span className="flex-1 truncate">{entry.path}</span>
                 <span className="shrink-0 text-xs text-[var(--qz-muted)]">
-                  {entry.size === null ? "—" : `${entry.size} B`}
+                  {entry.size === null ? "—" : formatSize(entry.size)}
                 </span>
               </li>
             );
