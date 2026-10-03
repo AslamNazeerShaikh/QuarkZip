@@ -40,3 +40,8 @@ wrapper with streaming progress, virtualized file list, nested-archive temp hand
 
 - [AkiZip](https://github.com/AkiZip/AkiZip) — visual 7-Zip archive manager for Linux (GTK4 + libadwaita, GPL-3.0). Feature and architecture reference for QuarkZip: format support, smart compression recommendations, in-archive management, background job queue with progress/ETA/cancel, logs panel.
 
+## Contributing
+
+See `CONTRIBUTING.md` — commits follow [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/).
+
+

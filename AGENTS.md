@@ -17,6 +17,7 @@ Visual 7-Zip archive manager for macOS (first), then Windows/Linux. Tauri 2 + Re
 - 7zz access only via the sidecar (`externalBin: binaries/7zz`): spawn with explicit args, never shell-string interpolation; stream stdout (`-bsp1`) for progress, support cancel/timeout; extract nested archives to `$TEMP` only.
 - Large archives: stream `7zz l -slt` output line-by-line, virtualize lists (never full DOM render), never block the UI thread.
 - Never install toolchains, packages, or tools automatically — give copy-pasteable commands instead.
+- Commits follow Conventional Commits v1.0.0 (`CONTRIBUTING.md`): `<type>[scope]: <description>`, imperative, lowercase, ≤72 chars; `BREAKING CHANGE:` footer for breaking changes.
 
 ## Guardrails
 

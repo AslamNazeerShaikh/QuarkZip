@@ -1,0 +1,11 @@
+# <type>[optional scope]: <description>
+# e.g. feat(ui): add archive file list
+#      fix(sidecar): resolve windows arm64 7za path
+#      docs: update 7zz pinning notes
+#
+# Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+# Scope (optional, in parens): ui, backend, sidecar, config, docs, release
+# - description: imperative, lowercase, no trailing period, <= 72 chars
+# - body (optional): why, wrapped at 72 cols
+# - footer (optional): BREAKING CHANGE: <what + migration>
+# Full spec: https://www.conventionalcommits.org/en/v1.0.0/
