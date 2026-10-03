@@ -3,7 +3,7 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { dirname } from "@tauri-apps/api/path";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { Download, FolderOpen } from "lucide-react";
+import { Download, ChevronDown, FolderOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import ArchiveTable from "./ArchiveTable";
 import ArchiveOverview, { type ArchiveInfo } from "./ArchiveOverview";
@@ -187,8 +187,17 @@ export default function App() {
         onMouseDown={(e) => {
           if (e.button === 0) void invoke("drag_window");
         }}
-        className="h-14 shrink-0 cursor-default select-none"
-      />
+        className="relative flex h-14 shrink-0 cursor-default items-center justify-center select-none"
+      >
+        {/* Centered window title: `QuarkZip | /full/path`, ellipsis on
+            overflow — pure CSS, so resize reflows dynamically. */}
+        <span className="max-w-[75%] truncate px-2 text-[13px]">
+          <span className="font-semibold">QuarkZip</span>
+          {archive && (
+            <span className="text-[var(--qz-muted)]"> | {archive}</span>
+          )}
+        </span>
+      </header>
       {/* All rhythm is 28px: horizontal margins, card gap, footer offset. */}
       <main className="relative flex min-h-0 flex-1 flex-col px-7">
         {dragging && (
@@ -208,7 +217,6 @@ export default function App() {
           <ArchiveOverview
             archive={archive}
             info={info}
-            entryCount={entries.length}
             loading={loading}
             onOpen={() => void openArchive()}
           />
@@ -218,11 +226,25 @@ export default function App() {
         </div>
         {/* Action bar in normal flow — nothing overlaps. */}
         <footer className="flex shrink-0 items-center justify-between gap-4 py-7">
-          <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
             {archive && (
               <>
-                <Button variant="secondary" size="sm" onClick={() => void openArchive()}>
-                  Browse…
+                <Button
+                  size="sm"
+                  onClick={() => void extract()}
+                  disabled={!dest || extracting}
+                  className="shrink-0"
+                >
+                  <Download size={14} aria-hidden />
+                  {extracting ? "Extracting…" : "Extract"}
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => void openArchive()}
+                  className="shrink-0"
+                >
+                  Open new…
                 </Button>
                 <Button
                   variant="secondary"
@@ -230,19 +252,19 @@ export default function App() {
                   onClick={() => void chooseDest()}
                   title={dest || "Choose where to extract"}
                   aria-label="Choose where to extract"
+                  className="min-w-0 flex-1"
                 >
-                  <FolderOpen size={14} aria-hidden />
-                  <span className="max-w-48 truncate">
-                    {dest || "Choose folder…"}
+                  <span className="flex w-full min-w-0 items-center gap-2">
+                    <FolderOpen size={14} aria-hidden className="shrink-0" />
+                    <span className="min-w-0 flex-1 truncate text-left">
+                      {dest || "Choose folder…"}
+                    </span>
+                    <ChevronDown
+                      size={14}
+                      aria-hidden
+                      className="shrink-0 text-[var(--qz-faint)]"
+                    />
                   </span>
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={() => void extract()}
-                  disabled={!dest || extracting}
-                >
-                  <Download size={14} aria-hidden />
-                  {extracting ? "Extracting…" : "Extract"}
                 </Button>
                 {extractStatus && (
                   <span

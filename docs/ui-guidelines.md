@@ -38,6 +38,7 @@ Supporting scales (all from the reference):
 | Use | Spec |
 | --- | ---- |
 | Card title | 16px, 600 |
+| Window title (centered drag strip) | 13px, app name 600 + ` | ` + muted full path, ellipsis |
 | Body / value | 14px (`text-sm`), 400–500 |
 | Secondary | 13px, `--qz-muted` |
 | Micro-label (column headers, meta labels) | 11px, 600, uppercase, `tracking-[0.06em]`, `--qz-faint` |
@@ -62,8 +63,9 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   Variants neutral/success/info/warning/danger, AA pairs in color-system doc.
 - `Separator`: 1px `--qz-border`, no verticals.
 - `ArchiveTable`: card container (13px radius), checkbox + `#` serial column
-  (1-based across the sorted dataset, stable under paging), 11px uppercase
-  headers synced with their cells (Name left; Type/Size/Modified centered
+  (1-based across the sorted dataset, stable under paging), header row fixed
+  to the 36px row height with 12px uppercase labels synced with their cells
+  (Name left; Type/Size/Modified centered
   both axes), Modified fixed at `w-64` showing the full local stamp
   (`formatModified`: system time zone, AM/PM, raw stamp on hover),
   horizontal separators only, checkbox multi-select with soft primary-tint
@@ -73,16 +75,17 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
 - `Pagination` / `ThemeSwitch`: solid surface, 10px radius, card shadow,
   8px inner radii. Segmented behavior (sliding indicator) preserved.
 - Action bar (`App.tsx` footer, in normal flow below the table — nothing
-  floats or overlaps): left = `Browse…` + destination chooser (defaults to
-  the archive's own folder, native directory picker to change) + green
-  `Extract` CTA + inline `role="status"` result; right = `Pagination` +
-  `ThemeSwitch`. Extract runs `extract_archive` (`7zz x -o<dest> -y`).
+  floats or overlaps), left to right: green `Extract` CTA, `Open new…`,
+  destination chooser (grows full width to the pagination control: folder
+  icon + truncating path + chevron indicator, native directory picker,
+  defaults to the archive's own folder) + inline `role="status"` result;
+  right = `Pagination` + `ThemeSwitch`. Extract runs `extract_archive`
+  (`7zz x -o<dest> -y`).
 - `ArchiveOverview`: the 50% overview card — centered empty state
-  (icon tile + title + description + primary CTA + hint); once open, the
-  header shows the full file path (`break-all`, never truncated) with a
-  copy-to-clipboard button (checkmark + "Copied!" feedback), then the
-  entry count and status badges; metadata in
-  4-column grids (micro-label + 14px medium value, block centered
+  (icon tile + title + description + primary CTA + hint); once open, no
+  card header and no pills (path lives in the centered window title;
+  format/encryption/solid already have grid rows): the details start
+  straight into the 4-column metadata grids (micro-label + 14px medium value, block centered
   on both axes via `m-auto`), progressbar with
   `aria-valuenow` for the compression ratio. Columns: Name flexes, Modified
   is fixed at `w-64`.

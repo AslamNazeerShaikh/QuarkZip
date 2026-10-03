@@ -1,11 +1,8 @@
-import { Archive, Check, Copy, FolderLock, PackageOpen } from "lucide-react";
+import { Archive, PackageOpen } from "lucide-react";
 import type { ReactNode } from "react";
-import { useEffect, useRef, useState } from "react";
 import { formatDateTimeLocal, formatSize } from "./format";
-import { Badge } from "./components/ui/badge";
 import { Button } from "./components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./components/ui/card";
-import { Separator } from "./components/ui/separator";
+import { Card, CardDescription, CardTitle } from "./components/ui/card";
 
 /// Mirrors `archive::ArchiveInfo` (snake_case over the Tauri bridge).
 export interface ArchiveInfo {
@@ -56,45 +53,14 @@ function Meta({ label, value }: { label: string; value: ReactNode }) {
 export default function ArchiveOverview({
   archive,
   info,
-  entryCount,
   loading,
   onOpen,
 }: {
   archive: string | null;
   info: ArchiveInfo | null;
-  entryCount: number;
   loading: boolean;
   onOpen: () => void;
 }) {
-  const [copied, setCopied] = useState(false);
-  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => {
-    return () => {
-      if (copyTimer.current) clearTimeout(copyTimer.current);
-    };
-  }, []);
-
-  async function copyPath(path: string) {
-    try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(path);
-      } else {
-        // Fallback for runtimes without the async clipboard API.
-        const area = document.createElement("textarea");
-        area.value = path;
-        document.body.appendChild(area);
-        area.select();
-        document.execCommand("copy");
-        area.remove();
-      }
-      setCopied(true);
-      if (copyTimer.current) clearTimeout(copyTimer.current);
-      copyTimer.current = setTimeout(() => setCopied(false), 1500);
-    } catch {
-      /* clipboard unavailable: stay silent, keep the path visible */
-    }
-  }
-
   return (
     <Card className="flex min-h-0 flex-[1_1_50%] flex-col overflow-hidden">
       {!archive ? (
@@ -118,54 +84,10 @@ export default function ArchiveOverview({
         </div>
       ) : (
         <div className="flex min-h-0 flex-1 flex-col">
-          <CardHeader>
-            <div className="flex min-w-0 items-start gap-3">
-              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-[var(--qz-primary-soft)]">
-                <Archive size={18} aria-hidden className="text-[var(--qz-primary)]" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-start gap-2">
-                  <CardTitle className="min-w-0 flex-1 break-all">
-                    {archive}
-                  </CardTitle>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => void copyPath(archive)}
-                    aria-label="Copy file path"
-                    title={copied ? "Copied!" : "Copy file path"}
-                    className="shrink-0"
-                  >
-                    {copied ? (
-                      <Check size={16} aria-hidden className="text-[var(--qz-success)]" />
-                    ) : (
-                      <Copy size={16} aria-hidden />
-                    )}
-                  </Button>
-                </div>
-                <CardDescription>
-                  {entryCount.toLocaleString("en-US")} entries
-                  {copied ? " · Copied!" : ""}
-                </CardDescription>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  <Badge variant="info">{(info?.container_format ?? "…").toUpperCase()}</Badge>
-                  {info && info.encrypted_files > 0 ? (
-                    <Badge variant="warning">
-                      <FolderLock size={11} aria-hidden />
-                      {info.encryption_scheme} · {info.encrypted_files} encrypted
-                    </Badge>
-                  ) : (
-                    <Badge variant="success">Not encrypted</Badge>
-                  )}
-                  {info?.solid === "+" && <Badge variant="neutral">Solid</Badge>}
-                </div>
-              </div>
-            </div>
-          </CardHeader>
-          <div className="mx-5">
-            <Separator />
-          </div>
-          <CardContent className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+          {/* No card header: path lives in the centered window title, and the
+              status pills live with the details below. */}
+          {/* No vertical padding: the centered block owns the rhythm. */}
+          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-5">
             <div className="m-auto w-full max-w-5xl">
             {loading && !info ? (
               <p className="py-6 text-center text-sm text-[var(--qz-muted)]">
@@ -262,7 +184,7 @@ export default function ArchiveOverview({
               </p>
             )}
             </div>
-          </CardContent>
+          </div>
         </div>
       )}
     </Card>

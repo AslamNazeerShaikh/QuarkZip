@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import ArchiveOverview, { type ArchiveInfo } from "./ArchiveOverview";
 
 const INFO: ArchiveInfo = {
@@ -31,7 +30,6 @@ describe("ArchiveOverview", () => {
       <ArchiveOverview
         archive={null}
         info={null}
-        entryCount={0}
         loading={false}
         onOpen={() => {}}
       />,
@@ -40,42 +38,19 @@ describe("ArchiveOverview", () => {
     expect(screen.getByText("No archive open")).toBeInTheDocument();
   });
 
-  it("should_show_metadata_when_archive_open", () => {
+  it("should_show_metadata_without_status_pills_when_archive_open", () => {
     render(
       <ArchiveOverview
         archive="/tmp/qz-sample.7z"
         info={INFO}
-        entryCount={6}
         loading={false}
         onOpen={() => {}}
       />,
     );
-    // Same card, new content: full path up top with a copy action.
-    expect(screen.getByText("/tmp/qz-sample.7z")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Copy file path" })).toBeInTheDocument();
-    expect(screen.getByText("7Z")).toBeInTheDocument();
-    expect(screen.getAllByText("LZMA2:12").length).toBeGreaterThanOrEqual(1);
+    // Pills removed: format/encryption/solid live in the metadata grid.
+    expect(screen.queryByText("Not encrypted")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Open archive" })).not.toBeInTheDocument();
-  });
-
-  it("should_copy_path_when_copy_clicked", async () => {
-    const user = userEvent.setup();
-    const writeText = vi.fn().mockResolvedValue(undefined);
-    Object.defineProperty(window.navigator, "clipboard", {
-      value: { writeText },
-      configurable: true,
-    });
-    render(
-      <ArchiveOverview
-        archive="/tmp/qz-sample.7z"
-        info={INFO}
-        entryCount={6}
-        loading={false}
-        onOpen={() => {}}
-      />,
-    );
-    await user.click(screen.getByRole("button", { name: "Copy file path" }));
-    expect(writeText).toHaveBeenCalledWith("/tmp/qz-sample.7z");
-    expect(await screen.findByText(/Copied!/)).toBeInTheDocument();
+    expect(screen.getByText("Container")).toBeInTheDocument();
+    expect(screen.getAllByText("LZMA2:12").length).toBeGreaterThanOrEqual(1);
   });
 });

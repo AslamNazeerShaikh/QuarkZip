@@ -70,18 +70,11 @@ describe("drag and drop", () => {
       payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
     });
     expect(await screen.findByText("dropped.txt")).toBeInTheDocument();
-    expect(await screen.findByText(/1 entries/)).toBeInTheDocument();
+    // Details backend is unmocked here, so the card shows its fallback.
+    expect(await screen.findByText(/Details unavailable/)).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: /open archive/i }),
     ).not.toBeInTheDocument();
-  });
-
-  it("should_show_full_path_when_archive_open", async () => {
-    render(<App />);
-    dragHandlers[dragHandlers.length - 1]?.({
-      payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
-    });
-    expect(await screen.findByText("/tmp/dropped.zip")).toBeInTheDocument();
   });
 
   it("should_show_footer_actions_when_archive_open", async () => {
@@ -89,11 +82,22 @@ describe("drag and drop", () => {
     dragHandlers[dragHandlers.length - 1]?.({
       payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
     });
-    expect(await screen.findByRole("button", { name: "Browse…" })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Open new…" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Extract" })).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Choose where to extract" }),
     ).toBeInTheDocument();
+  });
+
+  it("should_show_app_name_and_path_in_centered_window_title", async () => {
+    const { container } = render(<App />);
+    const header = container.querySelector("header");
+    expect(header?.textContent).toBe("QuarkZip");
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
+    });
+    await screen.findByText("dropped.txt");
+    expect(header?.textContent).toBe("QuarkZip | /tmp/dropped.zip");
   });
 
   it("should_report_extract_failure_in_status", async () => {

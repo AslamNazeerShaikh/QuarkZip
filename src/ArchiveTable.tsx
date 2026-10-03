@@ -149,7 +149,8 @@ export default function ArchiveTable({
   return (
     <div className="relative min-h-0 w-full min-w-0 flex-1">
       <div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-[13px] border border-[var(--qz-border)] bg-[var(--qz-surface)] text-[13px]">
-        <div className="flex h-9 shrink-0 items-center">
+        {/* Header matches ROW_HEIGHT so it never reads slim next to rows. */}
+        <div className="flex shrink-0 items-center" style={{ height: ROW_HEIGHT }}>
           <div className="flex w-10 shrink-0 items-center justify-center">
             <input
               type="checkbox"
@@ -164,7 +165,7 @@ export default function ArchiveTable({
           </div>
           <div
             aria-hidden
-            className="flex h-full w-12 shrink-0 items-center justify-center px-2 text-[11px] font-semibold tracking-wide text-[var(--qz-faint)] uppercase select-none"
+            className="flex h-full w-12 shrink-0 items-center justify-center px-2 text-xs font-semibold tracking-wide text-[var(--qz-faint)] uppercase select-none"
           >
             #
           </div>
@@ -173,7 +174,7 @@ export default function ArchiveTable({
               key={column.key}
               type="button"
               onClick={() => toggleSort(column.key)}
-              className={`flex h-full cursor-pointer items-center gap-1 px-4 text-[11px] font-semibold tracking-wide text-[var(--qz-faint)] uppercase select-none ${
+              className={`flex h-full cursor-pointer items-center gap-1 px-4 text-xs font-semibold tracking-wide text-[var(--qz-faint)] uppercase select-none ${
                 column.key === "path"
                   ? "min-w-0 flex-1"
                   : `${column.width} shrink-0 justify-center`
