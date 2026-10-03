@@ -67,6 +67,17 @@ describe("drag and drop", () => {
     });
     expect(await screen.findByText("dropped.txt")).toBeInTheDocument();
     expect(await screen.findByText(/1 entries/)).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /open archive/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("should_prefix_path_with_file_path_label", async () => {
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
+    });
+    expect(await screen.findByText(/File Path:/)).toBeInTheDocument();
   });
 });
 describe("theme switching", () => {

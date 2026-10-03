@@ -82,14 +82,16 @@ export default function App() {
             </p>
           </div>
         )}
-        <button
-          type="button"
-          onClick={() => void openArchive()}
-          className="flex items-center gap-2 rounded-lg bg-[var(--qz-primary)] px-5 py-2 font-medium text-white dark:text-[var(--qz-bg)]"
-        >
-          <PackageOpen size={18} aria-hidden />
-          {loading ? "Reading…" : "Open archive"}
-        </button>
+        {!archive && (
+          <button
+            type="button"
+            onClick={() => void openArchive()}
+            className="flex items-center gap-2 rounded-lg bg-[var(--qz-primary)] px-5 py-2 font-medium text-white dark:text-[var(--qz-bg)]"
+          >
+            <PackageOpen size={18} aria-hidden />
+            {loading ? "Reading…" : "Open archive"}
+          </button>
+        )}
         {error && (
           <p role="alert" className="text-sm text-[var(--qz-primary)]">
             {error}
@@ -97,7 +99,7 @@ export default function App() {
         )}
         {archive && (
           <p className="w-full max-w-2xl truncate text-xs text-[var(--qz-muted)]">
-            {archive} — {entries.length} entries
+            File Path: {archive} — {entries.length} entries
           </p>
         )}
         <ul className="w-full max-w-2xl divide-y divide-[var(--qz-border)] rounded-lg border border-[var(--qz-border)] bg-[var(--qz-surface)]">
