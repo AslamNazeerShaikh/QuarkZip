@@ -38,7 +38,7 @@ const COLUMNS: Column[] = [
   {
     key: "modified",
     header: "Modified",
-    width: "w-28",
+    width: "w-44",
     align: "right",
     value: (r) => r.modified ?? "",
   },
@@ -150,7 +150,7 @@ export default function ArchiveTable({ data }: { data: ArchiveEntry[] }) {
   }
 
   return (
-    <div className="relative min-h-0 w-full min-w-0 flex-1">
+    <div className="group/table relative min-h-0 w-full min-w-0 flex-1">
       <div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-lg border border-[var(--qz-border)] bg-[var(--qz-surface)] text-[13px]">
         <div className="flex h-9 shrink-0 items-center">
           <div className="flex w-10 shrink-0 items-center justify-center">
@@ -233,11 +233,11 @@ export default function ArchiveTable({ data }: { data: ArchiveEntry[] }) {
                   <div className="flex h-full w-24 shrink-0 items-center px-4 text-[var(--qz-muted)]">
                     {kind.label}
                   </div>
-                  <div className="flex h-full w-28 shrink-0 items-center justify-end px-4">
+                  <div className="flex h-full w-28 shrink-0 items-center justify-end overflow-hidden px-4">
                     {entry.size === null ? "—" : formatSize(entry.size)}
                   </div>
-                  <div className="flex h-full w-28 shrink-0 items-center justify-end px-4 text-[var(--qz-muted)]">
-                    {entry.modified ?? "—"}
+                  <div className="flex h-full w-44 shrink-0 items-center justify-end overflow-hidden px-4 text-[var(--qz-muted)]">
+                    <span className="truncate whitespace-nowrap">{entry.modified ?? "—"}</span>
                   </div>
                 </div>
               );
@@ -287,7 +287,7 @@ export default function ArchiveTable({ data }: { data: ArchiveEntry[] }) {
             onPointerUp={() => {
               dragRef.current = null;
             }}
-            className="absolute right-0 left-0 rounded-full bg-[var(--qz-muted)] opacity-0 transition-opacity duration-300 group-hover/track:opacity-60 hover:opacity-100"
+            className="absolute right-0 left-0 rounded-full bg-[var(--qz-muted)] opacity-0 transition-opacity duration-300 group-hover/table:opacity-60 group-hover/track:opacity-60 hover:opacity-100"
             style={{ top: thumbTop, height: thumbH }}
           />
         </div>
