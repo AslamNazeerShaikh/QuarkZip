@@ -81,9 +81,14 @@ describe("drag and drop", () => {
   });
 });
 describe("theme switching", () => {
+  async function openSwitcher(user: ReturnType<typeof userEvent.setup>) {
+    await user.click(screen.getByRole("button", { name: "Change theme" }));
+  }
+
   it("should_apply_dark_class_when_dark_chosen", async () => {
     const user = userEvent.setup();
     render(<App />);
+    await openSwitcher(user);
     await user.click(screen.getByRole("button", { name: "Dark" }));
     expect(document.documentElement.classList.contains("dark")).toBe(true);
   });
@@ -91,7 +96,9 @@ describe("theme switching", () => {
   it("should_remove_dark_class_when_light_chosen", async () => {
     const user = userEvent.setup();
     render(<App />);
+    await openSwitcher(user);
     await user.click(screen.getByRole("button", { name: "Dark" }));
+    await openSwitcher(user);
     await user.click(screen.getByRole("button", { name: "Light" }));
     expect(document.documentElement.classList.contains("dark")).toBe(false);
   });
@@ -99,11 +106,26 @@ describe("theme switching", () => {
   it("should_mark_active_choice_pressed", async () => {
     const user = userEvent.setup();
     render(<App />);
+    await openSwitcher(user);
     const system = screen.getByRole("button", { name: "System" });
     expect(system).toHaveAttribute("aria-pressed", "true");
     await user.click(screen.getByRole("button", { name: "Light" }));
+    await openSwitcher(user);
     expect(
       screen.getByRole("button", { name: "Light" }),
     ).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("should_collapse_after_choice_made", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await openSwitcher(user);
+    await user.click(screen.getByRole("button", { name: "Dark" }));
+    expect(
+      screen.queryByRole("button", { name: "Dark" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Change theme" }),
+    ).toBeInTheDocument();
   });
 });
