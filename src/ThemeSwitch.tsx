@@ -69,7 +69,10 @@ export default function ThemeSwitch({
       ref={rootRef}
       role="group"
       aria-label="Color theme"
-      className="flex h-9 items-center rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-1 shadow-[var(--qz-shadow-card)]"
+      // Relative: the sliding indicator is absolutely positioned and must
+      // size against this shell — without it, it escapes to <main> and
+      // renders as a full-height block.
+      className="relative flex h-9 items-center rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-1 shadow-[var(--qz-shadow-card)]"
     >
       {expanded ? (
         <>

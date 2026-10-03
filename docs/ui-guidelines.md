@@ -47,8 +47,9 @@ Supporting scales (all from the reference):
 Numbers: comma thousands via `toLocaleString("en-US")`, sizes via
 `formatSize` (IEC `KiB…`), stamps via `formatModified`/`formatDateTimeLocal`
 (system time zone, AM/PM, `en-US` shape), `·` joins meta, never `|` or `/`.
-Window title follows the open archive: `QuarkZip — <file>` (plain `QuarkZip`
-otherwise; `setWindowTitle`, best-effort).
+Window title follows the open archive: `QuarkZip | "Path: <full path>"`
+(plain `QuarkZip` otherwise; `setWindowTitle`, best-effort), centered in the
+drag strip with ellipsis.
 
 ## Components (`src/components/ui/` + feature components)
 
@@ -56,7 +57,8 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
 
 - `Button`: primary = solid green CTA h-10, 9px radius, 14px/500
   (`--qz-on-primary` text both modes); secondary = surface + 1px border;
-  ghost = text-only. One primary action per view.
+  ghost = text-only. Sizes default/`sm`/`bar` (36px footer height matching
+  the Pagination/ThemeSwitch shells)/icon. One primary action per view.
 - `Card`: surface, 13px radius, 1px border, card shadow. `CardTitle` 16/600,
   `CardDescription` 13px muted, content scrolls internally (`min-h-0`).
 - `Badge`: StatusPill language — 999px, 11px/600, 6px dot + text.
@@ -75,12 +77,20 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
 - `Pagination` / `ThemeSwitch`: solid surface, 10px radius, card shadow,
   8px inner radii. Segmented behavior (sliding indicator) preserved.
 - Action bar (`App.tsx` footer, in normal flow below the table — nothing
-  floats or overlaps), left to right: green `Extract` CTA, `Open new…`,
+  floats or overlaps), left to right: green `Extract` CTA (opens the
+  confirm dialog), `Open new…`,
   destination chooser (grows full width to the pagination control: folder
-  icon + truncating path + chevron indicator, native directory picker,
+  icon + centered path + chevron indicator, native directory picker,
   defaults to the archive's own folder) + inline `role="status"` result;
-  right = `Pagination` + `ThemeSwitch`. Extract runs `extract_archive`
-  (`7zz x -o<dest> -y`).
+  right = `Pagination` + `ThemeSwitch`. Confirm runs `extract_archive`
+  (`7zz x -o<dest> [files...] -y`) with the checked rows, or everything
+  when nothing is checked.
+- `ExtractDialog`: centered modal (dim backdrop, 16px radius, 180ms pop,
+  Esc/backdrop cancel, reduced-motion safe) — big centered icon, the
+  destination, `K of N selected` (or `All N`) file count, orange Cancel +
+  blue Proceed (`Button` warning/accent variants, AA pairs in color-system).
+- `ArchiveTable` reports checkbox selection via `onSelectionChange`
+  (cleared on each new listing); `App` feeds it to the dialog + extract.
 - `ArchiveOverview`: the 50% overview card — centered empty state
   (icon tile + title + description + primary CTA + hint); once open, no
   card header and no pills (path lives in the centered window title;

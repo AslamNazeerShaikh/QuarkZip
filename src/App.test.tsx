@@ -97,10 +97,10 @@ describe("drag and drop", () => {
       payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
     });
     await screen.findByText("dropped.txt");
-    expect(header?.textContent).toBe("QuarkZip | /tmp/dropped.zip");
+    expect(header?.textContent).toBe('QuarkZip | "Path: /tmp/dropped.zip"');
   });
 
-  it("should_report_extract_failure_in_status", async () => {
+  it("should_confirm_then_report_extract_failure_in_status", async () => {
     const user = userEvent.setup();
     render(<App />);
     dragHandlers[dragHandlers.length - 1]?.({
@@ -111,14 +111,39 @@ describe("drag and drop", () => {
     const extract = await screen.findByRole("button", { name: "Extract" });
     expect(extract).toBeEnabled();
     await user.click(extract);
+    expect(await screen.findByRole("dialog", { name: "Extract files?" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Proceed" }));
     const status = await screen.findByRole("status");
     expect(status).toHaveTextContent(/unexpected command extract_archive/);
+  });
+
+  it("should_close_confirm_dialog_when_cancel_clicked", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
+    });
+    await user.click(await screen.findByRole("button", { name: "Extract" }));
+    await user.click(await screen.findByRole("button", { name: "Cancel" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 });
 describe("theme switching", () => {
   async function openSwitcher(user: ReturnType<typeof userEvent.setup>) {
     await user.click(screen.getByRole("button", { name: "Change theme" }));
   }
+
+  it("should_keep_sliding_indicator_inside_the_theme_shell", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await openSwitcher(user);
+    // Regression: without `relative` on the shell, the absolutely
+    // positioned indicator escapes to <main> as a full-height block.
+    expect(
+      screen.getByRole("group", { name: "Color theme" }),
+    ).toHaveClass("relative");
+  });
 
   it("should_apply_dark_class_when_dark_chosen", async () => {
     const user = userEvent.setup();

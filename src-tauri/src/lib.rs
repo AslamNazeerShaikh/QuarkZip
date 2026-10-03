@@ -57,19 +57,22 @@ async fn info_archive(
 }
 
 /// Extracts an archive via the pinned 7zz sidecar into `dest`
-/// (`7zz x <archive> -o<dest> -y`, no password prompt). 7zz creates `dest`
-/// when missing. Returns 7zz's stdout; stderr becomes the error.
+/// (`7zz x <archive> -o<dest> [files...] -y`, no password prompt). An empty
+/// `files` list extracts everything; otherwise only those in-archive paths.
+/// 7zz creates `dest` when missing. Returns 7zz's stdout; stderr becomes
+/// the error.
 #[tauri::command]
 async fn extract_archive(
     app: tauri::AppHandle,
     path: String,
     dest: String,
+    files: Vec<String>,
 ) -> Result<String, String> {
     let output = app
         .shell()
         .sidecar("binaries/7zz")
         .map_err(|e| e.to_string())?
-        .args(archive::extract_args(&path, &dest, None))
+        .args(archive::extract_args(&path, &dest, None, &files))
         .output()
         .await
         .map_err(|e| e.to_string())?;

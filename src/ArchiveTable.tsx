@@ -56,25 +56,33 @@ function SortIcon({ state }: { state: SortDir | null }) {
 
 /// Hand-rolled archive table: sortable columns, windowed rows (only visible
 /// rows mount, so 10k-entry archives scroll smoothly), checkbox
-/// multi-select, and a floating scrollbar outside the table edge. No table
-/// library — plain divs over the sorted data.
+/// multi-select, and a native slim scrollbar. No table library — plain divs
+/// over the sorted data.
 ///
 /// Pagination is controlled by the parent: `page`/`pageSize` select a slice
-/// of the sorted rows; selection is global across pages.
+/// of the sorted rows; selection is global across pages. Selection belongs
+/// to one listing: a new `data` identity clears it, and every change is
+/// reported via `onSelectionChange` (used for selection-aware extraction).
 export default function ArchiveTable({
   data,
   page,
   pageSize,
+  onSelectionChange,
 }: {
   data: ArchiveEntry[];
   page: number;
   pageSize: number | "all";
+  onSelectionChange?: (selected: ReadonlySet<string>) => void;
 }) {
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
   const [scrollTop, setScrollTop] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+  // Ref-held so the reset effect below only fires on `data` identity,
+  // never on a re-created callback.
+  const selectionCb = useRef(onSelectionChange);
+  selectionCb.current = onSelectionChange;
 
   const sorted = useMemo(() => {
     if (!sortKey) return data;
@@ -96,6 +104,17 @@ export default function ArchiveTable({
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
     setScrollTop(0);
   }, [page, pageSize, data]);
+
+  // A new listing is a new archive: drop stale selections.
+  const dataRef = useRef(data);
+  useEffect(() => {
+    if (dataRef.current !== data) {
+      dataRef.current = data;
+      const empty = new Set<string>();
+      setSelected(empty);
+      selectionCb.current?.(empty);
+    }
+  }, [data]);
 
   // Visible window with overscan; jsdom reports no layout (clientHeight 0),
   // in which case render everything so tests and snapshots see full content.
@@ -126,24 +145,22 @@ export default function ArchiveTable({
   }
 
   function toggleAll() {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (allSelected) {
-        for (const r of pageRows) next.delete(r.path);
-      } else {
-        for (const r of pageRows) next.add(r.path);
-      }
-      return next;
-    });
+    const next = new Set(selected);
+    if (allSelected) {
+      for (const r of pageRows) next.delete(r.path);
+    } else {
+      for (const r of pageRows) next.add(r.path);
+    }
+    setSelected(next);
+    selectionCb.current?.(next);
   }
 
   function toggleOne(path: string) {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(path)) next.delete(path);
-      else next.add(path);
-      return next;
-    });
+    const next = new Set(selected);
+    if (next.has(path)) next.delete(path);
+    else next.add(path);
+    setSelected(next);
+    selectionCb.current?.(next);
   }
 
   return (

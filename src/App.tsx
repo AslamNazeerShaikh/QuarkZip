@@ -7,6 +7,7 @@ import { Download, ChevronDown, FolderOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import ArchiveTable from "./ArchiveTable";
 import ArchiveOverview, { type ArchiveInfo } from "./ArchiveOverview";
+import ExtractDialog from "./ExtractDialog";
 import Pagination, { type PageSize } from "./Pagination";
 import ThemeSwitch from "./ThemeSwitch";
 import { Button } from "./components/ui/button";
@@ -47,17 +48,12 @@ const STATUS_STYLE: Record<ExtractStatus["kind"], string> = {
   err: "text-[var(--qz-danger)]",
 };
 
-function basename(path: string): string {
-  const parts = path.split(/[/\\]/).filter(Boolean);
-  return parts[parts.length - 1] ?? path;
-}
-
 /// Window title follows the open archive; best-effort (mocked backends
 /// reject, and the static `tauri.conf.json` title covers cold start).
 async function setWindowTitle(archive: string | null): Promise<void> {
   try {
     await getCurrentWindow().setTitle(
-      archive ? `QuarkZip — ${basename(archive)}` : "QuarkZip",
+      archive ? `QuarkZip | "Path: ${archive}"` : "QuarkZip",
     );
   } catch {
     /* non-Tauri runtimes (tests, browser): ignore */
@@ -77,6 +73,8 @@ export default function App() {
   const [dest, setDest] = useState("");
   const [extracting, setExtracting] = useState(false);
   const [extractStatus, setExtractStatus] = useState<ExtractStatus | null>(null);
+  const [confirming, setConfirming] = useState(false);
+  const [selectedPaths, setSelectedPaths] = useState<ReadonlySet<string>>(new Set());
 
   const pageCount =
     pageSize === "all" ? 1 : Math.ceil(entries.length / pageSize);
@@ -162,13 +160,15 @@ export default function App() {
 
   async function extract() {
     if (!archive || !dest || extracting) return;
+    const files = [...selectedPaths];
+    const count = files.length === 0 ? entries.length : files.length;
     setExtracting(true);
-    setExtractStatus({ kind: "busy", text: `Extracting to ${dest}…` });
+    setExtractStatus({ kind: "busy", text: `Extracting ${count.toLocaleString("en-US")} files to ${dest}…` });
     try {
-      await invoke("extract_archive", { path: archive, dest });
+      await invoke("extract_archive", { path: archive, dest, files });
       setExtractStatus({
         kind: "ok",
-        text: `Extracted ${entries.length.toLocaleString("en-US")} entries to ${dest}`,
+        text: `Extracted ${count.toLocaleString("en-US")} files to ${dest}`,
       });
     } catch (e) {
       setExtractStatus({
@@ -194,7 +194,7 @@ export default function App() {
         <span className="max-w-[75%] truncate px-2 text-[13px]">
           <span className="font-semibold">QuarkZip</span>
           {archive && (
-            <span className="text-[var(--qz-muted)]"> | {archive}</span>
+            <span className="text-[var(--qz-muted)]"> | &quot;Path: {archive}&quot;</span>
           )}
         </span>
       </header>
@@ -221,7 +221,12 @@ export default function App() {
             onOpen={() => void openArchive()}
           />
           <div className="flex min-h-0 flex-[1_1_50%] flex-col">
-            <ArchiveTable data={entries} page={page} pageSize={pageSize} />
+            <ArchiveTable
+              data={entries}
+              page={page}
+              pageSize={pageSize}
+              onSelectionChange={setSelectedPaths}
+            />
           </div>
         </div>
         {/* Action bar in normal flow — nothing overlaps. */}
@@ -230,9 +235,9 @@ export default function App() {
             {archive && (
               <>
                 <Button
-                  size="sm"
-                  onClick={() => void extract()}
-                  disabled={!dest || extracting}
+                  size="bar"
+                  onClick={() => setConfirming(true)}
+                  disabled={!dest || extracting || entries.length === 0}
                   className="shrink-0"
                 >
                   <Download size={14} aria-hidden />
@@ -240,7 +245,7 @@ export default function App() {
                 </Button>
                 <Button
                   variant="secondary"
-                  size="sm"
+                  size="bar"
                   onClick={() => void openArchive()}
                   className="shrink-0"
                 >
@@ -248,15 +253,15 @@ export default function App() {
                 </Button>
                 <Button
                   variant="secondary"
-                  size="sm"
+                  size="bar"
                   onClick={() => void chooseDest()}
                   title={dest || "Choose where to extract"}
                   aria-label="Choose where to extract"
                   className="min-w-0 flex-1"
                 >
-                  <span className="flex w-full min-w-0 items-center gap-2">
+                  <span className="flex w-full min-w-0 items-center justify-center gap-2">
                     <FolderOpen size={14} aria-hidden className="shrink-0" />
-                    <span className="min-w-0 flex-1 truncate text-left">
+                    <span className="min-w-0 flex-1 truncate text-center">
                       {dest || "Choose folder…"}
                     </span>
                     <ChevronDown
@@ -296,6 +301,17 @@ export default function App() {
           </div>
         </footer>
       </main>
+      <ExtractDialog
+        open={confirming}
+        selected={selectedPaths.size}
+        total={entries.length}
+        dest={dest}
+        onCancel={() => setConfirming(false)}
+        onConfirm={() => {
+          setConfirming(false);
+          void extract();
+        }}
+      />
     </div>
   );
 }

@@ -23,14 +23,21 @@ pub fn list_args(archive: &str) -> Vec<String> {
     vec!["l".to_string(), "-slt".to_string(), archive.to_string()]
 }
 
-/// Argv for `7zz x <archive> -o<dest> [-p<pw>] -y`.
-pub fn extract_args(archive: &str, dest: &str, password: Option<&str>) -> Vec<String> {
+/// Argv for `7zz x <archive> -o<dest> [files...] [-p<pw>] -y`.
+/// An empty `files` slice extracts everything.
+pub fn extract_args(
+    archive: &str,
+    dest: &str,
+    password: Option<&str>,
+    files: &[String],
+) -> Vec<String> {
     let mut args = vec![
         "x".to_string(),
         archive.to_string(),
         format!("-o{dest}"),
-        "-y".to_string(),
     ];
+    args.extend(files.iter().cloned());
+    args.push("-y".to_string());
     if let Some(pw) = password {
         args.push(format!("-p{pw}"));
     }
@@ -332,7 +339,7 @@ mod tests {
     #[test]
     fn should_build_extract_args_without_password_when_none_given() {
         assert_eq!(
-            extract_args("a.7z", "/tmp/out", None),
+            extract_args("a.7z", "/tmp/out", None, &[]),
             vec![
                 "x".to_string(),
                 "a.7z".to_string(),
@@ -343,8 +350,23 @@ mod tests {
     }
 
     #[test]
+    fn should_list_files_before_assume_yes_when_files_given() {
+        assert_eq!(
+            extract_args("a.7z", "/tmp/out", None, &["a.txt".to_string(), "b/c.txt".to_string()]),
+            vec![
+                "x".to_string(),
+                "a.7z".to_string(),
+                "-o/tmp/out".to_string(),
+                "a.txt".to_string(),
+                "b/c.txt".to_string(),
+                "-y".to_string(),
+            ]
+        );
+    }
+
+    #[test]
     fn should_append_password_flag_when_password_given() {
-        let args = extract_args("a.7z", "/tmp/out", Some("s3cret"));
+        let args = extract_args("a.7z", "/tmp/out", Some("s3cret"), &[]);
         assert!(args.contains(&"-ps3cret".to_string()));
         let args = test_args("a.7z", Some("s3cret"));
         assert_eq!(args[0], "t");
