@@ -69,7 +69,7 @@ export default function ThemeSwitch({
       ref={rootRef}
       role="group"
       aria-label="Color theme"
-      className="fixed right-4 bottom-4 flex items-center rounded-full border border-[var(--qz-border)] bg-[var(--qz-surface)]/80 p-1 shadow-lg backdrop-blur"
+      className="flex h-9 items-center rounded-full border border-[var(--qz-border)] bg-[var(--qz-surface)]/80 p-1 shadow-lg backdrop-blur"
     >
       {expanded ? (
         <>
@@ -87,7 +87,7 @@ export default function ThemeSwitch({
               type="button"
               aria-pressed={choice === opt.value}
               onClick={() => select(opt.value)}
-              className={`relative z-10 rounded-full px-3 py-1 text-xs font-medium transition-colors duration-300 ${
+              className={`relative z-10 inline-flex h-7 items-center rounded-full px-3 font-medium transition-colors duration-300 ${
                 choice === opt.value
                   ? "text-white dark:text-[var(--qz-bg)]"
                   : "text-[var(--qz-muted)] hover:text-[var(--qz-text)]"
@@ -103,7 +103,7 @@ export default function ThemeSwitch({
           aria-label="Change theme"
           aria-expanded={expanded}
           onClick={() => setExpanded(true)}
-          className="rounded-full p-2 text-[var(--qz-muted)] transition-colors duration-300 hover:text-[var(--qz-text)]"
+          className="grid h-7 w-7 place-items-center rounded-full text-[var(--qz-muted)] transition-colors duration-300 hover:text-[var(--qz-text)]"
         >
           <CurrentIcon size={18} aria-hidden />
         </button>

@@ -29,14 +29,15 @@
   --qz-accent: #ff8fa3;
 }
 
-/* Base type: Inter everywhere, 14px app density. */
+/* Base type: Inter everywhere, one size across the whole app. */
 html {
   font-family: var(--qz-font);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 body {
   font-family: var(--qz-font);
+  font-size: 13px;
   -webkit-font-smoothing: antialiased;
 }
 

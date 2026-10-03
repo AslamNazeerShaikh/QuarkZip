@@ -12,7 +12,7 @@ const DATA: ArchiveEntry[] = [
 
 describe("ArchiveTable", () => {
   it("should_render_all_rows", () => {
-    render(<ArchiveTable data={DATA} />);
+    render(<ArchiveTable data={DATA} page={0} pageSize={100} />);
     for (const name of ["a.txt", "b.txt", "c.txt"]) {
       expect(screen.getByText(name)).toBeInTheDocument();
     }
@@ -20,7 +20,7 @@ describe("ArchiveTable", () => {
 
   it("should_sort_by_name_when_header_clicked", async () => {
     const user = userEvent.setup();
-    const { container } = render(<ArchiveTable data={DATA} />);
+    const { container } = render(<ArchiveTable data={DATA} page={0} pageSize={100} />);
     const rows = () =>
       Array.from(
         container.querySelectorAll('div[style*="translateY"]'),
@@ -32,13 +32,13 @@ describe("ArchiveTable", () => {
   });
 
   it("should_show_empty_state_when_no_data", () => {
-    render(<ArchiveTable data={[]} />);
+    render(<ArchiveTable data={[]} page={0} pageSize={100} />);
     expect(screen.getByText("No entries")).toBeInTheDocument();
   });
 
   it("should_toggle_row_when_checkbox_clicked", async () => {
     const user = userEvent.setup();
-    render(<ArchiveTable data={DATA} />);
+    render(<ArchiveTable data={DATA} page={0} pageSize={100} />);
     const box = screen.getByRole("checkbox", { name: "Select b.txt" });
     expect(box).not.toBeChecked();
     await user.click(box);
@@ -46,7 +46,7 @@ describe("ArchiveTable", () => {
   });
 
   it("should_hide_native_scrollbar_where_custom_track_takes_over", () => {
-    const { container } = render(<ArchiveTable data={DATA} />);
+    const { container } = render(<ArchiveTable data={DATA} page={0} pageSize={100} />);
     const scroller = container.querySelector(".scroll-hidden");
     expect(scroller).toBeInTheDocument();
   });

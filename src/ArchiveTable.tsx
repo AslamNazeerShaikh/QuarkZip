@@ -59,7 +59,18 @@ function SortIcon({ state }: { state: SortDir | null }) {
 /// rows mount, so 10k-entry archives scroll smoothly), checkbox
 /// multi-select, and a floating scrollbar outside the table edge. No table
 /// library — plain divs over the sorted data.
-export default function ArchiveTable({ data }: { data: ArchiveEntry[] }) {
+///
+/// Pagination is controlled by the parent: `page`/`pageSize` select a slice
+/// of the sorted rows; selection is global across pages.
+export default function ArchiveTable({
+  data,
+  page,
+  pageSize,
+}: {
+  data: ArchiveEntry[];
+  page: number;
+  pageSize: number | "all";
+}) {
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
@@ -80,18 +91,29 @@ export default function ArchiveTable({ data }: { data: ArchiveEntry[] }) {
     return sortDir === "asc" ? ordered : ordered.reverse();
   }, [data, sortKey, sortDir]);
 
+  const pageRows = useMemo(() => {
+    if (pageSize === "all") return sorted;
+    return sorted.slice(page * pageSize, (page + 1) * pageSize);
+  }, [sorted, page, pageSize]);
+
+  // Reset scroll whenever the visible slice changes.
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+    setScrollTop(0);
+  }, [page, pageSize, data]);
+
   // Visible window with overscan; jsdom reports no layout (clientHeight 0),
   // in which case render everything so tests and snapshots see full content.
   const viewportHeight = scrollRef.current?.clientHeight || 0;
   const visibleCount =
     viewportHeight === 0
-      ? sorted.length
+      ? pageRows.length
       : Math.ceil(viewportHeight / ROW_HEIGHT) + OVERSCAN * 2;
   const startIndex = Math.max(
     0,
     Math.floor(scrollTop / ROW_HEIGHT) - OVERSCAN,
   );
-  const visible = sorted.slice(startIndex, startIndex + visibleCount);
+  const visible = pageRows.slice(startIndex, startIndex + visibleCount);
 
   useEffect(() => {
     const scrollEl = scrollRef.current;
@@ -108,7 +130,7 @@ export default function ArchiveTable({ data }: { data: ArchiveEntry[] }) {
     return () => ro.disconnect();
   }, []);
 
-  const totalH = sorted.length * ROW_HEIGHT;
+  const totalH = pageRows.length * ROW_HEIGHT;
   const showScrollbar = trackH > 0 && totalH > viewportH;
   const thumbH = showScrollbar
     ? Math.max(MIN_THUMB, (viewportH / totalH) * trackH)
@@ -118,12 +140,14 @@ export default function ArchiveTable({ data }: { data: ArchiveEntry[] }) {
     : 0;
 
   function scrollTo(y: number) {
-    scrollRef.current?.scrollTo({
-      top: Math.max(0, Math.min(y, totalH - viewportH)),
-    });
+    const el = scrollRef.current;
+    if (!el) return;
+    const top = Math.max(0, Math.min(y, totalH - viewportH));
+    if (typeof el.scrollTo === "function") el.scrollTo({ top });
+    else el.scrollTop = top;
   }
 
-  const allSelected = sorted.length > 0 && selected.size === sorted.length;
+  const allSelected = pageRows.length > 0 && pageRows.every((r) => selected.has(r.path));
 
   function toggleSort(key: SortKey) {
     if (sortKey !== key) {
@@ -135,9 +159,15 @@ export default function ArchiveTable({ data }: { data: ArchiveEntry[] }) {
   }
 
   function toggleAll() {
-    setSelected(
-      allSelected ? new Set() : new Set(sorted.map((r) => r.path)),
-    );
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (allSelected) {
+        for (const r of pageRows) next.delete(r.path);
+      } else {
+        for (const r of pageRows) next.add(r.path);
+      }
+      return next;
+    });
   }
 
   function toggleOne(path: string) {
@@ -170,7 +200,7 @@ export default function ArchiveTable({ data }: { data: ArchiveEntry[] }) {
               key={column.key}
               type="button"
               onClick={() => toggleSort(column.key)}
-              className={`flex h-full cursor-pointer items-center gap-1 px-4 text-xs font-semibold tracking-wide text-[var(--qz-muted)] uppercase select-none ${
+              className={`flex h-full cursor-pointer items-center gap-1 px-4 font-semibold tracking-wide text-[var(--qz-muted)] uppercase select-none ${
                 column.key === "path"
                   ? "min-w-0 flex-1"
                   : `${column.width} shrink-0 ${column.align === "right" ? "justify-end" : ""}`
@@ -184,7 +214,7 @@ export default function ArchiveTable({ data }: { data: ArchiveEntry[] }) {
         <div
           ref={scrollRef}
           onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)}
-          className="scroll-hidden min-h-0 flex-1 overflow-y-auto"
+          className="scroll-hidden min-h-0 flex-1 overflow-y-auto pb-16"
         >
           <div
             style={{ height: `${totalH}px` }}
@@ -243,8 +273,8 @@ export default function ArchiveTable({ data }: { data: ArchiveEntry[] }) {
               );
             })}
           </div>
-          {sorted.length === 0 && (
-            <p className="px-4 py-6 text-center text-[13px] text-[var(--qz-muted)]">
+          {pageRows.length === 0 && (
+            <p className="px-4 py-6 text-center text-[var(--qz-muted)]">
               No entries
             </p>
           )}

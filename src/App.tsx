@@ -4,6 +4,7 @@ import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { PackageOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import ArchiveTable from "./ArchiveTable";
+import Pagination, { type PageSize } from "./Pagination";
 import ThemeSwitch from "./ThemeSwitch";
 import { useTheme } from "./useTheme";
 
@@ -21,6 +22,19 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [dragging, setDragging] = useState(false);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState<PageSize>(100);
+
+  const pageCount =
+    pageSize === "all" ? 1 : Math.ceil(entries.length / pageSize);
+
+  // New archive, or a shrink that strands the page: go back into range.
+  useEffect(() => {
+    setPage(0);
+  }, [archive]);
+  useEffect(() => {
+    setPage((p) => Math.min(p, Math.max(0, pageCount - 1)));
+  }, [pageCount]);
 
   async function listPath(path: string) {
     setLoading(true);
@@ -97,19 +111,39 @@ export default function App() {
           </div>
         )}
         {error && (
-          <p role="alert" className="text-sm text-[var(--qz-primary)]">
+          <p role="alert" className="text-[var(--qz-primary)]">
             {error}
           </p>
         )}
         {archive && (
-          <p className="w-full truncate text-xs text-[var(--qz-muted)]">
+          <p className="w-full truncate pb-2 text-[var(--qz-muted)]">
             File Path: {archive} — {entries.length.toLocaleString("en-US")}{" "}
             entries
           </p>
         )}
-        <ArchiveTable data={entries} />
+        <ArchiveTable data={entries} page={page} pageSize={pageSize} />
       </main>
-      <ThemeSwitch choice={choice} onChange={setChoice} />
+      {archive && (
+        <div className="fixed right-4 bottom-4 flex items-center gap-2">
+          <Pagination
+            page={page}
+            pageCount={entries.length === 0 ? 0 : pageCount}
+            pageSize={pageSize}
+            total={entries.length}
+            onPage={setPage}
+            onPageSize={(size) => {
+              setPageSize(size);
+              setPage(0);
+            }}
+          />
+          <ThemeSwitch choice={choice} onChange={setChoice} />
+        </div>
+      )}
+      {!archive && (
+        <div className="fixed right-4 bottom-4">
+          <ThemeSwitch choice={choice} onChange={setChoice} />
+        </div>
+      )}
     </div>
   );
 }
