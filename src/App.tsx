@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
-import { useState } from "react";
+import { getCurrentWebview } from "@tauri-apps/api/webview";
+import { useEffect, useState } from "react";
 import ThemeSwitch from "./ThemeSwitch";
 import { useTheme } from "./useTheme";
 
@@ -16,20 +17,14 @@ export default function App() {
   const [entries, setEntries] = useState<ArchiveEntry[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [dragging, setDragging] = useState(false);
 
-  async function openArchive() {
-    const selected = await open({
-      multiple: false,
-      filters: [{ name: "Archives", extensions: ["7z", "zip", "tar"] }],
-    });
-    if (typeof selected !== "string") return;
+  async function listPath(path: string) {
     setLoading(true);
     setError(null);
     try {
-      const list = await invoke<ArchiveEntry[]>("list_archive", {
-        path: selected,
-      });
-      setArchive(selected);
+      const list = await invoke<ArchiveEntry[]>("list_archive", { path });
+      setArchive(path);
       setEntries(list);
     } catch (e) {
       setError(typeof e === "string" ? e : String(e));
@@ -38,6 +33,35 @@ export default function App() {
     } finally {
       setLoading(false);
     }
+  }
+
+  useEffect(() => {
+    let unlisten: (() => void) | undefined;
+    getCurrentWebview()
+      .onDragDropEvent((event) => {
+        if (event.payload.type === "hover") {
+          setDragging(true);
+        } else if (event.payload.type === "cancel") {
+          setDragging(false);
+        } else if (event.payload.type === "drop") {
+          setDragging(false);
+          const [first] = event.payload.paths;
+          if (typeof first === "string") void listPath(first);
+        }
+      })
+      .then((off) => {
+        unlisten = off;
+      });
+    return () => unlisten?.();
+  }, []);
+
+  async function openArchive() {
+    const selected = await open({
+      multiple: false,
+      filters: [{ name: "Archives", extensions: ["7z", "zip", "tar"] }],
+    });
+    if (typeof selected !== "string") return;
+    await listPath(selected);
   }
 
   return (
@@ -49,7 +73,14 @@ export default function App() {
         }}
         className="h-14 shrink-0 cursor-default select-none"
       />
-      <main className="flex flex-1 flex-col items-center gap-4 px-8 pb-8">
+      <main className="relative flex flex-1 flex-col items-center gap-4 px-8 pb-8">
+        {dragging && (
+          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-lg border-2 border-dashed border-[var(--qz-primary)] bg-[var(--qz-primary)]/10">
+            <p className="font-medium text-[var(--qz-text)]">
+              Drop to open archive
+            </p>
+          </div>
+        )}
         <button
           type="button"
           onClick={() => void openArchive()}
