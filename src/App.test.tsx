@@ -98,6 +98,7 @@ describe("theme switching", () => {
     render(<App />);
     await openSwitcher(user);
     await user.click(screen.getByRole("button", { name: "Dark" }));
+    await screen.findByRole("button", { name: "Change theme" });
     await openSwitcher(user);
     await user.click(screen.getByRole("button", { name: "Light" }));
     expect(document.documentElement.classList.contains("dark")).toBe(false);
@@ -110,6 +111,7 @@ describe("theme switching", () => {
     const system = screen.getByRole("button", { name: "System" });
     expect(system).toHaveAttribute("aria-pressed", "true");
     await user.click(screen.getByRole("button", { name: "Light" }));
+    await screen.findByRole("button", { name: "Change theme" });
     await openSwitcher(user);
     expect(
       screen.getByRole("button", { name: "Light" }),
@@ -121,11 +123,9 @@ describe("theme switching", () => {
     render(<App />);
     await openSwitcher(user);
     await user.click(screen.getByRole("button", { name: "Dark" }));
+    // Indicator slides first; the control minimizes after the delay.
     expect(
-      screen.queryByRole("button", { name: "Dark" }),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Change theme" }),
+      await screen.findByRole("button", { name: "Change theme" }),
     ).toBeInTheDocument();
   });
 });
