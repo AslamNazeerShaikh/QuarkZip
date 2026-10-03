@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import ArchiveTable from "./ArchiveTable";
 import ArchiveOverview, { type ArchiveInfo } from "./ArchiveOverview";
 import ExtractDialog from "./ExtractDialog";
+import ExtractDoneDialog, { type ExtractResult } from "./ExtractDoneDialog";
 import Pagination, { type PageSize } from "./Pagination";
 import ThemeSwitch from "./ThemeSwitch";
 import { Button } from "./components/ui/button";
@@ -37,17 +38,6 @@ const ARCHIVE_FILTERS = [
   "lzma",
 ];
 
-interface ExtractStatus {
-  kind: "busy" | "ok" | "err";
-  text: string;
-}
-
-const STATUS_STYLE: Record<ExtractStatus["kind"], string> = {
-  busy: "text-[var(--qz-muted)]",
-  ok: "text-[var(--qz-success)]",
-  err: "text-[var(--qz-danger)]",
-};
-
 /// Window title follows the open archive; best-effort (mocked backends
 /// reject, and the static `tauri.conf.json` title covers cold start).
 async function setWindowTitle(archive: string | null): Promise<void> {
@@ -72,9 +62,9 @@ export default function App() {
   const [pageSize, setPageSize] = useState<PageSize>(100);
   const [dest, setDest] = useState("");
   const [extracting, setExtracting] = useState(false);
-  const [extractStatus, setExtractStatus] = useState<ExtractStatus | null>(null);
   const [confirming, setConfirming] = useState(false);
   const [selectedPaths, setSelectedPaths] = useState<ReadonlySet<string>>(new Set());
+  const [doneInfo, setDoneInfo] = useState<ExtractResult | null>(null);
 
   const pageCount =
     pageSize === "all" ? 1 : Math.ceil(entries.length / pageSize);
@@ -90,7 +80,7 @@ export default function App() {
   async function listPath(path: string) {
     setLoading(true);
     setError(null);
-    setExtractStatus(null);
+    setDoneInfo(null);
     try {
       const list = await invoke<ArchiveEntry[]>("list_archive", { path });
       setArchive(path);
@@ -155,7 +145,7 @@ export default function App() {
     const dir = await open({ directory: true, multiple: false });
     if (typeof dir !== "string") return;
     setDest(dir);
-    setExtractStatus(null);
+    setDoneInfo(null);
   }
 
   async function extract() {
@@ -163,17 +153,14 @@ export default function App() {
     const files = [...selectedPaths];
     const count = files.length === 0 ? entries.length : files.length;
     setExtracting(true);
-    setExtractStatus({ kind: "busy", text: `Extracting ${count.toLocaleString("en-US")} files to ${dest}…` });
     try {
       await invoke("extract_archive", { path: archive, dest, files });
-      setExtractStatus({
-        kind: "ok",
-        text: `Extracted ${count.toLocaleString("en-US")} files to ${dest}`,
-      });
+      setDoneInfo({ ok: true, fileCount: count, dest });
     } catch (e) {
-      setExtractStatus({
-        kind: "err",
-        text: typeof e === "string" ? e : String(e),
+      setDoneInfo({
+        ok: false,
+        message: typeof e === "string" ? e : String(e),
+        dest,
       });
     } finally {
       setExtracting(false);
@@ -273,15 +260,6 @@ export default function App() {
                     />
                   </span>
                 </Button>
-                {extractStatus && (
-                  <span
-                    role="status"
-                    title={extractStatus.text}
-                    className={`max-w-64 truncate text-xs ${STATUS_STYLE[extractStatus.kind]}`}
-                  >
-                    {extractStatus.text}
-                  </span>
-                )}
               </>
             )}
           </div>
@@ -314,6 +292,13 @@ export default function App() {
           void extract();
         }}
       />
+      {doneInfo && (
+        <ExtractDoneDialog
+          open
+          result={doneInfo}
+          onOk={() => setDoneInfo(null)}
+        />
+      )}
     </div>
   );
 }

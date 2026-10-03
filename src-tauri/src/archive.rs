@@ -60,7 +60,15 @@ pub fn test_args(archive: &str, password: Option<&str>) -> Vec<String> {
 /// themselves contain ` = `, so split on the first occurrence only.
 /// Folders come from `Attributes` (DOS `D` flag or unix `d` prefix),
 /// never from size — empty files legitimately report `Size = 0`.
+///
+/// The archive-level header (`Path = <archive itself>`, `Type`, …) precedes
+/// the `----------` separator and is NOT an entry: blocks before the first
+/// separator are skipped, so the archive never lists itself. (When no
+/// separator exists — e.g. bare test fixtures — everything parses, as
+/// before.)
 pub fn parse_list_slt(output: &str) -> Vec<ArchiveEntry> {
+    let has_separator = output.lines().any(|l| l.trim() == "----------");
+    let mut past_separator = false;
     let mut entries = Vec::new();
     let mut path: Option<String> = None;
     let mut size: Option<u64> = None;
@@ -84,6 +92,14 @@ pub fn parse_list_slt(output: &str) -> Vec<ArchiveEntry> {
 
     for line in output.lines() {
         let line = line.trim_end();
+        if line.trim() == "----------" {
+            past_separator = true;
+            continue;
+        }
+        // Header blocks describe the container, not its contents.
+        if has_separator && !past_separator {
+            continue;
+        }
         if line.trim().is_empty() {
             flush(
                 &mut path,
@@ -324,6 +340,13 @@ pub fn parse_archive_info(output: &str) -> ArchiveInfo {
     }
 }
 
+/// True when 7zz finished "successfully" but processed nothing: selective
+/// extraction with filters that match no in-archive path prints exactly
+/// this and exits 0, which must surface as an error, not a success.
+pub fn extract_output_is_noop(stdout: &str) -> bool {
+    stdout.lines().any(|l| l.trim() == "No files to process")
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -439,6 +462,35 @@ Attributes = A -rw-r--r--
     fn should_return_empty_when_output_has_no_paths() {
         assert!(parse_list_slt("7-Zip (z) 26.03\n\n").is_empty());
         assert!(parse_list_slt("").is_empty());
+    }
+
+    #[test]
+    fn should_skip_archive_header_when_separator_present() {
+        let output = "\
+Listing archive: /tmp/qz-sample.zip
+
+--
+Path = /tmp/qz-sample.zip
+Type = zip
+Physical Size = 150
+
+----------
+Path = a.txt
+Size = 6
+Modified = 2026-10-03 21:39:45
+Attributes = A -rw-r--r--
+";
+        let entries = parse_list_slt(output);
+        assert_eq!(entries.len(), 1);
+        assert_eq!(entries[0].path, "a.txt");
+        assert_eq!(entries[0].size, Some(6));
+    }
+
+    #[test]
+    fn should_detect_noop_extract_output() {
+        assert!(extract_output_is_noop("Extracting archive...\nNo files to process\n"));
+        assert!(!extract_output_is_noop("Everything is Ok\n"));
+        assert!(!extract_output_is_noop(""));
     }
 
     #[test]

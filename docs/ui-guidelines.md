@@ -76,7 +76,9 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   (`formatModified`: system time zone, AM/PM, raw stamp on hover),
   horizontal separators only, checkbox multi-select with soft primary-tint
   selection, native slim scrollbar (`.scroll-slim`), empty state centered on
-  both axes,
+  both axes. The listing never contains the archive itself: `parse_list_slt`
+  skips the header block before the `----------` separator, so only real
+  files/folders appear.
   reference empty state (16px icon + 14px gray text + 12px hint).
 - `Pagination` / `ThemeSwitch`: solid surface, 10px radius, card shadow,
   8px inner radii. Segmented behavior (sliding indicator) preserved.
@@ -93,6 +95,9 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   Esc/backdrop cancel, reduced-motion safe) — big centered icon, the
   destination, `K of N selected` (or `All N`) file count, orange Cancel +
   blue Proceed (`Button` warning/accent variants, AA pairs in color-system).
+- `ExtractDoneDialog`: same modal language for the result — green center
+  icon with file count + destination on success, red icon with the error on
+  failure, single OK action either way. The footer carries no status text.
 - `ArchiveTable` reports checkbox selection via `onSelectionChange`
   (cleared on each new listing); `App` feeds it to the dialog + extract.
 - `ArchiveOverview`: the 50% overview card — centered empty state

@@ -19,6 +19,8 @@ vi.mock("@tauri-apps/api/webview", () => ({
   }),
 }));
 
+const extractCtl = vi.hoisted(() => ({ fail: true }));
+
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (cmd: string) => {
     if (cmd === "drag_window") return Promise.resolve();
@@ -26,6 +28,11 @@ vi.mock("@tauri-apps/api/core", () => ({
       return Promise.resolve([
         { path: "dropped.txt", size: 10, modified: null, is_folder: false },
       ]);
+    }
+    if (cmd === "extract_archive") {
+      return extractCtl.fail
+        ? Promise.reject(`unexpected command ${cmd}`)
+        : Promise.resolve("Everything is Ok");
     }
     return Promise.reject(`unexpected command ${cmd}`);
   },
@@ -36,6 +43,7 @@ vi.mock("@tauri-apps/api/path", () => ({
 }));
 
 beforeEach(() => {
+  extractCtl.fail = true;
   localStorage.clear();
   document.documentElement.classList.remove("dark");
 });
@@ -113,8 +121,29 @@ describe("drag and drop", () => {
     await user.click(extract);
     expect(await screen.findByRole("dialog", { name: "Extract files?" })).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Proceed" }));
-    const status = await screen.findByRole("status");
-    expect(status).toHaveTextContent(/unexpected command extract_archive/);
+    expect(
+      await screen.findByRole("dialog", { name: "Extraction failed" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("unexpected command extract_archive")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "OK" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("should_show_completion_popup_when_extract_succeeds", async () => {
+    extractCtl.fail = false;
+    const user = userEvent.setup();
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
+    });
+    await user.click(await screen.findByRole("button", { name: "Extract" }));
+    await user.click(await screen.findByRole("button", { name: "Proceed" }));
+    expect(
+      await screen.findByRole("dialog", { name: "Extraction complete" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/1 files extracted to/)).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "OK" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
   it("should_close_confirm_dialog_when_cancel_clicked", async () => {
@@ -126,7 +155,6 @@ describe("drag and drop", () => {
     await user.click(await screen.findByRole("button", { name: "Extract" }));
     await user.click(await screen.findByRole("button", { name: "Cancel" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-    expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 });
 describe("theme switching", () => {

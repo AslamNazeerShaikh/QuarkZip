@@ -79,7 +79,11 @@ async fn extract_archive(
     if !output.status.success() {
         return Err(String::from_utf8_lossy(&output.stderr).into_owned());
     }
-    Ok(String::from_utf8_lossy(&output.stdout).into_owned())
+    let stdout = String::from_utf8_lossy(&output.stdout).into_owned();
+    if archive::extract_output_is_noop(&stdout) {
+        return Err("No files to process — nothing matched the selection.".to_string());
+    }
+    Ok(stdout)
 }
 
 /// Starts a native window drag (used by the custom header strip).

@@ -1,0 +1,85 @@
+import { CheckCircle2, XCircle } from "lucide-react";
+import { useEffect } from "react";
+import { Button } from "./components/ui/button";
+
+export type ExtractResult =
+  | { ok: true; fileCount: number; dest: string }
+  | { ok: false; message: string; dest: string };
+
+/// Extraction result popup, mirroring the confirm dialog: dimmed backdrop,
+/// white card with a big centered icon, and a single OK action. Success
+/// shows the extracted file count and destination; failure shows the error.
+/// Esc and backdrop click also dismiss. Nothing renders when closed.
+export default function ExtractDoneDialog({
+  open,
+  result,
+  onOk,
+}: {
+  open: boolean;
+  result: ExtractResult;
+  onOk: () => void;
+}) {
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onOk();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open, onOk]);
+
+  if (!open) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="extract-done-title"
+    >
+      <div
+        className="animate-qz-fade absolute inset-0 bg-black/25"
+        onClick={onOk}
+        aria-hidden
+      />
+      <div className="animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+        {result.ok ? (
+          <>
+            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-success-soft)]">
+              <CheckCircle2 size={24} aria-hidden className="text-[var(--qz-success)]" />
+            </span>
+            <h2
+              id="extract-done-title"
+              className="mt-3 text-[16px] leading-6 font-semibold"
+            >
+              Extraction complete
+            </h2>
+            <p className="mt-1 text-[13px] text-[var(--qz-muted)]">
+              {result.fileCount.toLocaleString("en-US")} files extracted to
+            </p>
+            <p className="mt-2 text-[13px] font-medium break-all">{result.dest}</p>
+          </>
+        ) : (
+          <>
+            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-danger-soft)]">
+              <XCircle size={24} aria-hidden className="text-[var(--qz-danger)]" />
+            </span>
+            <h2
+              id="extract-done-title"
+              className="mt-3 text-[16px] leading-6 font-semibold"
+            >
+              Extraction failed
+            </h2>
+            <p className="mt-1 text-[13px] text-[var(--qz-muted)]">{result.message}</p>
+            <p className="mt-2 text-[13px] font-medium break-all">{result.dest}</p>
+          </>
+        )}
+        <div className="mt-5 flex items-center justify-center">
+          <Button onClick={onOk} autoFocus>
+            OK
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
