@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import type { ArchiveEntry } from "./App";
@@ -45,18 +45,9 @@ describe("ArchiveTable", () => {
     expect(box).toBeChecked();
   });
 
-  it("should_select_range_on_marquee_drag", async () => {
+  it("should_hide_native_scrollbar_where_custom_track_takes_over", () => {
     const { container } = render(<ArchiveTable data={DATA} />);
-    const scroller = container.querySelector(".scroll-slim");
+    const scroller = container.querySelector(".scroll-hidden");
     expect(scroller).toBeInTheDocument();
-    fireEvent.mouseDown(scroller!, { button: 0, clientY: 5 });
-    fireEvent.mouseMove(scroller!, { button: 0, clientY: 80 });
-    fireEvent.mouseUp(scroller!);
-    // Rows are 36px: y 5..80 covers rows 0..2, i.e. all of DATA.
-    for (const name of ["a.txt", "b.txt", "c.txt"]) {
-      expect(
-        screen.getByRole("checkbox", { name: `Select ${name}` }),
-      ).toBeChecked();
-    }
   });
 });

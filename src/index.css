@@ -68,6 +68,15 @@ body {
   border: 2px solid transparent;
   background-clip: padding-box;
 }
+
+/* Fully hidden native scrollbars (used where a custom floating scrollbar
+   takes over). */
+.scroll-hidden {
+  scrollbar-width: none;
+}
+.scroll-hidden::-webkit-scrollbar {
+  display: none;
+}
 html,
 body,
 header,
