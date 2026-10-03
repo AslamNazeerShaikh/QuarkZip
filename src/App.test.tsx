@@ -16,9 +16,12 @@ describe("App blank canvas", () => {
     expect(header).toHaveAttribute("data-tauri-drag-region");
   });
 
-  it("should_render_empty_main_when_no_archive_open", () => {
+  it("should_render_open_button_with_empty_list_when_no_archive_open", () => {
     const { container } = render(<App />);
-    expect(container.querySelector("main")).toBeEmptyDOMElement();
+    expect(
+      screen.getByRole("button", { name: "Open archive" }),
+    ).toBeInTheDocument();
+    expect(container.querySelectorAll("li")).toHaveLength(0);
   });
 });
 

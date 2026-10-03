@@ -4,7 +4,7 @@
 //! is unit-testable without a binary.
 
 /// One entry from `7zz l -slt` output.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, serde::Serialize)]
 pub struct ArchiveEntry {
     /// Path inside the archive.
     pub path: String,
@@ -16,11 +16,7 @@ pub struct ArchiveEntry {
 
 /// Argv for `7zz l -slt <archive>` (technical listing, stable to parse).
 pub fn list_args(archive: &str) -> Vec<String> {
-    vec![
-        "l".to_string(),
-        "-slt".to_string(),
-        archive.to_string(),
-    ]
+    vec!["l".to_string(), "-slt".to_string(), archive.to_string()]
 }
 
 /// Argv for `7zz x <archive> -o<dest> [-p<pw>] -y`.
@@ -58,9 +54,9 @@ pub fn parse_list_slt(output: &str) -> Vec<ArchiveEntry> {
     let mut modified: Option<String> = None;
 
     let flush = |path: &mut Option<String>,
-                     size: &mut Option<u64>,
-                     modified: &mut Option<String>,
-                     entries: &mut Vec<ArchiveEntry>| {
+                 size: &mut Option<u64>,
+                 modified: &mut Option<String>,
+                 entries: &mut Vec<ArchiveEntry>| {
         if let Some(p) = path.take() {
             entries.push(ArchiveEntry {
                 path: p,
