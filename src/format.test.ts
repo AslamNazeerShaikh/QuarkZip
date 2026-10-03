@@ -2,18 +2,23 @@ import { describe, expect, it } from "vitest";
 import { formatSize } from "./format";
 
 describe("formatSize", () => {
-  it("should_show_bytes_without_unit", () => {
+  it("should_show_bytes_without_prefix", () => {
     expect(formatSize(0)).toBe("0B");
     expect(formatSize(128)).toBe("128B");
     expect(formatSize(1023)).toBe("1023B");
   });
 
-  it("should_scale_through_units", () => {
-    expect(formatSize(1024)).toBe("1K");
-    expect(formatSize(1536)).toBe("1.5K");
-    expect(formatSize(1024 * 1024)).toBe("1M");
-    expect(formatSize(6.1 * 1024 * 1024)).toBe("6.1M");
-    expect(formatSize(2 * 1024 ** 3)).toBe("2G");
+  it("should_scale_through_the_full_iec_range", () => {
+    expect(formatSize(1024)).toBe("1KiB");
+    expect(formatSize(1536)).toBe("1.5KiB");
+    expect(formatSize(1024 ** 2)).toBe("1MiB");
+    expect(formatSize(6.1 * 1024 ** 2)).toBe("6.1MiB");
+    expect(formatSize(2 * 1024 ** 3)).toBe("2GiB");
+    expect(formatSize(3 * 1024 ** 4)).toBe("3TiB");
+    expect(formatSize(4 * 1024 ** 5)).toBe("4PiB");
+    expect(formatSize(5 * 1024 ** 6)).toBe("5EiB");
+    expect(formatSize(6 * 1024 ** 7)).toBe("6ZiB");
+    expect(formatSize(7 * 1024 ** 8)).toBe("7YiB");
   });
 
   it("should_show_dash_for_unknown_sizes", () => {
