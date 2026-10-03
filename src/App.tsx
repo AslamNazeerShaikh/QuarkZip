@@ -76,7 +76,7 @@ export default function App() {
       />
       <main className="relative flex flex-1 flex-col items-center gap-4 px-8 pb-8">
         {dragging && (
-          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-lg border-2 border-dashed border-[var(--qz-primary)] bg-[var(--qz-primary)]/10">
+          <div className="pointer-events-none absolute inset-3 z-10 flex items-center justify-center rounded-3xl border-[1.5px] border-dotted border-[var(--qz-primary)] bg-[var(--qz-primary)]/10">
             <p className="font-medium text-[var(--qz-text)]">
               Drop to open archive
             </p>
