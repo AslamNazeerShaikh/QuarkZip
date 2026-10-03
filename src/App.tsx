@@ -6,7 +6,7 @@ export default function App() {
   const { choice, setChoice } = useTheme();
 
   return (
-    <div className="flex min-h-screen flex-col bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100">
+    <div className="flex min-h-screen flex-col bg-[var(--qz-bg)] text-[var(--qz-text)]">
       <header
         data-tauri-drag-region
         onMouseDown={(e) => {
