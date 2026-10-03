@@ -11,9 +11,10 @@ import {
   type SortingState,
 } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { ArrowDown, ArrowUp, ArrowUpDown, FileText, Folder } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import { useRef, useState } from "react";
 import type { ArchiveEntry } from "./App";
+import { fileKind } from "./fileKind";
 import { formatSize } from "./format";
 
 const ROW_HEIGHT = 36;
@@ -31,9 +32,8 @@ const columns: Array<ColumnDef<typeof features, ArchiveEntry, any>> = [
     header: "Name",
     sortFn: "alphanumeric",
     cell: (info) => {
-      const entry = info.row.original;
-      const isFolder = entry.size === null || entry.size === 0;
-      const Icon = isFolder ? Folder : FileText;
+      const kind = fileKind(info.row.original.path, info.row.original.size);
+      const Icon = kind.icon;
       return (
         <span className="flex min-w-0 items-center gap-3">
           <Icon
@@ -46,6 +46,15 @@ const columns: Array<ColumnDef<typeof features, ArchiveEntry, any>> = [
       );
     },
   }),
+  columnHelper.accessor(
+    (row) => fileKind(row.path, row.size).label,
+    {
+      id: "type",
+      header: "Type",
+      sortFn: "alphanumeric",
+      cell: (info) => info.getValue(),
+    },
+  ),
   columnHelper.accessor((row) => row.size ?? -1, {
     id: "size",
     header: "Size",
@@ -163,13 +172,11 @@ export default function ArchiveTable({ data }: { data: ArchiveEntry[] }) {
                   className="h-3.5 w-3.5 accent-[var(--qz-primary)]"
                 />
               </th>
-              {headerGroup.headers.map((header, i) => (
+              {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
                   onClick={header.column.getToggleSortingHandler()}
-                  className={`flex h-9 cursor-pointer items-center gap-1 px-4 text-xs font-semibold tracking-wide text-[var(--qz-muted)] uppercase select-none ${
-                    i === 0 ? "min-w-0 flex-1" : "w-28 shrink-0 justify-end"
-                  }`}
+                  className={`flex h-9 cursor-pointer items-center gap-1 px-4 text-xs font-semibold tracking-wide text-[var(--qz-muted)] uppercase select-none ${header.column.id === "path" ? "min-w-0 flex-1" : header.column.id === "type" ? "w-24 shrink-0" : "w-28 shrink-0 justify-end"}`}
                 >
                   {flexRender(
                     header.column.columnDef.header,
