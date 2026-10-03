@@ -1,4 +1,4 @@
-import { THEME_OPTIONS } from "./theme";
+import { THEME_OPTIONS, type ThemeChoice } from "./theme";
 
 /// Floating Light / System / Dark segmented control.
 export default function ThemeSwitch({
