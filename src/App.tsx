@@ -198,10 +198,12 @@ export default function App() {
           )}
         </span>
       </header>
-      {/* All rhythm is 28px: horizontal margins, card gap, footer offset. */}
-      <main className="relative flex min-h-0 flex-1 flex-col px-7">
+      {/* 28px rhythm on the content sides/bottom; no top pad. The drop
+          frame is window-fixed (not main-absolute), so its top edge floats
+          in the title strip instead of crossing the card. */}
+      <main className="relative flex min-h-0 flex-1 flex-col px-7 pb-7">
         {dragging && (
-          <div className="pointer-events-none absolute inset-3 z-10 flex items-center justify-center rounded-[20px] border-[1.5px] border-dotted border-[var(--qz-primary)] bg-[var(--qz-primary)]/10">
+          <div className="pointer-events-none fixed inset-3.5 z-10 flex items-center justify-center rounded-[20px] border-[1.5px] border-dotted border-[var(--qz-primary)] bg-[var(--qz-primary)]/10">
             <p className="font-medium text-[var(--qz-text)]">
               Drop to open archive
             </p>
@@ -230,7 +232,7 @@ export default function App() {
           </div>
         </div>
         {/* Action bar in normal flow — nothing overlaps. */}
-        <footer className="flex shrink-0 items-center justify-between gap-4 py-7">
+        <footer className="flex shrink-0 items-center justify-between gap-4 pt-7">
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
             {archive && (
               <>

@@ -23,9 +23,13 @@ Palette, roles, and measured contrast live in `docs/color-system.md`.
 Supporting scales (all from the reference):
 
 - Spacing (8px grid): `4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 48`.
-  One rhythm everywhere: 28px horizontal page margins, 28px gap between the
-  two cards, 28px above/below the action bar (`px-7` / `gap-7` / `py-7`).
-  Card internals keep their own padding (`px-5` + `py-4/5`).
+  One rhythm everywhere: 28px gutters on the content sides/bottom, no top
+  pad (card sits under the title strip), 28px gap between the two cards
+  and above the action bar (`px-7`/`pb-7`/`gap-7`/`pt-7`).
+  Card internals keep their own padding (`px-5` + `py-4/5`). The
+  drag-drop frame is window-fixed at `inset-3.5` (14px) — top edge in the
+  title strip, other edges centered in the content gutters — identical
+  from all sides and independent of content padding.
 - Radius ladder: window/overlay 20 → card 13 → input/button 9–10 →
   nav/segment 8 → pill/avatar 999/50%. Never one radius everywhere.
 - Shadows: cards `0 1px 2px rgba(0,0,0,.03)` only; floating controls reuse
