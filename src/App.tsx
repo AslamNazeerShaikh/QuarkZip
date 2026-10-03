@@ -1,9 +1,9 @@
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
-import { FileText, FolderOpen, PackageOpen } from "lucide-react";
+import { PackageOpen } from "lucide-react";
 import { useEffect, useState } from "react";
-import { formatSize } from "./format";
+import ArchiveTable from "./ArchiveTable";
 import ThemeSwitch from "./ThemeSwitch";
 import { useTheme } from "./useTheme";
 
@@ -103,28 +103,7 @@ export default function App() {
             File Path: {archive} — {entries.length} entries
           </p>
         )}
-        <ul className="w-full max-w-2xl divide-y divide-[var(--qz-border)] rounded-lg border border-[var(--qz-border)] bg-[var(--qz-surface)]">
-          {entries.map((entry) => {
-            const isFolder = entry.size === null || entry.size === 0;
-            const Icon = isFolder ? FolderOpen : FileText;
-            return (
-              <li
-                key={entry.path}
-                className="flex items-center gap-3 px-4 py-1.5 text-sm"
-              >
-                <Icon
-                  size={16}
-                  aria-hidden
-                  className="shrink-0 text-[var(--qz-muted)]"
-                />
-                <span className="flex-1 truncate">{entry.path}</span>
-                <span className="shrink-0 text-xs text-[var(--qz-muted)]">
-                  {entry.size === null ? "—" : formatSize(entry.size)}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
+        <ArchiveTable data={entries} />
       </main>
       <ThemeSwitch choice={choice} onChange={setChoice} />
     </div>

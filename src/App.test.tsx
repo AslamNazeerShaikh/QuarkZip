@@ -19,6 +19,20 @@ vi.mock("@tauri-apps/api/webview", () => ({
   }),
 }));
 
+vi.mock("@tanstack/react-virtual", () => ({
+  // jsdom has no layout: render every row instead of only the visible window.
+  useVirtualizer: ({ count }: { count: number }) => ({
+    getTotalSize: () => count * 33,
+    getVirtualItems: () =>
+      Array.from({ length: count }, (_, index) => ({
+        index,
+        start: index * 33,
+        size: 33,
+        key: index,
+      })),
+  }),
+}));
+
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (cmd: string) => {
     if (cmd === "drag_window") return Promise.resolve();
@@ -44,12 +58,12 @@ describe("App blank canvas", () => {
     expect(header).toHaveAttribute("data-tauri-drag-region");
   });
 
-  it("should_render_open_button_with_empty_list_when_no_archive_open", () => {
+  it("should_render_open_button_with_empty_table_when_no_archive_open", () => {
     const { container } = render(<App />);
     expect(
       screen.getByRole("button", { name: "Open archive" }),
     ).toBeInTheDocument();
-    expect(container.querySelectorAll("li")).toHaveLength(0);
+    expect(container.querySelectorAll("[role='row']")).toHaveLength(0);
   });
 });
 
