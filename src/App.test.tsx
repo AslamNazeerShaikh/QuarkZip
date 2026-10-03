@@ -31,6 +31,10 @@ vi.mock("@tauri-apps/api/core", () => ({
   },
 }));
 
+vi.mock("@tauri-apps/api/path", () => ({
+  dirname: () => Promise.resolve("/tmp"),
+}));
+
 beforeEach(() => {
   localStorage.clear();
   document.documentElement.classList.remove("dark");
@@ -78,6 +82,33 @@ describe("drag and drop", () => {
       payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
     });
     expect(await screen.findByText(/File Path:/)).toBeInTheDocument();
+  });
+
+  it("should_show_footer_actions_when_archive_open", async () => {
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
+    });
+    expect(await screen.findByRole("button", { name: "Browse…" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Extract" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Choose where to extract" }),
+    ).toBeInTheDocument();
+  });
+
+  it("should_report_extract_failure_in_status", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
+    });
+    // dirname is mocked to /tmp, so Extract enables; the invoke mock
+    // rejects unknown commands, exercising the error status path.
+    const extract = await screen.findByRole("button", { name: "Extract" });
+    expect(extract).toBeEnabled();
+    await user.click(extract);
+    const status = await screen.findByRole("status");
+    expect(status).toHaveTextContent(/unexpected command extract_archive/);
   });
 });
 describe("theme switching", () => {

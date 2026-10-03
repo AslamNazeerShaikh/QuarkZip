@@ -126,6 +126,197 @@ fn attributes_is_folder(attrs: &str) -> bool {
     }
 }
 
+/// Summary of an archive's container + content, derived from one
+/// `7zz l -slt` listing plus filesystem metadata for the container file.
+///
+/// `container_size` / `container_modified` are filled by the Tauri command
+/// (filesystem truth); the pure parser leaves them `None`.
+/// `compression_ratio` is `packed / unpacked` (0 when unpacked is 0).
+/// `max_depth` counts path segments (`a/b/c.txt` → 3), i.e. nesting levels.
+/// `encryption_scheme` is `"None"` when nothing is encrypted, otherwise the
+/// distinct cipher tokens seen in per-file `Method` values (e.g. `7zAES`)
+/// joined with ` + `, falling back to `"Encrypted"`.
+#[derive(Debug, PartialEq, Clone, serde::Serialize)]
+pub struct ArchiveInfo {
+    pub container_format: Option<String>,
+    pub physical_size: Option<u64>,
+    pub headers_size: Option<u64>,
+    pub method: Option<String>,
+    pub solid: Option<String>,
+    pub blocks: Option<String>,
+    pub file_count: usize,
+    pub folder_count: usize,
+    pub total_unpacked: u64,
+    pub total_packed: u64,
+    pub compression_ratio: f64,
+    pub max_depth: usize,
+    pub methods: Vec<String>,
+    pub encrypted_files: usize,
+    pub encryption_scheme: String,
+    pub host_os: Vec<String>,
+    pub container_size: Option<u64>,
+    pub container_modified: Option<u64>,
+    /// Header keys outside the known set (Code Page, Characteristics, …).
+    pub extra: std::collections::BTreeMap<String, String>,
+}
+
+/// Parse `7zz l -slt` output into an [`ArchiveInfo`].
+///
+/// The header (between `Listing archive:` and the `----------` separator)
+/// carries container keys (`Type`, `Physical Size`, …); every block after
+/// the separator is one entry with `Size`, `Packed Size`, `Method`,
+/// `Encrypted`, `Host OS` and either `Folder = +` (zip/tar) or `Attributes`
+/// (7z) marking directories.
+pub fn parse_archive_info(output: &str) -> ArchiveInfo {
+    use std::collections::{BTreeMap, BTreeSet};
+
+    let mut header: BTreeMap<String, String> = BTreeMap::new();
+    let mut in_header = false;
+    let mut header_done = false;
+    let mut block: BTreeMap<String, String> = BTreeMap::new();
+    let mut blocks: Vec<BTreeMap<String, String>> = Vec::new();
+
+    for raw in output.lines() {
+        let line = raw.trim_end();
+        if line.trim() == "----------" {
+            header_done = true;
+            in_header = false;
+            continue;
+        }
+        if !header_done {
+            if line.starts_with("Listing archive:") {
+                in_header = true;
+                continue;
+            }
+            if !in_header {
+                continue;
+            }
+            if line.trim().is_empty() || line.trim() == "--" {
+                continue;
+            }
+            if let Some((k, v)) = line.split_once(" = ") {
+                if k.trim() != "Path" {
+                    header.insert(k.trim().to_string(), v.trim().to_string());
+                }
+            }
+            continue;
+        }
+        if line.trim().is_empty() {
+            if !block.is_empty() {
+                blocks.push(std::mem::take(&mut block));
+            }
+            continue;
+        }
+        if let Some((k, v)) = line.split_once(" = ") {
+            let key = k.trim();
+            if key == "Path" && block.contains_key("Path") {
+                blocks.push(std::mem::take(&mut block));
+            }
+            block.insert(key.to_string(), v.trim().to_string());
+        }
+    }
+    if !block.is_empty() {
+        blocks.push(block);
+    }
+
+    let mut file_count = 0usize;
+    let mut folder_count = 0usize;
+    let mut total_unpacked = 0u64;
+    let mut total_packed = 0u64;
+    let mut max_depth = 0usize;
+    let mut encrypted_files = 0usize;
+    let mut methods: BTreeSet<String> = BTreeSet::new();
+    let mut cipher_tokens: BTreeSet<String> = BTreeSet::new();
+    let mut host_os: BTreeSet<String> = BTreeSet::new();
+
+    for b in &blocks {
+        let Some(path) = b.get("Path") else { continue };
+        let folder = b.get("Folder").is_some_and(|f| f == "+")
+            || b.get("Attributes").is_some_and(|a| attributes_is_folder(a));
+        if folder {
+            folder_count += 1;
+        } else {
+            file_count += 1;
+        }
+        if let Some(s) = b.get("Size").and_then(|s| s.parse::<u64>().ok()) {
+            if !folder {
+                total_unpacked = total_unpacked.saturating_add(s);
+            }
+        }
+        if let Some(p) = b
+            .get("Packed Size")
+            .and_then(|s| s.parse::<u64>().ok())
+        {
+            total_packed = total_packed.saturating_add(p);
+        }
+        let depth = path
+            .split(['/', '\\'])
+            .filter(|seg| !seg.is_empty())
+            .count();
+        max_depth = max_depth.max(depth);
+        if let Some(m) = b.get("Method").filter(|m| !m.is_empty()) {
+            methods.insert(m.clone());
+        }
+        if b.get("Encrypted").is_some_and(|e| e == "+") {
+            encrypted_files += 1;
+            if let Some(m) = b.get("Method") {
+                for token in m.split_whitespace() {
+                    let upper = token.to_ascii_uppercase();
+                    if upper.contains("AES") || upper.contains("CRYPTO") {
+                        let base = token.split(':').next().unwrap_or(token);
+                        cipher_tokens.insert(base.to_string());
+                    }
+                }
+            }
+        }
+        if let Some(os) = b.get("Host OS").filter(|s| !s.is_empty()) {
+            host_os.insert(os.clone());
+        }
+    }
+
+    let compression_ratio = if total_unpacked > 0 {
+        total_packed as f64 / total_unpacked as f64
+    } else {
+        0.0
+    };
+    let encryption_scheme = if encrypted_files == 0 {
+        "None".to_string()
+    } else if cipher_tokens.is_empty() {
+        "Encrypted".to_string()
+    } else {
+        cipher_tokens.into_iter().collect::<Vec<_>>().join(" + ")
+    };
+
+    let known = ["Type", "Physical Size", "Headers Size", "Method", "Solid", "Blocks"];
+    let extra: BTreeMap<String, String> = header
+        .iter()
+        .filter(|(k, _)| !known.contains(&k.as_str()))
+        .map(|(k, v)| (k.clone(), v.clone()))
+        .collect();
+
+    ArchiveInfo {
+        container_format: header.remove("Type"),
+        physical_size: header.remove("Physical Size").and_then(|s| s.parse().ok()),
+        headers_size: header.remove("Headers Size").and_then(|s| s.parse().ok()),
+        method: header.remove("Method"),
+        solid: header.remove("Solid"),
+        blocks: header.remove("Blocks"),
+        file_count,
+        folder_count,
+        total_unpacked,
+        total_packed,
+        compression_ratio,
+        max_depth,
+        methods: methods.into_iter().collect(),
+        encrypted_files,
+        encryption_scheme,
+        host_os: host_os.into_iter().collect(),
+        container_size: None,
+        container_modified: None,
+        extra,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -226,5 +417,112 @@ Attributes = A -rw-r--r--
     fn should_return_empty_when_output_has_no_paths() {
         assert!(parse_list_slt("7-Zip (z) 26.03\n\n").is_empty());
         assert!(parse_list_slt("").is_empty());
+    }
+
+    #[test]
+    fn should_parse_header_and_stats_when_7z_listing_given() {
+        let output = "\
+Listing archive: /tmp/qz-sample.7z
+
+--
+Path = /tmp/qz-sample.7z
+Type = 7z
+Physical Size = 255
+Headers Size = 234
+Method = LZMA2:12
+Solid = +
+Blocks = 1
+
+----------
+Path = qz-sample
+Size = 0
+Packed Size = 0
+Attributes = D drwxr-xr-x
+Encrypted = -
+Method =
+
+Path = qz-sample/sub/nested/c.txt
+Size = 5
+Packed Size = 7
+Attributes = A -rw-r--r--
+Encrypted = -
+Method = LZMA2:12
+";
+        let info = parse_archive_info(output);
+        assert_eq!(info.container_format.as_deref(), Some("7z"));
+        assert_eq!(info.physical_size, Some(255));
+        assert_eq!(info.headers_size, Some(234));
+        assert_eq!(info.method.as_deref(), Some("LZMA2:12"));
+        assert_eq!(info.solid.as_deref(), Some("+"));
+        assert_eq!(info.blocks.as_deref(), Some("1"));
+        assert_eq!(info.file_count, 1);
+        assert_eq!(info.folder_count, 1);
+        assert_eq!(info.total_unpacked, 5);
+        assert_eq!(info.total_packed, 7);
+        assert_eq!(info.max_depth, 4);
+        assert_eq!(info.methods, vec!["LZMA2:12".to_string()]);
+        assert_eq!(info.encrypted_files, 0);
+        assert_eq!(info.encryption_scheme, "None");
+    }
+
+    #[test]
+    fn should_detect_encryption_scheme_when_encrypted_listing_given() {
+        let output = "\
+Listing archive: /tmp/qz-pw.7z
+
+--
+Path = /tmp/qz-pw.7z
+Type = 7z
+Physical Size = 287
+Method = LZMA2:12 7zAES
+Solid = +
+Blocks = 1
+
+----------
+Path = a.txt
+Size = 6
+Packed Size = 32
+Attributes = A -rw-r--r--
+Encrypted = +
+Method = LZMA2:12 7zAES:19
+";
+        let info = parse_archive_info(output);
+        assert_eq!(info.encrypted_files, 1);
+        assert_eq!(info.encryption_scheme, "7zAES");
+    }
+
+    #[test]
+    fn should_parse_zip_folders_and_host_os_when_zip_listing_given() {
+        let output = "\
+Listing archive: /tmp/qz-fold.zip
+
+--
+Path = /tmp/qz-fold.zip
+Type = zip
+Physical Size = 921
+
+----------
+Path = qz-sample
+Folder = +
+Size = 0
+Packed Size = 0
+Encrypted = -
+Method = Store
+Host OS = Unix
+
+Path = qz-sample/a.txt
+Folder = -
+Size = 6
+Packed Size = 6
+Encrypted = -
+Method = Store
+Host OS = Unix
+";
+        let info = parse_archive_info(output);
+        assert_eq!(info.container_format.as_deref(), Some("zip"));
+        assert_eq!(info.file_count, 1);
+        assert_eq!(info.folder_count, 1);
+        assert_eq!(info.max_depth, 2);
+        assert_eq!(info.host_os, vec!["Unix".to_string()]);
     }
 }

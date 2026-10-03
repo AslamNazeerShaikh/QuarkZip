@@ -13,10 +13,10 @@
     "windows": [
       {
         "title": "",
-        "width": 900,
-        "height": 600,
-        "minWidth": 900,
-        "minHeight": 600,
+        "width": 990,
+        "height": 660,
+        "minWidth": 990,
+        "minHeight": 660,
         "center": true,
         "titleBarStyle": "Overlay",
         "trafficLightPosition": { "x": 20, "y": 24 }

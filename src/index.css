@@ -4,29 +4,66 @@
    so the UI can switch statically (Light/Dark) or follow the OS (System). */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* QuarkZip brand tokens — Palette 1 (rose) + Palette 5 (mist neutrals).
-   Surfaces reference vars so Light/Dark flips stay in one place. */
+/* QuarkZip design tokens — warm neutral reference palette (Brightway analysis):
+   app #F7F6F3, surface #FFFFFF / #FBFBFA, text #171717 / #666 / #8A8A8A,
+   border #E7E7E3, CTA green #147A5A. Components reference `--qz-*` role
+   tokens only, never raw hex (see docs/color-system.md + docs/ui-guidelines.md).
+   Dark ramp is hand-built, not a mechanical reverse.
+   Radius ladder: window 20 / card 13 / input+button 9 / nav+segment 8 / pill 999.
+   Shadows: card 0 1px 2px rgba(0,0,0,.03) only; overlays use the modal/drawer
+   elevations from the guidelines doc. Motion: 180ms ease-out. */
 :root {
-  --qz-font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --qz-bg: #fff0f3;
+  --qz-font: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    "SF Pro Text", system-ui, sans-serif;
+  --qz-bg: #f7f6f3;
   --qz-surface: #ffffff;
-  --qz-border: #ffccd5;
-  --qz-text: #590d22;
-  --qz-muted: #800f2f;
-  --qz-primary: #c9184a;
-  --qz-primary-hover: #a4133c;
-  --qz-accent: #ff4d6d;
+  --qz-surface-2: #fbfbfa;
+  --qz-border: #e7e7e3;
+  --qz-text: #171717;
+  --qz-muted: #666666;
+  --qz-faint: #8a8a8a;
+  --qz-primary: #147a5a;
+  --qz-primary-hover: #0f6248;
+  --qz-primary-soft: #e7f5ed;
+  --qz-on-primary: #ffffff;
+  --qz-accent: #3d73d9;
+  --qz-success: #147a5a;
+  --qz-success-soft: #e7f5ed;
+  --qz-info: #2f5fc4;
+  --qz-info-dot: #3d73d9;
+  --qz-info-soft: #edf3ff;
+  --qz-warning: #9a5b0b;
+  --qz-warning-dot: #d97a18;
+  --qz-warning-soft: #fff3e4;
+  --qz-danger: #a94444;
+  --qz-danger-soft: #fbecec;
+  --qz-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
 .dark {
-  --qz-bg: #160309;
-  --qz-surface: #2a0a12;
-  --qz-border: #800f2f;
-  --qz-text: #fff0f3;
-  --qz-muted: #ffb3c1;
-  --qz-primary: #ff4d6d;
-  --qz-primary-hover: #ff758f;
-  --qz-accent: #ff8fa3;
+  --qz-bg: #191614;
+  --qz-surface: #221f1c;
+  --qz-surface-2: #292524;
+  --qz-border: rgba(255, 255, 255, 0.1);
+  --qz-text: #f5f4f1;
+  --qz-muted: #a8a29e;
+  --qz-faint: #78716c;
+  --qz-primary: #3aa57f;
+  --qz-primary-hover: #4fbf94;
+  --qz-on-primary: #101613;
+  --qz-primary-soft: rgba(58, 165, 127, 0.15);
+  --qz-accent: #7aa5e8;
+  --qz-success: #3aa57f;
+  --qz-success-soft: #1e2e28;
+  --qz-info: #7aa5e8;
+  --qz-info-dot: #7aa5e8;
+  --qz-info-soft: #1e2a3f;
+  --qz-warning: #e8a33d;
+  --qz-warning-dot: #e8a33d;
+  --qz-warning-soft: #33270f;
+  --qz-danger: #e08a8a;
+  --qz-danger-soft: #382222;
+  --qz-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* Base type: Inter everywhere, one size across the whole app. */
@@ -41,9 +78,8 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Floating auto-hide scrollbars: transparent track (detached from the table
-   edge), thumb fades in on hover and thickens via a shrinking transparent
-   border. Firefox falls back to thin + transparent track. */
+/* Native slim scrollbars: thin track, thumb fades in on hover.
+   Firefox falls back to thin + transparent track. */
 .scroll-slim {
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
@@ -70,21 +106,13 @@ body {
   background-clip: padding-box;
 }
 
-/* Fully hidden native scrollbars (used where a custom floating scrollbar
-   takes over). */
-.scroll-hidden {
-  scrollbar-width: none;
-}
-.scroll-hidden::-webkit-scrollbar {
-  display: none;
-}
 html,
 body,
 header,
 main,
 div {
   transition:
-    background-color 0.35s ease,
-    border-color 0.35s ease,
-    color 0.35s ease;
+    background-color 0.18s ease-out,
+    border-color 0.18s ease-out,
+    color 0.18s ease-out;
 }

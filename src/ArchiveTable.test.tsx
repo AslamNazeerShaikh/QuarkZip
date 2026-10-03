@@ -45,9 +45,9 @@ describe("ArchiveTable", () => {
     expect(box).toBeChecked();
   });
 
-  it("should_hide_native_scrollbar_where_custom_track_takes_over", () => {
+  it("should_show_native_slim_scrollbar_on_the_table_scroller", () => {
     const { container } = render(<ArchiveTable data={DATA} page={0} pageSize={100} />);
-    const scroller = container.querySelector(".scroll-hidden");
+    const scroller = container.querySelector(".scroll-slim");
     expect(scroller).toBeInTheDocument();
   });
 });

@@ -28,8 +28,55 @@ async fn list_archive(
     )))
 }
 #[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+async fn info_archive(
+    app: tauri::AppHandle,
+    path: String,
+) -> Result<archive::ArchiveInfo, String> {
+    let output = app
+        .shell()
+        .sidecar("binaries/7zz")
+        .map_err(|e| e.to_string())?
+        .args(archive::list_args(&path))
+        .output()
+        .await
+        .map_err(|e| e.to_string())?;
+    if !output.status.success() {
+        return Err(String::from_utf8_lossy(&output.stderr).into_owned());
+    }
+    let mut info = archive::parse_archive_info(&String::from_utf8_lossy(&output.stdout));
+    // Filesystem truth for the container itself (size + mtime as epoch secs).
+    if let Ok(meta) = std::fs::metadata(&path) {
+        info.container_size = Some(meta.len());
+        info.container_modified = meta
+            .modified()
+            .ok()
+            .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
+            .map(|d| d.as_secs());
+    }
+    Ok(info)
+}
+
+/// Extracts an archive via the pinned 7zz sidecar into `dest`
+/// (`7zz x <archive> -o<dest> -y`, no password prompt). 7zz creates `dest`
+/// when missing. Returns 7zz's stdout; stderr becomes the error.
+#[tauri::command]
+async fn extract_archive(
+    app: tauri::AppHandle,
+    path: String,
+    dest: String,
+) -> Result<String, String> {
+    let output = app
+        .shell()
+        .sidecar("binaries/7zz")
+        .map_err(|e| e.to_string())?
+        .args(archive::extract_args(&path, &dest, None))
+        .output()
+        .await
+        .map_err(|e| e.to_string())?;
+    if !output.status.success() {
+        return Err(String::from_utf8_lossy(&output.stderr).into_owned());
+    }
+    Ok(String::from_utf8_lossy(&output.stdout).into_owned())
 }
 
 /// Starts a native window drag (used by the custom header strip).
@@ -38,13 +85,24 @@ fn drag_window(window: tauri::Window) {
     let _ = window.start_dragging();
 }
 
+#[tauri::command]
+fn greet(name: &str) -> String {
+    format!("Hello, {}! You've been greeted from Rust!", name)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet, drag_window, list_archive])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            drag_window,
+            list_archive,
+            info_archive,
+            extract_archive
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

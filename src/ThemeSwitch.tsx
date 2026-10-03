@@ -69,13 +69,13 @@ export default function ThemeSwitch({
       ref={rootRef}
       role="group"
       aria-label="Color theme"
-      className="flex h-9 items-center rounded-full border border-[var(--qz-border)] bg-[var(--qz-surface)]/80 p-1 shadow-lg backdrop-blur"
+      className="flex h-9 items-center rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-1 shadow-[var(--qz-shadow-card)]"
     >
       {expanded ? (
         <>
           <span
             aria-hidden
-            className="absolute top-1 bottom-1 rounded-full bg-[var(--qz-primary)] transition-all duration-300 ease-out"
+            className="absolute top-1 bottom-1 rounded-[8px] bg-[var(--qz-primary)] transition-all duration-180 ease-out"
             style={{ left: indicator.left, width: indicator.width }}
           />
           {THEME_OPTIONS.map((opt, i) => (
@@ -87,9 +87,9 @@ export default function ThemeSwitch({
               type="button"
               aria-pressed={choice === opt.value}
               onClick={() => select(opt.value)}
-              className={`relative z-10 inline-flex h-7 items-center rounded-full px-3 font-medium transition-colors duration-300 ${
+              className={`relative z-10 inline-flex h-7 items-center rounded-[8px] px-3 font-medium transition-colors duration-300 ${
                 choice === opt.value
-                  ? "text-white dark:text-[var(--qz-bg)]"
+                  ? "text-[var(--qz-on-primary)]"
                   : "text-[var(--qz-muted)] hover:text-[var(--qz-text)]"
               }`}
             >
@@ -103,7 +103,7 @@ export default function ThemeSwitch({
           aria-label="Change theme"
           aria-expanded={expanded}
           onClick={() => setExpanded(true)}
-          className="grid h-7 w-7 place-items-center rounded-full text-[var(--qz-muted)] transition-colors duration-300 hover:text-[var(--qz-text)]"
+          className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-colors duration-300 hover:text-[var(--qz-text)]"
         >
           <CurrentIcon size={18} aria-hidden />
         </button>

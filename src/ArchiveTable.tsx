@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, PackageOpen } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ArchiveEntry } from "./App";
 import { fileKind } from "./fileKind";
@@ -6,7 +6,6 @@ import { formatSize } from "./format";
 
 export const ROW_HEIGHT = 36;
 const OVERSCAN = 10;
-const MIN_THUMB = 24;
 
 type SortKey = "path" | "size" | "type" | "modified";
 type SortDir = "asc" | "desc";
@@ -38,7 +37,7 @@ const COLUMNS: Column[] = [
   {
     key: "modified",
     header: "Modified",
-    width: "w-44",
+    width: "w-56",
     align: "right",
     value: (r) => r.modified ?? "",
   },
@@ -75,11 +74,7 @@ export default function ArchiveTable({
   const [sortDir, setSortDir] = useState<SortDir>("asc");
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
   const [scrollTop, setScrollTop] = useState(0);
-  const [viewportH, setViewportH] = useState(0);
-  const [trackH, setTrackH] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const dragRef = useRef<{ startY: number; startScroll: number } | null>(null);
 
   const sorted = useMemo(() => {
     if (!sortKey) return data;
@@ -115,37 +110,7 @@ export default function ArchiveTable({
   );
   const visible = pageRows.slice(startIndex, startIndex + visibleCount);
 
-  useEffect(() => {
-    const scrollEl = scrollRef.current;
-    const trackEl = trackRef.current;
-    if (!scrollEl || !trackEl) return;
-    const update = () => {
-      setViewportH(scrollEl.clientHeight);
-      setTrackH(trackEl.clientHeight);
-    };
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(scrollEl);
-    ro.observe(trackEl);
-    return () => ro.disconnect();
-  }, []);
-
   const totalH = pageRows.length * ROW_HEIGHT;
-  const showScrollbar = trackH > 0 && totalH > viewportH;
-  const thumbH = showScrollbar
-    ? Math.max(MIN_THUMB, (viewportH / totalH) * trackH)
-    : 0;
-  const thumbTop = showScrollbar
-    ? (scrollTop / (totalH - viewportH)) * (trackH - thumbH)
-    : 0;
-
-  function scrollTo(y: number) {
-    const el = scrollRef.current;
-    if (!el) return;
-    const top = Math.max(0, Math.min(y, totalH - viewportH));
-    if (typeof el.scrollTo === "function") el.scrollTo({ top });
-    else el.scrollTop = top;
-  }
 
   const allSelected = pageRows.length > 0 && pageRows.every((r) => selected.has(r.path));
 
@@ -180,8 +145,8 @@ export default function ArchiveTable({
   }
 
   return (
-    <div className="group/table relative min-h-0 w-full min-w-0 flex-1">
-      <div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-lg border border-[var(--qz-border)] bg-[var(--qz-surface)] text-[13px]">
+    <div className="relative min-h-0 w-full min-w-0 flex-1">
+      <div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-[13px] border border-[var(--qz-border)] bg-[var(--qz-surface)] text-[13px]">
         <div className="flex h-9 shrink-0 items-center">
           <div className="flex w-10 shrink-0 items-center justify-center">
             <input
@@ -200,7 +165,7 @@ export default function ArchiveTable({
               key={column.key}
               type="button"
               onClick={() => toggleSort(column.key)}
-              className={`flex h-full cursor-pointer items-center gap-1 px-4 font-semibold tracking-wide text-[var(--qz-muted)] uppercase select-none ${
+              className={`flex h-full cursor-pointer items-center gap-1 px-4 text-[11px] font-semibold tracking-wide text-[var(--qz-faint)] uppercase select-none ${
                 column.key === "path"
                   ? "min-w-0 flex-1"
                   : `${column.width} shrink-0 ${column.align === "right" ? "justify-end" : ""}`
@@ -214,12 +179,21 @@ export default function ArchiveTable({
         <div
           ref={scrollRef}
           onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)}
-          className="scroll-hidden min-h-0 flex-1 overflow-y-auto pb-16"
+          className="scroll-slim min-h-0 flex-1 overflow-y-auto"
         >
-          <div
-            style={{ height: `${totalH}px` }}
-            className="relative w-full"
-          >
+          {pageRows.length === 0 ? (
+            <div className="flex min-h-full flex-col items-center justify-center gap-1 px-4 py-10 text-center">
+              <PackageOpen size={16} aria-hidden className="text-[var(--qz-faint)]" />
+              <p className="text-sm text-[var(--qz-muted)]">No entries</p>
+              <p className="text-xs text-[var(--qz-faint)]">
+                Open an archive to browse its contents
+              </p>
+            </div>
+          ) : (
+            <div
+              style={{ height: `${totalH}px` }}
+              className="relative w-full"
+            >
             {visible.map((entry, offset) => {
               const index = startIndex + offset;
               const kind = fileKind(entry.path, entry.is_folder);
@@ -266,62 +240,16 @@ export default function ArchiveTable({
                   <div className="flex h-full w-28 shrink-0 items-center justify-end overflow-hidden px-4">
                     {entry.size === null ? "—" : formatSize(entry.size)}
                   </div>
-                  <div className="flex h-full w-44 shrink-0 items-center justify-end overflow-hidden px-4 text-[var(--qz-muted)]">
+                  <div className="flex h-full w-56 shrink-0 items-center justify-end overflow-hidden px-4 text-[var(--qz-muted)]">
                     <span className="truncate whitespace-nowrap">{entry.modified ?? "—"}</span>
                   </div>
                 </div>
               );
             })}
           </div>
-          {pageRows.length === 0 && (
-            <p className="px-4 py-6 text-center text-[var(--qz-muted)]">
-              No entries
-            </p>
           )}
         </div>
       </div>
-      {showScrollbar && (
-        <div
-          ref={trackRef}
-          role="scrollbar"
-          aria-orientation="vertical"
-          aria-valuemin={0}
-          aria-valuemax={totalH - viewportH}
-          aria-valuenow={Math.round(scrollTop)}
-          onMouseDown={(e) => {
-            // Jump on track click; thumb drags via its own handlers.
-            if (e.target !== e.currentTarget || e.button !== 0) return;
-            const rect = e.currentTarget.getBoundingClientRect();
-            const ratio = (e.clientY - rect.top) / rect.height;
-            scrollTo(ratio * totalH - viewportH / 2);
-          }}
-          className="absolute top-10 -right-3.5 bottom-1 w-2.5 cursor-pointer group/track"
-        >
-          <div
-            role="presentation"
-            onPointerDown={(e) => {
-              if (e.button !== 0) return;
-              (e.target as HTMLElement).setPointerCapture(e.pointerId);
-              dragRef.current = {
-                startY: e.clientY,
-                startScroll: scrollTop,
-              };
-            }}
-            onPointerMove={(e) => {
-              const drag = dragRef.current;
-              if (!drag) return;
-              const ratio =
-                (e.clientY - drag.startY) / (trackH - thumbH);
-              scrollTo(drag.startScroll + ratio * (totalH - viewportH));
-            }}
-            onPointerUp={() => {
-              dragRef.current = null;
-            }}
-            className="absolute right-0 left-0 rounded-full bg-[var(--qz-muted)] opacity-0 transition-opacity duration-300 group-hover/table:opacity-60 group-hover/track:opacity-60 hover:opacity-100"
-            style={{ top: thumbTop, height: thumbH }}
-          />
-        </div>
-      )}
     </div>
   );
 }

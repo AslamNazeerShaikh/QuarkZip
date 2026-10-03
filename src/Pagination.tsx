@@ -4,7 +4,8 @@ export const PAGE_SIZES = [100, 1000, 5000, 10000] as const;
 export type PageSize = (typeof PAGE_SIZES)[number] | "all";
 
 /// Floating pagination controls: per-page selector, prev/next, page readout.
-/// Same pill language and 36px height as the theme switch.
+/// Solid surface with the card shadow — no glassmorphism (reference bans
+/// blur/translucency). 10px control radius, 7px inner actions.
 export default function Pagination({
   page,
   pageCount,
@@ -21,7 +22,7 @@ export default function Pagination({
   onPageSize: (s: PageSize) => void;
 }) {
   return (
-    <div className="flex h-9 items-center gap-1 rounded-full border border-[var(--qz-border)] bg-[var(--qz-surface)]/80 px-1 shadow-lg backdrop-blur">
+    <div className="flex h-9 items-center gap-1 rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] px-1 shadow-[var(--qz-shadow-card)]">
       <select
         aria-label="Rows per page"
         value={String(pageSize)}
@@ -29,7 +30,7 @@ export default function Pagination({
           const v = e.target.value;
           onPageSize(v === "all" ? "all" : Number(v) as PageSize);
         }}
-        className="h-7 cursor-pointer rounded-full bg-transparent px-2 text-[var(--qz-muted)] outline-none hover:text-[var(--qz-text)]"
+        className="h-7 cursor-pointer rounded-[7px] bg-transparent px-2 text-[var(--qz-muted)] outline-none hover:text-[var(--qz-text)]"
       >
         {PAGE_SIZES.map((size) => (
           <option key={size} value={size}>
@@ -43,7 +44,7 @@ export default function Pagination({
         aria-label="Previous page"
         disabled={page === 0}
         onClick={() => onPage(page - 1)}
-        className="rounded-full p-1.5 text-[var(--qz-muted)] transition-colors hover:text-[var(--qz-text)] disabled:opacity-30"
+        className="rounded-[7px] p-1.5 text-[var(--qz-muted)] transition-colors hover:text-[var(--qz-text)] disabled:opacity-30"
       >
         <ChevronLeft size={16} aria-hidden />
       </button>
@@ -57,7 +58,7 @@ export default function Pagination({
         aria-label="Next page"
         disabled={pageCount === 0 || page >= pageCount - 1}
         onClick={() => onPage(page + 1)}
-        className="rounded-full p-1.5 text-[var(--qz-muted)] transition-colors hover:text-[var(--qz-text)] disabled:opacity-30"
+        className="rounded-[7px] p-1.5 text-[var(--qz-muted)] transition-colors hover:text-[var(--qz-text)] disabled:opacity-30"
       >
         <ChevronRight size={16} aria-hidden />
       </button>
