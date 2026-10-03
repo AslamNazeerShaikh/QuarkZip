@@ -19,20 +19,6 @@ vi.mock("@tauri-apps/api/webview", () => ({
   }),
 }));
 
-vi.mock("@tanstack/react-virtual", () => ({
-  // jsdom has no layout: render every row instead of only the visible window.
-  useVirtualizer: ({ count }: { count: number }) => ({
-    getTotalSize: () => count * 33,
-    getVirtualItems: () =>
-      Array.from({ length: count }, (_, index) => ({
-        index,
-        start: index * 33,
-        size: 33,
-        key: index,
-      })),
-  }),
-}));
-
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (cmd: string) => {
     if (cmd === "drag_window") return Promise.resolve();

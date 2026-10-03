@@ -1,22 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { ArchiveEntry } from "./App";
 import ArchiveTable from "./ArchiveTable";
-
-vi.mock("@tanstack/react-virtual", () => ({
-  // jsdom has no layout: render every row instead of only the visible window.
-  useVirtualizer: ({ count }: { count: number }) => ({
-    getTotalSize: () => count * 33,
-    getVirtualItems: () =>
-      Array.from({ length: count }, (_, index) => ({
-        index,
-        start: index * 33,
-        size: 33,
-        key: index,
-      })),
-  }),
-}));
 
 const DATA: ArchiveEntry[] = [
   { path: "b.txt", size: 200, modified: null },
