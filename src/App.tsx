@@ -100,7 +100,8 @@ export default function App() {
         )}
         {archive && (
           <p className="w-full max-w-2xl truncate text-xs text-[var(--qz-muted)]">
-            File Path: {archive} — {entries.length} entries
+            File Path: {archive} — {entries.length.toLocaleString("en-US")}{" "}
+            entries
           </p>
         )}
         <ArchiveTable data={entries} />
