@@ -54,8 +54,13 @@ async function setWindowTitle(archive: string | null): Promise<void> {
 
 export default function App() {
   const { choice, setChoice } = useTheme();
-  // macOS uses the native title bar + traffic lights (set in Rust), so the
-  // custom TitleBar only renders elsewhere (Linux borderless window).
+  // macOS uses an overlay title bar (traffic lights float over the webview,
+  // set in Rust), so TitleBar renders a slim drag strip there instead of the
+  // Linux custom window controls.
+  // The overlay frame also needs a flush opaque layout: the floating card
+  // (transparent margin + rounded corners) only fits borderless windows.
+  // With decorations on, that margin shows the desktop around the card —
+  // traffic lights stranded above the UI.
   // Defaults to shown: non-Tauri runtimes (tests, browser) keep it.
   const [isMac, setIsMac] = useState(false);
   useEffect(() => {
@@ -204,11 +209,16 @@ export default function App() {
   }
 
   return (
-    <div className={`h-screen w-screen bg-transparent ${maximized ? "" : "p-5"}`}>
+    <div
+      data-testid="app-root"
+      className={`h-screen w-screen ${isMac ? "bg-[var(--qz-bg)]" : "bg-transparent"} ${maximized || isMac ? "" : "p-5"}`}
+    >
       <div
         data-testid="app-frame"
-        className={`flex h-full flex-col overflow-hidden border border-[var(--qz-window-border)] bg-[var(--qz-bg)] text-[var(--qz-text)] shadow-[var(--qz-shadow-window)] ${
-          maximized ? "rounded-none" : "rounded-[20px]"
+        className={`flex h-full flex-col overflow-hidden bg-[var(--qz-bg)] text-[var(--qz-text)] ${
+          maximized || isMac
+            ? "rounded-none border-0 shadow-none"
+            : "rounded-[20px] border border-[var(--qz-window-border)] shadow-[var(--qz-shadow-window)]"
         }`}
       >
       <TitleBar archive={archive} hidden={isMac} maximized={maximized} />

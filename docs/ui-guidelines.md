@@ -119,6 +119,8 @@ bar, all on the 28px rhythm. Panels scroll internally, never the page. The
 table scroller carries no bottom padding, so at max scroll the last row
 lands exactly on the viewport bottom (no dead zone), with or without
 pagination.
+Window chrome differs per OS (Linux floating card vs macOS overlay
+lights + flush layout): see `docs/window-chrome.md`.
 
 ## Interaction / states
 

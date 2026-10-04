@@ -106,19 +106,36 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_os::init())
         .setup(|app| {
-            // Per-platform chrome: macOS gets the native title bar with
-            // traffic lights; Linux stays borderless with the custom
-            // TitleBar (rounded corners need a transparent window). The
-            // window starts hidden (`visible: false`) so macOS never
-            // flashes the borderless state.
+            // Per-platform chrome: Linux stays borderless with the custom
+            // TitleBar (rounded corners need a transparent window). macOS
+            // needs native traffic lights, so decorations are re-enabled —
+            // but the two runtime calls below RACE if sent back-to-back:
+            // `set_decorations` applies via an async main-queue block while
+            // `set_title_bar_style` applies synchronously, so the style-mask
+            // rewrite lands last and wipes the overlay state (leaving a
+            // `Visible` strip above the content). Deferring the style past
+            // the mask change fixes it (the light inset comes from
+            // `trafficLightPosition`, applied at creation). The
+            // window starts hidden (`visible: false`) and is shown only
+            // after styling, so macOS never flashes the wrong state.
             if let Some(window) = app.get_webview_window("main") {
                 #[cfg(target_os = "macos")]
                 {
                     let _ = window.set_decorations(true);
-                    let _ =
-                        window.set_title_bar_style(tauri::utils::TitleBarStyle::Visible);
+                    let deferred = window.clone();
+                    std::thread::spawn(move || {
+                        std::thread::sleep(std::time::Duration::from_millis(500));
+                        let style =
+                            deferred.set_title_bar_style(tauri::utils::TitleBarStyle::Overlay);
+                        eprintln!("[quarkzip] overlay style applied: {style:?}");
+                        let shown = deferred.show();
+                        eprintln!("[quarkzip] window shown: {shown:?}");
+                    });
                 }
-                let _ = window.show();
+                #[cfg(not(target_os = "macos"))]
+                {
+                    let _ = window.show();
+                }
             }
             Ok(())
         })

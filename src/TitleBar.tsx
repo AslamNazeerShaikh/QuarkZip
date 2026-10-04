@@ -5,7 +5,7 @@ import type { MouseEvent } from "react";
 
 interface TitleBarProps {
   archive: string | null;
-  /// macOS uses the native title bar — render nothing.
+  /// macOS overlay bar (traffic lights float over the webview).
   hidden?: boolean;
   /// Owned by the parent (it also drives the flush maximized layout).
   maximized: boolean;
@@ -15,7 +15,29 @@ interface TitleBarProps {
 /// Used on Linux (Fedora/KDE) where the native title bar is disabled, so the
 /// window gets rounded corners + its own minimize / maximize / close buttons.
 /// The bar itself is the drag region; the buttons opt out of dragging.
+/// On macOS (`hidden`) the window uses an overlay title bar: traffic lights
+/// float over the webview, so this renders a slim drag strip with a left
+/// inset clearing the lights — no window buttons, no native title.
 export default function TitleBar({ archive, hidden, maximized }: TitleBarProps) {
+  if (hidden) {
+    return (
+      <div
+        data-tauri-drag-region
+        data-testid="mac-titlebar"
+        className="flex h-12 shrink-0 cursor-default items-center justify-center pr-4 pl-[76px] select-none"
+      >
+        <span className="max-w-[60vw] truncate px-2 text-center text-[13px]">
+          <span className="font-semibold">QuarkZip</span>
+          {archive && (
+            <span className="text-[var(--qz-muted)]">
+              {" "}
+              | &quot;Path: {archive}&quot;
+            </span>
+          )}
+        </span>
+      </div>
+    );
+  }
 
   async function toggleMaximize(): Promise<void> {
     try {
@@ -47,8 +69,6 @@ export default function TitleBar({ archive, hidden, maximized }: TitleBarProps) 
   function stopDrag(e: MouseEvent) {
     e.stopPropagation();
   }
-
-  if (hidden) return null;
 
   const btn =
     "flex h-8 w-11 items-center justify-center rounded-md text-[var(--qz-muted)] transition-colors hover:bg-black/5 hover:text-[var(--qz-text)] dark:hover:bg-white/10";
