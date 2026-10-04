@@ -4,6 +4,63 @@ pub mod archive;
 use tauri::Manager;
 use tauri_plugin_shell::ShellExt;
 
+/// Bounds for sidecar execution. A hung 7zz — notably a macOS Gatekeeper
+/// block on the unsigned binary, which never exits — must surface as an
+/// error, never an infinite "Reading…"/"Extracting…" spinner.
+const LIST_TIMEOUT_SECS: u64 = 60;
+const EXTRACT_TIMEOUT_SECS: u64 = 600;
+
+/// Runs the pinned 7zz sidecar with `args`, killing it on timeout.
+/// Collects stdout/stderr the same line-wise way `Command::output` does.
+async fn run_sidecar(
+    app: &tauri::AppHandle,
+    args: Vec<String>,
+    timeout_secs: u64,
+) -> Result<(Option<i32>, Vec<u8>, Vec<u8>), String> {
+    use tauri_plugin_shell::process::CommandEvent;
+    let (mut rx, child) = app
+        .shell()
+        .sidecar("binaries/7zz")
+        .map_err(|e| e.to_string())?
+        .args(args)
+        .spawn()
+        .map_err(|e| e.to_string())?;
+    let collect = async {
+        let mut code = None;
+        let mut stdout = Vec::new();
+        let mut stderr = Vec::new();
+        while let Some(event) = rx.recv().await {
+            match event {
+                CommandEvent::Terminated(payload) => code = payload.code,
+                CommandEvent::Stdout(line) => {
+                    stdout.extend(line);
+                    stdout.push(b'\n');
+                }
+                CommandEvent::Stderr(line) => {
+                    stderr.extend(line);
+                    stderr.push(b'\n');
+                }
+                // Non-exhaustive enum: ignore anything else (e.g. Error).
+                _ => {}
+            }
+        }
+        (code, stdout, stderr)
+    };
+    match tokio::time::timeout(std::time::Duration::from_secs(timeout_secs), collect).await {
+        Ok(done) => Ok(done),
+        Err(_) => {
+            let _ = child.kill();
+            Err(format!(
+                "7zz did not respond within {timeout_secs}s and was killed. \
+                On macOS this usually means Gatekeeper blocked the unsigned \
+                sidecar — clear it with `xattr -d com.apple.quarantine \
+                src-tauri/binaries/7zz-*` (or re-run scripts/fetch-7zz.sh) \
+                and try again."
+            ))
+        }
+    }
+}
+
 /// Lists an archive's contents via the pinned 7zz sidecar.
 ///
 /// Argv is built by [`archive::list_args`] (never from raw frontend input);
@@ -13,38 +70,24 @@ async fn list_archive(
     app: tauri::AppHandle,
     path: String,
 ) -> Result<Vec<archive::ArchiveEntry>, String> {
-    let output = app
-        .shell()
-        .sidecar("binaries/7zz")
-        .map_err(|e| e.to_string())?
-        .args(archive::list_args(&path))
-        .output()
-        .await
-        .map_err(|e| e.to_string())?;
-    if !output.status.success() {
-        return Err(String::from_utf8_lossy(&output.stderr).into_owned());
+    let (code, stdout, stderr) =
+        run_sidecar(&app, archive::list_args(&path), LIST_TIMEOUT_SECS).await?;
+    if code != Some(0) {
+        return Err(String::from_utf8_lossy(&stderr).into_owned());
     }
-    Ok(archive::parse_list_slt(&String::from_utf8_lossy(
-        &output.stdout,
-    )))
+    Ok(archive::parse_list_slt(&String::from_utf8_lossy(&stdout)))
 }
 #[tauri::command]
 async fn info_archive(
     app: tauri::AppHandle,
     path: String,
 ) -> Result<archive::ArchiveInfo, String> {
-    let output = app
-        .shell()
-        .sidecar("binaries/7zz")
-        .map_err(|e| e.to_string())?
-        .args(archive::list_args(&path))
-        .output()
-        .await
-        .map_err(|e| e.to_string())?;
-    if !output.status.success() {
-        return Err(String::from_utf8_lossy(&output.stderr).into_owned());
+    let (code, stdout, stderr) =
+        run_sidecar(&app, archive::list_args(&path), LIST_TIMEOUT_SECS).await?;
+    if code != Some(0) {
+        return Err(String::from_utf8_lossy(&stderr).into_owned());
     }
-    let mut info = archive::parse_archive_info(&String::from_utf8_lossy(&output.stdout));
+    let mut info = archive::parse_archive_info(&String::from_utf8_lossy(&stdout));
     // Filesystem truth for the container itself (size + mtime as epoch secs).
     if let Ok(meta) = std::fs::metadata(&path) {
         info.container_size = Some(meta.len());
@@ -69,18 +112,16 @@ async fn extract_archive(
     dest: String,
     files: Vec<String>,
 ) -> Result<String, String> {
-    let output = app
-        .shell()
-        .sidecar("binaries/7zz")
-        .map_err(|e| e.to_string())?
-        .args(archive::extract_args(&path, &dest, None, &files))
-        .output()
-        .await
-        .map_err(|e| e.to_string())?;
-    if !output.status.success() {
-        return Err(String::from_utf8_lossy(&output.stderr).into_owned());
+    let (code, stdout, stderr) = run_sidecar(
+        &app,
+        archive::extract_args(&path, &dest, None, &files),
+        EXTRACT_TIMEOUT_SECS,
+    )
+    .await?;
+    if code != Some(0) {
+        return Err(String::from_utf8_lossy(&stderr).into_owned());
     }
-    let stdout = String::from_utf8_lossy(&output.stdout).into_owned();
+    let stdout = String::from_utf8_lossy(&stdout).into_owned();
     if archive::extract_output_is_noop(&stdout) {
         return Err("No files to process — nothing matched the selection.".to_string());
     }

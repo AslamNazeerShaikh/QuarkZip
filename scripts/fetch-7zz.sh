@@ -88,6 +88,15 @@ cp "$LX64_BIN" "$OUT/7zz-x86_64-unknown-linux-gnu"
 cp "$LARM_BIN" "$OUT/7zz-aarch64-unknown-linux-gnu"
 chmod +x "$OUT"/7zz-* 2>/dev/null || true
 
+# macOS Gatekeeper quarantines curl-downloaded binaries (and the files
+# extracted from them), then blocks the unsigned sidecar at runtime with
+# a '"7zz" Not Opened' dialog while the app hangs waiting. Strip the
+# quarantine bit from the installed Mac sidecars so dev builds just run.
+# Signed release builds (re-sign on your identity) don't need this.
+if [[ "$(uname)" == "Darwin" ]]; then
+  xattr -d com.apple.quarantine "$OUT"/7zz-*-apple-darwin 2>/dev/null || true
+fi
+
 # Windows: extra.7z holds BOTH arches as standalone 7za.exe.
 # NOTE: 7za is standalone but ships fewer codecs than full 7z (e.g. no RAR).
 # Full-codec Windows support (7z.exe + 7z.dll as resources) is a follow-up;

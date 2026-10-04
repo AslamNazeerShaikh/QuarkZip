@@ -37,6 +37,29 @@ fewer codecs than full `7z` — RAR extraction will not work on Windows
 until we ship `7z.exe + 7z.dll` as resources (follow-up using the cached
 `7z2603-arm64.exe` + equivalent x64 source).
 
+## macOS Gatekeeper (dev machines)
+
+The Mac sidecars are unsigned third-party binaries, so Gatekeeper
+quarantines them on download and blocks execution with a
+`"7zz" Not Opened` dialog — while the app hangs on "Reading…"
+(listing never resolves). `scripts/fetch-7zz.sh` strips the
+quarantine bit after install, so re-run it after any re-fetch.
+Manual fix for already-installed sidecars (repo root):
+
+```sh
+xattr -d com.apple.quarantine src-tauri/binaries/7zz-*-apple-darwin
+```
+
+In `tauri dev` the sidecar that actually executes is Tauri's copy under
+`src-tauri/target/debug/` (e.g. `target/debug/7zz`), which inherits the
+quarantine bit — clear it there too, or rebuild after clearing the
+sources so the copies come out clean.
+
+Belt and suspenders in the backend: every sidecar call runs under a
+timeout (`LIST_TIMEOUT_SECS` / `EXTRACT_TIMEOUT_SECS` in
+`src-tauri/src/lib.rs`) that kills 7zz and reports a Gatekeeper hint
+instead of spinning forever.
+
 ## Checked-in vs fetch-at-build
 
 Default: **fetch at build**, binaries gitignored (`.gitignore` covers
