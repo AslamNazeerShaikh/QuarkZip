@@ -18,8 +18,8 @@ live in Rust `setup()` plus the `isMac` frontend branch:
 | `hiddenTitle` | ignored (mac-only key) | `true` — native title hidden, custom strip owns the title |
 | `trafficLightPosition` `{20, 24}` | ignored (needs Overlay + decorations) | lights float over content at creation inset |
 | Frontend frame | floating card: `bg-transparent p-5` outer, `rounded-[20px]` bordered card (`src/App.tsx:213-224`) | flush opaque: `bg-[var(--qz-bg)]`, no padding, `rounded-none border-0 shadow-none` |
-| Title strip | custom `TitleBar` with min/max/close (`src/TitleBar.tsx:78-141`) | slim drag strip, `pl-[76px]` clears the lights, no buttons (`TitleBar.tsx:22-40`) |
-| Drag | `invoke("drag_window")` on mousedown (borderless needs it) | `data-tauri-drag-region` only (decorated window drags natively) |
+| Title strip | custom `TitleBar` with min/max/close (`src/TitleBar.tsx:78-141`) | slim drag strip, symmetric 76px inset (clears the lights left, keeps title truly centered), no buttons (`TitleBar.tsx:22-40`) |
+| Drag | `invoke("drag_window")` on mousedown (borderless needs it) | same explicit `drag_window` mousedown (the attribute alone did not engage native drag on the Overlay setup) |
 
 ## What broke (2026-10-04, commit `644f03b`)
 
@@ -78,8 +78,9 @@ regression is diagnosable from stdout.
    the Linux look outside Tauri (tests, browser).
 3. **macOS overlay checklist** for any titlebar-adjacent change:
    keep `decorations:true` + `Overlay` + `hiddenTitle:true`;
-   keep the `pl-[76px]` clearance in the Mac strip in sync with
-   `trafficLightPosition`; keep `data-tauri-drag-region` on the
+   keep the symmetric 76px inset in the Mac strip in sync with
+   `trafficLightPosition` (left clears the lights, right mirrors it so
+   the title stays truly centered); keep `data-tauri-drag-region` on the
    strip (Overlay windows need an explicit drag region and cannot
    drag while unfocused — upstream Tauri caveat).
 4. **No doubled chrome.** The failure signature is always a doubled

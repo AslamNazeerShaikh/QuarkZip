@@ -23,8 +23,11 @@ export default function TitleBar({ archive, hidden, maximized }: TitleBarProps) 
     return (
       <div
         data-tauri-drag-region
+        onMouseDown={(e) => {
+          if (e.button === 0) void invoke("drag_window");
+        }}
         data-testid="mac-titlebar"
-        className="flex h-12 shrink-0 cursor-default items-center justify-center pr-4 pl-[76px] select-none"
+        className="flex h-12 shrink-0 cursor-default items-center justify-center px-[76px] select-none"
       >
         <span className="max-w-[60vw] truncate px-2 text-center text-[13px]">
           <span className="font-semibold">QuarkZip</span>
