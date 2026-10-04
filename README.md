@@ -3,6 +3,12 @@
 A visual 7-Zip archive manager for macOS (first), then Windows and Linux.
 Tauri 2 + React + Tailwind v4 + Rust, shelling out to a pinned 7-Zip console binary.
 
+## Screenshots
+
+![Empty state — no archive open](assets/screenshots/empty-state.png)
+![Archive open — 10k-entry zip with metadata grid and paginated table](assets/screenshots/archive-open-10k.png)
+![Drag and drop a Finder file onto the app to open it](assets/screenshots/drag-drop-finder.png)
+
 ## Prereqs
 
 - Node 20+, Rust stable, Xcode CLT (macOS)
