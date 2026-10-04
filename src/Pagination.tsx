@@ -1,7 +1,135 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Check, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 export const PAGE_SIZES = [100, 1000, 5000, 10000] as const;
 export type PageSize = (typeof PAGE_SIZES)[number] | "all";
+
+const OPTIONS: PageSize[] = [...PAGE_SIZES, "all"];
+
+function formatSize(size: PageSize): string {
+  return size === "all" ? "All" : size.toLocaleString("en-US");
+}
+
+/// Floating pagination controls: per-page selector, prev/next, page readout.
+/// Solid surface with the card shadow — no glassmorphism (reference bans
+/// blur/translucency). 10px control radius, 7px inner actions.
+///
+/// The page-size menu is a custom listbox (not a native `<select>`): native
+/// option popups are painted by the OS and ignore the app theme.
+function PageSizeMenu({
+  pageSize,
+  onPageSize,
+}: {
+  pageSize: PageSize;
+  onPageSize: (s: PageSize) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(() => OPTIONS.indexOf(pageSize));
+  const rootRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Closes on outside click or Escape — same pattern as ThemeSwitch.
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        buttonRef.current?.focus();
+      }
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open ]);
+
+  function choose(size: PageSize) {
+    onPageSize(size);
+    setOpen(false);
+    buttonRef.current?.focus();
+  }
+
+  function onButtonKey(e: React.KeyboardEvent) {
+    if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setActive(OPTIONS.indexOf(pageSize));
+      setOpen(true);
+    }
+  }
+
+  function onListKey(e: React.KeyboardEvent) {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActive((i) => (i + 1) % OPTIONS.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActive((i) => (i - 1 + OPTIONS.length) % OPTIONS.length);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      choose(OPTIONS[active]);
+    }
+  }
+
+  return (
+    <div ref={rootRef} className="relative">
+      <button
+        ref={buttonRef}
+        type="button"
+        aria-label="Rows per page"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => {
+          setActive(OPTIONS.indexOf(pageSize));
+          setOpen((o) => !o);
+        }}
+        onKeyDown={onButtonKey}
+        className="flex h-7 cursor-pointer items-center gap-1 rounded-[7px] px-2 text-[var(--qz-muted)] tabular-nums outline-none hover:text-[var(--qz-text)]"
+      >
+        {formatSize(pageSize)}
+        <ChevronDown
+          size={14}
+          aria-hidden
+          className={`transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && (
+        <div
+          role="listbox"
+          aria-label="Rows per page"
+          onKeyDown={onListKey}
+          className="animate-qz-pop absolute bottom-full left-0 mb-2 min-w-28 rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-1 shadow-[var(--qz-shadow-card)]"
+        >
+          {OPTIONS.map((size, i) => {
+            const selected = size === pageSize;
+            return (
+              <button
+                key={size}
+                type="button"
+                role="option"
+                aria-selected={selected}
+                onClick={() => choose(size)}
+                onMouseEnter={() => setActive(i)}
+                className={`flex h-8 w-full items-center justify-between gap-4 rounded-[7px] px-2.5 tabular-nums transition-colors ${
+                  i === active
+                    ? "bg-[var(--qz-primary-soft)] text-[var(--qz-text)]"
+                    : "text-[var(--qz-muted)]"
+                } ${selected ? "font-semibold text-[var(--qz-primary)]" : ""}`}
+              >
+                {formatSize(size)}
+                {selected && <Check size={14} aria-hidden />}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
 
 /// Floating pagination controls: per-page selector, prev/next, page readout.
 /// Solid surface with the card shadow — no glassmorphism (reference bans
@@ -23,22 +151,7 @@ export default function Pagination({
 }) {
   return (
     <div className="flex h-9 items-center gap-1 rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] px-1 shadow-[var(--qz-shadow-card)]">
-      <select
-        aria-label="Rows per page"
-        value={String(pageSize)}
-        onChange={(e) => {
-          const v = e.target.value;
-          onPageSize(v === "all" ? "all" : Number(v) as PageSize);
-        }}
-        className="h-7 cursor-pointer rounded-[7px] bg-transparent px-2 text-[var(--qz-muted)] outline-none hover:text-[var(--qz-text)]"
-      >
-        {PAGE_SIZES.map((size) => (
-          <option key={size} value={size}>
-            {size.toLocaleString("en-US")}
-          </option>
-        ))}
-        <option value="all">All</option>
-      </select>
+      <PageSizeMenu pageSize={pageSize} onPageSize={onPageSize} />
       <button
         type="button"
         aria-label="Previous page"

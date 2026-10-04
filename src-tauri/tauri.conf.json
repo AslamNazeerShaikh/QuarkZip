@@ -12,12 +12,18 @@
   "app": {
     "windows": [
       {
-        "title": "",
-        "width": 990,
+        "label": "main",
+        "title": "QuarkZip",
+        "width": 792,
         "height": 660,
-        "minWidth": 990,
+        "minWidth": 792,
         "minHeight": 660,
         "center": true,
+        "resizable": true,
+        "decorations": false,
+        "transparent": true,
+        "shadow": true,
+        "visible": false,
         "titleBarStyle": "Overlay",
         "trafficLightPosition": { "x": 20, "y": 24 }
       }

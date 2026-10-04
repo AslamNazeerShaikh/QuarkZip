@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
@@ -42,7 +42,14 @@ vi.mock("@tauri-apps/api/path", () => ({
   dirname: () => Promise.resolve("/tmp"),
 }));
 
+const osCtl = vi.hoisted(() => ({ platform: "linux" }));
+
+vi.mock("@tauri-apps/plugin-os", () => ({
+  platform: () => osCtl.platform,
+}));
+
 beforeEach(() => {
+  osCtl.platform = "linux";
   extractCtl.fail = true;
   localStorage.clear();
   document.documentElement.classList.remove("dark");
@@ -54,6 +61,15 @@ describe("App blank canvas", () => {
     const header = container.querySelector("header");
     expect(header).toBeInTheDocument();
     expect(header).toHaveAttribute("data-tauri-drag-region");
+  });
+
+  it("should_hide_custom_titlebar_when_on_macos", async () => {
+    osCtl.platform = "macos";
+    const { container } = render(<App />);
+    // Native traffic lights own the title bar there — no custom header.
+    await waitFor(() =>
+      expect(container.querySelector("header")).not.toBeInTheDocument(),
+    );
   });
 
   it("should_render_open_button_with_empty_table_when_no_archive_open", () => {

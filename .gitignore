@@ -13,6 +13,11 @@ dist-ssr
 *.local
 vendor/7zz-cache
 
+# Playwright e2e artifacts
+test-results/
+playwright-report/
+playwright/.cache/
+
 # 7zz sidecar binaries are fetched at build time (see scripts/fetch-7zz.sh).
 # To check them in instead, delete the two lines below.
 src-tauri/binaries/7zz-*

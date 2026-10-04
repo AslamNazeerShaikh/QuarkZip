@@ -43,11 +43,27 @@ describe("Pagination", () => {
   it("should_offer_page_sizes_up_to_10k_plus_all", async () => {
     const user = userEvent.setup();
     const { onPageSize } = setup();
-    const select = screen.getByRole("combobox", { name: "Rows per page" });
+    await user.click(screen.getByRole("button", { name: "Rows per page" }));
+    const listbox = screen.getByRole("listbox", { name: "Rows per page" });
     for (const label of ["100", "1,000", "5,000", "10,000", "All"]) {
-      expect(select).toContainElement(screen.getByRole("option", { name: label }));
+      expect(listbox).toContainElement(
+        screen.getByRole("option", { name: label }),
+      );
     }
-    await user.selectOptions(select, "all");
+    await user.click(screen.getByRole("option", { name: "All" }));
     expect(onPageSize).toHaveBeenCalledWith("all");
+  });
+
+  it("should_close_size_menu_on_escape", async () => {
+    const user = userEvent.setup();
+    setup();
+    await user.click(screen.getByRole("button", { name: "Rows per page" }));
+    expect(
+      screen.getByRole("listbox", { name: "Rows per page" }),
+    ).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    expect(
+      screen.queryByRole("listbox", { name: "Rows per page" }),
+    ).not.toBeInTheDocument();
   });
 });

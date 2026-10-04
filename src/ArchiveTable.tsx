@@ -1,4 +1,11 @@
-import { ArrowDown, ArrowUp, ArrowUpDown, PackageOpen } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
+  Check,
+  Minus,
+  PackageOpen,
+} from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ArchiveEntry } from "./App";
 import { fileKind } from "./fileKind";
@@ -52,6 +59,44 @@ function SortIcon({ state }: { state: SortDir | null }) {
   if (state === "asc") return <ArrowUp size={14} aria-hidden />;
   if (state === "desc") return <ArrowDown size={14} aria-hidden />;
   return <ArrowUpDown size={14} aria-hidden className="opacity-40" />;
+}
+
+/// Theme-painted checkbox (button + `role="checkbox"`). The native input is
+/// OS-painted: on Linux WebKitGTK it ignores `accent-color` and the check
+/// glyph renders clipped/missing at small sizes — so the box, check, and
+/// indeterminate dash are all drawn from `--qz-*` tokens instead.
+function TableCheckbox({
+  label,
+  checked,
+  onToggle,
+}: {
+  label: string;
+  checked: boolean | "mixed";
+  onToggle: () => void;
+}) {
+  const on = checked !== false;
+  return (
+    <button
+      type="button"
+      role="checkbox"
+      aria-checked={checked}
+      aria-label={label}
+      onClick={onToggle}
+      className={`flex h-4 w-4 items-center justify-center rounded-[5px] border transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--qz-primary)] ${
+        on
+          ? "border-transparent bg-[var(--qz-primary)]"
+          : "border-[var(--qz-border)] bg-transparent hover:border-[var(--qz-primary)]"
+      }`}
+    >
+      {checked === "mixed" ? (
+        <Minus size={12} strokeWidth={3} aria-hidden className="text-[var(--qz-on-primary)]" />
+      ) : (
+        checked && (
+          <Check size={12} strokeWidth={3} aria-hidden className="text-[var(--qz-on-primary)]" />
+        )
+      )}
+    </button>
+  );
 }
 
 /// Hand-rolled archive table: sortable columns, windowed rows (only visible
@@ -169,15 +214,12 @@ export default function ArchiveTable({
         {/* Header matches ROW_HEIGHT so it never reads slim next to rows. */}
         <div className="flex shrink-0 items-center" style={{ height: ROW_HEIGHT }}>
           <div className="flex w-10 shrink-0 items-center justify-center">
-            <input
-              type="checkbox"
-              aria-label="Select all"
-              checked={allSelected}
-              ref={(el) => {
-                if (el) el.indeterminate = selected.size > 0 && !allSelected;
-              }}
-              onChange={toggleAll}
-              className="h-3.5 w-3.5 accent-[var(--qz-primary)]"
+            <TableCheckbox
+              label="Select all"
+              checked={
+                allSelected ? true : selected.size > 0 ? "mixed" : false
+              }
+              onToggle={toggleAll}
             />
           </div>
           <div
@@ -241,13 +283,10 @@ export default function ArchiveTable({
                   }`}
                 >
                   <div className="flex w-10 shrink-0 items-center justify-center">
-                    <input
-                      type="checkbox"
-                      aria-label={`Select ${entry.path}`}
+                    <TableCheckbox
+                      label={`Select ${entry.path}`}
                       checked={isSelected}
-                      onChange={() => toggleOne(entry.path)}
-                      onClick={(e) => e.stopPropagation()}
-                      className="h-3.5 w-3.5 accent-[var(--qz-primary)]"
+                      onToggle={() => toggleOne(entry.path)}
                     />
                   </div>
                   <div className="flex w-12 shrink-0 items-center justify-center px-2 text-[var(--qz-faint)] tabular-nums">

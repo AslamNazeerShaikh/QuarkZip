@@ -1,6 +1,7 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 pub mod archive;
 
+use tauri::Manager;
 use tauri_plugin_shell::ShellExt;
 
 /// Lists an archive's contents via the pinned 7zz sidecar.
@@ -103,6 +104,24 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_os::init())
+        .setup(|app| {
+            // Per-platform chrome: macOS gets the native title bar with
+            // traffic lights; Linux stays borderless with the custom
+            // TitleBar (rounded corners need a transparent window). The
+            // window starts hidden (`visible: false`) so macOS never
+            // flashes the borderless state.
+            if let Some(window) = app.get_webview_window("main") {
+                #[cfg(target_os = "macos")]
+                {
+                    let _ = window.set_decorations(true);
+                    let _ =
+                        window.set_title_bar_style(tauri::utils::TitleBarStyle::Visible);
+                }
+                let _ = window.show();
+            }
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             greet,
             drag_window,

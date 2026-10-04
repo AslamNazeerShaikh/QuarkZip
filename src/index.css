@@ -38,6 +38,13 @@
   --qz-danger: #a94444;
   --qz-danger-soft: #fbecec;
   --qz-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.03);
+  /* Window frame: the app card floats in a transparent margin, but any
+     shadow must fully decay inside it — a blur wider than the margin gets
+     sliced at the window edge, and that hard cutoff (sharpest at the
+     corners) is what reads as "pointy". So: compact soft blur only. */
+  --qz-window-border: #e7e7e3;
+  --qz-shadow-window:
+    0 6px 14px rgba(23, 23, 23, 0.12), 0 2px 5px rgba(23, 23, 23, 0.06);
 }
 
 .dark {
@@ -64,18 +71,36 @@
   --qz-danger: #e08a8a;
   --qz-danger-soft: #382222;
   --qz-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+  /* Dark needs a harder outline + deeper shadow: the frame must read
+     against near-black wallpapers where a faint border disappears. The
+     first layer is a 1px bright ring just outside the border; the blur
+     stays compact so it melts out inside the margin (see above). */
+  --qz-window-border: rgba(255, 255, 255, 0.18);
+  --qz-shadow-window:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 6px 14px rgba(0, 0, 0, 0.45), 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 /* Base type: Inter everywhere, one size across the whole app. */
 html {
   font-family: var(--qz-font);
   font-size: 13px;
+  background: transparent;
 }
 
 body {
   font-family: var(--qz-font);
   font-size: 13px;
   -webkit-font-smoothing: antialiased;
+  background: transparent;
+  overflow: hidden;
+}
+
+/* Borderless window (`decorations: false` + `transparent: true`): the OS
+   draws nothing, so rounding comes from the app card clipping against a
+   transparent backdrop. KDE/KWin keeps the native shadow. */
+#root {
+  background: transparent;
 }
 
 /* Overlay motion: 180ms ease-out (fade + .98 scale for the card). */

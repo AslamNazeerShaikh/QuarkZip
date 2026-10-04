@@ -3,9 +3,11 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { dirname } from "@tauri-apps/api/path";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { platform } from "@tauri-apps/plugin-os";
 import { Download, ChevronDown, FolderOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import ArchiveTable from "./ArchiveTable";
+import TitleBar from "./TitleBar";
 import ArchiveOverview, { type ArchiveInfo } from "./ArchiveOverview";
 import ExtractDialog from "./ExtractDialog";
 import ExtractDoneDialog, { type ExtractResult } from "./ExtractDoneDialog";
@@ -52,6 +54,40 @@ async function setWindowTitle(archive: string | null): Promise<void> {
 
 export default function App() {
   const { choice, setChoice } = useTheme();
+  // macOS uses the native title bar + traffic lights (set in Rust), so the
+  // custom TitleBar only renders elsewhere (Linux borderless window).
+  // Defaults to shown: non-Tauri runtimes (tests, browser) keep it.
+  const [isMac, setIsMac] = useState(false);
+  useEffect(() => {
+    try {
+      setIsMac(platform() === "macos");
+    } catch {
+      // Non-Tauri runtimes (tests, browser): keep the custom bar.
+    }
+  }, []);
+  // Maximized windows go flush (no margin/radius — a transparent gap would
+  // show the desktop around a fullscreen window); windowed mode floats the
+  // card in a transparent margin so the window shadow can render.
+  const [maximized, setMaximized] = useState(false);
+  useEffect(() => {
+    let unlisten: (() => void) | undefined;
+    (async () => {
+      try {
+        const win = getCurrentWindow();
+        setMaximized(await win.isMaximized());
+        unlisten = await win.onResized(async () => {
+          try {
+            setMaximized(await win.isMaximized());
+          } catch {
+            /* ignore */
+          }
+        });
+      } catch {
+        /* non-Tauri runtime: stay windowed */
+      }
+    })();
+    return () => unlisten?.();
+  }, []);
   const [archive, setArchive] = useState<string | null>(null);
   const [entries, setEntries] = useState<ArchiveEntry[]>([]);
   const [info, setInfo] = useState<ArchiveInfo | null>(null);
@@ -168,23 +204,14 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-[var(--qz-bg)] text-[var(--qz-text)]">
-      <header
-        data-tauri-drag-region
-        onMouseDown={(e) => {
-          if (e.button === 0) void invoke("drag_window");
-        }}
-        className="relative flex h-14 shrink-0 cursor-default items-center justify-center select-none"
+    <div className={`h-screen w-screen bg-transparent ${maximized ? "" : "p-5"}`}>
+      <div
+        data-testid="app-frame"
+        className={`flex h-full flex-col overflow-hidden border border-[var(--qz-window-border)] bg-[var(--qz-bg)] text-[var(--qz-text)] shadow-[var(--qz-shadow-window)] ${
+          maximized ? "rounded-none" : "rounded-[20px]"
+        }`}
       >
-        {/* Centered window title: `QuarkZip | /full/path`, ellipsis on
-            overflow — pure CSS, so resize reflows dynamically. */}
-        <span className="max-w-[75%] truncate px-2 text-[13px]">
-          <span className="font-semibold">QuarkZip</span>
-          {archive && (
-            <span className="text-[var(--qz-muted)]"> | &quot;Path: {archive}&quot;</span>
-          )}
-        </span>
-      </header>
+      <TitleBar archive={archive} hidden={isMac} maximized={maximized} />
       {/* 28px rhythm on the content sides/bottom; no top pad. The drop
           frame is window-fixed (not main-absolute), so its top edge floats
           in the title strip instead of crossing the card. */}
@@ -299,6 +326,7 @@ export default function App() {
           onOk={() => setDoneInfo(null)}
         />
       )}
+      </div>
     </div>
   );
 }
