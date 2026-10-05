@@ -37,10 +37,11 @@
   "overview.meta.storeNone": "Store / none",
   "overview.meta.passwordScheme": "Password scheme",
   "overview.unavailable": "Details unavailable — the listing loaded but 7zz reported no summary.",
-  "overview.parsedNote": "Parsed from 7zz l -slt · ratio = packed ÷ unpacked",
   "overview.sectionContainer": "Container",
   "overview.sectionContent": "Content",
   "overview.sectionMore": "More details",
+  "overview.test": "Test",
+  "overview.checksum": "Checksum",
 
   "table.selectAll": "Select all",
   "table.selectItem": "Select {name}",
@@ -91,5 +92,24 @@
   "about.madeWithLabel": "Made with love in India",
 
   "lang.language": "Language",
-  "lang.changeLanguage": "Change language"
+  "lang.changeLanguage": "Change language",
+
+  "test.title": "Test archive",
+  "test.testing": "Testing {name}…",
+  "test.pass": "Integrity check passed — Everything is Ok.",
+  "test.progress": "Test progress",
+
+  "checksum.title": "Calculate checksum",
+  "checksum.algorithm": "Algorithm",
+  "checksum.algorithmList": "Checksum algorithm",
+  "checksum.expected": "Expected hash",
+  "checksum.expectedPlaceholder": "Paste expected hash to compare (optional)",
+  "checksum.calculate": "Calculate",
+  "checksum.calculating": "Calculating…",
+  "checksum.close": "Close",
+  "checksum.computed": "Computed {algo}",
+  "checksum.match": "Hashes match",
+  "checksum.mismatch": "Hashes do not match",
+  "checksum.cancelled": "Calculation cancelled — no result.",
+  "checksum.progress": "Checksum progress"
 }

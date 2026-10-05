@@ -1,4 +1,4 @@
-import { Archive, PackageOpen } from "lucide-react";
+import { Archive, Hash, PackageOpen, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
 import { formatCount, formatDateTimeLocal, formatSize } from "./format";
 import { Button } from "./components/ui/button";
@@ -56,11 +56,15 @@ export default function ArchiveOverview({
   info,
   loading,
   onOpen,
+  onTest = () => {},
+  onChecksum = () => {},
 }: {
   archive: string | null;
   info: ArchiveInfo | null;
   loading: boolean;
   onOpen: () => void;
+  onTest?: () => void;
+  onChecksum?: () => void;
 }) {
   const { t } = useLanguage();
   return (
@@ -178,15 +182,24 @@ export default function ArchiveOverview({
                     </div>
                   </section>
                 )}
-                <p className="text-xs text-[var(--qz-faint)]">
-                  {t("overview.parsedNote")}
-                </p>
               </div>
             ) : (
               <p className="py-6 text-center text-sm text-[var(--qz-muted)]">
                 {t("overview.unavailable")}
               </p>
             )}
+            {/* Integrity actions need only the open archive, not the parsed
+                summary — they stay available when details are unavailable. */}
+            <div className="flex flex-wrap justify-end gap-2 pt-4">
+              <Button variant="secondary" size="sm" onClick={onTest} className="w-32">
+                <ShieldCheck size={14} aria-hidden />
+                {t("overview.test")}
+              </Button>
+              <Button variant="secondary" size="sm" onClick={onChecksum} className="w-32">
+                <Hash size={14} aria-hidden />
+                {t("overview.checksum")}
+              </Button>
+            </div>
             </div>
           </div>
         </div>

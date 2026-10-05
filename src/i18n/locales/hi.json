@@ -37,10 +37,11 @@
   "overview.meta.storeNone": "स्टोर / कोई नहीं",
   "overview.meta.passwordScheme": "पासवर्ड योजना",
   "overview.unavailable": "विवरण उपलब्ध नहीं — सूची लोड हुई लेकिन 7zz ने कोई सारांश नहीं दिया।",
-  "overview.parsedNote": "7zz l -slt से पार्स किया गया · अनुपात = पैक्ड ÷ अनपैक्ड",
   "overview.sectionContainer": "कंटेनर",
   "overview.sectionContent": "सामग्री",
   "overview.sectionMore": "अधिक विवरण",
+  "overview.test": "परीक्षण",
+  "overview.checksum": "चेकसम",
 
   "table.selectAll": "सभी चुनें",
   "table.selectItem": "{name} चुनें",
@@ -91,5 +92,24 @@
   "about.madeWithLabel": "भारत में प्रेम सहित निर्मित",
 
   "lang.language": "भाषा",
-  "lang.changeLanguage": "भाषा बदलें"
+  "lang.changeLanguage": "भाषा बदलें",
+
+  "test.title": "आर्काइव परीक्षण",
+  "test.testing": "{name} का परीक्षण हो रहा है…",
+  "test.pass": "अखंडता जाँच सफल — सब कुछ ठीक है।",
+  "test.progress": "परीक्षण प्रगति",
+
+  "checksum.title": "चेकसम निकालें",
+  "checksum.algorithm": "एल्गोरिदम",
+  "checksum.algorithmList": "चेकसम एल्गोरिदम",
+  "checksum.expected": "अपेक्षित हैश",
+  "checksum.expectedPlaceholder": "तुलना के लिए अपेक्षित हैश चिपकाएँ (वैकल्पिक)",
+  "checksum.calculate": "गणना करें",
+  "checksum.calculating": "गणना हो रही है…",
+  "checksum.close": "बंद करें",
+  "checksum.computed": "परिकलित {algo}",
+  "checksum.match": "हैश मेल खाते हैं",
+  "checksum.mismatch": "हैश मेल नहीं खाते",
+  "checksum.cancelled": "गणना रद्द की गई — कोई परिणाम नहीं।",
+  "checksum.progress": "चेकसम प्रगति"
 }

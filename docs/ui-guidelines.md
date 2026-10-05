@@ -98,12 +98,23 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   (`7zz x -o<dest> [files...] -y`) with the checked rows, or everything
   when nothing is checked.
 - `ExtractDialog`: centered modal (dim backdrop, 16px radius, 180ms pop,
-  Esc/backdrop cancel, reduced-motion safe) — big centered icon, the
+  Esc cancel, reduced-motion safe) — big centered icon, the
   destination, `K of N selected` (or `All N`) file count, orange Cancel +
   blue Proceed (`Button` warning/accent variants, AA pairs in color-system).
+  The backdrop never dismisses — buttons or Esc only.
 - `ExtractDoneDialog`: same modal language for the result — green center
   icon with file count + destination on success, red icon with the error on
   failure, single OK action either way. The footer carries no status text.
+  The backdrop never dismisses — OK or Esc only.
+- `TestDialog`: integrity result popup (`7zz t` with `-bsp1` progress
+  streamed over a Tauri `Channel`) — auto-starts on open, determinate
+  progress bar while running, pass/fail result, OK enabled only when done.
+  Same modal language; backdrop never dismisses.
+- `ChecksumDialog`: MD5 / SHA-1 / SHA-256 / SHA-512 calculator — algorithm
+  listbox, optional expected-hash input, live progress bar, Cancel (aborts
+  the run, keeps the popup open), Close (cancels if running, then closes),
+  computed digest with match/mismatch verdict. Esc mirrors Close except
+  mid-calculation. Same modal language; backdrop never dismisses.
 - `ArchiveTable` reports checkbox selection via `onSelectionChange`
   (cleared on each new listing); `App` feeds it to the dialog + extract.
 - `ArchiveOverview`: the 50% overview card — centered empty state
@@ -113,7 +124,11 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   straight into the 4-column metadata grids (micro-label + 14px medium value, block centered
   on both axes via `m-auto`), progressbar with
   `aria-valuenow` for the compression ratio. Columns: Name flexes, Modified
-  is fixed at `w-64`.
+  is fixed at `w-64`. Below the details (always, once an archive is open —
+  even when the summary is unavailable) sits the integrity action row,
+  right-aligned: equal-width (`w-32`) secondary `sm` `Test`
+  (`test_archive`) and `Checksum` (`checksum_file`) buttons opening their
+  dialogs.
 
 ## Layout
 

@@ -188,6 +188,21 @@ export async function handleInvoke(cmd: string, args: unknown): Promise<unknown>
       if (state.extractError) throw state.extractError;
       return "Everything is Ok";
     }
+    case "test_archive": {
+      const channel = (a as Record<string, { emit?: (n: number) => void }>)
+        .onProgress;
+      channel?.emit?.(100);
+      return "Everything is Ok";
+    }
+    case "checksum_file": {
+      const channel = (a as Record<string, { emit?: (n: number) => void }>)
+        .onProgress;
+      channel?.emit?.(100);
+      return "d41d8cd98f00b204e9800998ecf8427e";
+    }
+    case "cancel_checksum": {
+      return null;
+    }
     default:
       throw `unexpected command ${cmd}`;
   }

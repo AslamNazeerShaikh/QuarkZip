@@ -53,6 +53,42 @@ pub fn test_args(archive: &str, password: Option<&str>) -> Vec<String> {
     args
 }
 
+/// Argv for `7zz t` with stdout progress (`-bsp1`): percent updates arrive
+/// `\r`-separated inside stdout chunks, parsed by [`parse_progress_percent`].
+pub fn test_progress_args(archive: &str, password: Option<&str>) -> Vec<String> {
+    let mut args = test_args(archive, password);
+    args.push("-bsp1".to_string());
+    args
+}
+
+/// Largest `NN%` percent in a 7zz progress chunk. Chunks may hold several
+/// updates (`… 12% …\r… 13% …`); only the max is useful for a progress bar.
+pub fn parse_progress_percent(chunk: &str) -> Option<u32> {
+    let mut best: Option<u32> = None;
+    let mut num: u32 = 0;
+    let mut have = false;
+    for ch in chunk.chars() {
+        if let Some(d) = ch.to_digit(10) {
+            num = num.saturating_mul(10).saturating_add(d);
+            have = true;
+        } else if ch == '%' && have {
+            best = Some(best.map_or(num, |b| b.max(num)));
+            num = 0;
+            have = false;
+        } else {
+            num = 0;
+            have = false;
+        }
+    }
+    best
+}
+
+/// True when `7zz t` output proves integrity (`t` exits 0 even on some
+/// warnings, so the marker — not just the exit code — is the verdict).
+pub fn test_output_ok(stdout: &str) -> bool {
+    stdout.contains("Everything is Ok")
+}
+
 /// Parse `7zz l -slt` output into entries.
 ///
 /// Blocks are separated by blank lines; each line is `Key = Value`.
@@ -491,6 +527,34 @@ Attributes = A -rw-r--r--
         assert!(extract_output_is_noop("Extracting archive...\nNo files to process\n"));
         assert!(!extract_output_is_noop("Everything is Ok\n"));
         assert!(!extract_output_is_noop(""));
+    }
+
+    #[test]
+    fn should_build_test_progress_args_with_bsp1() {
+        assert_eq!(
+            test_progress_args("a.7z", None),
+            vec!["t".to_string(), "a.7z".to_string(), "-bsp1".to_string()]
+        );
+        let args = test_progress_args("a.7z", Some("s3cret"));
+        assert!(args.contains(&"-ps3cret".to_string()));
+        assert!(args.contains(&"-bsp1".to_string()));
+    }
+
+    #[test]
+    fn should_parse_max_percent_from_progress_chunks() {
+        assert_eq!(parse_progress_percent("Testing...\n"), None);
+        assert_eq!(parse_progress_percent(" 12%"), Some(12));
+        // \r-separated burst inside one chunk: the max wins.
+        assert_eq!(parse_progress_percent(" 3% \r 7% \r 5%"), Some(7));
+        assert_eq!(parse_progress_percent("100%"), Some(100));
+        assert_eq!(parse_progress_percent("%"), None);
+    }
+
+    #[test]
+    fn should_require_ok_marker_for_test_success() {
+        assert!(test_output_ok("Everything is Ok\n"));
+        assert!(!test_output_ok(""));
+        assert!(!test_output_ok("ERROR: CRC Failed\n"));
     }
 
     #[test]

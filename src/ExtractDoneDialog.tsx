@@ -11,7 +11,7 @@ export type ExtractResult =
 /// Extraction result popup, mirroring the confirm dialog: dimmed backdrop,
 /// white card with a big centered icon, and a single OK action. Success
 /// shows the extracted file count and destination; failure shows the error.
-/// Esc and backdrop click also dismiss. Nothing renders when closed.
+/// Esc also dismisses. The backdrop never dismisses — use OK.
 export default function ExtractDoneDialog({
   open,
   result,
@@ -43,7 +43,6 @@ export default function ExtractDoneDialog({
     >
       <div
         className="animate-qz-fade absolute inset-0 bg-black/25"
-        onClick={onOk}
         aria-hidden
       />
       <div className="animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">

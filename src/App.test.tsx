@@ -22,6 +22,12 @@ vi.mock("@tauri-apps/api/webview", () => ({
 const extractCtl = vi.hoisted(() => ({ fail: true }));
 
 vi.mock("@tauri-apps/api/core", () => ({
+  Channel: class {
+    onmessage: (value: unknown) => void;
+    constructor(cb?: (value: unknown) => void) {
+      this.onmessage = cb ?? (() => {});
+    }
+  },
   invoke: (cmd: string) => {
     if (cmd === "drag_window") return Promise.resolve();
     if (cmd === "list_archive") {
@@ -171,6 +177,39 @@ describe("drag and drop", () => {
     await user.click(await screen.findByRole("button", { name: "Extract" }));
     await user.click(await screen.findByRole("button", { name: "Cancel" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("should_open_test_dialog_from_overview_that_backdrop_cannot_close", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
+    });
+    await user.click(await screen.findByRole("button", { name: "Test" }));
+    expect(
+      await screen.findByRole("dialog", { name: "Test archive" }),
+    ).toBeInTheDocument();
+    // The test_archive mock rejects → failure result with an enabled OK.
+    const ok = await screen.findByRole("button", { name: "OK" });
+    expect(ok).toBeEnabled();
+    const backdrop = container.querySelector("[role='dialog'] > [aria-hidden='true']");
+    expect(backdrop).not.toBeNull();
+    if (backdrop) await user.click(backdrop as Element);
+    expect(screen.getByRole("dialog", { name: "Test archive" })).toBeInTheDocument();
+    await user.click(ok);
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("should_open_checksum_dialog_from_overview", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
+    });
+    await user.click(await screen.findByRole("button", { name: "Checksum" }));
+    expect(
+      await screen.findByRole("dialog", { name: "Calculate checksum" }),
+    ).toBeInTheDocument();
   });
 });
 describe("theme switching", () => {

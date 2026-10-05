@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import ArchiveTable from "./ArchiveTable";
 import TitleBar from "./TitleBar";
 import AboutDialog from "./AboutDialog";
+import TestDialog from "./TestDialog";
+import ChecksumDialog from "./ChecksumDialog";
 import { loadAppInfo, type AppInfo } from "./appInfo";
 import ArchiveOverview, { type ArchiveInfo } from "./ArchiveOverview";
 import ExtractDialog from "./ExtractDialog";
@@ -113,6 +115,8 @@ export default function App() {
   const [doneInfo, setDoneInfo] = useState<ExtractResult | null>(null);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [aboutInfo, setAboutInfo] = useState<AppInfo | null>(null);
+  const [testOpen, setTestOpen] = useState(false);
+  const [checksumOpen, setChecksumOpen] = useState(false);
 
   function openAbout() {
     setAboutOpen(true);
@@ -258,6 +262,8 @@ export default function App() {
             info={info}
             loading={loading}
             onOpen={() => void openArchive()}
+            onTest={() => setTestOpen(true)}
+            onChecksum={() => setChecksumOpen(true)}
           />
           <div className="flex min-h-0 flex-[1_1_50%] flex-col">
             <ArchiveTable
@@ -368,6 +374,20 @@ export default function App() {
         info={aboutInfo}
         onOk={() => setAboutOpen(false)}
       />
+      {archive && (
+        <>
+          <TestDialog
+            open={testOpen}
+            archive={archive}
+            onOk={() => setTestOpen(false)}
+          />
+          <ChecksumDialog
+            open={checksumOpen}
+            archive={archive}
+            onClose={() => setChecksumOpen(false)}
+          />
+        </>
+      )}
       </div>
     </div>
   );

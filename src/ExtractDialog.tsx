@@ -10,8 +10,8 @@ function count(value: number): string {
 
 /// Centered extract confirmation: dimmed backdrop, white card with a big
 /// centered icon, the destination, and the selected-of-total file count.
-/// Cancel (orange) dismisses; Proceed (blue) runs the extraction. Esc and
-/// backdrop click also cancel. Nothing renders when closed.
+/// Cancel (orange) dismisses; Proceed (blue) runs the extraction. Esc also
+/// cancels. The backdrop never dismisses — use the buttons.
 export default function ExtractDialog({
   open,
   selected,
@@ -48,9 +48,10 @@ export default function ExtractDialog({
       aria-modal="true"
       aria-labelledby="extract-dialog-title"
     >
+      {/* Backdrop is inert: popups close only via their buttons (or Esc),
+          never by clicking outside. */}
       <div
         className="animate-qz-fade absolute inset-0 bg-black/25"
-        onClick={onCancel}
         aria-hidden
       />
       <div className="animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
