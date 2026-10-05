@@ -19,12 +19,27 @@ pub struct ArchiveEntry {
 }
 
 /// Argv for `7zz l -slt <archive>` (technical listing, stable to parse).
-pub fn list_args(archive: &str) -> Vec<String> {
-    vec!["l".to_string(), "-slt".to_string(), archive.to_string()]
+///
+/// `-p` is ALWAYS passed (empty when no password is known). Rationale: the
+/// Tauri shell plugin spawns 7zz with stdin piped and never closes it, so a
+/// password prompt would block forever and die only via the 60s timeout.
+/// An explicit (possibly empty) `-p` makes 7zz fail fast with a detectable
+/// password error instead — verified against 7zz 26.03.
+pub fn list_args(archive: &str, password: Option<&str>) -> Vec<String> {
+    vec![
+        "l".to_string(),
+        "-slt".to_string(),
+        archive.to_string(),
+        format!("-p{}", password.unwrap_or("")),
+    ]
 }
 
 /// Argv for `7zz x <archive> -o<dest> [files...] [-p<pw>] -y`.
 /// An empty `files` slice extracts everything.
+///
+/// `-p` is always passed (see [`list_args`]): an explicit empty password
+/// fails fast on encrypted content instead of hanging on the stdin prompt
+/// the shell plugin can never answer.
 pub fn extract_args(
     archive: &str,
     dest: &str,
@@ -38,19 +53,17 @@ pub fn extract_args(
     ];
     args.extend(files.iter().cloned());
     args.push("-y".to_string());
-    if let Some(pw) = password {
-        args.push(format!("-p{pw}"));
-    }
+    args.push(format!("-p{}", password.unwrap_or("")));
     args
 }
 
 /// Argv for `7zz t <archive> [-p<pw>]` (integrity test).
 pub fn test_args(archive: &str, password: Option<&str>) -> Vec<String> {
-    let mut args = vec!["t".to_string(), archive.to_string()];
-    if let Some(pw) = password {
-        args.push(format!("-p{pw}"));
-    }
-    args
+    vec![
+        "t".to_string(),
+        archive.to_string(),
+        format!("-p{}", password.unwrap_or("")),
+    ]
 }
 
 /// Argv for `7zz t` with stdout progress (`-bsp1`): percent updates arrive
@@ -376,6 +389,21 @@ pub fn parse_archive_info(output: &str) -> ArchiveInfo {
     }
 }
 
+/// True when 7zz output signals a password problem rather than corruption:
+/// header-encrypted archives refuse to list (`Enter password:` + `Break
+/// signaled` on a DEVNULL stdin, exit 255), and test/extract of encrypted
+/// content report `Wrong password` / `Cannot open encrypted archive`
+/// (exit 2). Verified against 7zz 26.03 (`-tzip` ZipCrypto + `-t7z -mhe=on`).
+/// Matching is case-insensitive; 7zz messages are English-only.
+pub fn is_password_output(text: &str) -> bool {
+    let lower = text.to_lowercase();
+    lower.contains("wrong password")
+        || lower.contains("enter password")
+        || lower.contains("cannot open encrypted archive")
+        || lower.contains("headers error")
+        || lower.contains("break signaled")
+}
+
 /// True when 7zz finished "successfully" but processed nothing: selective
 /// extraction with filters that match no in-archive path prints exactly
 /// this and exits 0, which must surface as an error, not a success.
@@ -390,9 +418,42 @@ mod tests {
     #[test]
     fn should_build_technical_listing_args_when_archive_given() {
         assert_eq!(
-            list_args("docs.7z"),
-            vec!["l".to_string(), "-slt".to_string(), "docs.7z".to_string()]
+            list_args("docs.7z", None),
+            vec![
+                "l".to_string(),
+                "-slt".to_string(),
+                "docs.7z".to_string(),
+                "-p".to_string(),
+            ]
         );
+    }
+
+    #[test]
+    fn should_append_password_flag_to_listing_when_password_given() {
+        assert_eq!(
+            list_args("docs.7z", Some("s3cret")),
+            vec![
+                "l".to_string(),
+                "-slt".to_string(),
+                "docs.7z".to_string(),
+                "-ps3cret".to_string(),
+            ]
+        );
+    }
+
+    #[test]
+    fn should_detect_password_problems_in_7zz_output() {
+        // Header-encrypted, no password (stdin DEVNULL): prompt + abort.
+        assert!(is_password_output("Enter password:\nBreak signaled\n"));
+        // Header-encrypted, wrong password.
+        assert!(is_password_output(
+            "Cannot open encrypted archive. Wrong password?\nERRORS:\nHeaders Error"
+        ));
+        // Content-encrypted, wrong password.
+        assert!(is_password_output("ERROR: Wrong password : data.csv"));
+        assert!(!is_password_output("Everything is Ok\n"));
+        assert!(!is_password_output(""));
+        assert!(!is_password_output("ERROR: CRC Failed : a.txt"));
     }
 
     #[test]
@@ -404,6 +465,7 @@ mod tests {
                 "a.7z".to_string(),
                 "-o/tmp/out".to_string(),
                 "-y".to_string(),
+                "-p".to_string(),
             ]
         );
     }
@@ -419,6 +481,7 @@ mod tests {
                 "a.txt".to_string(),
                 "b/c.txt".to_string(),
                 "-y".to_string(),
+                "-p".to_string(),
             ]
         );
     }
@@ -533,7 +596,12 @@ Attributes = A -rw-r--r--
     fn should_build_test_progress_args_with_bsp1() {
         assert_eq!(
             test_progress_args("a.7z", None),
-            vec!["t".to_string(), "a.7z".to_string(), "-bsp1".to_string()]
+            vec![
+                "t".to_string(),
+                "a.7z".to_string(),
+                "-p".to_string(),
+                "-bsp1".to_string(),
+            ]
         );
         let args = test_progress_args("a.7z", Some("s3cret"));
         assert!(args.contains(&"-ps3cret".to_string()));

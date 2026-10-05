@@ -48,9 +48,9 @@
     "semantic_hash": ""
   },
   "src-tauri/src/lib.rs": {
-    "mtime": 1791216255.5148678,
-    "seen": 1791216841.093838,
-    "ast_hash": "a42e4f031b893f17bb3ada414cad0bca",
+    "mtime": 1791219406.317885,
+    "seen": 1791220049.3470862,
+    "ast_hash": "62c02b9cf0b87262fe7cfc134fd9e485",
     "semantic_hash": ""
   },
   "src-tauri/src/main.rs": {
@@ -66,9 +66,9 @@
     "semantic_hash": ""
   },
   "src/App.tsx": {
-    "mtime": 1791215627.718329,
-    "seen": 1791216841.0938408,
-    "ast_hash": "546c0228704409a949c4673a458f60e1",
+    "mtime": 1791219565.891569,
+    "seen": 1791220049.347094,
+    "ast_hash": "d8287f8c4a740cc0bd1ca2b1dbdf34ef",
     "semantic_hash": ""
   },
   "src/main.tsx": {
@@ -480,9 +480,9 @@
     "semantic_hash": ""
   },
   "src-tauri/src/archive.rs": {
-    "mtime": 1791215414.5824194,
-    "seen": 1791216841.093836,
-    "ast_hash": "f4e378847b315ebf55670ab6283688fa",
+    "mtime": 1791219992.9802551,
+    "seen": 1791220049.347083,
+    "ast_hash": "fc8944887852d45f13fe1329fb3985ed",
     "semantic_hash": ""
   },
   "src-tauri/tests/list_archive_e2e.rs": {
@@ -492,9 +492,9 @@
     "semantic_hash": ""
   },
   "src/App.test.tsx": {
-    "mtime": 1791215730.5149834,
-    "seen": 1791216841.09384,
-    "ast_hash": "988cfe1a097e575ea39c5cab524286f0",
+    "mtime": 1791219620.298386,
+    "seen": 1791220049.347093,
+    "ast_hash": "4b1a474366fe5b34950ea18612b057ac",
     "semantic_hash": ""
   },
   "src/ArchiveOverview.test.tsx": {
@@ -678,9 +678,9 @@
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791216770.7867794,
-    "seen": 1791216841.093875,
-    "ast_hash": "12cc7a10fbdb2f73c445b0502e961322",
+    "mtime": 1791219666.346797,
+    "seen": 1791220049.347179,
+    "ast_hash": "3fecf487283a7093fc791554b3ea69eb",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -954,9 +954,9 @@
     "semantic_hash": ""
   },
   "src/TestDialog.tsx": {
-    "mtime": 1791216231.3983893,
-    "seen": 1791216841.093848,
-    "ast_hash": "9bc0dc000a30803b2dd451bff162e4c5",
+    "mtime": 1791219576.9619455,
+    "seen": 1791220049.347114,
+    "ast_hash": "04024bc7799e9511f078a5d3bf295292",
     "semantic_hash": ""
   },
   "src/appInfo.test.ts": {
@@ -990,15 +990,15 @@
     "semantic_hash": ""
   },
   "src/i18n/locales/en.json": {
-    "mtime": 1791215990.1245944,
-    "seen": 1791216841.093856,
-    "ast_hash": "e24ef0e16d5195b12625726b641f0d3e",
+    "mtime": 1791219458.2769675,
+    "seen": 1791220049.347132,
+    "ast_hash": "c901b99e7685f79dd7bac2cc189f46ba",
     "semantic_hash": ""
   },
   "src/i18n/locales/hi.json": {
-    "mtime": 1791216012.7540445,
-    "seen": 1791216841.093856,
-    "ast_hash": "1771dbad6a09d1563b9e9679985d3915",
+    "mtime": 1791219530.6435165,
+    "seen": 1791220049.347133,
+    "ast_hash": "84cfacd925f3a20aa4cd31e28db84f44",
     "semantic_hash": ""
   },
   "docs/akizip-reference.md": {
@@ -1008,15 +1008,15 @@
     "semantic_hash": ""
   },
   "docs/backend-commands.md": {
-    "mtime": 1791216782.206771,
-    "seen": 1791216841.0938728,
-    "ast_hash": "6e4127b36d0f04c48675154cfe3d1e2c",
+    "mtime": 1791220031.317993,
+    "seen": 1791220049.3471758,
+    "ast_hash": "d4fb946e218bd5cfd876245c3f37775c",
     "semantic_hash": ""
   },
   "docs/i18n.md": {
-    "mtime": 1791216018.8333366,
-    "seen": 1791216841.093874,
-    "ast_hash": "5a4eb9ee200a1783e28082d4bd4427ea",
+    "mtime": 1791219681.608098,
+    "seen": 1791220049.347178,
+    "ast_hash": "e40717bf64d0e7d3ad960b1e30debda2",
     "semantic_hash": ""
   },
   "assets/screenshots/archive-open-10k.png": {
@@ -1035,6 +1035,36 @@
     "mtime": 1791143014.693639,
     "seen": 1791216841.093878,
     "ast_hash": "8d35f3cf893574bb60406aa042e4c571",
+    "semantic_hash": ""
+  },
+  "src/PasswordDialog.test.tsx": {
+    "mtime": 1791219604.1008046,
+    "seen": 1791220049.3471098,
+    "ast_hash": "2dd48dccb89b16c74bfc1ffe5ae7bedb",
+    "semantic_hash": ""
+  },
+  "src/PasswordDialog.tsx": {
+    "mtime": 1791219453.7958016,
+    "seen": 1791220049.347112,
+    "ast_hash": "04a4bad4070514dffe868124268597c6",
+    "semantic_hash": ""
+  },
+  "src/password.test.ts": {
+    "mtime": 1791219595.1083698,
+    "seen": 1791220049.347135,
+    "ast_hash": "68aaf048f949a9933149b13fe48f4709",
+    "semantic_hash": ""
+  },
+  "src/password.ts": {
+    "mtime": 1791219419.0938885,
+    "seen": 1791220049.347136,
+    "ast_hash": "8da752d96e76d806b340405fce9583fc",
+    "semantic_hash": ""
+  },
+  "SECURITY.md": {
+    "mtime": 1791217021.1277297,
+    "seen": 1791220049.3471732,
+    "ast_hash": "2c76150a9d46b3154dc6a85d7fcb4615",
     "semantic_hash": ""
   }
 }

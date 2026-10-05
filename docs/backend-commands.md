@@ -10,9 +10,9 @@ unit-tested without a binary (`npm run test:rust`).
 
 | Command | Args | Returns |
 | --- | --- | --- |
-| `list_archive` | `path` | `ArchiveEntry[]` (`7zz l -slt`) |
-| `info_archive` | `path` | `ArchiveInfo` (listing + fs size/mtime) |
-| `extract_archive` | `path`, `dest`, `files[]` | 7zz stdout (`7zz x -o<dest> [files…] -y`); empty `files` = everything |
+| `list_archive` | `path`, `password?` | `ArchiveEntry[]` (`7zz l -slt [-p<pw>]`) |
+| `info_archive` | `path`, `password?` | `ArchiveInfo` (listing + fs size/mtime) |
+| `extract_archive` | `path`, `dest`, `files[]`, `password?` | 7zz stdout (`7zz x -o<dest> [files…] [-p<pw>] -y`); empty `files` = everything |
 | `test_archive` | `path`, `password?`, `onProgress: Channel<u32>` | `"Everything is Ok"` (`7zz t -bsp1`, percent streamed) |
 | `checksum_file` | `path`, `algorithm`, `onProgress: Channel<u32>` | lowercase hex digest (MD5 / SHA-1 / SHA-256 / SHA-512) |
 | `cancel_checksum` | — | aborts the in-flight `checksum_file` |
@@ -42,4 +42,15 @@ unit-tested without a binary (`npm run test:rust`).
    dismisses it.
 6. **Argv is backend-built.** Only the archive *path* (and algorithm id for
    checksums, validated against `ChecksumAlgo::parse`) crosses IPC; flags
-   are never assembled from frontend strings.
+   are never assembled from frontend strings. `-p` is always appended, even
+   empty: the shell plugin spawns 7zz with stdin piped and never closes it,
+   so without an explicit `-p` a password prompt would block until the
+   timeout. Empty `-p` fails fast with detectable password markers and is
+   ignored for plain archives (verified against 7zz 26.03).
+7. **Passwords ride optional params.** `list/info/extract/test` take
+   `password?` (`-p<pw>` appended server-side). The frontend detects
+   password failures with `isPasswordError` (mirrors Rust's
+   `archive::is_password_output` — keep both marker lists in sync) and
+   opens the password gate instead of erroring; the verified password is
+   remembered per open archive so Test/Extract keep working on encrypted
+   content.

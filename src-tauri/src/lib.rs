@@ -108,14 +108,19 @@ fn tail(text: &str) -> String {
 /// Lists an archive's contents via the pinned 7zz sidecar.
 ///
 /// Argv is built by [`archive::list_args`] (never from raw frontend input);
-/// only the archive *path* crosses the IPC boundary.
+/// only the archive *path* (and optional password) cross the IPC boundary.
 #[tauri::command]
 async fn list_archive(
     app: tauri::AppHandle,
     path: String,
+    password: Option<String>,
 ) -> Result<Vec<archive::ArchiveEntry>, String> {
-    let (code, stdout, stderr) =
-        run_sidecar(&app, archive::list_args(&path), LIST_TIMEOUT_SECS).await?;
+    let (code, stdout, stderr) = run_sidecar(
+        &app,
+        archive::list_args(&path, password.as_deref()),
+        LIST_TIMEOUT_SECS,
+    )
+    .await?;
     if code != Some(0) {
         return Err(String::from_utf8_lossy(&stderr).into_owned());
     }
@@ -125,9 +130,14 @@ async fn list_archive(
 async fn info_archive(
     app: tauri::AppHandle,
     path: String,
+    password: Option<String>,
 ) -> Result<archive::ArchiveInfo, String> {
-    let (code, stdout, stderr) =
-        run_sidecar(&app, archive::list_args(&path), LIST_TIMEOUT_SECS).await?;
+    let (code, stdout, stderr) = run_sidecar(
+        &app,
+        archive::list_args(&path, password.as_deref()),
+        LIST_TIMEOUT_SECS,
+    )
+    .await?;
     if code != Some(0) {
         return Err(String::from_utf8_lossy(&stderr).into_owned());
     }
@@ -145,20 +155,21 @@ async fn info_archive(
 }
 
 /// Extracts an archive via the pinned 7zz sidecar into `dest`
-/// (`7zz x <archive> -o<dest> [files...] -y`, no password prompt). An empty
-/// `files` list extracts everything; otherwise only those in-archive paths.
-/// 7zz creates `dest` when missing. Returns 7zz's stdout; stderr becomes
-/// the error.
+/// (`7zz x <archive> -o<dest> [files...] [-p<pw>] -y`, no password prompt).
+/// An empty `files` list extracts everything; otherwise only those
+/// in-archive paths. 7zz creates `dest` when missing. Returns 7zz's stdout;
+/// stderr becomes the error.
 #[tauri::command]
 async fn extract_archive(
     app: tauri::AppHandle,
     path: String,
     dest: String,
     files: Vec<String>,
+    password: Option<String>,
 ) -> Result<String, String> {
     let (code, stdout, stderr) = run_sidecar(
         &app,
-        archive::extract_args(&path, &dest, None, &files),
+        archive::extract_args(&path, &dest, password.as_deref(), &files),
         EXTRACT_TIMEOUT_SECS,
     )
     .await?;
