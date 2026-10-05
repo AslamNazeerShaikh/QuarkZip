@@ -39,8 +39,13 @@ npm run tauri build
 
 ## Status
 
-Scaffold + branding only. Next: shell/dialog plugins, 7zz list/extract
-wrapper with streaming progress, virtualized file list, nested-archive temp handling.
+Working archive manager (dev): open/list 10k-entry archives (virtualized,
+paginated table + metadata grid), extract with confirm/result dialogs,
+integrity test (`7zz t`) and MD5/SHA-1/SHA-256/SHA-512 checksums with
+streaming progress (`docs/backend-commands.md`), About dialog, EN/HI runtime
+translations with footer switcher (`docs/i18n.md`), light/system/dark themes,
+per-OS window chrome (`docs/window-chrome.md`). Next: nested-archive temp
+handling, in-archive add/rename/delete (see `docs/akizip-reference.md` §10).
 
 ## References
 

@@ -93,8 +93,8 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   destination chooser (grows full width to the pagination control: folder
   icon + centered path + chevron indicator, native directory picker,
   defaults to the archive's own folder) + inline `role="status"` result;
-  right = `Pagination` + `About` (secondary `bar` button opening the
-  About dialog) + `ThemeSwitch`. Confirm runs `extract_archive`
+  right = `Pagination` + shell-styled `About` (opens the About dialog) +
+  `LanguageSwitch` + `ThemeSwitch`. Confirm runs `extract_archive`
   (`7zz x -o<dest> [files...] -y`) with the checked rows, or everything
   when nothing is checked.
 - `ExtractDialog`: centered modal (dim backdrop, 16px radius, 180ms pop,
@@ -115,6 +115,14 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   the run, keeps the popup open), Close (cancels if running, then closes),
   computed digest with match/mismatch verdict. Esc mirrors Close except
   mid-calculation. Same modal language; backdrop never dismisses.
+  Footer variants never change with phase (Calculate primary, Cancel/Close
+  secondary).
+- `AboutDialog`: same modal language — app name/version/release-date/
+  commit/OS/arch grid, 7-Zip attribution paragraph with `7-zip.org` link,
+  origin note, single OK. Backdrop never dismisses.
+- `LanguageSwitch`: footer shell control (same shell as Pagination) with a
+  floating listbox of native language names; switching persists to
+  `localStorage` and re-renders instantly, no restart.
 - `ArchiveTable` reports checkbox selection via `onSelectionChange`
   (cleared on each new listing); `App` feeds it to the dialog + extract.
 - `ArchiveOverview`: the 50% overview card — centered empty state
