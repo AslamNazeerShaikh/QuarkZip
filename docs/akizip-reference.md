@@ -224,3 +224,169 @@ Invocation (`src/plugins/sevenzip.py: _run_7zip(args, timeout, cancel_event, on_
 ## 10. What QuarkZip borrows
 
 Format matrix, compress-dialog fields + Auto Recommend, in-archive add/move/rename/delete/mkdir semantics, `JobQueue + status(progress/ETA) + cancel/timeout + logs` pattern, `--`/`-spd` hardening, temp-staging for adds. QuarkZip diverges: Tauri 2 + React + Rust sidecar (`src-tauri/binaries/7zz-*`) instead of GTK/Flatpak, single-window 50/50 overview/table layout (`docs/ui-guidelines.md`).
+
+## 11. Diagrams
+
+### 11.1 System architecture (UI → app → queue → plugins → 7zz)
+
+```mermaid
+flowchart TD
+    User([User]) --> Win[AkizipWindow<br/>src/ui/window.py<br/>LogPanelMixin + InfoDialogMixin]
+    Win --> App[AkizipApplication<br/>Adw.Application<br/>commands dict + job_queue + sysop]
+    App --> SysOp[sysop - system.py<br/>immediate state only<br/>selected / destination / format_category]
+    Win -->|_run_command group.feature| JQ[JobQueue<br/>single thread + queue.Queue<br/>serial worker]
+    JQ --> SZ[sevenzip.py<br/>archive.info / list / compress_advance<br/>extract / extract_file / delete<br/>add / test / move / rename / mkdir]
+    JQ --> SJ[system_job.py<br/>system.move / scan<br/>suggest_zip_paramiters]
+    SZ --> Popen[7zz /app/bin/7zz<br/>subprocess.Popen argv only<br/>-bsp2 progress + killpg]
+    SJ --> FS[(Filesystem<br/>pathlib / shutil / tempfile<br/>1 MiB chunks)]
+    JQ -->|GLib.idle_add| Logs[Logs window<br/>log_panel.py<br/>progress + ETA + Cancel]
+    Win -->|parse_archive_entries<br/>l -slt -ba| List[ColumnView<br/>Path / Size / Modified]
+    Win --> Dialogs[Dialogs<br/>compress / add / extract<br/>move chooser / password / info / prefs]
+```
+
+### 11.2 Main window composition (`src/window.ui`)
+
+```mermaid
+flowchart TD
+    AWin[AdwApplicationWindow AkizipWindow<br/>800x600] --> Toast[AdwToastOverlay #toast_overlay]
+    Toast --> TV[AdwToolbarView]
+    TV --> HB[AdwHeaderBar<br/>MenuButton primary_menu]
+    TV --> Content[GtkBox vertical<br/>margins 10 spacing 10]
+    Content --> Toolbar[GtkBox horizontal homogeneous<br/>Open / Compress Split / ExtractAll Split<br/>Test / Move / Delete / Info]
+    Content --> Addr[GtkEntry #address_entry<br/>folder-symbolic]
+    Content --> Stack[GtkStack #file_list_stack]
+    Stack --> SEmpty[empty - Open an archive]
+    Stack --> SNotArc[not_archive]
+    Stack --> SLoading[loading - Spinner 48px]
+    Stack --> SEmptyArc[empty_archive]
+    Stack --> SNoPrev[no_preview - bz2/xz]
+    Stack --> SList[list - ScrolledWindow<br/>ColumnView MultiSelection]
+    Toolbar --> Menus[Menus<br/>primary / add / extract<br/>extract_popup / context_menu]
+```
+
+### 11.3 Startup + distribution (Flatpak build → run)
+
+```mermaid
+flowchart LR
+    subgraph Build[flatpak-builder top.akizip.akizip.json]
+        direction TB
+        DL[download 7z2603-linux-x64.tar.xz<br/>sha256 dc99eff5..3c695] --> INST[tar -xf + install -Dm755<br/>7zz + 7zzs to /app/bin]
+        MESON[meson build<br/>gresource + akizip.in→akizip<br/>install to pkgdatadir + bindir] --> RES[Gio.Resource akizip.gresource<br/>7x .ui files]
+    end
+    Build --> Run[akizip launcher]
+    Run --> LANG[read GSettings language<br/>set LANGUAGE/LANG<br/>bindtextdomain]
+    Run --> GRES[Resource.load + _register]
+    Run --> MAIN[main.py - App + JobQueue + sysop<br/>register_plugins + queue.start + app.run]
+    MAIN --> DOPEN[do_open %F<br/>MimeType 7z/zip/rar/tar/gz/...]
+```
+
+### 11.4 Job lifecycle (`job_queue.py` + `status.py`)
+
+```mermaid
+stateDiagram-v2
+    [*] --> pending: submit fn+args
+    pending --> cancelled: cancel before dequeue
+    pending --> working: dequeue + start msg
+    working --> finished: return OK + elapsed &lt; timeout
+    working --> error: RuntimeError / OSError / FileNotFoundError
+    working --> timeout: TimeoutError or elapsed >= timeout
+    working --> cancelled: cancel_event set
+    finished --> [*]: on_success via idle_add
+    error --> [*]: on_error via idle_add
+    timeout --> [*]: on_error via idle_add
+    cancelled --> [*]: on_error skipped, on_status only
+    note right of working: on_status on every transition<br/>progress int + ETA float
+```
+
+### 11.5 7z invocation with progress / cancel / timeout (`sevenzip._run_7zip`)
+
+```mermaid
+sequenceDiagram
+    participant UI as AkizipWindow
+    participant JQ as JobQueue thread
+    participant SZ as sevenzip._run_7zip
+    participant P as 7zz Popen<br/>start_new_session
+    UI->>JQ: submit archive.* + timeout + cancel_event + task_status
+    JQ->>SZ: call fn timeout/cancel_event/task_status
+    SZ->>P: Popen /app/bin/7zz args + -bsp2<br/>stdin DEVNULL, PIPE stdout/stderr
+    par stderr reader + stdout reader
+        P-->>SZ: % lines backspace-aware regex (\d+)%
+    end
+    SZ->>JQ: task_status.set_progress % → ETA = elapsed*(100/%-1)
+    JQ->>UI: on_status idle_add → Logs progress bar
+    alt cancel_event set every 0.1s
+        SZ->>P: os.killpg SIGKILL + join 1s
+        SZ-->>JQ: raise RuntimeError Cancelled
+    else monotonic timeout exceeded
+        SZ->>P: os.killpg SIGKILL + join 1s
+        SZ-->>JQ: raise TimeoutError 7zz timed out
+    else process exits
+        P-->>SZ: returncode + stdout + stderr
+        alt returncode != 0 or test missing Everything is Ok
+            SZ-->>JQ: raise RuntimeError combined output
+        else ok
+            SZ-->>JQ: return output string
+        end
+    end
+```
+
+### 11.6 Compress with Auto Recommend (`compress-dialog.ui` + `system_job`)
+
+```mermaid
+flowchart TD
+    Open[butadd → _present_compress_dialog] --> Pick[Add Files / Add Folders<br/>source_paths + folder_entry + filename_entry]
+    Pick --> Suggest{suggest_btn?}
+    Suggest -->|yes| Scan[system.scan each src, depth<br/>merge counts/sizes/categories/buckets]
+    Scan --> Reco[suggest_zip_paramiters<br/>packed>=90%→tar store<br/>packed>=70%→zip store<br/>text>=60%→7z mx9 solid<br/>files>5000→mx7 solid<br/>size>=2GiB→mx3 else mx5]
+    Reco --> Apply[apply format/level/method<br/>dictionary/threads to combos<br/>log args + reasons]
+    Suggest -->|no / done| Args[_advanced_compress_args<br/>-t -mx -m0/-mm -md -mmt -p -mhe]
+    Args --> Exists{output exists?}
+    Exists -->|yes| Replace[Replace dialog DESTRUCTIVE<br/>unlink or abort]
+    Exists -->|no| Submit[_run_command archive.compress_advance<br/>out + sources + sevenzip_args]
+    Replace --> Submit
+    Submit --> Job[JobQueue → 7zz a → finished/failed]
+```
+
+### 11.7 Extract / Test with password retry
+
+```mermaid
+flowchart TD
+    E0[butextract / butextract_one / buttest<br/>guard can_extract] --> EDlg[_present_extract_dialog<br/>dest entry + portal browse + password_entry]
+    EDlg --> Run[run_extract dest password<br/>_run_command archive.extract / extract_file / test]
+    Run --> Job[JobQueue → 7zz x -o + -y / t]
+    Job -->|ok| Done[finished → log Done]
+    Job -->|is_password_error?| PW[yes → _present_password_dialog<br/>retry same command with new password]
+    PW --> Run
+    Job -->|other error| Fail[failed/timeout/cancelled<br/>log full stdout+stderr + toast]
+```
+
+### 11.8 In-archive mutations (add / delete / move / rename / mkdir)
+
+```mermaid
+flowchart TD
+    G[guard can_extract + can_modify<br/>else log format does not support modification] --> Sel[_selected_entries excl ..]
+    Sel --> Add[butadd_file → AddDialog<br/>sources + dest_folder → archive.add<br/>symlink stage akizip-add-* → 7z a -spd -- cwd=temp]
+    Sel --> Del[butdelete → AlertDialog DESTRUCTIVE<br/>1 vs N message → archive.delete<br/>7z d -spd -- names]
+    Sel --> Mov1[butmove 1 item → Move dialog<br/>entry + folder browse → archive.move<br/>7z rn -spd -- src dst]
+    Sel --> MovN[butmove N items → Move-many dialog<br/>dest folder → pairs → archive.move<br/>single rn rewrite]
+    Sel --> Ren[butrename exactly 1 → Rename dialog<br/>validate no / . .. → archive.rename<br/>7z rn parent/new]
+    Sel --> Mkdir[butnew_folder → name dialog<br/>current_path/name → archive.mkdir<br/>stage empty dir akizip-mkdir-* → 7z a]
+    Add & Del & Mov1 & MovN & Ren & Mkdir --> Refresh[on_success_extra → _refresh_file_list<br/>archive.list → parse_archive_entries]
+    Refresh --> OnErr{on_error is_password_error?}
+    OnErr -->|yes| PWRetry[password dialog → rerun with pw]
+    OnErr -->|no| LogErr[log ERROR + toast]
+```
+
+### 11.9 Error-handling layers (§8)
+
+```mermaid
+flowchart TD
+    L1[L1 immediate validation<br/>sysop._failed + button guards<br/>no exception] --> L2[L2 plugin raise<br/>FileNotFound / NotADirectory<br/>FileExists / ValueError<br/>RuntimeError / TimeoutError]
+    L2 --> L3[L3 JobQueue mapping<br/>cancel→cancelled<br/>TimeoutError→timed_out<br/>else failed<br/>post-elapsed check]
+    L3 --> L4[L4 7z output as error<br/>non-zero → combined output<br/>test needs Everything is Ok]
+    L4 --> L5[L5 password recovery<br/>is_password_error → retry dialog]
+    L5 --> L6[L6 destructive confirmations<br/>Delete + Replace DESTRUCTIVE<br/>same-name → toast no submit]
+    L6 --> L7[L7 partial-write safety<br/>_remove_partial<br/>rmtree temp + nested cleanup]
+    L7 --> L8[L8 settings robustness<br/>try/except fallback defaults]
+    L8 --> UIlogs[Logs row + header colour<br/>Running/Done/Warning/Timeout/Error/Cancelled]
+```
