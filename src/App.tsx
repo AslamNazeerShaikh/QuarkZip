@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import ArchiveTable from "./ArchiveTable";
 import TitleBar from "./TitleBar";
 import AboutDialog from "./AboutDialog";
+import PasswordDialog from "./PasswordDialog";
 import TestDialog from "./TestDialog";
 import ChecksumDialog from "./ChecksumDialog";
 import { loadAppInfo, type AppInfo } from "./appInfo";
@@ -21,6 +22,7 @@ import LanguageSwitch from "./LanguageSwitch";
 import { Button } from "./components/ui/button";
 import { useTheme } from "./useTheme";
 import { useLanguage } from "./i18n/LanguageContext";
+import { isPasswordError } from "./password";
 
 export interface ArchiveEntry {
   path: string;
@@ -117,6 +119,25 @@ export default function App() {
   const [aboutInfo, setAboutInfo] = useState<AppInfo | null>(null);
   const [testOpen, setTestOpen] = useState(false);
   const [checksumOpen, setChecksumOpen] = useState(false);
+  // Password gate: path awaiting unlock (dialog open), what to do once
+  // verified (open the listing vs. retry the originating operation), and
+  // the verified password of the current archive (reused for Test/Extract
+  // so encrypted content keeps working after unlocking).
+  const [passwordOpen, setPasswordOpen] = useState(false);
+  const [pendingPath, setPendingPath] = useState<string | null>(null);
+  const [passwordMode, setPasswordMode] = useState<"open" | "extract" | "test">("open");
+  const [archivePassword, setArchivePassword] = useState<string | null>(null);
+
+  function askPassword(path: string, mode: "open" | "extract" | "test") {
+    setPendingPath(path);
+    setPasswordMode(mode);
+    setPasswordOpen(true);
+  }
+
+  function closePasswordGate() {
+    setPasswordOpen(false);
+    setPendingPath(null);
+  }
 
   function openAbout() {
     setAboutOpen(true);
@@ -135,19 +156,20 @@ export default function App() {
     setPage((p) => Math.min(p, Math.max(0, pageCount - 1)));
   }, [pageCount]);
 
-  async function listPath(path: string) {
+  async function listPath(path: string, password: string | null = null) {
     setLoading(true);
     setError(null);
     setDoneInfo(null);
     try {
-      const list = await invoke<ArchiveEntry[]>("list_archive", { path });
+      const list = await invoke<ArchiveEntry[]>("list_archive", { path, password });
       setArchive(path);
       setEntries(list);
+      setArchivePassword(password);
       void setWindowTitle(path);
       // Details are best-effort: the table must work even if the
       // summary parse fails (or the backend predates `info_archive`).
       try {
-        const summary = await invoke<ArchiveInfo>("info_archive", { path });
+        const summary = await invoke<ArchiveInfo>("info_archive", { path, password });
         setInfo(summary);
       } catch {
         setInfo(null);
@@ -159,12 +181,20 @@ export default function App() {
         setDest("");
       }
     } catch (e) {
-      setError(typeof e === "string" ? e : String(e));
-      setArchive(null);
-      setEntries([]);
-      setInfo(null);
-      setDest("");
-      void setWindowTitle(null);
+      const message = typeof e === "string" ? e : String(e);
+      if (isPasswordError(message)) {
+        // Encrypted archive: keep the current listing exactly as-is and
+        // ask for the password instead of showing an error.
+        askPassword(path, "open");
+      } else {
+        setError(message);
+        setArchive(null);
+        setEntries([]);
+        setInfo(null);
+        setArchivePassword(null);
+        setDest("");
+        void setWindowTitle(null);
+      }
     } finally {
       setLoading(false);
     }
@@ -206,22 +236,41 @@ export default function App() {
     setDoneInfo(null);
   }
 
-  async function extract() {
+  async function extract(passwordOverride: string | null = null) {
     if (!archive || !dest || extracting) return;
     const files = [...selectedPaths];
     const count = files.length === 0 ? entries.length : files.length;
+    const password = passwordOverride ?? archivePassword;
     setExtracting(true);
     try {
-      await invoke("extract_archive", { path: archive, dest, files });
+      await invoke("extract_archive", { path: archive, dest, files, password });
       setDoneInfo({ ok: true, fileCount: count, dest });
     } catch (e) {
-      setDoneInfo({
-        ok: false,
-        message: typeof e === "string" ? e : String(e),
-        dest,
-      });
+      const message = typeof e === "string" ? e : String(e);
+      if (isPasswordError(message) && passwordOverride === null) {
+        // First failure and no fresh password: ask, then retry on verify
+        // instead of dumping raw per-file 7zz errors. Cancel keeps state.
+        if (archive) askPassword(archive, "extract");
+      } else {
+        setDoneInfo({ ok: false, message, dest });
+      }
     } finally {
       setExtracting(false);
+    }
+  }
+
+  /// Runs after the gate verifies a password: remembers it and retries the
+  /// originating operation (open → load listing, extract/test → rerun).
+  function acceptPassword(path: string, password: string) {
+    closePasswordGate();
+    if (passwordMode === "extract") {
+      setArchivePassword(password);
+      void extract(password);
+    } else if (passwordMode === "test") {
+      setArchivePassword(password);
+      setTestOpen(true);
+    } else {
+      void listPath(path, password);
     }
   }
 
@@ -379,7 +428,14 @@ export default function App() {
           <TestDialog
             open={testOpen}
             archive={archive}
+            password={archivePassword}
             onOk={() => setTestOpen(false)}
+            onPasswordError={() => {
+              // Never unlocked for this operation: swap the raw 7zz error
+              // for the password gate; verifying reopens the test.
+              setTestOpen(false);
+              askPassword(archive, "test");
+            }}
           />
           <ChecksumDialog
             open={checksumOpen}
@@ -387,6 +443,21 @@ export default function App() {
             onClose={() => setChecksumOpen(false)}
           />
         </>
+      )}
+      {passwordOpen && pendingPath && (
+        <PasswordDialog
+          open
+          archive={pendingPath}
+          acceptLabel={
+            passwordMode === "extract"
+              ? t("app.extract")
+              : passwordMode === "test"
+                ? t("overview.test")
+                : t("password.open")
+          }
+          onAccept={acceptPassword}
+          onCancel={closePasswordGate}
+        />
       )}
       </div>
     </div>

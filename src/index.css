@@ -128,9 +128,47 @@ body {
 .animate-qz-pop {
   animation: qz-pop 0.18s ease-out;
 }
+/* Wrong-password shake: short horizontal rattle on the input row. */
+@keyframes qz-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+.animate-qz-shake {
+  animation: qz-shake 0.4s ease-out;
+}
+/* Verified check: springy scale-in for the success icon. */
+@keyframes qz-success {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-qz-success {
+  animation: qz-success 0.35s ease-out;
+}
 @media (prefers-reduced-motion: reduce) {
   .animate-qz-fade,
-  .animate-qz-pop {
+  .animate-qz-pop,
+  .animate-qz-shake,
+  .animate-qz-success {
     animation: none;
   }
 }

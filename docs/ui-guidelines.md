@@ -123,6 +123,14 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
 - `LanguageSwitch`: footer shell control (same shell as Pagination) with a
   floating listbox of native language names; switching persists to
   `localStorage` and re-renders instantly, no restart.
+- `PasswordDialog`: password gate for encrypted archives — lock icon,
+  password input with show/hide peek, live verify progress (`7zz t`);
+  wrong passwords shake the input red and keep Check/Cancel, a match
+  animates a success check and reveals the accept button. Opens for
+  listing failures and for Test/Extract password errors (which it retries
+  after verifying); the accept button reads Open / Extract / Test per
+  caller. Cancel/Esc dismiss with the current listing untouched. Same
+  modal language; backdrop never dismisses.
 - `ArchiveTable` reports checkbox selection via `onSelectionChange`
   (cleared on each new listing); `App` feeds it to the dialog + extract.
 - `ArchiveOverview`: the 50% overview card — centered empty state

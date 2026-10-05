@@ -3,6 +3,7 @@ import { CheckCircle2, ShieldCheck, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "./components/ui/button";
 import { useLanguage } from "./i18n/LanguageContext";
+import { isPasswordError } from "./password";
 
 type Phase = { running: true; pct: number } | { running: false; ok: boolean; message: string };
 
@@ -18,11 +19,17 @@ function clampPct(value: number): number {
 export default function TestDialog({
   open,
   archive,
+  password = null,
   onOk,
+  onPasswordError,
 }: {
   open: boolean;
   archive: string;
+  password?: string | null;
   onOk: () => void;
+  /// Called instead of showing a result when the run fails for lack of a
+  /// password (and none was supplied) — the caller swaps in the gate.
+  onPasswordError?: () => void;
 }) {
   const { t } = useLanguage();
   const [phase, setPhase] = useState<Phase>({ running: true, pct: 0 });
@@ -34,25 +41,26 @@ export default function TestDialog({
     const channel = new Channel<number>((pct) => {
       if (alive) setPhase({ running: true, pct: clampPct(pct) });
     });
-    invoke<string>("test_archive", { path: archive, password: null, onProgress: channel })
+    invoke<string>("test_archive", { path: archive, password, onProgress: channel })
       .then(() => {
         if (alive) setPhase({ running: false, ok: true, message: t("test.pass") });
       })
       .catch((e) => {
-        if (alive) {
-          setPhase({
-            running: false,
-            ok: false,
-            message: typeof e === "string" ? e : String(e),
-          });
+        if (!alive) return;
+        const message = typeof e === "string" ? e : String(e);
+        if (password === null && isPasswordError(message) && onPasswordError) {
+          onPasswordError();
+          return;
         }
+        setPhase({ running: false, ok: false, message });
       });
     return () => {
       alive = false;
     };
-    // Re-run once per opening; `t` is stable per language.
+    // Re-run once per opening (and per password — unlocking reuses it);
+    // `t` is stable per language.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, archive]);
+  }, [open, archive, password]);
 
   useEffect(() => {
     if (!open || phase.running) return;

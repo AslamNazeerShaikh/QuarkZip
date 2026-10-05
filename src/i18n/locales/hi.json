@@ -94,6 +94,18 @@
   "lang.language": "भाषा",
   "lang.changeLanguage": "भाषा बदलें",
 
+  "password.title": "पासवर्ड आवश्यक",
+  "password.label": "पासवर्ड",
+  "password.placeholder": "आर्काइव पासवर्ड दर्ज करें",
+  "password.show": "पासवर्ड दिखाएँ",
+  "password.hide": "पासवर्ड छिपाएँ",
+  "password.check": "जाँचें",
+  "password.open": "खोलें",
+  "password.wrong": "गलत पासवर्ड — पुनः प्रयास करें।",
+  "password.verified": "पासवर्ड सही है।",
+  "password.checking": "सत्यापित हो रहा है…",
+  "password.progress": "पासवर्ड सत्यापन",
+
   "test.title": "आर्काइव परीक्षण",
   "test.testing": "{name} का परीक्षण हो रहा है…",
   "test.pass": "अखंडता जाँच सफल — सब कुछ ठीक है।",

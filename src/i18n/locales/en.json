@@ -94,6 +94,18 @@
   "lang.language": "Language",
   "lang.changeLanguage": "Change language",
 
+  "password.title": "Password required",
+  "password.label": "Password",
+  "password.placeholder": "Enter archive password",
+  "password.show": "Show password",
+  "password.hide": "Hide password",
+  "password.check": "Check",
+  "password.open": "Open",
+  "password.wrong": "Wrong password — try again.",
+  "password.verified": "Password correct.",
+  "password.checking": "Verifying…",
+  "password.progress": "Password verification",
+
   "test.title": "Test archive",
   "test.testing": "Testing {name}…",
   "test.pass": "Integrity check passed — Everything is Ok.",

@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
@@ -28,14 +28,57 @@ vi.mock("@tauri-apps/api/core", () => ({
       this.onmessage = cb ?? (() => {});
     }
   },
-  invoke: (cmd: string) => {
+  invoke: (cmd: string, args?: unknown) => {
     if (cmd === "drag_window") return Promise.resolve();
     if (cmd === "list_archive") {
+      const { path, password } = (args ?? {}) as {
+        path: string;
+        password: string | null;
+      };
+      // Encrypted fixture: no password → 7zz-style password failure.
+      if (path === "/tmp/secret.zip" && !password) {
+        return Promise.reject("Enter password:\nBreak signaled");
+      }
+      if (path === "/tmp/secret.zip") {
+        return Promise.resolve([
+          { path: "secret.txt", size: 5, modified: null, is_folder: false },
+        ]);
+      }
+      if (path === "/tmp/locked.zip") {
+        // Content-encrypted zip: names list without a password, but
+        // extraction needs one — the reported Extract-before-password case.
+        return Promise.resolve([
+          { path: "locked.txt", size: 5, modified: null, is_folder: false },
+        ]);
+      }
       return Promise.resolve([
         { path: "dropped.txt", size: 10, modified: null, is_folder: false },
       ]);
     }
+    if (cmd === "test_archive") {
+      const { path, password } = (args ?? {}) as {
+        path: string;
+        password: string | null;
+      };
+      if (password === "Correct123") return Promise.resolve("Everything is Ok");
+      // Encrypted fixtures fail the 7zz way; plain archives pass.
+      if (path === "/tmp/locked.zip" || path === "/tmp/secret.zip") {
+        return Promise.reject("ERROR: Wrong password : data.csv");
+      }
+      return Promise.resolve("Everything is Ok");
+    }
     if (cmd === "extract_archive") {
+      const { path, password } = (args ?? {}) as {
+        path: string;
+        password: string | null;
+      };
+      // locked.zip without a password fails the 7zz way (per-file errors);
+      // the app must gate instead of showing them.
+      if (path === "/tmp/locked.zip" && !password) {
+        return Promise.reject(
+          "ERROR: Wrong password : locked.txt",
+        );
+      }
       return extractCtl.fail
         ? Promise.reject(`unexpected command ${cmd}`)
         : Promise.resolve("Everything is Ok");
@@ -210,6 +253,126 @@ describe("drag and drop", () => {
     expect(
       await screen.findByRole("dialog", { name: "Calculate checksum" }),
     ).toBeInTheDocument();
+  });
+
+  it("should_ask_for_password_when_dropped_archive_is_encrypted", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/secret.zip"] },
+    });
+    expect(
+      await screen.findByRole("dialog", { name: "Password required" }),
+    ).toBeInTheDocument();
+    // No error shown and the previous (empty) state is untouched.
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(screen.getByText("No archive open")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Cancel" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.getByText("No archive open")).toBeInTheDocument();
+  });
+
+  it("should_keep_current_listing_when_password_cancelled", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
+    });
+    await screen.findByText("dropped.txt");
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/secret.zip"] },
+    });
+    expect(
+      await screen.findByRole("dialog", { name: "Password required" }),
+    ).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Cancel" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.getByText("dropped.txt")).toBeInTheDocument();
+  });
+
+  it("should_unlock_and_open_on_correct_password", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/secret.zip"] },
+    });
+    expect(
+      await screen.findByRole("dialog", { name: "Password required" }),
+    ).toBeInTheDocument();
+    await user.type(screen.getByLabelText("Password"), "Correct123");
+    await user.click(screen.getByRole("button", { name: "Check" }));
+    await user.click(await screen.findByRole("button", { name: "Open" }));
+    expect(await screen.findByText("secret.txt")).toBeInTheDocument();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("should_gate_extract_behind_password_instead_of_raw_errors", async () => {
+    extractCtl.fail = false;
+    const user = userEvent.setup();
+    render(<App />);
+    // locked.zip lists without a password (content-encrypted names visible).
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/locked.zip"] },
+    });
+    await screen.findByText("locked.txt");
+    await user.click(await screen.findByRole("button", { name: "Extract" }));
+    await user.click(await screen.findByRole("button", { name: "Proceed" }));
+    // No failure popup — the password gate opens instead.
+    expect(
+      await screen.findByRole("dialog", { name: "Password required" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("dialog", { name: "Extraction failed" }),
+    ).not.toBeInTheDocument();
+    await user.type(screen.getByLabelText("Password"), "Correct123");
+    await user.click(screen.getByRole("button", { name: "Check" }));
+    const gate = await screen.findByRole("dialog", { name: "Password required" });
+    await user.click(within(gate).getByRole("button", { name: "Extract" }));
+    expect(
+      await screen.findByRole("dialog", { name: "Extraction complete" }),
+    ).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "OK" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.getByText("locked.txt")).toBeInTheDocument();
+  });
+
+  it("should_keep_state_when_extract_gate_cancelled", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/locked.zip"] },
+    });
+    await screen.findByText("locked.txt");
+    await user.click(await screen.findByRole("button", { name: "Extract" }));
+    await user.click(await screen.findByRole("button", { name: "Proceed" }));
+    expect(
+      await screen.findByRole("dialog", { name: "Password required" }),
+    ).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Cancel" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.getByText("locked.txt")).toBeInTheDocument();
+  });
+
+  it("should_gate_test_behind_password_and_rerun_after_verify", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/locked.zip"] },
+    });
+    await screen.findByText("locked.txt");
+    await user.click(await screen.findByRole("button", { name: "Test" }));
+    // Raw 7zz password errors never surface — the gate swaps in.
+    expect(
+      await screen.findByRole("dialog", { name: "Password required" }),
+    ).toBeInTheDocument();
+    await user.type(screen.getByLabelText("Password"), "Correct123");
+    await user.click(screen.getByRole("button", { name: "Check" }));
+    const gate = await screen.findByRole("dialog", { name: "Password required" });
+    await user.click(within(gate).getByRole("button", { name: "Test" }));
+    expect(
+      await screen.findByRole("dialog", { name: "Test archive" }),
+    ).toBeInTheDocument();
+    expect(await screen.findByText(/Integrity check passed/)).toBeInTheDocument();
   });
 });
 describe("theme switching", () => {

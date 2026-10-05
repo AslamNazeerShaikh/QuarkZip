@@ -66,9 +66,9 @@
     "semantic_hash": ""
   },
   "src/App.tsx": {
-    "mtime": 1791219565.891569,
-    "seen": 1791220049.347094,
-    "ast_hash": "d8287f8c4a740cc0bd1ca2b1dbdf34ef",
+    "mtime": 1791220443.8300068,
+    "seen": 1791220638.9657211,
+    "ast_hash": "6920868bcaafa0904550dcbb828fbeb2",
     "semantic_hash": ""
   },
   "src/main.tsx": {
@@ -492,9 +492,9 @@
     "semantic_hash": ""
   },
   "src/App.test.tsx": {
-    "mtime": 1791219620.298386,
-    "seen": 1791220049.347093,
-    "ast_hash": "4b1a474366fe5b34950ea18612b057ac",
+    "mtime": 1791220620.0127554,
+    "seen": 1791220638.9657211,
+    "ast_hash": "3b74f85f194888f6dabde835b5a47b51",
     "semantic_hash": ""
   },
   "src/ArchiveOverview.test.tsx": {
@@ -678,9 +678,9 @@
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791219666.346797,
-    "seen": 1791220049.347179,
-    "ast_hash": "3fecf487283a7093fc791554b3ea69eb",
+    "mtime": 1791220634.052268,
+    "seen": 1791220638.965753,
+    "ast_hash": "09d5e614fc638af9bb2c07c8478b8e7b",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -954,9 +954,9 @@
     "semantic_hash": ""
   },
   "src/TestDialog.tsx": {
-    "mtime": 1791219576.9619455,
-    "seen": 1791220049.347114,
-    "ast_hash": "04024bc7799e9511f078a5d3bf295292",
+    "mtime": 1791220456.3534145,
+    "seen": 1791220638.965728,
+    "ast_hash": "0d555b285c7632ffe5d0f34a6acbc15b",
     "semantic_hash": ""
   },
   "src/appInfo.test.ts": {
@@ -1038,15 +1038,15 @@
     "semantic_hash": ""
   },
   "src/PasswordDialog.test.tsx": {
-    "mtime": 1791219604.1008046,
-    "seen": 1791220049.3471098,
-    "ast_hash": "2dd48dccb89b16c74bfc1ffe5ae7bedb",
+    "mtime": 1791220501.889244,
+    "seen": 1791220638.965727,
+    "ast_hash": "35cbf8947c0e5001301b29025c299518",
     "semantic_hash": ""
   },
   "src/PasswordDialog.tsx": {
-    "mtime": 1791219453.7958016,
-    "seen": 1791220049.347112,
-    "ast_hash": "04a4bad4070514dffe868124268597c6",
+    "mtime": 1791220486.4834843,
+    "seen": 1791220638.965728,
+    "ast_hash": "5884eca5825b61a13d534d54c0110595",
     "semantic_hash": ""
   },
   "src/password.test.ts": {
