@@ -678,9 +678,9 @@
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791226839.3987544,
-    "seen": 1791226847.4604108,
-    "ast_hash": "12eb6f9ebfaf5a9cd48404318e3b785c",
+    "mtime": 1791226920.3932202,
+    "seen": 1791226927.798151,
+    "ast_hash": "6aa8c102bc5a625b2b169f6a43144178",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -942,9 +942,9 @@
     "semantic_hash": ""
   },
   "src/LanguageSwitch.tsx": {
-    "mtime": 1791226811.0372317,
-    "seen": 1791226847.460383,
-    "ast_hash": "904235bd9512b6842230ba465fe3872e",
+    "mtime": 1791226916.2796338,
+    "seen": 1791226927.7981231,
+    "ast_hash": "2023c3c93433a9afe8a31dc93812c422",
     "semantic_hash": ""
   },
   "src/TestDialog.test.tsx": {

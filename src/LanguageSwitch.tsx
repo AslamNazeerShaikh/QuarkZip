@@ -70,7 +70,9 @@ export default function LanguageSwitch() {
         <div
           role="listbox"
           aria-label={t("lang.language")}
-          className="animate-qz-pop absolute bottom-full left-0 mb-2 w-max min-w-full rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-1 shadow-[var(--qz-shadow-card)]"
+          // Right-anchored: this control sits at the window's right edge,
+          // so the menu opens inward (right-0) instead of hitting the wall.
+          className="animate-qz-pop absolute right-0 bottom-full mb-2 w-max min-w-full rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-1 shadow-[var(--qz-shadow-card)]"
         >
           {LOCALES.map((locale) => {
             const selected = locale.code === lang;

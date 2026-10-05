@@ -85,7 +85,9 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   8px inner radii. Segmented behavior (sliding indicator) preserved.
   The page-size menu hugs its trigger (`left-0`, `w-max min-w-full`, 8px
   gap) with option text insets matching the trigger (`px-2`), so list
-  edges and text align with the control below. The footer `About` and
+  edges and text align with the control below. Edge-anchored menus open
+  inward instead (`LanguageSwitch` uses `right-0` at the window's right
+  edge) so floating lists never touch the sidewalls. The footer `About` and
   `LanguageSwitch` controls reuse the same shell as icon-only buttons
   (h-9 shell, 28px icon button, 8px inner radius — like collapsed
   `ThemeSwitch`); hover/title and aria-labels name them.
