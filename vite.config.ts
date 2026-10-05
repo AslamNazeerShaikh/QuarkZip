@@ -5,7 +5,20 @@ import tailwindcss from "@tailwindcss/vite";
 import process from "node:process";
 // @ts-expect-error type error without @types/node package
 import { fileURLToPath } from "node:url";
+// @ts-expect-error type error without @types/node package
+import { execSync } from "node:child_process";
 const host = process.env.TAURI_DEV_HOST;
+
+function shortCommit(): string {
+  const fromEnv =
+    process.env.GITHUB_SHA?.slice(0, 7) || process.env.VITE_APP_COMMIT_ID;
+  if (fromEnv) return fromEnv;
+  try {
+    return execSync("git rev-parse --short HEAD").toString().trim() || "dev";
+  } catch {
+    return "dev";
+  }
+}
 
 // E2E mode (`vite --mode e2e`, used by Playwright): the real Tauri IPC
 // modules are swapped for an in-memory fake (`e2e/mocks/*`) so the full UI
@@ -31,6 +44,12 @@ const e2eMocks = [
 export default defineConfig(({ mode }) => ({
   plugins: [react(), tailwindcss()],
   resolve: mode === "e2e" ? { alias: e2eMocks } : {},
+  define: {
+    __QZ_COMMIT_ID__: JSON.stringify(shortCommit()),
+    __QZ_RELEASE_DATE__: JSON.stringify(
+      new Date().toISOString().slice(0, 10),
+    ),
+  },
   test: {
     globals: true,
     environment: "jsdom",

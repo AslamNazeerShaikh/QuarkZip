@@ -49,6 +49,7 @@ export interface E2EState {
   extractError: string | null;
   maximized: boolean;
   osPlatform: string;
+  osArch: string;
   calls: {
     setTitle: string[];
     minimize: number;
@@ -73,6 +74,7 @@ function freshState(): E2EState {
     extractError: null,
     maximized: false,
     osPlatform: "linux",
+    osArch: "x86_64",
     calls: {
       setTitle: [],
       minimize: 0,

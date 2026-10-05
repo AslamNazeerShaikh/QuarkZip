@@ -83,13 +83,18 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   reference empty state (16px icon + 14px gray text + 12px hint).
 - `Pagination` / `ThemeSwitch`: solid surface, 10px radius, card shadow,
   8px inner radii. Segmented behavior (sliding indicator) preserved.
+  The page-size menu hugs its trigger (`left-0`, `w-max min-w-full`, 8px
+  gap) with option text insets matching the trigger (`px-2`), so list
+  edges and text align with the control below. The footer `About` control
+  reuses the same shell (h-9, 10px radius, 1px border, card shadow).
 - Action bar (`App.tsx` footer, in normal flow below the table — nothing
   floats or overlaps), left to right: green `Extract` CTA (opens the
   confirm dialog), `Open new…`,
   destination chooser (grows full width to the pagination control: folder
   icon + centered path + chevron indicator, native directory picker,
   defaults to the archive's own folder) + inline `role="status"` result;
-  right = `Pagination` + `ThemeSwitch`. Confirm runs `extract_archive`
+  right = `Pagination` + `About` (secondary `bar` button opening the
+  About dialog) + `ThemeSwitch`. Confirm runs `extract_archive`
   (`7zz x -o<dest> [files...] -y`) with the checked rows, or everything
   when nothing is checked.
 - `ExtractDialog`: centered modal (dim backdrop, 16px radius, 180ms pop,

@@ -102,7 +102,7 @@ function PageSizeMenu({
           role="listbox"
           aria-label="Rows per page"
           onKeyDown={onListKey}
-          className="animate-qz-pop absolute bottom-full left-0 mb-2 min-w-28 rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-1 shadow-[var(--qz-shadow-card)]"
+          className="animate-qz-pop absolute bottom-full left-0 mb-2 w-max min-w-full rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-1 shadow-[var(--qz-shadow-card)]"
         >
           {OPTIONS.map((size, i) => {
             const selected = size === pageSize;
@@ -114,7 +114,7 @@ function PageSizeMenu({
                 aria-selected={selected}
                 onClick={() => choose(size)}
                 onMouseEnter={() => setActive(i)}
-                className={`flex h-8 w-full items-center justify-between gap-4 rounded-[7px] px-2.5 tabular-nums transition-colors ${
+                className={`flex h-8 w-full items-center justify-between gap-4 rounded-[7px] px-2 tabular-nums transition-colors ${
                   i === active
                     ? "bg-[var(--qz-primary-soft)] text-[var(--qz-text)]"
                     : "text-[var(--qz-muted)]"

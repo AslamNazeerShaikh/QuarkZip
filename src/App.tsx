@@ -4,10 +4,12 @@ import { dirname } from "@tauri-apps/api/path";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { platform } from "@tauri-apps/plugin-os";
-import { Download, ChevronDown, FolderOpen } from "lucide-react";
+import { Download, ChevronDown, FolderOpen, Info } from "lucide-react";
 import { useEffect, useState } from "react";
 import ArchiveTable from "./ArchiveTable";
 import TitleBar from "./TitleBar";
+import AboutDialog from "./AboutDialog";
+import { loadAppInfo, type AppInfo } from "./appInfo";
 import ArchiveOverview, { type ArchiveInfo } from "./ArchiveOverview";
 import ExtractDialog from "./ExtractDialog";
 import ExtractDoneDialog, { type ExtractResult } from "./ExtractDoneDialog";
@@ -106,6 +108,14 @@ export default function App() {
   const [confirming, setConfirming] = useState(false);
   const [selectedPaths, setSelectedPaths] = useState<ReadonlySet<string>>(new Set());
   const [doneInfo, setDoneInfo] = useState<ExtractResult | null>(null);
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const [aboutInfo, setAboutInfo] = useState<AppInfo | null>(null);
+
+  function openAbout() {
+    setAboutOpen(true);
+    // Best-effort: the dialog shows placeholders until this resolves.
+    void loadAppInfo().then(setAboutInfo);
+  }
 
   const pageCount =
     pageSize === "all" ? 1 : Math.ceil(entries.length / pageSize);
@@ -315,6 +325,19 @@ export default function App() {
               />
             )}
             <ThemeSwitch choice={choice} onChange={setChoice} />
+            {/* Shell-styled like its Pagination/ThemeSwitch neighbours:
+                h-9, 10px radius, 1px border, card shadow — not the 9px
+                shadowless `Button` used by the left-group actions. */}
+            <button
+              type="button"
+              onClick={openAbout}
+              aria-label="About QuarkZip"
+              title="About QuarkZip"
+              className="flex h-9 shrink-0 items-center gap-2 rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] px-3 text-[13px] font-medium text-[var(--qz-text)] shadow-[var(--qz-shadow-card)] transition-colors outline-none hover:bg-[var(--qz-surface-2)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+            >
+              <Info size={16} aria-hidden className="text-[var(--qz-muted)]" />
+              About
+            </button>
           </div>
         </footer>
       </main>
@@ -336,6 +359,11 @@ export default function App() {
           onOk={() => setDoneInfo(null)}
         />
       )}
+      <AboutDialog
+        open={aboutOpen}
+        info={aboutInfo}
+        onOk={() => setAboutOpen(false)}
+      />
       </div>
     </div>
   );
