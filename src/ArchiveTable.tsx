@@ -10,6 +10,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ArchiveEntry } from "./App";
 import { fileKind } from "./fileKind";
 import { formatModified, formatSize } from "./format";
+import { useLanguage } from "./i18n/LanguageContext";
 
 export const ROW_HEIGHT = 36;
 const OVERSCAN = 10;
@@ -19,36 +20,38 @@ type SortDir = "asc" | "desc";
 
 interface Column {
   key: SortKey;
-  header: string;
+  headerKey: string;
   width: string;
   align: "left" | "center";
   value: (row: ArchiveEntry) => string | number;
 }
 
-const COLUMNS: Column[] = [
-  { key: "path", header: "Name", width: "flex-1", align: "left", value: (r) => r.path },
-  {
-    key: "type",
-    header: "Type",
-    width: "w-24",
-    align: "center",
-    value: (r) => fileKind(r.path, r.is_folder).label,
-  },
-  {
-    key: "size",
-    header: "Size",
-    width: "w-32",
-    align: "center",
-    value: (r) => r.size ?? -1,
-  },
-  {
-    key: "modified",
-    header: "Modified",
-    width: "w-64",
-    align: "center",
-    value: (r) => r.modified ?? "",
-  },
-];
+function baseColumns(): Column[] {
+  return [
+    { key: "path", headerKey: "table.colName", width: "flex-1", align: "left", value: (r) => r.path },
+    {
+      key: "type",
+      headerKey: "table.colType",
+      width: "w-24",
+      align: "center",
+      value: (r) => fileKind(r.path, r.is_folder).label,
+    },
+    {
+      key: "size",
+      headerKey: "table.colSize",
+      width: "w-32",
+      align: "center",
+      value: (r) => r.size ?? -1,
+    },
+    {
+      key: "modified",
+      headerKey: "table.colModified",
+      width: "w-64",
+      align: "center",
+      value: (r) => r.modified ?? "",
+    },
+  ];
+}
 
 function compareValues(a: string | number, b: string | number): number {
   if (typeof a === "number" && typeof b === "number") return a - b;
@@ -129,15 +132,29 @@ export default function ArchiveTable({
   const selectionCb = useRef(onSelectionChange);
   selectionCb.current = onSelectionChange;
 
+  const { t } = useLanguage();
+  const folderLabel = t("filekind.folder");
+  const fileLabel = t("filekind.file");
+  // Type-column sorting follows the displayed (translated) label.
+  const columns: Column[] = useMemo(() => {
+    const cols = baseColumns();
+    const typeCol = cols.find((c) => c.key === "type");
+    if (typeCol) {
+      typeCol.value = (r) =>
+        fileKind(r.path, r.is_folder, { folder: folderLabel, file: fileLabel }).label;
+    }
+    return cols;
+  }, [folderLabel, fileLabel]);
+
   const sorted = useMemo(() => {
     if (!sortKey) return data;
-    const column = COLUMNS.find((c) => c.key === sortKey);
+    const column = columns.find((c) => c.key === sortKey);
     if (!column) return data;
     const ordered = [...data].sort((a, b) =>
       compareValues(column.value(a), column.value(b)),
     );
     return sortDir === "asc" ? ordered : ordered.reverse();
-  }, [data, sortKey, sortDir]);
+  }, [data, sortKey, sortDir, columns]);
 
   const pageRows = useMemo(() => {
     if (pageSize === "all") return sorted;
@@ -215,7 +232,7 @@ export default function ArchiveTable({
         <div className="flex shrink-0 items-center" style={{ height: ROW_HEIGHT }}>
           <div className="flex w-10 shrink-0 items-center justify-center">
             <TableCheckbox
-              label="Select all"
+              label={t("table.selectAll")}
               checked={
                 allSelected ? true : selected.size > 0 ? "mixed" : false
               }
@@ -228,7 +245,7 @@ export default function ArchiveTable({
           >
             #
           </div>
-          {COLUMNS.map((column) => (
+          {columns.map((column) => (
             <button
               key={column.key}
               type="button"
@@ -239,7 +256,7 @@ export default function ArchiveTable({
                   : `${column.width} shrink-0 justify-center`
               }`}
             >
-              {column.header}
+              {t(column.headerKey)}
               <SortIcon state={sortKey === column.key ? sortDir : null} />
             </button>
           ))}
@@ -252,9 +269,9 @@ export default function ArchiveTable({
           {pageRows.length === 0 ? (
             <div className="flex min-h-full flex-col items-center justify-center gap-1 px-4 py-10 text-center">
               <PackageOpen size={16} aria-hidden className="text-[var(--qz-faint)]" />
-              <p className="text-sm text-[var(--qz-muted)]">No entries</p>
+              <p className="text-sm text-[var(--qz-muted)]">{t("table.empty")}</p>
               <p className="text-xs text-[var(--qz-faint)]">
-                Open an archive to browse its contents
+                {t("table.emptyHint")}
               </p>
             </div>
           ) : (
@@ -264,7 +281,10 @@ export default function ArchiveTable({
             >
             {visible.map((entry, offset) => {
               const index = startIndex + offset;
-              const kind = fileKind(entry.path, entry.is_folder);
+              const kind = fileKind(entry.path, entry.is_folder, {
+                folder: folderLabel,
+                file: fileLabel,
+              });
               const Icon = kind.icon;
               const isSelected = selected.has(entry.path);
               return (
@@ -284,7 +304,7 @@ export default function ArchiveTable({
                 >
                   <div className="flex w-10 shrink-0 items-center justify-center">
                     <TableCheckbox
-                      label={`Select ${entry.path}`}
+                      label={t("table.selectItem", { name: entry.path })}
                       checked={isSelected}
                       onToggle={() => toggleOne(entry.path)}
                     />

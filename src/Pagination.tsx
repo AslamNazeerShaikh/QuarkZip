@@ -1,13 +1,15 @@
 import { Check, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { formatCount } from "./format";
+import { useLanguage } from "./i18n/LanguageContext";
 
 export const PAGE_SIZES = [100, 1000, 5000, 10000] as const;
 export type PageSize = (typeof PAGE_SIZES)[number] | "all";
 
 const OPTIONS: PageSize[] = [...PAGE_SIZES, "all"];
 
-function formatSize(size: PageSize): string {
-  return size === "all" ? "All" : size.toLocaleString("en-US");
+function formatSize(size: PageSize, allLabel: string): string {
+  return size === "all" ? allLabel : formatCount(size);
 }
 
 /// Floating pagination controls: per-page selector, prev/next, page readout.
@@ -27,6 +29,8 @@ function PageSizeMenu({
   const [active, setActive] = useState(() => OPTIONS.indexOf(pageSize));
   const rootRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const { t } = useLanguage();
+  const allLabel = t("pagination.all");
 
   // Closes on outside click or Escape — same pattern as ThemeSwitch.
   useEffect(() => {
@@ -80,7 +84,7 @@ function PageSizeMenu({
       <button
         ref={buttonRef}
         type="button"
-        aria-label="Rows per page"
+        aria-label={t("pagination.rowsPerPage")}
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => {
@@ -90,7 +94,7 @@ function PageSizeMenu({
         onKeyDown={onButtonKey}
         className="flex h-7 cursor-pointer items-center gap-1 rounded-[7px] px-2 text-[var(--qz-muted)] tabular-nums outline-none hover:text-[var(--qz-text)]"
       >
-        {formatSize(pageSize)}
+        {formatSize(pageSize, allLabel)}
         <ChevronDown
           size={14}
           aria-hidden
@@ -100,7 +104,7 @@ function PageSizeMenu({
       {open && (
         <div
           role="listbox"
-          aria-label="Rows per page"
+          aria-label={t("pagination.rowsPerPage")}
           onKeyDown={onListKey}
           className="animate-qz-pop absolute bottom-full left-0 mb-2 w-max min-w-full rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-1 shadow-[var(--qz-shadow-card)]"
         >
@@ -120,7 +124,7 @@ function PageSizeMenu({
                     : "text-[var(--qz-muted)]"
                 } ${selected ? "font-semibold text-[var(--qz-primary)]" : ""}`}
               >
-                {formatSize(size)}
+                {formatSize(size, allLabel)}
                 {selected && <Check size={14} aria-hidden />}
               </button>
             );
@@ -149,12 +153,13 @@ export default function Pagination({
   onPage: (p: number) => void;
   onPageSize: (s: PageSize) => void;
 }) {
+  const { t } = useLanguage();
   return (
     <div className="flex h-9 items-center gap-1 rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] px-1 shadow-[var(--qz-shadow-card)]">
       <PageSizeMenu pageSize={pageSize} onPageSize={onPageSize} />
       <button
         type="button"
-        aria-label="Previous page"
+        aria-label={t("pagination.prevPage")}
         disabled={page === 0}
         onClick={() => onPage(page - 1)}
         className="rounded-[7px] p-1.5 text-[var(--qz-muted)] transition-colors hover:text-[var(--qz-text)] disabled:opacity-30"
@@ -163,12 +168,12 @@ export default function Pagination({
       </button>
       <span className="min-w-16 text-center text-[var(--qz-muted)] tabular-nums">
         {pageCount === 0
-          ? "0 / 0"
-          : `${(page + 1).toLocaleString("en-US")} / ${pageCount.toLocaleString("en-US")}`}
+          ? `0 / 0`
+          : `${formatCount(page + 1)} / ${formatCount(pageCount)}`}
       </span>
       <button
         type="button"
-        aria-label="Next page"
+        aria-label={t("pagination.nextPage")}
         disabled={pageCount === 0 || page >= pageCount - 1}
         onClick={() => onPage(page + 1)}
         className="rounded-[7px] p-1.5 text-[var(--qz-muted)] transition-colors hover:text-[var(--qz-text)] disabled:opacity-30"
@@ -176,7 +181,7 @@ export default function Pagination({
         <ChevronRight size={16} aria-hidden />
       </button>
       <span className="hidden pr-2 text-[var(--qz-muted)] tabular-nums min-[1100px]:inline">
-        {total.toLocaleString("en-US")}
+        {formatCount(total)}
       </span>
     </div>
   );

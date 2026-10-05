@@ -52,3 +52,14 @@ instead of TSV; update callers to parse JSON lines.
 
 Your editor uses the repo template (`.gitmessage`) automatically once
 `git config commit.template .gitmessage` has been run in this clone.
+
+## Translations
+
+The UI is fully translatable at runtime (see `docs/i18n.md` — modeled on
+XDM's one-file-per-language `Lang/` + index pattern). To add a language:
+
+1. `cp src/i18n/locales/en.json src/i18n/locales/<code>.json` and translate
+   the values (keys and `{placeholders}` stay intact).
+2. Register it in `src/i18n/locales.ts` (`LOCALES`).
+3. Run `npm run i18n:check` and `npm test`, then PR as
+   `feat(i18n): add <Language> (<code>)`.

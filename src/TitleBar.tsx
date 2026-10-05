@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { Copy, Minus, Square, X } from "lucide-react";
 import type { MouseEvent } from "react";
+import { useLanguage } from "./i18n/LanguageContext";
 
 interface TitleBarProps {
   archive: string | null;
@@ -19,6 +20,7 @@ interface TitleBarProps {
 /// float over the webview, so this renders a slim drag strip with a left
 /// inset clearing the lights — no window buttons, no native title.
 export default function TitleBar({ archive, hidden, maximized }: TitleBarProps) {
+  const { t } = useLanguage();
   if (hidden) {
     return (
       <div
@@ -34,7 +36,7 @@ export default function TitleBar({ archive, hidden, maximized }: TitleBarProps) 
           {archive && (
             <span className="text-[var(--qz-muted)]">
               {" "}
-              | &quot;Path: {archive}&quot;
+              | &quot;{t("titlebar.path", { path: archive })}&quot;
             </span>
           )}
         </span>
@@ -96,7 +98,7 @@ export default function TitleBar({ archive, hidden, maximized }: TitleBarProps) 
         {archive && (
           <span className="text-[var(--qz-muted)]">
             {" "}
-            | &quot;Path: {archive}&quot;
+            | &quot;{t("titlebar.path", { path: archive })}&quot;
           </span>
         )}
       </span>
@@ -105,8 +107,8 @@ export default function TitleBar({ archive, hidden, maximized }: TitleBarProps) 
       <div className="flex items-center justify-end gap-1">
         <button
           type="button"
-          aria-label="Minimize"
-          title="Minimize"
+          aria-label={t("titlebar.minimize")}
+          title={t("titlebar.minimize")}
           onMouseDown={stopDrag}
           onClick={() => void minimize()}
           className={btn}
@@ -115,8 +117,8 @@ export default function TitleBar({ archive, hidden, maximized }: TitleBarProps) 
         </button>
         <button
           type="button"
-          aria-label={maximized ? "Restore" : "Maximize"}
-          title={maximized ? "Restore" : "Maximize"}
+          aria-label={maximized ? t("titlebar.restore") : t("titlebar.maximize")}
+          title={maximized ? t("titlebar.restore") : t("titlebar.maximize")}
           onMouseDown={stopDrag}
           onClick={() => void toggleMaximize()}
           className={btn}
@@ -129,8 +131,8 @@ export default function TitleBar({ archive, hidden, maximized }: TitleBarProps) 
         </button>
         <button
           type="button"
-          aria-label="Close"
-          title="Close"
+          aria-label={t("titlebar.close")}
+          title={t("titlebar.close")}
           onMouseDown={stopDrag}
           onClick={() => void close()}
           className="flex h-8 w-11 items-center justify-center rounded-md text-[var(--qz-muted)] transition-colors hover:bg-[#e81123] hover:text-white"

@@ -1,6 +1,7 @@
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { THEME_OPTIONS, type ThemeChoice } from "./theme";
+import { useLanguage } from "./i18n/LanguageContext";
 
 const CHOICE_ICON = { light: Sun, dark: Moon, system: Monitor } as const;
 
@@ -24,6 +25,7 @@ export default function ThemeSwitch({
   const buttonRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const collapseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const CurrentIcon = CHOICE_ICON[choice];
+  const { t } = useLanguage();
 
   // Slide the indicator under the active option whenever it is visible.
   useLayoutEffect(() => {
@@ -68,7 +70,7 @@ export default function ThemeSwitch({
     <div
       ref={rootRef}
       role="group"
-      aria-label="Color theme"
+      aria-label={t("theme.group")}
       // Relative: the sliding indicator is absolutely positioned and must
       // size against this shell — without it, it escapes to <main> and
       // renders as a full-height block.
@@ -96,14 +98,18 @@ export default function ThemeSwitch({
                   : "text-[var(--qz-muted)] hover:text-[var(--qz-text)]"
               }`}
             >
-              {opt.label}
+              {opt.value === "light"
+                ? t("theme.light")
+                : opt.value === "dark"
+                  ? t("theme.dark")
+                  : t("theme.system")}
             </button>
           ))}
         </>
       ) : (
         <button
           type="button"
-          aria-label="Change theme"
+          aria-label={t("theme.change")}
           aria-expanded={expanded}
           onClick={() => setExpanded(true)}
           className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-colors duration-300 hover:text-[var(--qz-text)]"

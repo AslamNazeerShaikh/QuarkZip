@@ -15,8 +15,10 @@ import ExtractDialog from "./ExtractDialog";
 import ExtractDoneDialog, { type ExtractResult } from "./ExtractDoneDialog";
 import Pagination, { type PageSize } from "./Pagination";
 import ThemeSwitch from "./ThemeSwitch";
+import LanguageSwitch from "./LanguageSwitch";
 import { Button } from "./components/ui/button";
 import { useTheme } from "./useTheme";
+import { useLanguage } from "./i18n/LanguageContext";
 
 export interface ArchiveEntry {
   path: string;
@@ -56,6 +58,7 @@ async function setWindowTitle(archive: string | null): Promise<void> {
 
 export default function App() {
   const { choice, setChoice } = useTheme();
+  const { t } = useLanguage();
   // macOS uses an overlay title bar (traffic lights float over the webview,
   // set in Rust), so TitleBar renders a slim drag strip there instead of the
   // Linux custom window controls.
@@ -239,7 +242,7 @@ export default function App() {
         {dragging && (
           <div className="pointer-events-none fixed inset-3.5 z-10 flex items-center justify-center rounded-[20px] border-[1.5px] border-dotted border-[var(--qz-primary)] bg-[var(--qz-primary)]/10">
             <p className="font-medium text-[var(--qz-text)]">
-              Drop to open archive
+              {t("app.dropHint")}
             </p>
           </div>
         )}
@@ -277,7 +280,7 @@ export default function App() {
                   className="shrink-0"
                 >
                   <Download size={14} aria-hidden />
-                  {extracting ? "Extracting…" : "Extract"}
+                  {extracting ? t("app.extracting") : t("app.extract")}
                 </Button>
                 <Button
                   variant="secondary"
@@ -285,20 +288,20 @@ export default function App() {
                   onClick={() => void openArchive()}
                   className="shrink-0"
                 >
-                  Open new…
+                  {t("app.openNew")}
                 </Button>
                 <Button
                   variant="secondary"
                   size="bar"
                   onClick={() => void chooseDest()}
-                  title={dest || "Choose where to extract"}
-                  aria-label="Choose where to extract"
+                  title={dest || t("app.chooseDest")}
+                  aria-label={t("app.chooseDest")}
                   className="min-w-0 flex-1"
                 >
                   <span className="flex w-full min-w-0 items-center justify-center gap-2">
                     <FolderOpen size={14} aria-hidden className="shrink-0" />
                     <span className="min-w-0 flex-1 truncate text-center">
-                      {dest || "Choose folder…"}
+                      {dest || t("app.chooseFolder")}
                     </span>
                     <ChevronDown
                       size={14}
@@ -325,6 +328,7 @@ export default function App() {
               />
             )}
             <ThemeSwitch choice={choice} onChange={setChoice} />
+            <LanguageSwitch />
             {/* Shell-styled like its Pagination/ThemeSwitch neighbours:
                 h-9, 10px radius, 1px border, card shadow — not the 9px
                 shadowless `Button` used by the left-group actions. */}

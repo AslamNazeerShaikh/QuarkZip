@@ -1,6 +1,8 @@
 import { CheckCircle2, XCircle } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "./components/ui/button";
+import { formatCount } from "./format";
+import { useLanguage } from "./i18n/LanguageContext";
 
 export type ExtractResult =
   | { ok: true; fileCount: number; dest: string }
@@ -28,6 +30,8 @@ export default function ExtractDoneDialog({
     return () => document.removeEventListener("keydown", onKey);
   }, [open, onOk]);
 
+  const { t } = useLanguage();
+
   if (!open) return null;
 
   return (
@@ -52,10 +56,10 @@ export default function ExtractDoneDialog({
               id="extract-done-title"
               className="mt-3 text-[16px] leading-6 font-semibold"
             >
-              Extraction complete
+              {t("done.successTitle")}
             </h2>
             <p className="mt-1 text-[13px] text-[var(--qz-muted)]">
-              {result.fileCount.toLocaleString("en-US")} files extracted to
+              {t("done.successFiles", { count: formatCount(result.fileCount) })}
             </p>
             <p className="mt-2 text-[13px] font-medium break-all">{result.dest}</p>
           </>
@@ -68,7 +72,7 @@ export default function ExtractDoneDialog({
               id="extract-done-title"
               className="mt-3 text-[16px] leading-6 font-semibold"
             >
-              Extraction failed
+              {t("done.failTitle")}
             </h2>
             <p className="mt-1 text-[13px] text-[var(--qz-muted)]">{result.message}</p>
             <p className="mt-2 text-[13px] font-medium break-all">{result.dest}</p>
@@ -76,7 +80,7 @@ export default function ExtractDoneDialog({
         )}
         <div className="mt-5 flex items-center justify-center">
           <Button onClick={onOk} autoFocus>
-            OK
+            {t("common.ok")}
           </Button>
         </div>
       </div>

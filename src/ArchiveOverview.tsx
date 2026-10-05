@@ -1,8 +1,9 @@
 import { Archive, PackageOpen } from "lucide-react";
 import type { ReactNode } from "react";
-import { formatDateTimeLocal, formatSize } from "./format";
+import { formatCount, formatDateTimeLocal, formatSize } from "./format";
 import { Button } from "./components/ui/button";
 import { Card, CardDescription, CardTitle } from "./components/ui/card";
+import { useLanguage } from "./i18n/LanguageContext";
 
 /// Mirrors `archive::ArchiveInfo` (snake_case over the Tauri bridge).
 export interface ArchiveInfo {
@@ -61,6 +62,7 @@ export default function ArchiveOverview({
   loading: boolean;
   onOpen: () => void;
 }) {
+  const { t } = useLanguage();
   return (
     <Card className="flex min-h-0 flex-[1_1_50%] flex-col overflow-hidden">
       {!archive ? (
@@ -69,17 +71,17 @@ export default function ArchiveOverview({
             <Archive size={20} aria-hidden className="text-[var(--qz-primary)]" />
           </span>
           <div>
-            <CardTitle>No archive open</CardTitle>
+            <CardTitle>{t("overview.emptyTitle")}</CardTitle>
             <CardDescription className="mt-1">
-              Open a 7z, zip, tar or 30+ other formats — or drop a file anywhere.
+              {t("overview.emptyDesc")}
             </CardDescription>
           </div>
           <Button onClick={onOpen} disabled={loading} className="mt-1 min-w-40">
             <PackageOpen size={16} aria-hidden />
-            {loading ? "Reading…" : "Open archive"}
+            {loading ? t("overview.reading") : t("overview.openCta")}
           </Button>
           <p className="text-xs text-[var(--qz-faint)]">
-            Powered by the pinned 7-Zip sidecar · nothing leaves your machine
+            {t("overview.powered")}
           </p>
         </div>
       ) : (
@@ -91,54 +93,56 @@ export default function ArchiveOverview({
             <div className="m-auto w-full max-w-5xl">
             {loading && !info ? (
               <p className="py-6 text-center text-sm text-[var(--qz-muted)]">
-                Reading archive details…
+                {t("overview.readingDetails")}
               </p>
             ) : info ? (
               <div className="flex flex-col gap-5">
-                <section aria-label="Container">
+                <section aria-label={t("overview.sectionContainer")}>
                   <div className="grid grid-cols-2 gap-x-6 gap-y-4 md:grid-cols-4">
-                    <Meta label="Container" value={info.container_format ?? "—"} />
-                    <Meta label="Method" value={info.method ?? "—"} />
+                    <Meta label={t("overview.meta.container")} value={info.container_format ?? "—"} />
+                    <Meta label={t("overview.meta.method")} value={info.method ?? "—"} />
                     <Meta
-                      label="Solid · Blocks"
+                      label={t("overview.meta.solidBlocks")}
                       value={`${info.solid ?? "—"} · ${info.blocks ?? "—"}`}
                     />
                     <Meta
-                      label="Headers"
+                      label={t("overview.meta.headers")}
                       value={info.headers_size != null ? formatSize(info.headers_size) : "—"}
                     />
                     <Meta
-                      label="Physical size"
+                      label={t("overview.meta.physicalSize")}
                       value={info.physical_size != null ? formatSize(info.physical_size) : "—"}
                     />
                     <Meta
-                      label="On disk"
+                      label={t("overview.meta.onDisk")}
                       value={info.container_size != null ? formatSize(info.container_size) : "—"}
                     />
-                    <Meta label="Modified" value={formatEpoch(info.container_modified)} />
+                    <Meta label={t("overview.meta.modified")} value={formatEpoch(info.container_modified)} />
                     <Meta
-                      label="Host OS"
+                      label={t("overview.meta.hostOs")}
                       value={info.host_os.length > 0 ? info.host_os.join(", ") : "—"}
                     />
                   </div>
                 </section>
-                <section aria-label="Content">
+                <section aria-label={t("overview.sectionContent")}>
                   <div className="grid grid-cols-2 gap-x-6 gap-y-4 md:grid-cols-4">
-                    <Meta label="Files" value={info.file_count.toLocaleString("en-US")} />
-                    <Meta label="Folders" value={info.folder_count.toLocaleString("en-US")} />
+                    <Meta label={t("overview.meta.files")} value={formatCount(info.file_count)} />
+                    <Meta label={t("overview.meta.folders")} value={formatCount(info.folder_count)} />
                     <Meta
-                      label="Nesting levels"
+                      label={t("overview.meta.nesting")}
                       value={info.max_depth > 0 ? `${info.max_depth}` : "—"}
                     />
-                    <Meta label="Unpacked" value={formatSize(info.total_unpacked)} />
-                    <Meta label="Packed" value={formatSize(info.total_packed)} />
+                    <Meta label={t("overview.meta.unpacked")} value={formatSize(info.total_unpacked)} />
+                    <Meta label={t("overview.meta.packed")} value={formatSize(info.total_packed)} />
                     <div className="min-w-0">
                       <p className="text-[11px] font-semibold tracking-[0.06em] text-[var(--qz-faint)] uppercase">
-                        Ratio
+                        {t("overview.meta.ratio")}
                       </p>
                       <div className="mt-1 text-sm font-medium text-[var(--qz-text)]">
                         {info.total_unpacked > 0
-                          ? `${(info.compression_ratio * 100).toFixed(1)}% of original`
+                          ? t("overview.meta.ratioOf", {
+                              pct: (info.compression_ratio * 100).toFixed(1),
+                            })
                           : "—"}
                       </div>
                       {info.total_unpacked > 0 && (
@@ -159,14 +163,14 @@ export default function ArchiveOverview({
                       )}
                     </div>
                     <Meta
-                      label="Algorithms"
-                      value={info.methods.length > 0 ? info.methods.join(" · ") : "Store / none"}
+                      label={t("overview.meta.algorithms")}
+                      value={info.methods.length > 0 ? info.methods.join(" · ") : t("overview.meta.storeNone")}
                     />
-                    <Meta label="Password scheme" value={info.encryption_scheme} />
+                    <Meta label={t("overview.meta.passwordScheme")} value={info.encryption_scheme} />
                   </div>
                 </section>
                 {Object.keys(info.extra).length > 0 && (
-                  <section aria-label="More details">
+                  <section aria-label={t("overview.sectionMore")}>
                     <div className="grid grid-cols-2 gap-x-6 gap-y-4 md:grid-cols-4">
                       {Object.entries(info.extra).map(([k, v]) => (
                         <Meta key={k} label={k} value={v || "—"} />
@@ -175,12 +179,12 @@ export default function ArchiveOverview({
                   </section>
                 )}
                 <p className="text-xs text-[var(--qz-faint)]">
-                  Parsed from 7zz l -slt · ratio = packed ÷ unpacked
+                  {t("overview.parsedNote")}
                 </p>
               </div>
             ) : (
               <p className="py-6 text-center text-sm text-[var(--qz-muted)]">
-                Details unavailable — the listing loaded but 7zz reported no summary.
+                {t("overview.unavailable")}
               </p>
             )}
             </div>

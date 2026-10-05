@@ -12,6 +12,7 @@
     "test:e2e:ui": "playwright test --ui",
     "test:coverage": "vitest run --coverage",
     "test:rust": "cargo test --manifest-path src-tauri/Cargo.toml",
+    "i18n:check": "node scripts/check-locales.mjs",
     "tauri": "tauri"
   },
   "dependencies": {

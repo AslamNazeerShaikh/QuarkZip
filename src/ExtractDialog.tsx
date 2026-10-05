@@ -1,9 +1,11 @@
 import { Download } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "./components/ui/button";
+import { formatCount } from "./format";
+import { useLanguage } from "./i18n/LanguageContext";
 
 function count(value: number): string {
-  return value.toLocaleString("en-US");
+  return formatCount(value);
 }
 
 /// Centered extract confirmation: dimmed backdrop, white card with a big
@@ -34,6 +36,8 @@ export default function ExtractDialog({
     return () => document.removeEventListener("keydown", onKey);
   }, [open, onCancel]);
 
+  const { t } = useLanguage();
+
   if (!open) return null;
   const all = selected === 0;
 
@@ -57,27 +61,27 @@ export default function ExtractDialog({
           id="extract-dialog-title"
           className="mt-3 text-[16px] leading-6 font-semibold"
         >
-          Extract files?
+          {t("extract.title")}
         </h2>
         <p className="mt-1 text-[13px] text-[var(--qz-muted)]">
           {all ? (
-            <>
-              All {count(total)} files will be extracted to
-            </>
+            <>{t("extract.allFiles", { total: count(total) })}</>
           ) : (
             <>
-              {count(selected)} of {count(total)} selected files will be
-              extracted to
+              {t("extract.someFiles", {
+                selected: count(selected),
+                total: count(total),
+              })}
             </>
           )}
         </p>
         <p className="mt-2 text-[13px] font-medium break-all">{dest}</p>
         <div className="mt-5 flex items-center justify-center gap-2">
           <Button variant="warning" onClick={onCancel}>
-            Cancel
+            {t("common.cancel")}
           </Button>
           <Button variant="accent" onClick={onConfirm} autoFocus>
-            Proceed
+            {t("common.proceed")}
           </Button>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { Info } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "./components/ui/button";
 import { APP_NAME, type AppInfo } from "./appInfo";
+import { useLanguage } from "./i18n/LanguageContext";
 
 /// About popup, mirroring the extract dialogs: dimmed backdrop, surface card
 /// with a big centered icon, an info grid, the 7-Zip attribution paragraph,
@@ -26,13 +27,15 @@ export default function AboutDialog({
 
   if (!open) return null;
 
+  const { t } = useLanguage();
+
   const rows: Array<[string, string]> = [
-    ["App Name", APP_NAME],
-    ["Current Version", info?.version ?? "…"],
-    ["Release Date", info?.releaseDate ?? "…"],
-    ["Commit ID", info?.commitId ?? "…"],
-    ["OS", info?.os ?? "…"],
-    ["Architecture", info?.arch ?? "…"],
+    [t("about.appName"), APP_NAME],
+    [t("about.version"), info?.version ?? "…"],
+    [t("about.releaseDate"), info?.releaseDate ?? "…"],
+    [t("about.commitId"), info?.commitId ?? "…"],
+    [t("about.os"), info?.os ?? "…"],
+    [t("about.arch"), info?.arch ?? "…"],
   ];
 
   return (
@@ -55,7 +58,7 @@ export default function AboutDialog({
           id="about-dialog-title"
           className="mt-2 text-[16px] leading-6 font-semibold"
         >
-          About {APP_NAME}
+          {t("about.title", { app: APP_NAME })}
         </h2>
         <dl className="mt-3 space-y-1.5 text-left">
           {rows.map(([label, value]) => (
@@ -73,26 +76,23 @@ export default function AboutDialog({
           ))}
         </dl>
         <p className="mt-3 text-center text-[12px] leading-5 text-[var(--qz-muted)]">
-          {APP_NAME}&rsquo;s own interface is open-source. Archiving is powered
-          by the 7-Zip command-line binary (7zz), Copyright &copy; 1999&ndash;2025
-          Igor Pavlov, licensed mainly under the GNU LGPL v2.1 or later (see{" "}
+          {t("about.licenseA", { app: APP_NAME })}
           <a
             href="https://www.7-zip.org/"
             target="_blank"
             rel="noreferrer"
             className="underline"
           >
-            7-zip.org
+            {t("about.licenseLink")}
           </a>
-          ). The pinned 7-Zip 26.03 sidecar ships as-is from the upstream
-          release and is free for any use, including commercial.
+          {t("about.licenseB")}
         </p>
-        <p className="mt-3 text-[13px]" aria-label="Made with love in India">
-          Made with ❤️ in 🇮🇳
+        <p className="mt-3 text-[13px]" aria-label={t("about.madeWithLabel")}>
+          {t("about.madeWith")}
         </p>
         <div className="mt-4 flex items-center justify-center">
           <Button onClick={onOk} autoFocus>
-            OK
+            {t("common.ok")}
           </Button>
         </div>
       </div>

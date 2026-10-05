@@ -110,15 +110,20 @@ const EXTENSIONS: Record<string, { label?: string; icon: LucideIcon }> = {
 /// Classify an archive entry for display: folder vs file, matching icon,
 /// and short type label. Folder-ness comes from 7zz `Attributes`
 /// (surfaced as `is_folder`) — never from size, since empty files
-/// legitimately report `Size = 0`.
-export function fileKind(path: string, isFolder: boolean): FileKind {
+/// legitimately report `Size = 0`. The `labels` override carries translated
+/// "Folder"/"File" words; extension labels (`PNG`, `7Z`) never translate.
+export function fileKind(
+  path: string,
+  isFolder: boolean,
+  labels: { folder: string; file: string } = { folder: "Folder", file: "File" },
+): FileKind {
   if (isFolder) {
-    return { label: "Folder", icon: Folder, isFolder: true };
+    return { label: labels.folder, icon: Folder, isFolder: true };
   }
   const dot = path.lastIndexOf(".");
   const ext = dot >= 0 ? path.slice(dot + 1).toLowerCase() : "";
   const known = ext ? EXTENSIONS[ext] : undefined;
-  if (!known) return { label: ext ? ext.toUpperCase() : "File", icon: File, isFolder: false };
+  if (!known) return { label: ext ? ext.toUpperCase() : labels.file, icon: File, isFolder: false };
   return {
     label: ext.toUpperCase(),
     icon: known.icon,
