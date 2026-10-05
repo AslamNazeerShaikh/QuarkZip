@@ -53,4 +53,4 @@ unit-tested without a binary (`npm run test:rust`).
    `archive::is_password_output` — keep both marker lists in sync) and
    opens the password gate instead of erroring; the verified password is
    remembered per open archive so Test/Extract keep working on encrypted
-   content.
+   content. Content-scope vs header-scope behavior: `docs/passwords.md`.

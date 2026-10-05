@@ -678,9 +678,9 @@
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791220634.052268,
-    "seen": 1791220638.965753,
-    "ast_hash": "09d5e614fc638af9bb2c07c8478b8e7b",
+    "mtime": 1791220998.2363229,
+    "seen": 1791221014.577997,
+    "ast_hash": "84d48f22b12dd11b0a142b8cff8b49f1",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -1008,9 +1008,9 @@
     "semantic_hash": ""
   },
   "docs/backend-commands.md": {
-    "mtime": 1791220031.317993,
-    "seen": 1791220049.3471758,
-    "ast_hash": "d4fb946e218bd5cfd876245c3f37775c",
+    "mtime": 1791221009.235099,
+    "seen": 1791221014.577995,
+    "ast_hash": "deae716ba5b42a8542fe87e66c440bc4",
     "semantic_hash": ""
   },
   "docs/i18n.md": {

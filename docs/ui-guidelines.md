@@ -130,7 +130,8 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   listing failures and for Test/Extract password errors (which it retries
   after verifying); the accept button reads Open / Extract / Test per
   caller. Cancel/Esc dismiss with the current listing untouched. Same
-  modal language; backdrop never dismisses.
+  modal language; backdrop never dismisses. Full behavior matrix:
+  `docs/passwords.md`.
 - `ArchiveTable` reports checkbox selection via `onSelectionChange`
   (cleared on each new listing); `App` feeds it to the dialog + extract.
 - `ArchiveOverview`: the 50% overview card — centered empty state

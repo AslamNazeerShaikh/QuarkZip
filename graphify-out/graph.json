@@ -3260,7 +3260,7 @@
       "node_kind": "heading",
       "norm_label": "deliberate deviations (with rationale)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L172"
+      "source_location": "L173"
     },
     {
       "id": "docs_ui_guidelines_design_direction",
@@ -3284,7 +3284,7 @@
       "node_kind": "heading",
       "norm_label": "interaction / states",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L161"
+      "source_location": "L162"
     },
     {
       "id": "docs_ui_guidelines_layout",
@@ -3296,7 +3296,7 @@
       "node_kind": "heading",
       "norm_label": "layout",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L149"
+      "source_location": "L150"
     },
     {
       "id": "docs_ui_guidelines_quarkzip_ui_guidelines",
@@ -15984,7 +15984,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L149",
+      "source_location": "L150",
       "weight": 1.0
     },
     {
@@ -15995,7 +15995,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L161",
+      "source_location": "L162",
       "weight": 1.0
     },
     {
@@ -16006,7 +16006,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L172",
+      "source_location": "L173",
       "weight": 1.0
     },
     {
@@ -21573,5 +21573,5 @@
       "source_file": "docs/window-chrome.md"
     }
   ],
-  "built_at_commit": "6ec6b27a2941341c7adf5b7ef79f99b3c08bf259"
+  "built_at_commit": "c725b8121cc4418347be1942959b975688d42de5"
 }
