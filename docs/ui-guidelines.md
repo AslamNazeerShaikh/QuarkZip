@@ -85,8 +85,10 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   8px inner radii. Segmented behavior (sliding indicator) preserved.
   The page-size menu hugs its trigger (`left-0`, `w-max min-w-full`, 8px
   gap) with option text insets matching the trigger (`px-2`), so list
-  edges and text align with the control below. The footer `About` control
-  reuses the same shell (h-9, 10px radius, 1px border, card shadow).
+  edges and text align with the control below. The footer `About` and
+  `LanguageSwitch` controls reuse the same shell as icon-only buttons
+  (h-9 shell, 28px icon button, 8px inner radius — like collapsed
+  `ThemeSwitch`); hover/title and aria-labels name them.
 - Action bar (`App.tsx` footer, in normal flow below the table — nothing
   floats or overlaps), left to right: green `Extract` CTA (opens the
   confirm dialog), `Open new…`,
@@ -120,9 +122,10 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
 - `AboutDialog`: same modal language — app name/version/release-date/
   commit/OS/arch grid, 7-Zip attribution paragraph with `7-zip.org` link,
   origin note, single OK. Backdrop never dismisses.
-- `LanguageSwitch`: footer shell control (same shell as Pagination) with a
-  floating listbox of native language names; switching persists to
-  `localStorage` and re-renders instantly, no restart.
+- `LanguageSwitch`: icon-only footer shell control (same shell as
+  Pagination) with a floating listbox of native language names; the button
+  tooltip shows the active language. Switching persists to `localStorage`
+  and re-renders instantly, no restart.
 - `PasswordDialog`: password gate for encrypted archives — lock icon,
   password input with show/hide peek, live verify progress (`7zz t`);
   wrong passwords shake the input red and keep Check/Cancel, a match

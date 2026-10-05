@@ -384,19 +384,19 @@ export default function App() {
             )}
             <ThemeSwitch choice={choice} onChange={setChoice} />
             <LanguageSwitch />
-            {/* Shell-styled like its Pagination/ThemeSwitch neighbours:
-                h-9, 10px radius, 1px border, card shadow — not the 9px
-                shadowless `Button` used by the left-group actions. */}
-            <button
-              type="button"
-              onClick={openAbout}
-              aria-label="About QuarkZip"
-              title="About QuarkZip"
-              className="flex h-9 shrink-0 items-center gap-2 rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] px-3 text-[13px] font-medium text-[var(--qz-text)] shadow-[var(--qz-shadow-card)] transition-colors outline-none hover:bg-[var(--qz-surface-2)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
-            >
-              <Info size={16} aria-hidden className="text-[var(--qz-muted)]" />
-              About
-            </button>
+            {/* Icon-only shell like ThemeSwitch: h-9, 10px radius, 1px
+                border, card shadow. Hover/tip names it (aria-label + title). */}
+            <div className="flex h-9 shrink-0 items-center rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-1 shadow-[var(--qz-shadow-card)]">
+              <button
+                type="button"
+                onClick={openAbout}
+                aria-label="About QuarkZip"
+                title="About QuarkZip"
+                className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-colors outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+              >
+                <Info size={18} aria-hidden />
+              </button>
+            </div>
           </div>
         </footer>
       </main>

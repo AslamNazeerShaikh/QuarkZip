@@ -1,4 +1,4 @@
-import { Check, ChevronDown, Languages } from "lucide-react";
+import { Check, Languages } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { LOCALES } from "./i18n/locales";
 import { useLanguage } from "./i18n/LanguageContext";
@@ -52,6 +52,7 @@ export default function LanguageSwitch() {
         ref={buttonRef}
         type="button"
         aria-label={t("lang.changeLanguage")}
+        title={activeNative}
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
@@ -61,15 +62,9 @@ export default function LanguageSwitch() {
             setOpen(true);
           }
         }}
-        className="flex h-7 cursor-pointer items-center gap-1.5 rounded-[7px] px-2 text-[13px] font-medium text-[var(--qz-muted)] outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+        className="grid h-7 w-7 cursor-pointer place-items-center rounded-[8px] text-[var(--qz-muted)] outline-none transition-colors hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
       >
-        <Languages size={16} aria-hidden />
-        <span className="max-w-24 truncate">{activeNative}</span>
-        <ChevronDown
-          size={14}
-          aria-hidden
-          className={`shrink-0 transition-transform ${open ? "rotate-180" : ""}`}
-        />
+        <Languages size={18} aria-hidden />
       </button>
       {open && (
         <div
