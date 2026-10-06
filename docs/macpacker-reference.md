@@ -353,4 +353,33 @@ Disk images and filesystems:
 Pages frozen at 0.19.0 (10 Aug 2026). Two capability rows changed since: **Create split volumes → Yes** and **Write encrypted archives → Yes** (AES-256/ZipCrypto + split volumes shipped in v1.0.0; the "save panel exposes format and compression level only" note is stale). Totals (39/1 vs 43/9 vs 42/0 vs 33/16 vs 34/15) are row counts, not extension counts.
 
 For QuarkZip: our engine is the 7-Zip 26.03 sidecar, so our read coverage tracks the **7-Zip column** (43 rows — broadest on disk images/filesystems) while our UI reads like BetterZip/MacPacker (browser + nested drill + modify ambitions). Gaps the matrix exposes for us: no split-set joining yet, single-stream **write** is read-only in our UI, and no CLI.
+
+## 13. Live 10M-row stress test (Oct 2026, MacPacker v1.0.0 Direct, Apple Silicon)
+
+Fixture (built for QuarkZip testing, reused here): `files-10m.zip`, 1.6 GB Zip64 — 10,000,000 empty files in 1000 shards (`d-0000/f-00000000.txt`…) + 1001 dir entries = 10,001,002 entries, plus one stray `.DS_Store`.
+
+| Observation                | Measurement                                                  | Method                                                |
+| -------------------------- | ------------------------------------------------------------ | ----------------------------------------------------- |
+| Open time                  | <60 s (~31 s "reading")                                      | user-measured, app UI                                 |
+| Main app memory            | 3.5 GB footprint (8.4 GB RSS peak)                           | `footprint -p`, `ps`                                  |
+| …of which                  | ~3 GB dirty + 4.6 GB reclaimable `Malloc Small`              | `footprint` categories                                |
+| QuickLook appex            | 4.6 GB RSS, 0% CPU, started ~2 min after main                | `ps` (spacebar preview loads a **second full model**) |
+| Combined cost, one archive | ~8 GB across two processes                                   | sum                                                   |
+| Post-load CPU              | ~83–99% of one core, minutes later                           | `top`, lifetime `ps`                                  |
+| Main thread                | idle in runloop (`NSApplication run`)                        | `sample` call graph                                   |
+| Workers                    | parked `__workq_kernreturn`, no single hot thread            | `sample` (GCD micro-task churn signature)             |
+| Recurring frames           | `NSPerformVisuallyAtomicChange`, `_layoutSubtreeWithOldSize` | `sample` recursive totals                             |
+| Cache written              | **none** (`ta/` absent) — listing is RAM-only                | `find ~/Library/Caches`                               |
+| Unified log                | zero errors/faults in 8 min window                           | `log show`                                            |
+
+```mermaid
+flowchart LR
+    A[files-10m.zip<br/>1.6 GB, 10M entries] --> B[sz_open + full scan<br/>~31 s]
+    B --> C[10M SevenZipEntry<br/>+ 10M ArchiveItem<br/>+ UUID dict<br/>~3.5 GB]
+    C --> D[ColumnView current folder]
+    E[Spacebar preview] --> F[Second full model<br/>in appex: +4.6 GB]
+    G[Each folder click] --> H[Full 10M re-scan + re-sort<br/>+ relayout: 1 core sustained]
+```
+
+Interpretation: in-process C enumeration (no text round-trip) is why 10M rows open in ~31 s here versus minutes through a sidecar pipe — at the price of ~350 bytes/entry resident, doubled by preview. The sustained post-load CPU matches per-navigation full resorts while browsing; if reproduced with zero interaction it would indicate a runaway update loop instead (not confirmed). For QuarkZip: this is empirical backing for backend-held/paged entries (never ship 10M rows over IPC), for sharing — not duplicating — models across views/previews, and for sorting without full rescans per navigation.
 ...[truncated 6154 chars]
