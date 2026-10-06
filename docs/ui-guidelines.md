@@ -158,6 +158,11 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   absorbs the freed space; `Test`/`Checksum` stay available in both
   states. Pagination never changes with the card — page/row counts are
   independent of it.
+  Opening an archive shows a progress popup (`LoadDialog`): `7zz l`
+  reports no percent, so the bar is indeterminate and the rows show live
+  counters instead (entries completed, data read, elapsed, throughput —
+  no ETA, since totals are unknowable upfront). Cancel kills the sidecar
+  (`cancel_list_archive`) and keeps the previous listing intact.
 
 ## Layout
 

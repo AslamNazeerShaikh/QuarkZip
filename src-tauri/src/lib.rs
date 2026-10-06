@@ -9,7 +9,10 @@ use tauri_plugin_shell::ShellExt;
 /// Bounds for sidecar execution. A hung 7zz — notably a macOS Gatekeeper
 /// block on the unsigned binary, which never exits — must surface as an
 /// error, never an infinite "Reading…"/"Extracting…" spinner.
-const LIST_TIMEOUT_SECS: u64 = 60;
+/// Listing budget: measured 2026-10 — a 10M-entry `7zz l -slt` emits
+/// ~3 GB in ~25 s, then parsing takes ~5 s release / ~48 s debug and the
+/// 1 GB JSON response still has to cross IPC. 60 s killed real listings.
+const LIST_TIMEOUT_SECS: u64 = 600;
 const EXTRACT_TIMEOUT_SECS: u64 = 600;
 const TEST_TIMEOUT_SECS: u64 = 600;
 
@@ -20,16 +23,37 @@ const ERROR_TAIL_CHARS: usize = 4000;
 /// checksum at a time: starting resets it, [`cancel_checksum`] sets it.
 static CHECKSUM_CANCEL: AtomicBool = AtomicBool::new(false);
 
+/// Cooperative cancel flag for [`list_archive`]/[`info_archive`], same
+/// single-operation contract. Reset when a listing starts (only there —
+/// `info_archive` runs second in the same open flow, so a cancel landing
+/// between the two must still abort it instead of being cleared).
+static LIST_CANCEL: AtomicBool = AtomicBool::new(false);
+
+/// Listing progress snapshot streamed over a Channel while `7zz l -slt`
+/// runs: raw stdout bytes collected plus entry blocks completed so far.
+/// The total is unknowable upfront (`l` reports no percent — verified
+/// against 7zz 26.03), so the frontend shows counters + an indeterminate
+/// bar, never a fake ETA.
+#[derive(serde::Serialize, Clone)]
+struct ListProgress {
+    bytes: u64,
+    entries: u64,
+}
+
 /// Runs the pinned 7zz sidecar with `args`, killing it on timeout.
 /// Collects stdout/stderr the same line-wise way `Command::output` does.
 /// Stdout chunks are additionally scanned for `NN%` progress (7zz `-bsp1`
 /// separates updates with `\r` inside one chunk); `on_progress` fires only
-/// when the max percent grows.
+/// when the max percent grows. `on_line` sees every stdout line (without
+/// its newline) for streaming consumers; `cancel` is polled per event and
+/// kills the child promptly with a cancellation error.
 async fn run_sidecar_progress(
     app: &tauri::AppHandle,
     args: Vec<String>,
     timeout_secs: u64,
-    mut on_progress: impl FnMut(u32),
+    mut on_progress: impl FnMut(u32) + Send,
+    mut on_line: Option<&mut (dyn FnMut(&[u8]) + Send)>,
+    cancel: Option<&'static AtomicBool>,
 ) -> Result<(Option<i32>, Vec<u8>, Vec<u8>), String> {
     use tauri_plugin_shell::process::CommandEvent;
     let (mut rx, child) = app
@@ -39,15 +63,27 @@ async fn run_sidecar_progress(
         .args(args)
         .spawn()
         .map_err(|e| e.to_string())?;
+    // Collect outcome: the event loop never touches `child`, so the kill
+    // stays with the caller for timeouts and cooperative cancels alike.
+    enum Collected {
+        Done((Option<i32>, Vec<u8>, Vec<u8>)),
+        Cancelled,
+    }
     let collect = async {
         let mut code = None;
         let mut stdout = Vec::new();
         let mut stderr = Vec::new();
         let mut last_pct: u32 = 0;
         while let Some(event) = rx.recv().await {
+            if cancel.is_some_and(|c| c.load(Ordering::SeqCst)) {
+                return Collected::Cancelled;
+            }
             match event {
                 CommandEvent::Terminated(payload) => code = payload.code,
                 CommandEvent::Stdout(line) => {
+                    if let Some(hook) = on_line.as_mut() {
+                        hook(&line);
+                    }
                     if let Some(pct) =
                         archive::parse_progress_percent(&String::from_utf8_lossy(&line))
                     {
@@ -67,15 +103,21 @@ async fn run_sidecar_progress(
                 _ => {}
             }
         }
-        (code, stdout, stderr)
+        Collected::Done((code, stdout, stderr))
     };
     match tokio::time::timeout(std::time::Duration::from_secs(timeout_secs), collect).await {
-        Ok(done) => Ok(done),
+        Ok(Collected::Done(done)) => Ok(done),
+        Ok(Collected::Cancelled) => {
+            let _ = child.kill();
+            Err("Listing cancelled.".to_string())
+        }
         Err(_) => {
             let _ = child.kill();
             Err(format!(
                 "7zz did not respond within {timeout_secs}s and was killed. \
-                On macOS this usually means Gatekeeper blocked the unsigned \
+                Large archives can exceed this (listing millions of entries \
+                takes minutes: emit + parse + transfer). On macOS a fast \
+                failure usually means Gatekeeper blocked the unsigned \
                 sidecar — clear it with `xattr -d com.apple.quarantine \
                 src-tauri/binaries/7zz-*` (or re-run scripts/fetch-7zz.sh) \
                 and try again."
@@ -90,7 +132,39 @@ async fn run_sidecar(
     args: Vec<String>,
     timeout_secs: u64,
 ) -> Result<(Option<i32>, Vec<u8>, Vec<u8>), String> {
-    run_sidecar_progress(app, args, timeout_secs, |_| {}).await
+    run_sidecar_progress(app, args, timeout_secs, |_| {}, None, None).await
+}
+
+/// Runs a `7zz l -slt` listing like [`run_sidecar`], additionally folding
+/// every stdout line into an [`archive::ListCounter`] and forwarding
+/// throttled [`ListProgress`] snapshots over `on_progress`. Abort mid-run
+/// with [`cancel_list_archive`].
+async fn run_listing(
+    app: &tauri::AppHandle,
+    args: Vec<String>,
+    on_progress: &tauri::ipc::Channel<ListProgress>,
+) -> Result<(Option<i32>, Vec<u8>, Vec<u8>), String> {
+    let mut counter = archive::ListCounter::default();
+    let mut last_send = std::time::Instant::now();
+    let mut on_line = |line: &[u8]| {
+        counter.push_line(line);
+        if last_send.elapsed() >= std::time::Duration::from_millis(200) {
+            last_send = std::time::Instant::now();
+            let _ = on_progress.send(ListProgress {
+                bytes: counter.bytes(),
+                entries: counter.entries(),
+            });
+        }
+    };
+    run_sidecar_progress(
+        app,
+        args,
+        LIST_TIMEOUT_SECS,
+        |_| {},
+        Some(&mut on_line),
+        Some(&LIST_CANCEL),
+    )
+    .await
 }
 
 /// Last ~`ERROR_TAIL_CHARS` chars of long output (char-boundary safe).
@@ -109,16 +183,24 @@ fn tail(text: &str) -> String {
 ///
 /// Argv is built by [`archive::list_args`] (never from raw frontend input);
 /// only the archive *path* (and optional password) cross the IPC boundary.
+/// Streaming [`ListProgress`] snapshots arrive over `on_progress` while the
+/// listing runs (totals are unknowable upfront); abort with
+/// [`cancel_list_archive`].
+///
+/// NOTE: like [`test_archive`], the frontend sends `onProgress` (Tauri
+/// camelCases command args on IPC by default).
 #[tauri::command]
 async fn list_archive(
     app: tauri::AppHandle,
     path: String,
     password: Option<String>,
+    on_progress: tauri::ipc::Channel<ListProgress>,
 ) -> Result<Vec<archive::ArchiveEntry>, String> {
-    let (code, stdout, stderr) = run_sidecar(
+    LIST_CANCEL.store(false, Ordering::SeqCst);
+    let (code, stdout, stderr) = run_listing(
         &app,
         archive::list_args(&path, password.as_deref()),
-        LIST_TIMEOUT_SECS,
+        &on_progress,
     )
     .await?;
     if code != Some(0) {
@@ -131,11 +213,14 @@ async fn info_archive(
     app: tauri::AppHandle,
     path: String,
     password: Option<String>,
+    on_progress: tauri::ipc::Channel<ListProgress>,
 ) -> Result<archive::ArchiveInfo, String> {
-    let (code, stdout, stderr) = run_sidecar(
+    // No flag reset here: info runs second in the same open flow, so a
+    // cancel landing between the two invokes must still abort it.
+    let (code, stdout, stderr) = run_listing(
         &app,
         archive::list_args(&path, password.as_deref()),
-        LIST_TIMEOUT_SECS,
+        &on_progress,
     )
     .await?;
     if code != Some(0) {
@@ -210,6 +295,8 @@ async fn test_archive(
         |pct| {
             let _ = on_progress.send(pct);
         },
+        None,
+        None,
     )
     .await?;
     if code != Some(0) {
@@ -254,6 +341,14 @@ async fn checksum_file(
         let _ = on_progress.send(pct);
     })
     .await
+}
+
+/// Cancels an in-flight [`list_archive`]/[`info_archive`]. The open flow
+/// keeps the previous listing; the command surfaces the cancellation as
+/// its error, which the frontend ignores when it initiated the cancel.
+#[tauri::command]
+fn cancel_list_archive() {
+    LIST_CANCEL.store(true, Ordering::SeqCst);
 }
 
 /// Cancels an in-flight [`checksum_file`]. The dialog stays open; the
@@ -314,6 +409,7 @@ pub fn run() {
             drag_window,
             list_archive,
             info_archive,
+            cancel_list_archive,
             extract_archive,
             test_archive,
             checksum_file,

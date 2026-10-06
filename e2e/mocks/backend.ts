@@ -202,6 +202,9 @@ export async function handleInvoke(
       channel?.emit?.(100);
       return "d41d8cd98f00b204e9800998ecf8427e";
     }
+    case "cancel_list_archive": {
+      return null;
+    }
     case "cancel_checksum": {
       return null;
     }

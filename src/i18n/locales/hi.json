@@ -45,6 +45,15 @@
   "overview.collapse": "विवरण छिपाएँ",
   "overview.expand": "विवरण दिखाएँ",
 
+  "loading.title": "आर्काइव खोला जा रहा है",
+  "loading.listing": "फ़ाइल सूची पढ़ी जा रही है…",
+  "loading.details": "आर्काइव विवरण पढ़ा जा रहा है…",
+  "loading.entries": "प्रविष्टियाँ",
+  "loading.dataRead": "पढ़ा गया डेटा",
+  "loading.elapsed": "बीता समय",
+  "loading.rate": "गति",
+  "loading.progress": "खोलने की प्रगति",
+
   "table.selectAll": "सभी चुनें",
   "table.selectItem": "{name} चुनें",
   "table.colName": "नाम",

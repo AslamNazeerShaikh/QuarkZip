@@ -194,6 +194,60 @@ fn attributes_is_folder(attrs: &str) -> bool {
     }
 }
 
+/// Streaming progress counter for one `7zz l -slt` run: feed each stdout
+/// line (without its newline) in order; [`entries`] tracks completed
+/// entry blocks so far.
+///
+/// Every entry block opens with a `Path = ` line, and the pre-separator
+/// container header holds exactly one of them — so `paths - sep_seen`
+/// equals the final [`parse_list_slt`] entry count, both for real listings
+/// (separator present) and bare fixtures (none). Byte counts include the
+/// stripped newline per line, matching the collected buffer size.
+#[derive(Default)]
+pub struct ListCounter {
+    bytes: u64,
+    paths: u64,
+    sep_seen: bool,
+}
+
+impl ListCounter {
+    pub fn push_line(&mut self, line: &[u8]) {
+        self.bytes += line.len() as u64 + 1;
+        let trimmed = strip_ascii(line);
+        if trimmed == b"----------" {
+            self.sep_seen = true;
+        } else if let Some(rest) = trimmed.strip_prefix(b"Path") {
+            // `Path = <value>`: split on the first " = " like the parser.
+            if rest.strip_prefix(b" = ").is_some() {
+                self.paths += 1;
+            }
+        }
+    }
+
+    pub fn bytes(&self) -> u64 {
+        self.bytes
+    }
+
+    pub fn entries(&self) -> u64 {
+        self.paths - u64::from(self.sep_seen)
+    }
+}
+
+/// ASCII trim (spaces/tabs/newlines), byte-level so the hot collect loop
+/// never validates UTF-8 per line.
+fn strip_ascii(line: &[u8]) -> &[u8] {
+    let is_space = |b: &u8| matches!(b, b' ' | b'\t' | b'\n' | b'\r');
+    let mut start = 0;
+    let mut end = line.len();
+    while start < end && is_space(&line[start]) {
+        start += 1;
+    }
+    while end > start && is_space(&line[end - 1]) {
+        end -= 1;
+    }
+    &line[start..end]
+}
+
 /// Summary of an archive's container + content, derived from one
 /// `7zz l -slt` listing plus filesystem metadata for the container file.
 ///
@@ -560,6 +614,56 @@ Attributes = A -rw-r--r--
         assert!(!attributes_is_folder("A -rw-r--r--"));
         assert!(!attributes_is_folder("A"));
         assert!(!attributes_is_folder(""));
+    }
+
+    fn feed_counter(output: &str) -> ListCounter {
+        let mut counter = ListCounter::default();
+        for line in output.lines() {
+            // Collect loop hands lines without their newline, like the
+            // shell plugin's per-line stdout events.
+            counter.push_line(line.as_bytes());
+        }
+        counter
+    }
+
+    #[test]
+    fn should_match_parser_count_when_separator_listing_given() {
+        let output = "\
+Path = /tmp/sample.zip
+Type = zip
+Physical Size = 1234
+
+----------
+Path = notes.txt
+Size = 128
+Attributes = A -rw-r--r--
+
+Path = pics
+Size = 0
+Attributes = D drwxr-xr-x
+
+Path = pics/a = b.png
+Size = 2048
+Attributes = A -rw-r--r--
+";
+        let counter = feed_counter(output);
+        assert_eq!(counter.entries(), 3);
+        assert_eq!(counter.entries() as usize, parse_list_slt(output).len());
+        assert_eq!(counter.bytes(), output.len() as u64);
+    }
+
+    #[test]
+    fn should_match_parser_count_when_bare_fixture_given() {
+        let output = "\
+Path = notes.txt
+Size = 128
+
+Path = pics
+Size = 0
+";
+        let counter = feed_counter(output);
+        assert_eq!(counter.entries(), 2);
+        assert_eq!(counter.entries() as usize, parse_list_slt(output).len());
     }
 
     #[test]

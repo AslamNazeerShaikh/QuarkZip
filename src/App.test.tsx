@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
@@ -21,6 +21,12 @@ vi.mock("@tauri-apps/api/webview", () => ({
 
 const extractCtl = vi.hoisted(() => ({ fail: true }));
 
+const listCtl = vi.hoisted(() => ({
+  deferList: false,
+  releaseList: null as null | ((value: unknown) => void),
+  calls: [] as string[],
+}));
+
 vi.mock("@tauri-apps/api/core", () => ({
   Channel: class {
     onmessage: (value: unknown) => void;
@@ -29,8 +35,15 @@ vi.mock("@tauri-apps/api/core", () => ({
     }
   },
   invoke: (cmd: string, args?: unknown) => {
+    listCtl.calls.push(cmd);
     if (cmd === "drag_window") return Promise.resolve();
+    if (cmd === "cancel_list_archive") return Promise.resolve(null);
     if (cmd === "list_archive") {
+      if (listCtl.deferList) {
+        return new Promise((resolve) => {
+          listCtl.releaseList = resolve as (value: unknown) => void;
+        });
+      }
       const { path, password } = (args ?? {}) as {
         path: string;
         password: string | null;
@@ -98,6 +111,9 @@ vi.mock("@tauri-apps/plugin-os", () => ({
 beforeEach(() => {
   osCtl.platform = "linux";
   extractCtl.fail = true;
+  listCtl.deferList = false;
+  listCtl.releaseList = null;
+  listCtl.calls = [];
   localStorage.clear();
   document.documentElement.classList.remove("dark");
 });
@@ -148,6 +164,44 @@ describe("drag and drop", () => {
     expect(
       screen.queryByRole("button", { name: /open archive/i }),
     ).not.toBeInTheDocument();
+  });
+
+  it("should_keep_previous_listing_when_open_is_cancelled", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
+    });
+    expect(await screen.findByText("dropped.txt")).toBeInTheDocument();
+
+    // Stall the next listing mid-flight: the progress popup appears.
+    listCtl.deferList = true;
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/other.zip"] },
+    });
+    expect(
+      await screen.findByRole("dialog", { name: "Opening archive" }),
+    ).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Cancel" }));
+    expect(listCtl.calls).toContain("cancel_list_archive");
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Opening archive" }),
+      ).not.toBeInTheDocument();
+    });
+
+    // The stalled listing resolves late: it must stay silent and the
+    // previous listing (plus no error) must survive it.
+    await act(async () => {
+      listCtl.releaseList?.([
+        { path: "other.txt", size: 1, modified: null, is_folder: false },
+      ]);
+    });
+    listCtl.deferList = false;
+    expect(screen.getByText("dropped.txt")).toBeInTheDocument();
+    expect(screen.queryByText("other.txt")).not.toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
   it("should_show_footer_actions_when_archive_open", async () => {

@@ -45,6 +45,15 @@
   "overview.collapse": "Collapse details",
   "overview.expand": "Expand details",
 
+  "loading.title": "Opening archive",
+  "loading.listing": "Reading file list…",
+  "loading.details": "Reading archive details…",
+  "loading.entries": "Entries",
+  "loading.dataRead": "Data read",
+  "loading.elapsed": "Elapsed",
+  "loading.rate": "Rate",
+  "loading.progress": "Opening progress",
+
   "table.selectAll": "Select all",
   "table.selectItem": "Select {name}",
   "table.colName": "Name",

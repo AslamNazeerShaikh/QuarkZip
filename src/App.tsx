@@ -1,11 +1,11 @@
-import { invoke } from "@tauri-apps/api/core";
+import { Channel, invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { dirname } from "@tauri-apps/api/path";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { platform } from "@tauri-apps/plugin-os";
 import { Download, ChevronDown, FolderOpen, Info } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ArchiveTable from "./components/ArchiveTable";
 import TitleBar from "./components/TitleBar";
 import AboutDialog from "./components/AboutDialog";
@@ -17,6 +17,7 @@ import ArchiveOverview, {
   type ArchiveInfo,
 } from "./components/ArchiveOverview";
 import ExtractDialog from "./components/ExtractDialog";
+import LoadDialog, { type LoadStats } from "./components/LoadDialog";
 import ExtractDoneDialog, {
   type ExtractResult,
 } from "./components/ExtractDoneDialog";
@@ -111,6 +112,15 @@ export default function App() {
   const [info, setInfo] = useState<ArchiveInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  // Opening progress popup state: live counters from the backend Channel,
+  // current phase, and the archive being opened. Cancel keeps the previous
+  // listing intact (tracked via ref so late invokes stay silent).
+  const [loadStats, setLoadStats] = useState<LoadStats | null>(null);
+  const [loadPhase, setLoadPhase] = useState<"listing" | "details">("listing");
+  const [loadStart, setLoadStart] = useState(0);
+  const [loadElapsed, setLoadElapsed] = useState(0);
+  const [opening, setOpening] = useState<string | null>(null);
+  const cancelLoadRef = useRef(false);
   const [dragging, setDragging] = useState(false);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState<PageSize>(100);
@@ -160,19 +170,43 @@ export default function App() {
   useEffect(() => {
     setPage(0);
   }, [archive]);
+  // Elapsed-time ticker for the opening progress popup.
+  useEffect(() => {
+    if (!loading) return;
+    const id = window.setInterval(
+      () => setLoadElapsed(Date.now() - loadStart),
+      250,
+    );
+    return () => window.clearInterval(id);
+  }, [loading, loadStart]);
   useEffect(() => {
     setPage((p) => Math.min(p, Math.max(0, pageCount - 1)));
   }, [pageCount]);
 
   async function listPath(path: string, password: string | null = null) {
     setLoading(true);
+    setLoadStats(null);
+    setLoadPhase("listing");
+    setLoadStart(Date.now());
+    setLoadElapsed(0);
+    setOpening(path);
+    cancelLoadRef.current = false;
     setError(null);
     setDoneInfo(null);
+    // Live counters from the backend (bytes + entries so far); ignored
+    // once a cancel lands so a late snapshot can't reopen the popup.
+    const channel = new Channel<LoadStats>((msg) => {
+      if (!cancelLoadRef.current && msg && typeof msg === "object") {
+        setLoadStats({ bytes: msg.bytes, entries: msg.entries });
+      }
+    });
     try {
       const list = await invoke<ArchiveEntry[]>("list_archive", {
         path,
         password,
+        onProgress: channel,
       });
+      if (cancelLoadRef.current) return;
       setArchive(path);
       setEntries(list);
       setArchivePassword(password);
@@ -180,13 +214,16 @@ export default function App() {
       // Details are best-effort: the table must work even if the
       // summary parse fails (or the backend predates `info_archive`).
       try {
+        setLoadPhase("details");
         const summary = await invoke<ArchiveInfo>("info_archive", {
           path,
           password,
+          onProgress: channel,
         });
+        if (cancelLoadRef.current) return;
         setInfo(summary);
       } catch {
-        setInfo(null);
+        if (!cancelLoadRef.current) setInfo(null);
       }
       // Default extract destination: beside the archive.
       try {
@@ -195,6 +232,8 @@ export default function App() {
         setDest("");
       }
     } catch (e) {
+      // Cancelled opens keep the previous listing exactly as-is.
+      if (cancelLoadRef.current) return;
       const message = typeof e === "string" ? e : String(e);
       if (isPasswordError(message)) {
         // Encrypted archive: keep the current listing exactly as-is and
@@ -211,7 +250,17 @@ export default function App() {
       }
     } finally {
       setLoading(false);
+      setOpening(null);
     }
+  }
+
+  /// Aborts an in-flight open: the backend kills 7zz, the popup closes,
+  /// and the previous listing stays untouched (late invokes stay silent).
+  function cancelLoading() {
+    cancelLoadRef.current = true;
+    setLoading(false);
+    setOpening(null);
+    void invoke("cancel_list_archive").catch(() => {});
   }
 
   useEffect(() => {
@@ -415,6 +464,14 @@ export default function App() {
             </div>
           </footer>
         </main>
+        <LoadDialog
+          open={loading}
+          archive={opening ?? ""}
+          phase={loadPhase}
+          stats={loadStats}
+          elapsedMs={loadElapsed}
+          onCancel={cancelLoading}
+        />
         <ExtractDialog
           open={confirming}
           selected={selectedPaths.size}

@@ -147,6 +147,19 @@ body {
 .animate-qz-shake {
   animation: qz-shake 0.4s ease-out;
 }
+/* Indeterminate loading sweep: a chunk slides across the track (used
+   where 7zz reports no percent, e.g. opening an archive). */
+@keyframes qz-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(400%);
+  }
+}
+.animate-qz-slide {
+  animation: qz-slide 1.2s ease-in-out infinite;
+}
 /* Verified check: springy scale-in for the success icon. */
 @keyframes qz-success {
   0% {
@@ -169,6 +182,7 @@ body {
   .animate-qz-fade,
   .animate-qz-pop,
   .animate-qz-shake,
+  .animate-qz-slide,
   .animate-qz-success {
     animation: none;
   }
