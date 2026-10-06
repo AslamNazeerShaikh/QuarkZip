@@ -1080,9 +1080,15 @@
     "semantic_hash": ""
   },
   "docs/macpacker-reference.md": {
-    "mtime": 1791305858.7875233,
-    "seen": 1791305861.311424,
-    "ast_hash": "81521a7cbfd5b677fcb38b14fc5d856b",
+    "mtime": 1791309455.365573,
+    "seen": 1791309459.0837371,
+    "ast_hash": "1b0942130b74c4ee3dab954f16f5e134",
+    "semantic_hash": ""
+  },
+  "docs/7zip-reference.md": {
+    "mtime": 1791310128.629585,
+    "seen": 1791310131.140513,
+    "ast_hash": "0f5c62415de2b3c674daa1df1ba61b34",
     "semantic_hash": ""
   }
 }

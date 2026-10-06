@@ -63,7 +63,7 @@
   "61": "QuarkZip translations (i18n)",
   "62": "QuarkZip backend commands (`src-tauri/src/lib.rs`)",
   "63": "permission",
-  "64": "appInfo.ts",
+  "64": "7-Zip reference (upstream)",
   "65": "tauri.conf.json",
   "66": "github",
   "67": "muse-spark-1.3-contributor-free",
@@ -74,5 +74,5 @@
   "72": "vite.config.ts",
   "73": "useTheme.ts",
   "74": "lint-staged",
-  "76": "TitleBar"
+  "75": "TitleBar"
 }

@@ -1,16 +1,16 @@
 # Graph Report - QuarkZip  (2026-10-06)
 
 ## Corpus Check
-- 125 files · ~197,391 words
+- 126 files · ~198,902 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 840 nodes · 1267 edges · 76 communities (57 shown, 8 thin omitted)
+- 850 nodes · 1276 edges · 76 communities (57 shown, 8 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c01f1e90`
+- Built from commit: `6a57f9a5`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -68,7 +68,7 @@
 - QuarkZip translations (i18n)
 - QuarkZip backend commands (`src-tauri/src/lib.rs`)
 - permission
-- appInfo.ts
+- 7-Zip reference (upstream)
 - tauri.conf.json
 - github
 - muse-spark-1.3-contributor-free
@@ -115,8 +115,8 @@ Cohesion: 0.12
 Nodes (16): scripts, build, dev, format, format:check, format:rust, format:rust:check, i18n:check (+8 more)
 
 ### Community 1 - "App"
-Cohesion: 0.12
-Nodes (21): set_decorations / set_title_bar_style async race, defer Overlay past the async style-mask rewrite, macOS needs flush opaque layout because the floating margin would show the desktop, transparent is creation-only so the rescued native bar stayed transparent, Rules for parallel macOS/Linux development, Steady state per-OS window settings, Steady state (what each OS gets today), What broke (2026-10-04, commit `644f03b`) (+13 more)
+Cohesion: 0.08
+Nodes (32): set_decorations / set_title_bar_style async race, defer Overlay past the async style-mask rewrite, macOS needs flush opaque layout because the floating margin would show the desktop, transparent is creation-only so the rescued native bar stayed transparent, Rules for parallel macOS/Linux development, Steady state per-OS window settings, Steady state (what each OS gets today), What broke (2026-10-04, commit `644f03b`) (+24 more)
 
 ### Community 2 - "opencode.json"
 Cohesion: 0.17
@@ -168,7 +168,7 @@ Nodes (13): Agents, Commands, Documentation, Guardrails, Knowledge graph, MCP, O
 
 ### Community 14 - "MacPacker reference (upstream)"
 Cohesion: 0.08
-Nodes (24): 0. File hierarchy (accurate, `main` root, ~361 entries), 10. Edge cases (changelog archaeology) + error paths, 11. QuarkZip takeaways (adopt / avoid / divergent), 12.1 The five apps (main `/compare`: 68 formats · 9 capabilities), 12.2 Capability matrix (verbatim descriptions; Y = Yes, P = Partial, – = No), 12.3 Format matrix, all 68 rows (cells are Read/Write; Y/P/–), 12.4 Staleness audit vs MacPacker v1.0.0 + reading for QuarkZip, 12. Appendix A — compare pages in full (`macpacker.app/en/compare*`, fetched Oct 2026) (+16 more)
+Nodes (25): 0. File hierarchy (accurate, `main` root, ~361 entries), 10. Edge cases (changelog archaeology) + error paths, 11. QuarkZip takeaways (adopt / avoid / divergent), 12.1 The five apps (main `/compare`: 68 formats · 9 capabilities), 12.2 Capability matrix (verbatim descriptions; Y = Yes, P = Partial, – = No), 12.3 Format matrix, all 68 rows (cells are Read/Write; Y/P/–), 12.4 Staleness audit vs MacPacker v1.0.0 + reading for QuarkZip, 12. Appendix A — compare pages in full (`macpacker.app/en/compare*`, fetched Oct 2026) (+17 more)
 
 ### Community 15 - "lib.rs"
 Cohesion: 0.16
@@ -275,8 +275,8 @@ Cohesion: 0.20
 Nodes (10): dependencies, @fontsource/inter, lucide-react, react, react-dom, @tauri-apps/api, @tauri-apps/plugin-dialog, @tauri-apps/plugin-opener (+2 more)
 
 ### Community 59 - "LanguageContext.tsx"
-Cohesion: 0.06
-Nodes (36): @testing-library/react, @testing-library/user-event, vitest, DragEvent, dragHandlers, extractCtl, listCtl, osCtl (+28 more)
+Cohesion: 0.07
+Nodes (35): @testing-library/react, @testing-library/user-event, vitest, DragEvent, dragHandlers, extractCtl, listCtl, osCtl (+27 more)
 
 ### Community 60 - "check-locales.mjs"
 Cohesion: 0.22
@@ -294,13 +294,13 @@ Nodes (3): Commands, QuarkZip backend commands (`src-tauri/src/lib.rs`), Rules
 Cohesion: 0.18
 Nodes (11): chmod 777 *, rm -rf *, sudo *, permission, bash, edit, glob, grep (+3 more)
 
-### Community 64 - "appInfo.ts"
-Cohesion: 0.31
-Nodes (8): @tauri-apps/plugin-os, openAbout(), APP_FALLBACK_VERSION, APP_NAME, buildValue(), friendlyArch(), friendlyOs(), loadAppInfo()
+### Community 64 - "7-Zip reference (upstream)"
+Cohesion: 0.22
+Nodes (8): 0. Download page (7-zip.org/download.html, 26.04), 1. Repo tree + build (`ip7z/7zip@main`, 1351 entries, Make-only), 2. Embedding API (no stable public C API for the full engine), 3. Formats, limits, technical claims, 4. History, reception, security, variants, 5. Licensing (repo `DOC/`, Wikipedia concurs), 6. Binding 7-Zip into our Rust backend (MacPacker-style) — feasible, phased, 7-Zip reference (upstream)
 
 ### Community 65 - "tauri.conf.json"
-Cohesion: 0.11
-Nodes (17): app, security, build, beforeBuildCommand, beforeDevCommand, devUrl, frontendDist, bundle (+9 more)
+Cohesion: 0.13
+Nodes (14): build, beforeBuildCommand, beforeDevCommand, devUrl, frontendDist, bundle, active, externalBin (+6 more)
 
 ### Community 66 - "github"
 Cohesion: 0.29
@@ -312,7 +312,7 @@ Nodes (6): muse-spark-1.3-contributor-free, options, models, reasoningEffort, pr
 
 ### Community 68 - "App.tsx"
 Cohesion: 0.05
-Nodes (62): lucide-react, react, ARCHIVE_FILTERS, ArchiveEntry, AboutDialog(), ArchiveInfo, ArchiveOverview(), formatEpoch() (+54 more)
+Nodes (63): lucide-react, react, ARCHIVE_FILTERS, ArchiveEntry, AboutDialog(), info, ArchiveInfo, ArchiveOverview() (+55 more)
 
 ### Community 69 - "Security Policy"
 Cohesion: 0.40
@@ -334,28 +334,28 @@ Nodes (3): @tailwindcss/vite, @vitejs/plugin-react, e2eMocks
 Cohesion: 0.44
 Nodes (8): useTheme(), applyTheme(), loadChoice(), ResolvedTheme, resolveTheme(), saveChoice(), THEME_OPTIONS, ThemeChoice
 
-### Community 76 - "TitleBar"
+### Community 75 - "TitleBar"
 Cohesion: 0.70
 Nodes (4): TitleBar(), close(), minimize(), toggleMaximize()
 
 ## Knowledge Gaps
-- **389 isolated node(s):** `$schema`, `version`, `model`, `small_model`, `reasoningEffort` (+384 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 506 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **397 isolated node(s):** `$schema`, `version`, `model`, `small_model`, `reasoningEffort` (+392 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 515 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **8 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `App()` connect `App` to `appInfo.ts`, `useTheme.ts`, `LanguageContext.tsx`, `App.tsx`?**
-  _High betweenness centrality (0.061) - this node is a cross-community bridge._
+- **Why does `App()` connect `App` to `useTheme.ts`, `LanguageContext.tsx`, `App.tsx`?**
+  _High betweenness centrality (0.060) - this node is a cross-community bridge._
 - **Why does `react` connect `App.tsx` to `cn`, `useTheme.ts`, `package.json`, `LanguageContext.tsx`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
 - **What connects `$schema`, `version`, `model` to the rest of the system?**
-  _389 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _397 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `scripts` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._
 - **Should `App` be split into smaller, more focused modules?**
-  _Cohesion score 0.12318840579710146 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07807807807807808 - nodes in this community are weakly interconnected._
 - **Should `package.json` be split into smaller, more focused modules?**
   _Cohesion score 0.08695652173913043 - nodes in this community are weakly interconnected._
 - **Should `archive.rs` be split into smaller, more focused modules?**
