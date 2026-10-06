@@ -45,7 +45,7 @@ Two consequences shaped the implementation:
 
 Detection lives in two mirrored helpers — keep their marker lists in
 sync: `archive::is_password_output` (Rust) and `isPasswordError`
-(`src/password.ts`). Markers: `wrong password`, `enter password`,
+(`src/lib/password.ts`). Markers: `wrong password`, `enter password`,
 `cannot open encrypted archive`, `headers error`, `break signaled`
 (case-insensitive; 7zz messages are English-only).
 

@@ -1,8 +1,8 @@
 import { Download } from "lucide-react";
 import { useEffect } from "react";
-import { Button } from "./components/ui/button";
-import { formatCount } from "./format";
-import { useLanguage } from "./i18n/LanguageContext";
+import { Button } from "./ui/button";
+import { formatCount } from "../lib/format";
+import { useLanguage } from "../i18n/LanguageContext";
 
 function count(value: number): string {
   return formatCount(value);

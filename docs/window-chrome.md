@@ -18,7 +18,7 @@ live in Rust `setup()` plus the `isMac` frontend branch:
 | `hiddenTitle`                     | ignored (mac-only key)                                                                            | `true` — native title hidden, custom strip owns the title                                                                     |
 | `trafficLightPosition` `{20, 24}` | ignored (needs Overlay + decorations)                                                             | lights float over content at creation inset                                                                                   |
 | Frontend frame                    | floating card: `bg-transparent p-5` outer, `rounded-[20px]` bordered card (`src/App.tsx:213-224`) | flush opaque: `bg-[var(--qz-bg)]`, no padding, `rounded-none border-0 shadow-none`                                            |
-| Title strip                       | custom `TitleBar` with min/max/close (`src/TitleBar.tsx:78-141`)                                  | slim drag strip, symmetric 76px inset (clears the lights left, keeps title truly centered), no buttons (`TitleBar.tsx:22-40`) |
+| Title strip                       | custom `TitleBar` with min/max/close (`src/components/TitleBar.tsx:78-141`)                       | slim drag strip, symmetric 76px inset (clears the lights left, keeps title truly centered), no buttons (`TitleBar.tsx:22-40`) |
 | Drag                              | `invoke("drag_window")` on mousedown (borderless needs it)                                        | same explicit `drag_window` mousedown (the attribute alone did not engage native drag on the Overlay setup)                   |
 
 ## What broke (2026-10-04, commit `644f03b`)

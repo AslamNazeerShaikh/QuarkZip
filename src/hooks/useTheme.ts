@@ -6,7 +6,7 @@ import {
   saveChoice,
   type ResolvedTheme,
   type ThemeChoice,
-} from "./theme";
+} from "../lib/theme";
 
 /// Tracks the persisted theme choice, applies the resolved theme to <html>,
 /// and re-resolves live when the OS preference changes in "system" mode.

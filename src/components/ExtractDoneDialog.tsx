@@ -1,8 +1,8 @@
 import { CheckCircle2, XCircle } from "lucide-react";
 import { useEffect } from "react";
-import { Button } from "./components/ui/button";
-import { formatCount } from "./format";
-import { useLanguage } from "./i18n/LanguageContext";
+import { Button } from "./ui/button";
+import { formatCount } from "../lib/format";
+import { useLanguage } from "../i18n/LanguageContext";
 
 export type ExtractResult =
   | { ok: true; fileCount: number; dest: string }

@@ -1,7 +1,7 @@
 import { Check, Languages } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { LOCALES } from "./i18n/locales";
-import { useLanguage } from "./i18n/LanguageContext";
+import { LOCALES } from "../i18n/locales";
+import { useLanguage } from "../i18n/LanguageContext";
 
 /// Footer language menu: shell-styled like its Pagination/ThemeSwitch
 /// neighbours (h-9, 10px radius, 1px border, card shadow) with a floating

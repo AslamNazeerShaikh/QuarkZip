@@ -7,10 +7,10 @@ import {
   PackageOpen,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { ArchiveEntry } from "./App";
-import { fileKind } from "./fileKind";
-import { formatModified, formatSize } from "./format";
-import { useLanguage } from "./i18n/LanguageContext";
+import type { ArchiveEntry } from "../App";
+import { fileKind } from "../lib/fileKind";
+import { formatModified, formatSize } from "../lib/format";
+import { useLanguage } from "../i18n/LanguageContext";
 
 export const ROW_HEIGHT = 36;
 const OVERSCAN = 10;

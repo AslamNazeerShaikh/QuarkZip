@@ -1,7 +1,7 @@
 import { Check, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { formatCount } from "./format";
-import { useLanguage } from "./i18n/LanguageContext";
+import { formatCount } from "../lib/format";
+import { useLanguage } from "../i18n/LanguageContext";
 
 export const PAGE_SIZES = [100, 1000, 5000, 10000] as const;
 export type PageSize = (typeof PAGE_SIZES)[number] | "all";

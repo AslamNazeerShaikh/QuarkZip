@@ -9,7 +9,7 @@
 import { createContext, useCallback, useContext, useState } from "react";
 import type { ReactNode } from "react";
 import { FALLBACK_CODE, localeMeta, LOCALES, resolveLocale } from "./locales";
-import { setFormatLocale } from "../format";
+import { setFormatLocale } from "../lib/format";
 
 const STORAGE_KEY = "quarkzip.lang";
 

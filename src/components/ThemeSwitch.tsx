@@ -1,7 +1,7 @@
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { THEME_OPTIONS, type ThemeChoice } from "./theme";
-import { useLanguage } from "./i18n/LanguageContext";
+import { THEME_OPTIONS, type ThemeChoice } from "../lib/theme";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const CHOICE_ICON = { light: Sun, dark: Moon, system: Monitor } as const;
 

@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import AboutDialog from "./AboutDialog";
-import type { AppInfo } from "./appInfo";
+import type { AppInfo } from "../lib/appInfo";
 
 const info: AppInfo = {
   version: "0.1.0",

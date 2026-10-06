@@ -1,9 +1,9 @@
 import { Archive, Hash, PackageOpen, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
-import { formatCount, formatDateTimeLocal, formatSize } from "./format";
-import { Button } from "./components/ui/button";
-import { Card, CardDescription, CardTitle } from "./components/ui/card";
-import { useLanguage } from "./i18n/LanguageContext";
+import { formatCount, formatDateTimeLocal, formatSize } from "../lib/format";
+import { Button } from "./ui/button";
+import { Card, CardDescription, CardTitle } from "./ui/card";
+import { useLanguage } from "../i18n/LanguageContext";
 
 /// Mirrors `archive::ArchiveInfo` (snake_case over the Tauri bridge).
 export interface ArchiveInfo {

@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { Copy, Minus, Square, X } from "lucide-react";
 import type { MouseEvent } from "react";
-import { useLanguage } from "./i18n/LanguageContext";
+import { useLanguage } from "../i18n/LanguageContext";
 
 interface TitleBarProps {
   archive: string | null;

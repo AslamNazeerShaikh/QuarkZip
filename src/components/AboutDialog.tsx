@@ -1,8 +1,8 @@
 import { Info } from "lucide-react";
 import { useEffect } from "react";
-import { Button } from "./components/ui/button";
-import { APP_NAME, type AppInfo } from "./appInfo";
-import { useLanguage } from "./i18n/LanguageContext";
+import { Button } from "./ui/button";
+import { APP_NAME, type AppInfo } from "../lib/appInfo";
+import { useLanguage } from "../i18n/LanguageContext";
 
 /// About popup, mirroring the extract dialogs: dimmed backdrop, surface card
 /// with a big centered icon, an info grid, the 7-Zip attribution paragraph,

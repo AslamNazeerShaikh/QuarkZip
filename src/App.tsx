@@ -6,23 +6,27 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { platform } from "@tauri-apps/plugin-os";
 import { Download, ChevronDown, FolderOpen, Info } from "lucide-react";
 import { useEffect, useState } from "react";
-import ArchiveTable from "./ArchiveTable";
-import TitleBar from "./TitleBar";
-import AboutDialog from "./AboutDialog";
-import PasswordDialog from "./PasswordDialog";
-import TestDialog from "./TestDialog";
-import ChecksumDialog from "./ChecksumDialog";
-import { loadAppInfo, type AppInfo } from "./appInfo";
-import ArchiveOverview, { type ArchiveInfo } from "./ArchiveOverview";
-import ExtractDialog from "./ExtractDialog";
-import ExtractDoneDialog, { type ExtractResult } from "./ExtractDoneDialog";
-import Pagination, { type PageSize } from "./Pagination";
-import ThemeSwitch from "./ThemeSwitch";
-import LanguageSwitch from "./LanguageSwitch";
+import ArchiveTable from "./components/ArchiveTable";
+import TitleBar from "./components/TitleBar";
+import AboutDialog from "./components/AboutDialog";
+import PasswordDialog from "./components/PasswordDialog";
+import TestDialog from "./components/TestDialog";
+import ChecksumDialog from "./components/ChecksumDialog";
+import { loadAppInfo, type AppInfo } from "./lib/appInfo";
+import ArchiveOverview, {
+  type ArchiveInfo,
+} from "./components/ArchiveOverview";
+import ExtractDialog from "./components/ExtractDialog";
+import ExtractDoneDialog, {
+  type ExtractResult,
+} from "./components/ExtractDoneDialog";
+import Pagination, { type PageSize } from "./components/Pagination";
+import ThemeSwitch from "./components/ThemeSwitch";
+import LanguageSwitch from "./components/LanguageSwitch";
 import { Button } from "./components/ui/button";
-import { useTheme } from "./useTheme";
+import { useTheme } from "./hooks/useTheme";
 import { useLanguage } from "./i18n/LanguageContext";
-import { isPasswordError } from "./password";
+import { isPasswordError } from "./lib/password";
 
 export interface ArchiveEntry {
   path: string;

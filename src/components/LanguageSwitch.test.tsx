@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
 import LanguageSwitch from "./LanguageSwitch";
-import { LanguageProvider } from "./i18n/LanguageContext";
+import { LanguageProvider } from "../i18n/LanguageContext";
 
 beforeEach(() => {
   localStorage.clear();

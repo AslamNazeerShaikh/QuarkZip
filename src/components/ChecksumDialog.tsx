@@ -1,8 +1,8 @@
 import { invoke, Channel } from "@tauri-apps/api/core";
 import { Check, ChevronDown, Hash } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "./components/ui/button";
-import { useLanguage } from "./i18n/LanguageContext";
+import { Button } from "./ui/button";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const ALGOS = [
   { id: "md5", label: "MD5" },

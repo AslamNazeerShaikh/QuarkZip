@@ -1,9 +1,9 @@
 import { invoke, Channel } from "@tauri-apps/api/core";
 import { CheckCircle2, Eye, EyeOff, LockKeyhole, XCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "./components/ui/button";
-import { useLanguage } from "./i18n/LanguageContext";
-import { isPasswordError } from "./password";
+import { Button } from "./ui/button";
+import { useLanguage } from "../i18n/LanguageContext";
+import { isPasswordError } from "../lib/password";
 
 type Phase =
   | { name: "idle" }
