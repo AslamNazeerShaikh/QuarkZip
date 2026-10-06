@@ -8,6 +8,7 @@ playwright-report/
 playwright/.cache/
 src-tauri/target/
 src-tauri/binaries/
+src-tauri/gen/
 vendor/7zz-cache/
 # graphify generated outputs (regenerated via `graphify update`; formatting
 # them only creates churn, e.g. 25k-line graph.html)

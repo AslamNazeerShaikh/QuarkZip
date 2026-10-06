@@ -46,11 +46,7 @@ pub fn extract_args(
     password: Option<&str>,
     files: &[String],
 ) -> Vec<String> {
-    let mut args = vec![
-        "x".to_string(),
-        archive.to_string(),
-        format!("-o{dest}"),
-    ];
+    let mut args = vec!["x".to_string(), archive.to_string(), format!("-o{dest}")];
     args.extend(files.iter().cloned());
     args.push("-y".to_string());
     args.push(format!("-p{}", password.unwrap_or("")));
@@ -315,10 +311,7 @@ pub fn parse_archive_info(output: &str) -> ArchiveInfo {
                 total_unpacked = total_unpacked.saturating_add(s);
             }
         }
-        if let Some(p) = b
-            .get("Packed Size")
-            .and_then(|s| s.parse::<u64>().ok())
-        {
+        if let Some(p) = b.get("Packed Size").and_then(|s| s.parse::<u64>().ok()) {
             total_packed = total_packed.saturating_add(p);
         }
         let depth = path
@@ -359,7 +352,14 @@ pub fn parse_archive_info(output: &str) -> ArchiveInfo {
         cipher_tokens.into_iter().collect::<Vec<_>>().join(" + ")
     };
 
-    let known = ["Type", "Physical Size", "Headers Size", "Method", "Solid", "Blocks"];
+    let known = [
+        "Type",
+        "Physical Size",
+        "Headers Size",
+        "Method",
+        "Solid",
+        "Blocks",
+    ];
     let extra: BTreeMap<String, String> = header
         .iter()
         .filter(|(k, _)| !known.contains(&k.as_str()))
@@ -473,7 +473,12 @@ mod tests {
     #[test]
     fn should_list_files_before_assume_yes_when_files_given() {
         assert_eq!(
-            extract_args("a.7z", "/tmp/out", None, &["a.txt".to_string(), "b/c.txt".to_string()]),
+            extract_args(
+                "a.7z",
+                "/tmp/out",
+                None,
+                &["a.txt".to_string(), "b/c.txt".to_string()]
+            ),
             vec![
                 "x".to_string(),
                 "a.7z".to_string(),
@@ -587,7 +592,9 @@ Attributes = A -rw-r--r--
 
     #[test]
     fn should_detect_noop_extract_output() {
-        assert!(extract_output_is_noop("Extracting archive...\nNo files to process\n"));
+        assert!(extract_output_is_noop(
+            "Extracting archive...\nNo files to process\n"
+        ));
         assert!(!extract_output_is_noop("Everything is Ok\n"));
         assert!(!extract_output_is_noop(""));
     }

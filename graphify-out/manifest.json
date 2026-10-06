@@ -18,9 +18,9 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1791293970.3592918,
-    "seen": 1791294105.802345,
-    "ast_hash": "376150a69c7a20c657009cf2f39b7784",
+    "mtime": 1791294201.7250645,
+    "seen": 1791294220.2999308,
+    "ast_hash": "9b2237efa4bda322bdba4d11403d1c4a",
     "semantic_hash": ""
   },
   "scripts/fetch-7zz.sh": {
@@ -480,9 +480,9 @@
     "semantic_hash": ""
   },
   "src-tauri/src/archive.rs": {
-    "mtime": 1791219992.9802551,
-    "seen": 1791220049.347083,
-    "ast_hash": "fc8944887852d45f13fe1329fb3985ed",
+    "mtime": 1791294188.632571,
+    "seen": 1791294220.299934,
+    "ast_hash": "0964f84d0b4029b42aadd1d7e9316d6d",
     "semantic_hash": ""
   },
   "src-tauri/tests/list_archive_e2e.rs": {

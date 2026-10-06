@@ -1,0 +1,4 @@
+# QuarkZip Rust formatting (stable rustfmt only — no nightly options).
+# Run: cargo fmt --all   Check: cargo fmt --all --check
+edition = "2021"
+max_width = 100

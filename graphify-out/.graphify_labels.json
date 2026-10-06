@@ -57,8 +57,7 @@
   "55": "quarkzip",
   "56": "test-setup.ts",
   "57": "vite-env.d.ts",
-  "58": "dependencies",
-  "59": "ArchiveTable.tsx",
+  "59": "LanguageContext.tsx",
   "60": "check-locales.mjs",
   "61": "QuarkZip translations (i18n)",
   "62": "QuarkZip backend commands (`src-tauri/src/lib.rs`)",
@@ -70,6 +69,5 @@
   "68": "appInfo.ts",
   "69": "Security Policy",
   "70": "project",
-  "71": "agents",
-  "72": "vite.config.ts"
+  "71": "agents"
 }

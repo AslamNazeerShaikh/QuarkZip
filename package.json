@@ -13,13 +13,16 @@
     "test:coverage": "vitest run --coverage",
     "test:rust": "cargo test --manifest-path src-tauri/Cargo.toml",
     "i18n:check": "node scripts/check-locales.mjs",
-    "format": "prettier . --write --ignore-unknown",
-    "format:check": "prettier . --check --ignore-unknown",
+    "format": "prettier . --write --ignore-unknown && npm run format:rust",
+    "format:check": "prettier . --check --ignore-unknown && npm run format:rust:check",
+    "format:rust": "cargo fmt --all --manifest-path src-tauri/Cargo.toml",
+    "format:rust:check": "cargo fmt --all --check --manifest-path src-tauri/Cargo.toml",
     "tauri": "tauri",
     "prepare": "husky"
   },
   "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
+    "**/*": "prettier --write --ignore-unknown",
+    "src-tauri/**/*.rs": "rustfmt --edition 2021"
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",
