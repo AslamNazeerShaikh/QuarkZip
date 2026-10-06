@@ -1,16 +1,16 @@
 # Graph Report - QuarkZip  (2026-10-06)
 
 ## Corpus Check
-- 122 files · ~190,487 words
+- 122 files · ~190,855 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 793 nodes · 1187 edges · 78 communities (59 shown, 8 thin omitted)
+- 793 nodes · 1188 edges · 77 communities (59 shown, 7 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `96dc133a`
+- Built from commit: `87c63286`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -26,7 +26,7 @@
 - compilerOptions
 - mcp
 - devDependencies
-- ArchiveOverview.tsx
+- cn
 - checksum.rs
 - Opencode Configuration for QuarkZip
 - ArchiveTable.tsx
@@ -68,20 +68,19 @@
 - QuarkZip translations (i18n)
 - QuarkZip backend commands (`src-tauri/src/lib.rs`)
 - permission
-- App.tsx
+- AboutDialog.tsx
 - tauri.conf.json
 - github
 - muse-spark-1.3-contributor-free
-- useLanguage
+- App.tsx
 - Security Policy
 - project
 - agents
 - PasswordDialog.tsx
 - useTheme.ts
-- ChecksumDialog.tsx
-- Pagination.tsx
+- button.tsx
+- ArchiveOverview.tsx
 - TitleBar
-- lucide-react
 
 ## God Nodes (most connected - your core abstractions)
 1. `useLanguage()` - 31 edges
@@ -93,7 +92,7 @@
 7. `addArchive()` - 15 edges
 8. `App()` - 15 edges
 9. `@testing-library/react` - 14 edges
-10. `openViaButton()` - 13 edges
+10. `@testing-library/user-event` - 14 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `set_decorations / set_title_bar_style async race` --references--> `run()`  [EXTRACTED]
@@ -110,15 +109,15 @@
 ## Import Cycles
 - None detected.
 
-## Communities (78 total, 8 thin omitted)
+## Communities (77 total, 7 thin omitted)
 
 ### Community 0 - "scripts"
 Cohesion: 0.12
 Nodes (16): scripts, build, dev, format, format:check, format:rust, format:rust:check, i18n:check (+8 more)
 
 ### Community 1 - "App"
-Cohesion: 0.09
-Nodes (25): set_decorations / set_title_bar_style async race, defer Overlay past the async style-mask rewrite, macOS needs flush opaque layout because the floating margin would show the desktop, transparent is creation-only so the rescued native bar stayed transparent, Rules for parallel macOS/Linux development, Steady state per-OS window settings, Steady state (what each OS gets today), What broke (2026-10-04, commit `644f03b`) (+17 more)
+Cohesion: 0.08
+Nodes (28): set_decorations / set_title_bar_style async race, defer Overlay past the async style-mask rewrite, macOS needs flush opaque layout because the floating margin would show the desktop, transparent is creation-only so the rescued native bar stayed transparent, Rules for parallel macOS/Linux development, Steady state per-OS window settings, Steady state (what each OS gets today), What broke (2026-10-04, commit `644f03b`) (+20 more)
 
 ### Community 2 - "opencode.json"
 Cohesion: 0.17
@@ -156,9 +155,9 @@ Nodes (9): mcp, ui-skills, whiteboard, enabled, type, url, command, enabled (+1 
 Cohesion: 0.11
 Nodes (19): devDependencies, husky, jsdom, lint-staged, @playwright/test, prettier, tailwindcss, @tailwindcss/vite (+11 more)
 
-### Community 11 - "ArchiveOverview.tsx"
-Cohesion: 0.12
-Nodes (20): ArchiveInfo, ArchiveOverview(), formatEpoch(), INFO, Badge(), BadgeVariant, DOTS, STYLES (+12 more)
+### Community 11 - "cn"
+Cohesion: 0.23
+Nodes (11): Badge(), BadgeVariant, DOTS, STYLES, Card(), CardContent(), CardDescription(), CardHeader() (+3 more)
 
 ### Community 12 - "checksum.rs"
 Cohesion: 0.11
@@ -169,8 +168,8 @@ Cohesion: 0.14
 Nodes (13): Agents, Commands, Documentation, Guardrails, Knowledge graph, MCP, Opencode Configuration for QuarkZip, Repo layout (target project) (+5 more)
 
 ### Community 14 - "ArchiveTable.tsx"
-Cohesion: 0.14
-Nodes (13): ArchiveEntry, ArchiveTable(), baseColumns(), Column, compareValues(), ROW_HEIGHT, SortDir, SortKey (+5 more)
+Cohesion: 0.16
+Nodes (11): lucide-react, ArchiveEntry, ArchiveTable(), baseColumns(), Column, compareValues(), ROW_HEIGHT, SortDir (+3 more)
 
 ### Community 15 - "lib.rs"
 Cohesion: 0.18
@@ -273,12 +272,12 @@ Cohesion: 0.29
 Nodes (6): Bash operations (safe commands for this toolchain), Dangerous bash commands, File operations, File operations on sensitive files, Task operations, Web operations
 
 ### Community 58 - "vitest"
-Cohesion: 0.15
-Nodes (11): @testing-library/react, @testing-library/user-event, vitest, { ChannelStub }, invokeCtl, Pagination(), { ChannelStub }, invokeCtl (+3 more)
+Cohesion: 0.16
+Nodes (11): @testing-library/react, @testing-library/user-event, vitest, DATA, { ChannelStub }, invokeCtl, { ChannelStub }, invokeCtl (+3 more)
 
 ### Community 59 - "LanguageContext.tsx"
-Cohesion: 0.16
-Nodes (18): react, LanguageSwitch(), CHOICE_ICON, TitleBarProps, EN_KEYS, applySideEffects(), detectInitial(), interpolate() (+10 more)
+Cohesion: 0.20
+Nodes (15): LanguageSwitch(), EN_KEYS, applySideEffects(), detectInitial(), interpolate(), LanguageContext, LanguageProvider(), LanguageValue (+7 more)
 
 ### Community 60 - "check-locales.mjs"
 Cohesion: 0.22
@@ -296,13 +295,13 @@ Nodes (3): Commands, QuarkZip backend commands (`src-tauri/src/lib.rs`), Rules
 Cohesion: 0.18
 Nodes (11): chmod 777 *, rm -rf *, sudo *, permission, bash, edit, glob, grep (+3 more)
 
-### Community 64 - "App.tsx"
+### Community 64 - "AboutDialog.tsx"
 Cohesion: 0.23
-Nodes (12): @tauri-apps/plugin-os, openAbout(), ARCHIVE_FILTERS, AboutDialog(), info, APP_FALLBACK_VERSION, APP_NAME, AppInfo (+4 more)
+Nodes (11): @tauri-apps/plugin-os, openAbout(), AboutDialog(), info, APP_FALLBACK_VERSION, APP_NAME, AppInfo, buildValue() (+3 more)
 
 ### Community 65 - "tauri.conf.json"
-Cohesion: 0.11
-Nodes (17): app, security, build, beforeBuildCommand, beforeDevCommand, devUrl, frontendDist, bundle (+9 more)
+Cohesion: 0.13
+Nodes (14): build, beforeBuildCommand, beforeDevCommand, devUrl, frontendDist, bundle, active, externalBin (+6 more)
 
 ### Community 66 - "github"
 Cohesion: 0.29
@@ -312,9 +311,9 @@ Nodes (7): enabled, headers, oauth, type, url, Authorization, github
 Cohesion: 0.33
 Nodes (6): muse-spark-1.3-contributor-free, options, models, reasoningEffort, provider, opencode
 
-### Community 68 - "useLanguage"
-Cohesion: 0.24
-Nodes (9): count(), ExtractDialog(), ExtractDoneDialog(), ExtractResult, ThemeSwitch(), Switcher(), TProbe(), useLanguage() (+1 more)
+### Community 68 - "App.tsx"
+Cohesion: 0.13
+Nodes (21): react, ARCHIVE_FILTERS, count(), ExtractDialog(), ExtractDoneDialog(), ExtractResult, formatSize(), OPTIONS (+13 more)
 
 ### Community 69 - "Security Policy"
 Cohesion: 0.40
@@ -336,13 +335,13 @@ Nodes (9): clampPct(), PasswordDialog(), check(), Phase, clampPct(), Phase, Test
 Cohesion: 0.44
 Nodes (8): useTheme(), applyTheme(), loadChoice(), ResolvedTheme, resolveTheme(), saveChoice(), THEME_OPTIONS, ThemeChoice
 
-### Community 74 - "ChecksumDialog.tsx"
-Cohesion: 0.24
-Nodes (7): AlgoId, ALGOS, ChecksumDialog(), start(), clampPct(), normalizeHash(), Phase
+### Community 74 - "button.tsx"
+Cohesion: 0.15
+Nodes (12): AlgoId, ALGOS, ChecksumDialog(), start(), clampPct(), normalizeHash(), Phase, Button() (+4 more)
 
-### Community 75 - "Pagination.tsx"
+### Community 75 - "ArchiveOverview.tsx"
 Cohesion: 0.28
-Nodes (7): formatSize(), OPTIONS, PAGE_SIZES, PageSize, PageSizeMenu(), choose(), onListKey()
+Nodes (7): ArchiveInfo, ArchiveOverview(), formatEpoch(), INFO, formatDateTimeLocal(), formatModified(), formatSize()
 
 ### Community 76 - "TitleBar"
 Cohesion: 0.70
@@ -351,21 +350,21 @@ Nodes (4): TitleBar(), close(), minimize(), toggleMaximize()
 ## Knowledge Gaps
 - **365 isolated node(s):** `$schema`, `version`, `model`, `small_model`, `reasoningEffort` (+360 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 476 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **8 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `App()` connect `App` to `App.tsx`, `useTheme.ts`, `LanguageContext.tsx`, `useLanguage`?**
+- **Why does `App()` connect `App` to `AboutDialog.tsx`, `useTheme.ts`, `LanguageContext.tsx`, `App.tsx`?**
   _High betweenness centrality (0.061) - this node is a cross-community bridge._
-- **Why does `react` connect `LanguageContext.tsx` to `App.tsx`, `package.json`, `useLanguage`, `PasswordDialog.tsx`, `useTheme.ts`, `ChecksumDialog.tsx`, `ArchiveOverview.tsx`, `Pagination.tsx`, `ArchiveTable.tsx`?**
+- **Why does `react` connect `App.tsx` to `AboutDialog.tsx`, `package.json`, `PasswordDialog.tsx`, `useTheme.ts`, `button.tsx`, `ArchiveOverview.tsx`, `cn`, `ArchiveTable.tsx`, `LanguageContext.tsx`?**
   _High betweenness centrality (0.034) - this node is a cross-community bridge._
 - **What connects `$schema`, `version`, `model` to the rest of the system?**
   _365 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `scripts` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._
 - **Should `App` be split into smaller, more focused modules?**
-  _Cohesion score 0.09195402298850575 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08143939393939394 - nodes in this community are weakly interconnected._
 - **Should `package.json` be split into smaller, more focused modules?**
   _Cohesion score 0.05128205128205128 - nodes in this community are weakly interconnected._
 - **Should `archive.rs` be split into smaller, more focused modules?**

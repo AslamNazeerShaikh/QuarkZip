@@ -318,7 +318,8 @@ export default function App() {
               {error}
             </p>
           )}
-          {/* 50/50 vertical split: overview card above, table below. */}
+          {/* Overview card above (half the space expanded, action row
+            only when collapsed), table below absorbs the rest. */}
           <div className="flex min-h-0 flex-1 flex-col gap-7">
             <ArchiveOverview
               archive={archive}
@@ -328,7 +329,7 @@ export default function App() {
               onTest={() => setTestOpen(true)}
               onChecksum={() => setChecksumOpen(true)}
             />
-            <div className="flex min-h-0 flex-[1_1_50%] flex-col">
+            <div className="flex min-h-0 flex-1 flex-col">
               <ArchiveTable
                 data={entries}
                 page={page}

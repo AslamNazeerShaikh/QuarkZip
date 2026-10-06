@@ -152,12 +152,19 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   right-aligned: equal-width (`w-32`) secondary `sm` `Test`
   (`test_archive`) and `Checksum` (`checksum_file`) buttons opening their
   dialogs.
+  The card collapses via the chevron toggle beside `Checksum` (same
+  secondary `sm` shell, square icon-only, arrow rotates with the state):
+  collapsed it shrink-wraps to the action row (`flex-none`) and the table
+  absorbs the freed space; `Test`/`Checksum` stay available in both
+  states. Pagination never changes with the card — page/row counts are
+  independent of it.
 
 ## Layout
 
 Single window (990×660 default, Tauri `tauri.conf.json`), no sidebar: slim
-drag strip (`h-14`), then a 50/50 vertical split — `ArchiveOverview`
-(`flex-[1_1_50%]`) above, table (`flex-[1_1_50%]`) below — then the action
+drag strip (`h-14`), then an equal vertical split — `ArchiveOverview`
+above (expanded: `flex-1`; collapsed: `flex-none`, action row only),
+table (`flex-1`) below — then the action
 bar, all on the 28px rhythm. Panels scroll internally, never the page. The
 table scroller carries no bottom padding, so at max scroll the last row
 lands exactly on the viewport bottom (no dead zone), with or without

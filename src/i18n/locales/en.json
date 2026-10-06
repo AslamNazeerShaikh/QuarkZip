@@ -42,6 +42,8 @@
   "overview.sectionMore": "More details",
   "overview.test": "Test",
   "overview.checksum": "Checksum",
+  "overview.collapse": "Collapse details",
+  "overview.expand": "Expand details",
 
   "table.selectAll": "Select all",
   "table.selectItem": "Select {name}",

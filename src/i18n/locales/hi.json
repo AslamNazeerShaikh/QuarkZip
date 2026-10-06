@@ -42,6 +42,8 @@
   "overview.sectionMore": "अधिक विवरण",
   "overview.test": "परीक्षण",
   "overview.checksum": "चेकसम",
+  "overview.collapse": "विवरण छिपाएँ",
+  "overview.expand": "विवरण दिखाएँ",
 
   "table.selectAll": "सभी चुनें",
   "table.selectItem": "{name} चुनें",

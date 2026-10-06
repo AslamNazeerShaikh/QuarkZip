@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import ArchiveOverview, { type ArchiveInfo } from "./ArchiveOverview";
 
@@ -56,5 +57,54 @@ describe("ArchiveOverview", () => {
     ).not.toBeInTheDocument();
     expect(screen.getByText("Container")).toBeInTheDocument();
     expect(screen.getAllByText("LZMA2:12").length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("should_collapse_to_action_row_and_expand_back_on_toggle", async () => {
+    const user = userEvent.setup();
+    render(
+      <ArchiveOverview
+        archive="/tmp/qz-sample.7z"
+        info={INFO}
+        loading={false}
+        onOpen={() => {}}
+      />,
+    );
+    const toggle = screen.getByRole("button", { name: "Collapse details" });
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText("Container")).toBeInTheDocument();
+
+    await user.click(toggle);
+    expect(
+      screen.getByRole("button", { name: "Expand details" }),
+    ).toHaveAttribute("aria-expanded", "false");
+    // Metadata hides; Test/Checksum stay available.
+    expect(screen.queryByText("Container")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Test" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Checksum" }),
+    ).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Expand details" }));
+    expect(screen.getByText("Container")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Collapse details" }),
+    ).toBeInTheDocument();
+  });
+
+  it("should_offer_no_collapse_toggle_without_open_archive", () => {
+    render(
+      <ArchiveOverview
+        archive={null}
+        info={null}
+        loading={false}
+        onOpen={() => {}}
+      />,
+    );
+    expect(
+      screen.queryByRole("button", { name: "Collapse details" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Expand details" }),
+    ).not.toBeInTheDocument();
   });
 });
