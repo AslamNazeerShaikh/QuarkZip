@@ -50,7 +50,7 @@ function PageSizeMenu({
       document.removeEventListener("pointerdown", onPointerDown);
       document.removeEventListener("keydown", onKey);
     };
-  }, [open ]);
+  }, [open]);
 
   function choose(size: PageSize) {
     onPageSize(size);

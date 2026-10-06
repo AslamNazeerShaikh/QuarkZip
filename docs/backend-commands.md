@@ -8,16 +8,16 @@ unit-tested without a binary (`npm run test:rust`).
 
 ## Commands
 
-| Command | Args | Returns |
-| --- | --- | --- |
-| `list_archive` | `path`, `password?` | `ArchiveEntry[]` (`7zz l -slt [-p<pw>]`) |
-| `info_archive` | `path`, `password?` | `ArchiveInfo` (listing + fs size/mtime) |
-| `extract_archive` | `path`, `dest`, `files[]`, `password?` | 7zz stdout (`7zz x -o<dest> [files…] [-p<pw>] -y`); empty `files` = everything |
-| `test_archive` | `path`, `password?`, `onProgress: Channel<u32>` | `"Everything is Ok"` (`7zz t -bsp1`, percent streamed) |
-| `checksum_file` | `path`, `algorithm`, `onProgress: Channel<u32>` | lowercase hex digest (MD5 / SHA-1 / SHA-256 / SHA-512) |
-| `cancel_checksum` | — | aborts the in-flight `checksum_file` |
-| `drag_window` | — | starts a native drag (custom title strip) |
-| `greet` | `name` | scaffold sample, unused by the UI |
+| Command           | Args                                            | Returns                                                                        |
+| ----------------- | ----------------------------------------------- | ------------------------------------------------------------------------------ |
+| `list_archive`    | `path`, `password?`                             | `ArchiveEntry[]` (`7zz l -slt [-p<pw>]`)                                       |
+| `info_archive`    | `path`, `password?`                             | `ArchiveInfo` (listing + fs size/mtime)                                        |
+| `extract_archive` | `path`, `dest`, `files[]`, `password?`          | 7zz stdout (`7zz x -o<dest> [files…] [-p<pw>] -y`); empty `files` = everything |
+| `test_archive`    | `path`, `password?`, `onProgress: Channel<u32>` | `"Everything is Ok"` (`7zz t -bsp1`, percent streamed)                         |
+| `checksum_file`   | `path`, `algorithm`, `onProgress: Channel<u32>` | lowercase hex digest (MD5 / SHA-1 / SHA-256 / SHA-512)                         |
+| `cancel_checksum` | —                                               | aborts the in-flight `checksum_file`                                           |
+| `drag_window`     | —                                               | starts a native drag (custom title strip)                                      |
+| `greet`           | `name`                                          | scaffold sample, unused by the UI                                              |
 
 ## Rules
 
@@ -34,13 +34,13 @@ unit-tested without a binary (`npm run test:rust`).
    expiry reports the Gatekeeper hint, not a spinner.
 4. **Exit code is not the verdict.** `test_archive` additionally requires the
    `Everything is Ok` marker; selective extracts returning `No files to
-   process` surface as errors. Long stderr/stdout is tail-truncated
+process` surface as errors. Long stderr/stdout is tail-truncated
    (`ERROR_TAIL_CHARS = 4000`, char-boundary safe) before crossing IPC.
 5. **Checksum cancel is cooperative.** One global flag (single-window app):
    `checksum_file` resets it on start and checks per 1 MiB chunk;
    `cancel_checksum` sets it. The dialog stays open on cancel — only Close
    dismisses it.
-6. **Argv is backend-built.** Only the archive *path* (and algorithm id for
+6. **Argv is backend-built.** Only the archive _path_ (and algorithm id for
    checksums, validated against `ChecksumAlgo::parse`) crosses IPC; flags
    are never assembled from frontend strings. `-p` is always appended, even
    empty: the shell plugin spawns 7zz with stdin piped and never closes it,

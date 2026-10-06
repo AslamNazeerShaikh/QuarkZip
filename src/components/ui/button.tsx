@@ -16,8 +16,10 @@ const VARIANTS: Record<Variant, string> = {
     "bg-[var(--qz-surface)] text-[var(--qz-text)] border border-[var(--qz-border)] hover:bg-[var(--qz-surface-2)]",
   ghost: "text-[var(--qz-text)] hover:bg-[var(--qz-surface-2)]",
   // Confirm dialog: orange Cancel, blue Proceed (AA pairs in color-system).
-  warning: "bg-[var(--qz-warning-soft)] text-[var(--qz-warning)] hover:opacity-80",
-  accent: "bg-[var(--qz-info)] text-[var(--qz-on-primary)] border border-transparent hover:opacity-90",
+  warning:
+    "bg-[var(--qz-warning-soft)] text-[var(--qz-warning)] hover:opacity-80",
+  accent:
+    "bg-[var(--qz-info)] text-[var(--qz-on-primary)] border border-transparent hover:opacity-90",
 };
 
 const SIZES: Record<Size, string> = {

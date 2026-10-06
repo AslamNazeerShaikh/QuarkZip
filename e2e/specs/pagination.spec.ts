@@ -37,9 +37,7 @@ test("page-size menu lists every option and applies it", async ({ app }) => {
   await app.getByRole("button", { name: "Rows per page" }).click();
   const menu = app.getByRole("listbox", { name: "Rows per page" });
   for (const label of ["100", "1,000", "5,000", "10,000", "All"]) {
-    await expect(
-      menu.getByRole("option", { name: label }),
-    ).toBeVisible();
+    await expect(menu.getByRole("option", { name: label })).toBeVisible();
   }
   await menu.getByRole("option", { name: "1,000" }).click();
   await expect(app.getByText("1 / 1")).toBeVisible();
@@ -58,9 +56,7 @@ test("choosing All shows a single page", async ({ app }) => {
     .getByRole("option", { name: "All" })
     .click();
   await expect(app.getByText("1 / 1")).toBeVisible();
-  await expect(
-    app.getByRole("button", { name: "Next page" }),
-  ).toBeDisabled();
+  await expect(app.getByRole("button", { name: "Next page" })).toBeDisabled();
 });
 
 test("size change resets to the first page", async ({ app }) => {
@@ -83,9 +79,9 @@ test("menu closes on Escape and outside click", async ({ app }) => {
     app.getByRole("listbox", { name: "Rows per page" }),
   ).toBeVisible();
   await app.keyboard.press("Escape");
-  await expect(
-    app.getByRole("listbox", { name: "Rows per page" }),
-  ).toHaveCount(0);
+  await expect(app.getByRole("listbox", { name: "Rows per page" })).toHaveCount(
+    0,
+  );
 
   await button.click();
   await expect(
@@ -93,9 +89,9 @@ test("menu closes on Escape and outside click", async ({ app }) => {
   ).toBeVisible();
   // Clicking the table header (outside the menu) dismisses it.
   await app.getByRole("button", { name: "Name" }).click();
-  await expect(
-    app.getByRole("listbox", { name: "Rows per page" }),
-  ).toHaveCount(0);
+  await expect(app.getByRole("listbox", { name: "Rows per page" })).toHaveCount(
+    0,
+  );
 });
 
 test("menu opens and selects via keyboard", async ({ app }) => {

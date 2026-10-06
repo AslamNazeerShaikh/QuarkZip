@@ -29,13 +29,19 @@ describe("TitleBar", () => {
     const { container } = render(<TitleBar archive={null} maximized={false} />);
     const header = container.querySelector("header");
     expect(header).toHaveAttribute("data-tauri-drag-region");
-    expect(screen.getByRole("button", { name: "Minimize" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Maximize" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Minimize" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Maximize" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Close" })).toBeInTheDocument();
   });
 
   it("should_show_archive_path_in_centered_title", () => {
-    const { container } = render(<TitleBar archive="/tmp/a.zip" maximized={false} />);
+    const { container } = render(
+      <TitleBar archive="/tmp/a.zip" maximized={false} />,
+    );
     expect(container.querySelector("header")?.textContent).toBe(
       'QuarkZip | "Path: /tmp/a.zip"',
     );
@@ -43,9 +49,7 @@ describe("TitleBar", () => {
 
   it("should_show_restore_when_maximized", () => {
     render(<TitleBar archive={null} maximized />);
-    expect(
-      screen.getByRole("button", { name: "Restore" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Restore" })).toBeInTheDocument();
   });
 
   it("should_call_window_actions_when_buttons_clicked", async () => {

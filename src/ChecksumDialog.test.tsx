@@ -28,7 +28,9 @@ vi.mock("@tauri-apps/api/core", () => ({
     return new Promise<string>((resolve, reject) => {
       invokeCtl.resolve = resolve;
       invokeCtl.reject = reject;
-      const channel = (args as { onProgress?: InstanceType<typeof ChannelStub> }).onProgress;
+      const channel = (
+        args as { onProgress?: InstanceType<typeof ChannelStub> }
+      ).onProgress;
       invokeCtl.progress = (pct: number) => channel?.onmessage(pct);
     });
   },
@@ -51,7 +53,9 @@ describe("ChecksumDialog", () => {
       await screen.findByRole("dialog", { name: "Calculate checksum" }),
     ).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Checksum algorithm" }));
+    await user.click(
+      screen.getByRole("button", { name: "Checksum algorithm" }),
+    );
     await user.click(screen.getByRole("option", { name: "MD5" }));
     await user.type(
       screen.getByLabelText("Expected hash"),
@@ -97,12 +101,12 @@ describe("ChecksumDialog", () => {
     ).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Calculate" }));
     await user.click(screen.getByRole("button", { name: "Cancel" }));
-    expect(
-      invokeCtl.calls.some((c) => c.cmd === "cancel_checksum"),
-    ).toBe(true);
+    expect(invokeCtl.calls.some((c) => c.cmd === "cancel_checksum")).toBe(true);
     // Backend surfaces the abort as a rejection; the popup stays open.
     act(() => invokeCtl.reject?.("Checksum calculation cancelled."));
-    expect(await screen.findByText(/Calculation cancelled/)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/Calculation cancelled/),
+    ).toBeInTheDocument();
     expect(onClose).not.toHaveBeenCalled();
     expect(
       screen.getByRole("dialog", { name: "Calculate checksum" }),

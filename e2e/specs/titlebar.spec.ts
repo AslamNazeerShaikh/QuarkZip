@@ -1,14 +1,6 @@
-import {
-  addArchive,
-  calls,
-  expect,
-  openViaButton,
-  test,
-} from "../fixtures";
+import { addArchive, calls, expect, openViaButton, test } from "../fixtures";
 
-test("window buttons call the backend and header drags", async ({
-  app,
-}) => {
+test("window buttons call the backend and header drags", async ({ app }) => {
   const header = app.locator("header");
   await expect(header).toHaveAttribute("data-tauri-drag-region");
 
@@ -27,21 +19,15 @@ test("window buttons call the backend and header drags", async ({
   expect((await calls(app)).dragWindow).toBeGreaterThanOrEqual(1);
 });
 
-test("maximize button shows restore state when maximized", async ({
-  app,
-}) => {
+test("maximize button shows restore state when maximized", async ({ app }) => {
   const frame = app.getByTestId("app-frame");
   await expect(frame).toHaveCSS("border-radius", "20px");
   await app.getByRole("button", { name: "Maximize" }).click();
-  await expect(
-    app.getByRole("button", { name: "Restore" }),
-  ).toBeVisible();
+  await expect(app.getByRole("button", { name: "Restore" })).toBeVisible();
   // Maximized windows go flush: no radius or floating margin.
   await expect(frame).toHaveCSS("border-radius", "0px");
   await app.getByRole("button", { name: "Restore" }).click();
-  await expect(
-    app.getByRole("button", { name: "Maximize" }),
-  ).toBeVisible();
+  await expect(app.getByRole("button", { name: "Maximize" })).toBeVisible();
   await expect(frame).toHaveCSS("border-radius", "20px");
 });
 

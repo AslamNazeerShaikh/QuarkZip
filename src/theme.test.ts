@@ -1,10 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import {
-  applyTheme,
-  loadChoice,
-  resolveTheme,
-  saveChoice,
-} from "./theme";
+import { applyTheme, loadChoice, resolveTheme, saveChoice } from "./theme";
 
 describe("resolveTheme", () => {
   it("should_follow_system_when_choice_is_system", () => {

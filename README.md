@@ -54,5 +54,3 @@ handling, in-archive add/rename/delete (see `docs/akizip-reference.md` §10).
 ## Contributing
 
 See `CONTRIBUTING.md` — commits follow [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/).
-
-

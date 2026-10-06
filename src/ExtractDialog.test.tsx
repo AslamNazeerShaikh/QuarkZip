@@ -22,7 +22,9 @@ function setup(selected: number, total = 10021) {
 describe("ExtractDialog", () => {
   it("should_show_selected_of_total_when_selection_given", () => {
     setup(12);
-    expect(screen.getByRole("dialog", { name: "Extract files?" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("dialog", { name: "Extract files?" }),
+    ).toBeInTheDocument();
     // Counts share one element with the static copy: match the whole line.
     expect(screen.getByText(/12 of 10,021 selected files/)).toBeInTheDocument();
     expect(screen.getByText("/tmp/out")).toBeInTheDocument();

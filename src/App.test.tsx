@@ -75,9 +75,7 @@ vi.mock("@tauri-apps/api/core", () => ({
       // locked.zip without a password fails the 7zz way (per-file errors);
       // the app must gate instead of showing them.
       if (path === "/tmp/locked.zip" && !password) {
-        return Promise.reject(
-          "ERROR: Wrong password : locked.txt",
-        );
+        return Promise.reject("ERROR: Wrong password : locked.txt");
       }
       return extractCtl.fail
         ? Promise.reject(`unexpected command ${cmd}`)
@@ -133,7 +131,9 @@ describe("App blank canvas", () => {
 describe("drag and drop", () => {
   it("should_show_overlay_when_file_hovers", async () => {
     render(<App />);
-    dragHandlers[dragHandlers.length - 1]?.({ payload: { type: "over", paths: [] } });
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "over", paths: [] },
+    });
     expect(await screen.findByText("Drop to open archive")).toBeInTheDocument();
   });
 
@@ -155,7 +155,9 @@ describe("drag and drop", () => {
     dragHandlers[dragHandlers.length - 1]?.({
       payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
     });
-    expect(await screen.findByRole("button", { name: "Open new…" })).toBeInTheDocument();
+    expect(
+      await screen.findByRole("button", { name: "Open new…" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Extract" })).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Choose where to extract" }),
@@ -184,12 +186,16 @@ describe("drag and drop", () => {
     const extract = await screen.findByRole("button", { name: "Extract" });
     expect(extract).toBeEnabled();
     await user.click(extract);
-    expect(await screen.findByRole("dialog", { name: "Extract files?" })).toBeInTheDocument();
+    expect(
+      await screen.findByRole("dialog", { name: "Extract files?" }),
+    ).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Proceed" }));
     expect(
       await screen.findByRole("dialog", { name: "Extraction failed" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("unexpected command extract_archive")).toBeInTheDocument();
+    expect(
+      screen.getByText("unexpected command extract_archive"),
+    ).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "OK" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
@@ -235,10 +241,14 @@ describe("drag and drop", () => {
     // The test_archive mock rejects → failure result with an enabled OK.
     const ok = await screen.findByRole("button", { name: "OK" });
     expect(ok).toBeEnabled();
-    const backdrop = container.querySelector("[role='dialog'] > [aria-hidden='true']");
+    const backdrop = container.querySelector(
+      "[role='dialog'] > [aria-hidden='true']",
+    );
     expect(backdrop).not.toBeNull();
     if (backdrop) await user.click(backdrop as Element);
-    expect(screen.getByRole("dialog", { name: "Test archive" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("dialog", { name: "Test archive" }),
+    ).toBeInTheDocument();
     await user.click(ok);
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
@@ -326,7 +336,9 @@ describe("drag and drop", () => {
     ).not.toBeInTheDocument();
     await user.type(screen.getByLabelText("Password"), "Correct123");
     await user.click(screen.getByRole("button", { name: "Check" }));
-    const gate = await screen.findByRole("dialog", { name: "Password required" });
+    const gate = await screen.findByRole("dialog", {
+      name: "Password required",
+    });
     await user.click(within(gate).getByRole("button", { name: "Extract" }));
     expect(
       await screen.findByRole("dialog", { name: "Extraction complete" }),
@@ -367,12 +379,16 @@ describe("drag and drop", () => {
     ).toBeInTheDocument();
     await user.type(screen.getByLabelText("Password"), "Correct123");
     await user.click(screen.getByRole("button", { name: "Check" }));
-    const gate = await screen.findByRole("dialog", { name: "Password required" });
+    const gate = await screen.findByRole("dialog", {
+      name: "Password required",
+    });
     await user.click(within(gate).getByRole("button", { name: "Test" }));
     expect(
       await screen.findByRole("dialog", { name: "Test archive" }),
     ).toBeInTheDocument();
-    expect(await screen.findByText(/Integrity check passed/)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/Integrity check passed/),
+    ).toBeInTheDocument();
   });
 });
 describe("theme switching", () => {
@@ -386,9 +402,9 @@ describe("theme switching", () => {
     await openSwitcher(user);
     // Regression: without `relative` on the shell, the absolutely
     // positioned indicator escapes to <main> as a full-height block.
-    expect(
-      screen.getByRole("group", { name: "Color theme" }),
-    ).toHaveClass("relative");
+    expect(screen.getByRole("group", { name: "Color theme" })).toHaveClass(
+      "relative",
+    );
   });
 
   it("should_apply_dark_class_when_dark_chosen", async () => {
@@ -419,9 +435,10 @@ describe("theme switching", () => {
     await user.click(screen.getByRole("button", { name: "Light" }));
     await screen.findByRole("button", { name: "Change theme" });
     await openSwitcher(user);
-    expect(
-      screen.getByRole("button", { name: "Light" }),
-    ).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "Light" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
   });
 
   it("should_collapse_after_choice_made", async () => {

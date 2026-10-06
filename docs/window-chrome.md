@@ -10,16 +10,16 @@ working when window chrome changes.
 platforms (Tauri has no per-OS window entries), so per-OS differences
 live in Rust `setup()` plus the `isMac` frontend branch:
 
-| Setting | Linux (KDE) | macOS |
-| --- | --- | --- |
-| `decorations` | `false` (config) | `false` at creation → `true` via `set_decorations` in `src-tauri/src/lib.rs:124` |
-| `transparent` | `true` (creation-only, never changes) | `true` (same; content covers it opaquely) |
-| `titleBarStyle` | `Overlay` (irrelevant without decorations) | `Overlay`, re-applied deferred in `lib.rs:129` (see §3) |
-| `hiddenTitle` | ignored (mac-only key) | `true` — native title hidden, custom strip owns the title |
-| `trafficLightPosition` `{20, 24}` | ignored (needs Overlay + decorations) | lights float over content at creation inset |
-| Frontend frame | floating card: `bg-transparent p-5` outer, `rounded-[20px]` bordered card (`src/App.tsx:213-224`) | flush opaque: `bg-[var(--qz-bg)]`, no padding, `rounded-none border-0 shadow-none` |
-| Title strip | custom `TitleBar` with min/max/close (`src/TitleBar.tsx:78-141`) | slim drag strip, symmetric 76px inset (clears the lights left, keeps title truly centered), no buttons (`TitleBar.tsx:22-40`) |
-| Drag | `invoke("drag_window")` on mousedown (borderless needs it) | same explicit `drag_window` mousedown (the attribute alone did not engage native drag on the Overlay setup) |
+| Setting                           | Linux (KDE)                                                                                       | macOS                                                                                                                         |
+| --------------------------------- | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `decorations`                     | `false` (config)                                                                                  | `false` at creation → `true` via `set_decorations` in `src-tauri/src/lib.rs:124`                                              |
+| `transparent`                     | `true` (creation-only, never changes)                                                             | `true` (same; content covers it opaquely)                                                                                     |
+| `titleBarStyle`                   | `Overlay` (irrelevant without decorations)                                                        | `Overlay`, re-applied deferred in `lib.rs:129` (see §3)                                                                       |
+| `hiddenTitle`                     | ignored (mac-only key)                                                                            | `true` — native title hidden, custom strip owns the title                                                                     |
+| `trafficLightPosition` `{20, 24}` | ignored (needs Overlay + decorations)                                                             | lights float over content at creation inset                                                                                   |
+| Frontend frame                    | floating card: `bg-transparent p-5` outer, `rounded-[20px]` bordered card (`src/App.tsx:213-224`) | flush opaque: `bg-[var(--qz-bg)]`, no padding, `rounded-none border-0 shadow-none`                                            |
+| Title strip                       | custom `TitleBar` with min/max/close (`src/TitleBar.tsx:78-141`)                                  | slim drag strip, symmetric 76px inset (clears the lights left, keeps title truly centered), no buttons (`TitleBar.tsx:22-40`) |
+| Drag                              | `invoke("drag_window")` on mousedown (borderless needs it)                                        | same explicit `drag_window` mousedown (the attribute alone did not engage native drag on the Overlay setup)                   |
 
 ## What broke (2026-10-04, commit `644f03b`)
 
@@ -54,7 +54,7 @@ Root cause, verified in dependency source:
   (`tao-0.37.1/.../platform_impl/macos/window.rs:1717-1730`)
 
 The async mask rewrite (`Titled|Closable|Miniaturizable|Resizable`,
-*without* `FullSizeContentView`) lands last and wipes the overlay
+_without_ `FullSizeContentView`) lands last and wipes the overlay
 state — back to a `Visible` strip above the content.
 
 Fix (`lib.rs:120-139`): apply `set_decorations(true)` immediately,

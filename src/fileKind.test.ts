@@ -1,10 +1,22 @@
 import { describe, expect, it } from "vitest";
 import { fileKind } from "./fileKind";
-import { File, FileArchive, FileAudio, FileCode2, FileImage, FileVideo, Folder } from "lucide-react";
+import {
+  File,
+  FileArchive,
+  FileAudio,
+  FileCode2,
+  FileImage,
+  FileVideo,
+  Folder,
+} from "lucide-react";
 
 describe("fileKind", () => {
   it("should_classify_folders_by_flag_not_size", () => {
-    expect(fileKind("pics", true)).toMatchObject({ label: "Folder", icon: Folder, isFolder: true });
+    expect(fileKind("pics", true)).toMatchObject({
+      label: "Folder",
+      icon: Folder,
+      isFolder: true,
+    });
     expect(fileKind("empty.txt", false).isFolder).toBe(false);
   });
 
@@ -22,7 +34,14 @@ describe("fileKind", () => {
   });
 
   it("should_fall_back_for_unknown_or_missing_extensions", () => {
-    expect(fileKind("weird.xyz123", false)).toMatchObject({ label: "XYZ123", icon: File, isFolder: false });
-    expect(fileKind("Makefile", false)).toMatchObject({ label: "File", icon: File });
+    expect(fileKind("weird.xyz123", false)).toMatchObject({
+      label: "XYZ123",
+      icon: File,
+      isFolder: false,
+    });
+    expect(fileKind("Makefile", false)).toMatchObject({
+      label: "File",
+      icon: File,
+    });
   });
 });

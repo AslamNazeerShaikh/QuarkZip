@@ -149,8 +149,7 @@ export function addArchive(
     }));
   state.archives[path] = {
     entries,
-    info:
-      opts.info === undefined ? defaultInfo(entries.length) : opts.info,
+    info: opts.info === undefined ? defaultInfo(entries.length) : opts.info,
     listError: opts.listError,
     infoError: opts.infoError,
   };
@@ -162,7 +161,10 @@ function lookup(path: string): FakeArchive {
   return archive;
 }
 
-export async function handleInvoke(cmd: string, args: unknown): Promise<unknown> {
+export async function handleInvoke(
+  cmd: string,
+  args: unknown,
+): Promise<unknown> {
   const a = args as Record<string, unknown>;
   switch (cmd) {
     case "drag_window":
@@ -229,13 +231,15 @@ if (typeof window !== "undefined") {
     reset: resetState,
     addArchive,
     dragOver: (paths = []) => {
-      for (const h of state.dropHandlers) h({ payload: { type: "over", paths } });
+      for (const h of state.dropHandlers)
+        h({ payload: { type: "over", paths } });
     },
     dragLeave: () => {
       for (const h of state.dropHandlers) h({ payload: { type: "leave" } });
     },
     drop: (paths) => {
-      for (const h of state.dropHandlers) h({ payload: { type: "drop", paths } });
+      for (const h of state.dropHandlers)
+        h({ payload: { type: "drop", paths } });
     },
   };
 }

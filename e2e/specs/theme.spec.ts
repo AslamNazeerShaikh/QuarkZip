@@ -13,10 +13,7 @@ test("system choice follows the OS scheme", async ({ app }, testInfo) => {
   } else {
     await expect(html).not.toHaveClass(/dark/);
   }
-  await expect(html).toHaveCSS(
-    "color-scheme",
-    darkProject ? "dark" : "light",
-  );
+  await expect(html).toHaveCSS("color-scheme", darkProject ? "dark" : "light");
 });
 
 test("explicit dark and light choices apply immediately", async ({ app }) => {
@@ -45,22 +42,23 @@ test("choice persists across reloads", async ({ app }) => {
 
 test("active choice is pressed and control collapses", async ({ app }) => {
   await openSwitcher(app);
-  await expect(
-    app.getByRole("button", { name: "System" }),
-  ).toHaveAttribute("aria-pressed", "true");
+  await expect(app.getByRole("button", { name: "System" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
   await app.getByRole("button", { name: "Light" }).click();
   // Collapses back to the single icon button after choosing.
-  await expect(
-    app.getByRole("button", { name: "Change theme" }),
-  ).toBeVisible();
+  await expect(app.getByRole("button", { name: "Change theme" })).toBeVisible();
   await openSwitcher(app);
-  await expect(
-    app.getByRole("button", { name: "Light" }),
-  ).toHaveAttribute("aria-pressed", "true");
+  await expect(app.getByRole("button", { name: "Light" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
 });
 
 test("theme control keeps working with an archive open", async ({ app }) => {
-  await addArchive(app, "/tmp/t.zip", { count: 1 });  await openViaButton(app, "/tmp/t.zip");
+  await addArchive(app, "/tmp/t.zip", { count: 1 });
+  await openViaButton(app, "/tmp/t.zip");
   await expect(app.getByText("file-1.txt")).toBeVisible();
   await openSwitcher(app);
   await app.getByRole("button", { name: "Dark" }).click();

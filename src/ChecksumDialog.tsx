@@ -56,7 +56,7 @@ export default function ChecksumDialog({
     cancelRef.current = false;
     setPhase({ name: "idle" });
     setMenuOpen(false);
-  }, [open ]);
+  }, [open]);
 
   // Dismiss the algorithm menu on outside click / Escape (menu only —
   // the dialog itself never closes this way).
@@ -97,7 +97,9 @@ export default function ChecksumDialog({
     setPhase({ name: "running", pct: 0 });
     const channel = new Channel<number>((pct) => {
       setPhase((prev) =>
-        prev.name === "running" ? { name: "running", pct: clampPct(pct) } : prev,
+        prev.name === "running"
+          ? { name: "running", pct: clampPct(pct) }
+          : prev,
       );
     });
     invoke<string>("checksum_file", {
@@ -286,22 +288,32 @@ export default function ChecksumDialog({
                 <span
                   aria-hidden
                   className={`h-1.5 w-1.5 rounded-full ${
-                    verdict === "match" ? "bg-[var(--qz-success)]" : "bg-[var(--qz-danger)]"
+                    verdict === "match"
+                      ? "bg-[var(--qz-success)]"
+                      : "bg-[var(--qz-danger)]"
                   }`}
                 />
-                {verdict === "match" ? t("checksum.match") : t("checksum.mismatch")}
+                {verdict === "match"
+                  ? t("checksum.match")
+                  : t("checksum.mismatch")}
               </p>
             )}
           </div>
         )}
 
         {phase.name === "cancelled" && (
-          <p role="status" className="mt-4 text-[13px] text-[var(--qz-warning)]">
+          <p
+            role="status"
+            className="mt-4 text-[13px] text-[var(--qz-warning)]"
+          >
             {t("checksum.cancelled")}
           </p>
         )}
         {phase.name === "error" && (
-          <p role="alert" className="mt-4 text-[13px] break-all text-[var(--qz-danger)]">
+          <p
+            role="alert"
+            className="mt-4 text-[13px] break-all text-[var(--qz-danger)]"
+          >
             {phase.message}
           </p>
         )}

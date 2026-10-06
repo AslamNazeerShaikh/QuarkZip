@@ -16,14 +16,10 @@ describe("LanguageSwitch", () => {
         <LanguageSwitch />
       </LanguageProvider>,
     );
-    await user.click(
-      screen.getByRole("button", { name: "Change language" }),
-    );
+    await user.click(screen.getByRole("button", { name: "Change language" }));
     const listbox = screen.getByRole("listbox", { name: "Language" });
     expect(listbox).toBeInTheDocument();
-    expect(
-      screen.getByRole("option", { name: "English" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "English" })).toBeInTheDocument();
     await user.click(screen.getByRole("option", { name: "हिन्दी" }));
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
     expect(localStorage.getItem("quarkzip.lang")).toBe("hi");

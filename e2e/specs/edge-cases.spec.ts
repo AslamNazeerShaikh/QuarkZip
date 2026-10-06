@@ -61,9 +61,7 @@ test("large listing paginates and All collapses to one page", async ({
   await openViaButton(app, "/tmp/huge.zip");
   await expect(app.getByText("1 / 25")).toBeVisible();
   // Virtualized: only the visible window mounts, not all 2500 rows.
-  const mounted = await app
-    .locator('div[style*="translateY"]')
-    .count();
+  const mounted = await app.locator('div[style*="translateY"]').count();
   expect(mounted).toBeLessThan(200);
 
   await app.getByRole("button", { name: "Rows per page" }).click();
@@ -73,9 +71,9 @@ test("large listing paginates and All collapses to one page", async ({
     .click();
   await expect(app.getByText("1 / 1")).toBeVisible();
   // Still virtualized: the full 2500 rows never mount at once.
-  expect(
-    await app.locator('div[style*="translateY"]').count(),
-  ).toBeLessThan(200);
+  expect(await app.locator('div[style*="translateY"]').count()).toBeLessThan(
+    200,
+  );
 });
 
 test("archive path with spaces and quotes titles correctly", async ({
@@ -118,9 +116,9 @@ test("rich info renders extra fields and security metadata", async ({
   await openViaButton(app, "/tmp/rich.7z");
   await expect(app.getByText("7zAES")).toBeVisible();
   await expect(app.getByText("LZMA2 · BCJ")).toBeVisible();
-  await expect(
-    app.getByRole("region", { name: "More details" }),
-  ).toContainText("yes");
+  await expect(app.getByRole("region", { name: "More details" })).toContainText(
+    "yes",
+  );
 });
 
 test("single-entry archive has no pagination beyond one page", async ({

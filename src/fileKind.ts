@@ -123,7 +123,12 @@ export function fileKind(
   const dot = path.lastIndexOf(".");
   const ext = dot >= 0 ? path.slice(dot + 1).toLowerCase() : "";
   const known = ext ? EXTENSIONS[ext] : undefined;
-  if (!known) return { label: ext ? ext.toUpperCase() : labels.file, icon: File, isFolder: false };
+  if (!known)
+    return {
+      label: ext ? ext.toUpperCase() : labels.file,
+      icon: File,
+      isFolder: false,
+    };
   return {
     label: ext.toUpperCase(),
     icon: known.icon,

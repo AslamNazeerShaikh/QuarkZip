@@ -76,7 +76,9 @@ for (const file of files) {
   }
   const registered = registry.includes(`./locales/${code}.json`);
   if (!registered) {
-    fail(`${file}: not registered in src/i18n/locales.ts (add an entry to LOCALES)`);
+    fail(
+      `${file}: not registered in src/i18n/locales.ts (add an entry to LOCALES)`,
+    );
     errors += 1;
   }
 }

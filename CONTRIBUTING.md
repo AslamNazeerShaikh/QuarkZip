@@ -16,26 +16,26 @@ Format:
 
 ### Types
 
-| Type       | Use for                                              | SemVer |
-| ---------- | ---------------------------------------------------- | ------ |
-| `feat`     | New feature                                          | MINOR  |
-| `fix`      | Bug fix                                              | PATCH  |
-| `docs`     | Documentation only                                   | —      |
-| `style`    | Formatting, no logic change                          | —      |
-| `refactor` | Code change that is neither feat nor fix             | —      |
-| `perf`     | Performance improvement                              | —      |
-| `test`     | Adding or fixing tests                               | —      |
-| `build`    | Build system, sidecars, packaging                    | —      |
-| `ci`       | CI configuration                                     | —      |
-| `chore`    | Maintenance, no src change                           | —      |
-| `revert`   | Reverts a prior commit                               | —      |
+| Type       | Use for                                  | SemVer |
+| ---------- | ---------------------------------------- | ------ |
+| `feat`     | New feature                              | MINOR  |
+| `fix`      | Bug fix                                  | PATCH  |
+| `docs`     | Documentation only                       | —      |
+| `style`    | Formatting, no logic change              | —      |
+| `refactor` | Code change that is neither feat nor fix | —      |
+| `perf`     | Performance improvement                  | —      |
+| `test`     | Adding or fixing tests                   | —      |
+| `build`    | Build system, sidecars, packaging        | —      |
+| `ci`       | CI configuration                         | —      |
+| `chore`    | Maintenance, no src change               | —      |
+| `revert`   | Reverts a prior commit                   | —      |
 
 Scopes (optional, in parens): `ui`, `backend`, `sidecar`, `config`, `docs`, `release`.
 
 ### Rules
 
 - Description: imperative mood, lowercase, no trailing period, max 72 chars.
-- Body (optional): explain *why*, wrapped at 72 columns.
+- Body (optional): explain _why_, wrapped at 72 columns.
 - Breaking changes: append `!` after type/scope **and** add a `BREAKING CHANGE:` footer describing what broke and how to migrate (correlates with MAJOR).
 
 ### Examples

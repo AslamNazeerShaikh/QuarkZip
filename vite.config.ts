@@ -46,9 +46,7 @@ export default defineConfig(({ mode }) => ({
   resolve: mode === "e2e" ? { alias: e2eMocks } : {},
   define: {
     __QZ_COMMIT_ID__: JSON.stringify(shortCommit()),
-    __QZ_RELEASE_DATE__: JSON.stringify(
-      new Date().toISOString().slice(0, 10),
-    ),
+    __QZ_RELEASE_DATE__: JSON.stringify(new Date().toISOString().slice(0, 10)),
   },
   test: {
     globals: true,

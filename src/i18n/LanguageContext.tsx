@@ -24,11 +24,7 @@ function interpolate(template: string, vars: Vars): string {
 }
 
 /// Pure lookup shared by the hook and the no-provider default context.
-export function translate(
-  code: string,
-  key: string,
-  vars: Vars = {},
-): string {
+export function translate(code: string, key: string, vars: Vars = {}): string {
   const active = localeMeta(code).strings[key];
   const template = active ?? localeMeta(FALLBACK_CODE).strings[key] ?? key;
   if (active === undefined && template === key) {

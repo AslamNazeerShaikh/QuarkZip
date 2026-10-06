@@ -37,8 +37,7 @@ test("rows show name, type, size, modified, serial", async ({ app }) => {
 
 test("sorting by name toggles asc then desc", async ({ app }) => {
   await openMixed(app);
-  const rows = () =>
-    app.locator('div[style*="translateY"]').allTextContents();
+  const rows = () => app.locator('div[style*="translateY"]').allTextContents();
   await app.getByRole("button", { name: "Name" }).click();
   const asc = await rows();
   expect(asc[0]).toContain("backup");
@@ -52,15 +51,11 @@ test("sorting by name toggles asc then desc", async ({ app }) => {
 test("sorting by size orders numerically", async ({ app }) => {
   await openMixed(app);
   await app.getByRole("button", { name: "Size" }).click();
-  const asc = await app
-    .locator('div[style*="translateY"]')
-    .allTextContents();
+  const asc = await app.locator('div[style*="translateY"]').allTextContents();
   expect(asc[0]).toContain("backup"); // null size sorts as -1, first
   expect(asc.at(-1)).toContain("inner.zip"); // 9000, last
   await app.getByRole("button", { name: "Size" }).click();
-  const desc = await app
-    .locator('div[style*="translateY"]')
-    .allTextContents();
+  const desc = await app.locator('div[style*="translateY"]').allTextContents();
   expect(desc[0]).toContain("inner.zip");
 });
 
@@ -128,9 +123,7 @@ test("opening a new archive clears selection", async ({ app }) => {
   ).toHaveAttribute("aria-checked", "false");
 });
 
-test("archive with zero entries shows empty state and 0/0", async ({
-  app,
-}) => {
+test("archive with zero entries shows empty state and 0/0", async ({ app }) => {
   await addArchive(app, "/tmp/empty.zip", { count: 0 });
   await openViaButton(app, "/tmp/empty.zip");
   await expect(app.getByText("No entries")).toBeVisible();

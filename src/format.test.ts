@@ -33,7 +33,9 @@ describe("formatModified", () => {
     expect(formatModified("2026-10-03 21:39:45.9666222")).toBe(
       "Oct 3, 2026, 9:39:45 PM",
     );
-    expect(formatModified("2026-10-03 08:05:04")).toBe("Oct 3, 2026, 8:05:04 AM");
+    expect(formatModified("2026-10-03 08:05:04")).toBe(
+      "Oct 3, 2026, 8:05:04 AM",
+    );
     expect(formatModified("2026-10-03 00:00:00")).toBe(
       "Oct 3, 2026, 12:00:00 AM",
     );

@@ -6,7 +6,8 @@ type BadgeVariant = "neutral" | "success" | "info" | "warning" | "danger";
 const STYLES: Record<BadgeVariant, string> = {
   // Reference StatusPill: 999px radius, 11–12px/600, dot + text. Colors come
   // from `--qz-*` role tokens (AA pairs recorded in docs/color-system.md).
-  neutral: "bg-[var(--qz-surface-2)] text-[var(--qz-muted)] border border-[var(--qz-border)]",
+  neutral:
+    "bg-[var(--qz-surface-2)] text-[var(--qz-muted)] border border-[var(--qz-border)]",
   success: "bg-[var(--qz-success-soft)] text-[var(--qz-success)]",
   info: "bg-[var(--qz-info-soft)] text-[var(--qz-info)]",
   warning: "bg-[var(--qz-warning-soft)] text-[var(--qz-warning)]",
@@ -37,7 +38,10 @@ export function Badge({
       )}
       {...rest}
     >
-      <span className={cn("h-1.5 w-1.5 rounded-full", DOTS[variant])} aria-hidden />
+      <span
+        className={cn("h-1.5 w-1.5 rounded-full", DOTS[variant])}
+        aria-hidden
+      />
       {children}
     </span>
   );

@@ -49,7 +49,11 @@ export default function ExtractDoneDialog({
         {result.ok ? (
           <>
             <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-success-soft)]">
-              <CheckCircle2 size={24} aria-hidden className="text-[var(--qz-success)]" />
+              <CheckCircle2
+                size={24}
+                aria-hidden
+                className="text-[var(--qz-success)]"
+              />
             </span>
             <h2
               id="extract-done-title"
@@ -60,12 +64,18 @@ export default function ExtractDoneDialog({
             <p className="mt-1 text-[13px] text-[var(--qz-muted)]">
               {t("done.successFiles", { count: formatCount(result.fileCount) })}
             </p>
-            <p className="mt-2 text-[13px] font-medium break-all">{result.dest}</p>
+            <p className="mt-2 text-[13px] font-medium break-all">
+              {result.dest}
+            </p>
           </>
         ) : (
           <>
             <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-danger-soft)]">
-              <XCircle size={24} aria-hidden className="text-[var(--qz-danger)]" />
+              <XCircle
+                size={24}
+                aria-hidden
+                className="text-[var(--qz-danger)]"
+              />
             </span>
             <h2
               id="extract-done-title"
@@ -73,8 +83,12 @@ export default function ExtractDoneDialog({
             >
               {t("done.failTitle")}
             </h2>
-            <p className="mt-1 text-[13px] text-[var(--qz-muted)]">{result.message}</p>
-            <p className="mt-2 text-[13px] font-medium break-all">{result.dest}</p>
+            <p className="mt-1 text-[13px] text-[var(--qz-muted)]">
+              {result.message}
+            </p>
+            <p className="mt-2 text-[13px] font-medium break-all">
+              {result.dest}
+            </p>
           </>
         )}
         <div className="mt-5 flex items-center justify-center">

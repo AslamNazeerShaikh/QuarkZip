@@ -98,9 +98,9 @@ export async function calls(page: Page): Promise<E2ECalls> {
   return (await e2e(page, "window.__e2e.state.calls")) as E2ECalls;
 }
 
-export async function failNextExtract(page: Page, message: string): Promise<void> {
-  await page.evaluate(
-    (m) => (window.__e2e.state.extractError = m),
-    message,
-  );
+export async function failNextExtract(
+  page: Page,
+  message: string,
+): Promise<void> {
+  await page.evaluate((m) => (window.__e2e.state.extractError = m), message);
 }

@@ -34,7 +34,9 @@ describe("ArchiveOverview", () => {
         onOpen={() => {}}
       />,
     );
-    expect(screen.getByRole("button", { name: "Open archive" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Open archive" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("No archive open")).toBeInTheDocument();
   });
 
@@ -49,7 +51,9 @@ describe("ArchiveOverview", () => {
     );
     // Pills removed: format/encryption/solid live in the metadata grid.
     expect(screen.queryByText("Not encrypted")).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Open archive" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Open archive" }),
+    ).not.toBeInTheDocument();
     expect(screen.getByText("Container")).toBeInTheDocument();
     expect(screen.getAllByText("LZMA2:12").length).toBeGreaterThanOrEqual(1);
   });

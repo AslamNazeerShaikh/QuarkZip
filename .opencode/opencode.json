@@ -31,9 +31,7 @@
     ]
   },
   "skills": {
-    "enabled": [
-      "tauri-development"
-    ]
+    "enabled": ["tauri-development"]
   },
   "commands": {
     "custom": [

@@ -1,12 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import {
-  FALLBACK_CODE,
-  LOCALES,
-  localeMeta,
-  resolveLocale,
-} from "./locales";
+import { FALLBACK_CODE, LOCALES, localeMeta, resolveLocale } from "./locales";
 import { LanguageProvider, translate, useLanguage } from "./LanguageContext";
 import en from "./locales/en.json";
 
@@ -85,7 +80,9 @@ describe("shipped locale parity", () => {
     const codes = LOCALES.map((l) => l.code);
     expect(new Set(codes).size).toBe(codes.length);
     for (const locale of LOCALES) {
-      expect(locale.code).toMatch(/^[a-z]{2,3}(-[A-Z][a-z]{3})?(-([A-Z]{2}|\d{3}))?$/);
+      expect(locale.code).toMatch(
+        /^[a-z]{2,3}(-[A-Z][a-z]{3})?(-([A-Z]{2}|\d{3}))?$/,
+      );
       expect(locale.native.trim().length).toBeGreaterThan(0);
       expect(["ltr", "rtl"]).toContain(locale.dir);
       expect(localeMeta(locale.code).code).toBe(locale.code);

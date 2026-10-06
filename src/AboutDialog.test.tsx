@@ -47,9 +47,7 @@ describe("AboutDialog", () => {
   it("should_call_on_ok_when_escape_pressed_or_backdrop_clicked", async () => {
     const user = userEvent.setup();
     const onOk = vi.fn();
-    const { container } = render(
-      <AboutDialog open info={info} onOk={onOk} />,
-    );
+    const { container } = render(<AboutDialog open info={info} onOk={onOk} />);
     await user.keyboard("{Escape}");
     expect(onOk).toHaveBeenCalledTimes(1);
     const backdrop = container.querySelector("[aria-hidden='true']");

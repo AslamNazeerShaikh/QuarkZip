@@ -1,5 +1,8 @@
 import { getVersion } from "@tauri-apps/api/app";
-import { arch as getArch, platform as getPlatform } from "@tauri-apps/plugin-os";
+import {
+  arch as getArch,
+  platform as getPlatform,
+} from "@tauri-apps/plugin-os";
 
 export const APP_NAME = "QuarkZip";
 export const APP_FALLBACK_VERSION = "0.1.0";
@@ -46,12 +49,19 @@ export function friendlyArch(raw: string): string {
   }
 }
 
-function buildValue(name: "__QZ_COMMIT_ID__" | "__QZ_RELEASE_DATE__", fallback: string): string {
+function buildValue(
+  name: "__QZ_COMMIT_ID__" | "__QZ_RELEASE_DATE__",
+  fallback: string,
+): string {
   try {
     const value =
       name === "__QZ_COMMIT_ID__"
-        ? (typeof __QZ_COMMIT_ID__ !== "undefined" ? __QZ_COMMIT_ID__ : fallback)
-        : (typeof __QZ_RELEASE_DATE__ !== "undefined" ? __QZ_RELEASE_DATE__ : fallback);
+        ? typeof __QZ_COMMIT_ID__ !== "undefined"
+          ? __QZ_COMMIT_ID__
+          : fallback
+        : typeof __QZ_RELEASE_DATE__ !== "undefined"
+          ? __QZ_RELEASE_DATE__
+          : fallback;
     return value || fallback;
   } catch {
     return fallback;

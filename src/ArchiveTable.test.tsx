@@ -20,11 +20,13 @@ describe("ArchiveTable", () => {
 
   it("should_sort_by_name_when_header_clicked", async () => {
     const user = userEvent.setup();
-    const { container } = render(<ArchiveTable data={DATA} page={0} pageSize={100} />);
+    const { container } = render(
+      <ArchiveTable data={DATA} page={0} pageSize={100} />,
+    );
     const rows = () =>
-      Array.from(
-        container.querySelectorAll('div[style*="translateY"]'),
-      ).map((el) => el.textContent);
+      Array.from(container.querySelectorAll('div[style*="translateY"]')).map(
+        (el) => el.textContent,
+      );
     await user.click(screen.getByText("Name"));
     expect(rows()[0]).toContain("a.txt");
     await user.click(screen.getByText("Name"));
@@ -50,7 +52,12 @@ describe("ArchiveTable", () => {
     render(
       <ArchiveTable
         data={[
-          { path: "a.txt", size: 1, modified: "2026-10-03 21:39:45", is_folder: false },
+          {
+            path: "a.txt",
+            size: 1,
+            modified: "2026-10-03 21:39:45",
+            is_folder: false,
+          },
         ]}
         page={0}
         pageSize={100}
@@ -76,7 +83,9 @@ describe("ArchiveTable", () => {
   });
 
   it("should_show_native_slim_scrollbar_on_the_table_scroller", () => {
-    const { container } = render(<ArchiveTable data={DATA} page={0} pageSize={100} />);
+    const { container } = render(
+      <ArchiveTable data={DATA} page={0} pageSize={100} />,
+    );
     const scroller = container.querySelector(".scroll-slim");
     expect(scroller).toBeInTheDocument();
   });

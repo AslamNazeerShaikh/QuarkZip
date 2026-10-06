@@ -54,7 +54,7 @@ export default function PasswordDialog({
     setAttempts(0);
     const timer = setTimeout(() => inputRef.current?.focus(), 50);
     return () => clearTimeout(timer);
-  }, [open ]);
+  }, [open]);
 
   // Esc mirrors Cancel. Inert while checking (Cancel is disabled then —
   // the verify call is seconds away from a verdict either way).
@@ -129,11 +129,23 @@ export default function PasswordDialog({
           } ${verified ? "animate-qz-success" : ""}`}
         >
           {verified ? (
-            <CheckCircle2 size={24} aria-hidden className="text-[var(--qz-success)]" />
+            <CheckCircle2
+              size={24}
+              aria-hidden
+              className="text-[var(--qz-success)]"
+            />
           ) : phase.name === "wrong" || phase.name === "error" ? (
-            <XCircle size={24} aria-hidden className="text-[var(--qz-danger)]" />
+            <XCircle
+              size={24}
+              aria-hidden
+              className="text-[var(--qz-danger)]"
+            />
           ) : (
-            <LockKeyhole size={24} aria-hidden className="text-[var(--qz-primary)]" />
+            <LockKeyhole
+              size={24}
+              aria-hidden
+              className="text-[var(--qz-primary)]"
+            />
           )}
         </span>
         <h2
@@ -195,12 +207,18 @@ export default function PasswordDialog({
               </button>
             </div>
             {phase.name === "wrong" && (
-              <p role="alert" className="mt-2 text-[13px] text-[var(--qz-danger)]">
+              <p
+                role="alert"
+                className="mt-2 text-[13px] text-[var(--qz-danger)]"
+              >
                 {t("password.wrong")}
               </p>
             )}
             {phase.name === "error" && (
-              <p role="alert" className="mt-2 text-[13px] break-all text-[var(--qz-danger)]">
+              <p
+                role="alert"
+                className="mt-2 text-[13px] break-all text-[var(--qz-danger)]"
+              >
                 {phase.message}
               </p>
             )}
@@ -233,7 +251,11 @@ export default function PasswordDialog({
               {acceptLabel}
             </Button>
           ) : (
-            <Button onClick={check} disabled={password === "" || locked} autoFocus={!checking}>
+            <Button
+              onClick={check}
+              disabled={password === "" || locked}
+              autoFocus={!checking}
+            >
               {t("password.check")}
             </Button>
           )}

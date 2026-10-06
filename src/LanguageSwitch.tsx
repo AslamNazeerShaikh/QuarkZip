@@ -13,8 +13,7 @@ export default function LanguageSwitch() {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const activeNative =
-    LOCALES.find((l) => l.code === lang)?.native ?? lang;
+  const activeNative = LOCALES.find((l) => l.code === lang)?.native ?? lang;
 
   useEffect(() => {
     if (!open) return;
@@ -33,7 +32,7 @@ export default function LanguageSwitch() {
       document.removeEventListener("pointerdown", onPointerDown);
       document.removeEventListener("keydown", onKey);
     };
-  }, [open ]);
+  }, [open]);
 
   function choose(code: string) {
     setLang(code);

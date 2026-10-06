@@ -12,7 +12,9 @@ describe("ExtractDoneDialog", () => {
         onOk={() => {}}
       />,
     );
-    expect(screen.getByRole("dialog", { name: "Extraction complete" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("dialog", { name: "Extraction complete" }),
+    ).toBeInTheDocument();
     expect(screen.getByText(/10,021 files extracted to/)).toBeInTheDocument();
     expect(screen.getByText("/tmp/out")).toBeInTheDocument();
   });
@@ -25,7 +27,9 @@ describe("ExtractDoneDialog", () => {
         onOk={() => {}}
       />,
     );
-    expect(screen.getByRole("dialog", { name: "Extraction failed" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("dialog", { name: "Extraction failed" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("No files to process")).toBeInTheDocument();
   });
 

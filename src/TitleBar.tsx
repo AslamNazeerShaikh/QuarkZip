@@ -19,7 +19,11 @@ interface TitleBarProps {
 /// On macOS (`hidden`) the window uses an overlay title bar: traffic lights
 /// float over the webview, so this renders a slim drag strip with a left
 /// inset clearing the lights — no window buttons, no native title.
-export default function TitleBar({ archive, hidden, maximized }: TitleBarProps) {
+export default function TitleBar({
+  archive,
+  hidden,
+  maximized,
+}: TitleBarProps) {
   const { t } = useLanguage();
   if (hidden) {
     return (
@@ -117,7 +121,9 @@ export default function TitleBar({ archive, hidden, maximized }: TitleBarProps) 
         </button>
         <button
           type="button"
-          aria-label={maximized ? t("titlebar.restore") : t("titlebar.maximize")}
+          aria-label={
+            maximized ? t("titlebar.restore") : t("titlebar.maximize")
+          }
           title={maximized ? t("titlebar.restore") : t("titlebar.maximize")}
           onMouseDown={stopDrag}
           onClick={() => void toggleMaximize()}

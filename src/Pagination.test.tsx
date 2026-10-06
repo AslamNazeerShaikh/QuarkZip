@@ -28,7 +28,9 @@ describe("Pagination", () => {
 
   it("should_disable_prev_on_first_page", () => {
     setup();
-    expect(screen.getByRole("button", { name: "Previous page" })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "Previous page" }),
+    ).toBeDisabled();
   });
 
   it("should_navigate_pages", async () => {

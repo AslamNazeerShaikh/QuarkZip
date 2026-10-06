@@ -2,9 +2,10 @@
 
 Distilled from the Brightway reference analysis
 (`CollegeAdmissionManagementSystem/docs/ReferenceUi/Reference-UI-Analysis.md`
-+ `UiPrompt.md`). That analysis is the visual source of truth; this file maps
-it onto QuarkZip. When uncertain: lighter border, softer shadow, more
-whitespace, smaller icon, less bold.
+
+- `UiPrompt.md`). That analysis is the visual source of truth; this file maps
+  it onto QuarkZip. When uncertain: lighter border, softer shadow, more
+  whitespace, smaller icon, less bold.
 
 ## Design direction
 
@@ -39,14 +40,14 @@ Supporting scales (all from the reference):
 
 ## Typography (Inter, OFL)
 
-| Use | Spec |
-| --- | ---- |
-| Card title | 16px, 600 |
-| Window title (centered drag strip) | 13px, app name 600 + ` | ` + muted full path, ellipsis |
-| Body / value | 14px (`text-sm`), 400–500 |
-| Secondary | 13px, `--qz-muted` |
+| Use                                       | Spec                                                    |
+| ----------------------------------------- | ------------------------------------------------------- |
+| Card title                                | 16px, 600                                               |
+| Window title (centered drag strip)        | 13px, app name 600 + `                                  | ` + muted full path, ellipsis |
+| Body / value                              | 14px (`text-sm`), 400–500                               |
+| Secondary                                 | 13px, `--qz-muted`                                      |
 | Micro-label (column headers, meta labels) | 11px, 600, uppercase, `tracking-[0.06em]`, `--qz-faint` |
-| Tertiary / hint | 12px (`text-xs`), `--qz-faint` |
+| Tertiary / hint                           | 12px (`text-xs`), `--qz-faint`                          |
 
 Numbers: comma thousands via `toLocaleString("en-US")`, sizes via
 `formatSize` (IEC `KiB…`), stamps via `formatModified`/`formatDateTimeLocal`

@@ -28,7 +28,13 @@ interface Column {
 
 function baseColumns(): Column[] {
   return [
-    { key: "path", headerKey: "table.colName", width: "flex-1", align: "left", value: (r) => r.path },
+    {
+      key: "path",
+      headerKey: "table.colName",
+      width: "flex-1",
+      align: "left",
+      value: (r) => r.path,
+    },
     {
       key: "type",
       headerKey: "table.colType",
@@ -92,10 +98,20 @@ function TableCheckbox({
       }`}
     >
       {checked === "mixed" ? (
-        <Minus size={12} strokeWidth={3} aria-hidden className="text-[var(--qz-on-primary)]" />
+        <Minus
+          size={12}
+          strokeWidth={3}
+          aria-hidden
+          className="text-[var(--qz-on-primary)]"
+        />
       ) : (
         checked && (
-          <Check size={12} strokeWidth={3} aria-hidden className="text-[var(--qz-on-primary)]" />
+          <Check
+            size={12}
+            strokeWidth={3}
+            aria-hidden
+            className="text-[var(--qz-on-primary)]"
+          />
         )
       )}
     </button>
@@ -141,7 +157,8 @@ export default function ArchiveTable({
     const typeCol = cols.find((c) => c.key === "type");
     if (typeCol) {
       typeCol.value = (r) =>
-        fileKind(r.path, r.is_folder, { folder: folderLabel, file: fileLabel }).label;
+        fileKind(r.path, r.is_folder, { folder: folderLabel, file: fileLabel })
+          .label;
     }
     return cols;
   }, [folderLabel, fileLabel]);
@@ -185,17 +202,15 @@ export default function ArchiveTable({
     viewportHeight === 0
       ? pageRows.length
       : Math.ceil(viewportHeight / ROW_HEIGHT) + OVERSCAN * 2;
-  const startIndex = Math.max(
-    0,
-    Math.floor(scrollTop / ROW_HEIGHT) - OVERSCAN,
-  );
+  const startIndex = Math.max(0, Math.floor(scrollTop / ROW_HEIGHT) - OVERSCAN);
   const visible = pageRows.slice(startIndex, startIndex + visibleCount);
 
   const totalH = pageRows.length * ROW_HEIGHT;
   // 1-based serial across the whole sorted dataset, stable under paging.
   const rowBase = pageSize === "all" ? 0 : page * (pageSize as number);
 
-  const allSelected = pageRows.length > 0 && pageRows.every((r) => selected.has(r.path));
+  const allSelected =
+    pageRows.length > 0 && pageRows.every((r) => selected.has(r.path));
 
   function toggleSort(key: SortKey) {
     if (sortKey !== key) {
@@ -229,13 +244,14 @@ export default function ArchiveTable({
     <div className="relative min-h-0 w-full min-w-0 flex-1">
       <div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-[13px] border border-[var(--qz-border)] bg-[var(--qz-surface)] text-[13px]">
         {/* Header matches ROW_HEIGHT so it never reads slim next to rows. */}
-        <div className="flex shrink-0 items-center" style={{ height: ROW_HEIGHT }}>
+        <div
+          className="flex shrink-0 items-center"
+          style={{ height: ROW_HEIGHT }}
+        >
           <div className="flex w-10 shrink-0 items-center justify-center">
             <TableCheckbox
               label={t("table.selectAll")}
-              checked={
-                allSelected ? true : selected.size > 0 ? "mixed" : false
-              }
+              checked={allSelected ? true : selected.size > 0 ? "mixed" : false}
               onToggle={toggleAll}
             />
           </div>
@@ -268,78 +284,83 @@ export default function ArchiveTable({
         >
           {pageRows.length === 0 ? (
             <div className="flex min-h-full flex-col items-center justify-center gap-1 px-4 py-10 text-center">
-              <PackageOpen size={16} aria-hidden className="text-[var(--qz-faint)]" />
-              <p className="text-sm text-[var(--qz-muted)]">{t("table.empty")}</p>
+              <PackageOpen
+                size={16}
+                aria-hidden
+                className="text-[var(--qz-faint)]"
+              />
+              <p className="text-sm text-[var(--qz-muted)]">
+                {t("table.empty")}
+              </p>
               <p className="text-xs text-[var(--qz-faint)]">
                 {t("table.emptyHint")}
               </p>
             </div>
           ) : (
-            <div
-              style={{ height: `${totalH}px` }}
-              className="relative w-full"
-            >
-            {visible.map((entry, offset) => {
-              const index = startIndex + offset;
-              const kind = fileKind(entry.path, entry.is_folder, {
-                folder: folderLabel,
-                file: fileLabel,
-              });
-              const Icon = kind.icon;
-              const isSelected = selected.has(entry.path);
-              return (
-                <div
-                  key={entry.path}
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: `${ROW_HEIGHT}px`,
-                    transform: `translateY(${index * ROW_HEIGHT}px)`,
-                  }}
-                  className={`flex items-center border-t border-[var(--qz-border)] ${
-                    isSelected ? "bg-[var(--qz-primary)]/10" : ""
-                  }`}
-                >
-                  <div className="flex w-10 shrink-0 items-center justify-center">
-                    <TableCheckbox
-                      label={t("table.selectItem", { name: entry.path })}
-                      checked={isSelected}
-                      onToggle={() => toggleOne(entry.path)}
-                    />
-                  </div>
-                  <div className="flex w-12 shrink-0 items-center justify-center px-2 text-[var(--qz-faint)] tabular-nums">
-                    {rowBase + index + 1}
-                  </div>
-                  <div className="flex h-full min-w-0 flex-1 items-center px-4">
-                    <span className="flex min-w-0 items-center gap-3">
-                      <Icon
-                        size={16}
-                        aria-hidden
-                        className="shrink-0 text-[var(--qz-muted)]"
-                      />
-                      <span className="truncate leading-5">{entry.path}</span>
-                    </span>
-                  </div>
-                  <div className="flex h-full w-24 shrink-0 items-center justify-center px-4 text-[var(--qz-muted)]">
-                    {kind.label}
-                  </div>
-                  <div className="flex h-full w-32 shrink-0 items-center justify-center overflow-hidden px-4 tabular-nums">
-                    <span className="whitespace-nowrap">
-                      {entry.size === null ? "—" : formatSize(entry.size)}
-                    </span>
-                  </div>
+            <div style={{ height: `${totalH}px` }} className="relative w-full">
+              {visible.map((entry, offset) => {
+                const index = startIndex + offset;
+                const kind = fileKind(entry.path, entry.is_folder, {
+                  folder: folderLabel,
+                  file: fileLabel,
+                });
+                const Icon = kind.icon;
+                const isSelected = selected.has(entry.path);
+                return (
                   <div
-                    className="flex h-full w-64 shrink-0 items-center justify-center overflow-hidden px-4 text-[var(--qz-muted)]"
-                    title={entry.modified ?? undefined}
+                    key={entry.path}
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: `${ROW_HEIGHT}px`,
+                      transform: `translateY(${index * ROW_HEIGHT}px)`,
+                    }}
+                    className={`flex items-center border-t border-[var(--qz-border)] ${
+                      isSelected ? "bg-[var(--qz-primary)]/10" : ""
+                    }`}
                   >
-                    <span className="truncate whitespace-nowrap tabular-nums">{formatModified(entry.modified)}</span>
+                    <div className="flex w-10 shrink-0 items-center justify-center">
+                      <TableCheckbox
+                        label={t("table.selectItem", { name: entry.path })}
+                        checked={isSelected}
+                        onToggle={() => toggleOne(entry.path)}
+                      />
+                    </div>
+                    <div className="flex w-12 shrink-0 items-center justify-center px-2 text-[var(--qz-faint)] tabular-nums">
+                      {rowBase + index + 1}
+                    </div>
+                    <div className="flex h-full min-w-0 flex-1 items-center px-4">
+                      <span className="flex min-w-0 items-center gap-3">
+                        <Icon
+                          size={16}
+                          aria-hidden
+                          className="shrink-0 text-[var(--qz-muted)]"
+                        />
+                        <span className="truncate leading-5">{entry.path}</span>
+                      </span>
+                    </div>
+                    <div className="flex h-full w-24 shrink-0 items-center justify-center px-4 text-[var(--qz-muted)]">
+                      {kind.label}
+                    </div>
+                    <div className="flex h-full w-32 shrink-0 items-center justify-center overflow-hidden px-4 tabular-nums">
+                      <span className="whitespace-nowrap">
+                        {entry.size === null ? "—" : formatSize(entry.size)}
+                      </span>
+                    </div>
+                    <div
+                      className="flex h-full w-64 shrink-0 items-center justify-center overflow-hidden px-4 text-[var(--qz-muted)]"
+                      title={entry.modified ?? undefined}
+                    >
+                      <span className="truncate whitespace-nowrap tabular-nums">
+                        {formatModified(entry.modified)}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
           )}
         </div>
       </div>

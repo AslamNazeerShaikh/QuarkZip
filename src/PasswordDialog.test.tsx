@@ -27,7 +27,9 @@ vi.mock("@tauri-apps/api/core", () => ({
     return new Promise<string>((resolve, reject) => {
       invokeCtl.resolve = resolve;
       invokeCtl.reject = reject;
-      const channel = (args as { onProgress?: InstanceType<typeof ChannelStub> }).onProgress;
+      const channel = (
+        args as { onProgress?: InstanceType<typeof ChannelStub> }
+      ).onProgress;
       invokeCtl.progress = (pct: number) => channel?.onmessage(pct);
     });
   },
@@ -65,7 +67,8 @@ describe("PasswordDialog", () => {
     expect(screen.getByRole("button", { name: "Check" })).toBeEnabled();
   });
 
-  it("should_verify_and_reveal_open_on_correct_password", async () => {    const user = userEvent.setup();
+  it("should_verify_and_reveal_open_on_correct_password", async () => {
+    const user = userEvent.setup();
     const { onAccept } = setup();
     await user.type(screen.getByLabelText("Password"), "Correct123");
     await user.click(screen.getByRole("button", { name: "Check" }));
@@ -100,7 +103,9 @@ describe("PasswordDialog", () => {
     expect(
       await screen.findByRole("button", { name: "Extract" }),
     ).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Open" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Open" }),
+    ).not.toBeInTheDocument();
   });
 
   it("should_shake_and_offer_retry_on_wrong_password", async () => {
@@ -109,9 +114,13 @@ describe("PasswordDialog", () => {
     await user.type(screen.getByLabelText("Password"), "nope");
     await user.click(screen.getByRole("button", { name: "Check" }));
     act(() => invokeCtl.reject?.("ERROR: Wrong password : data.csv"));
-    expect(await screen.findByText("Wrong password — try again.")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Wrong password — try again."),
+    ).toBeInTheDocument();
     // No Open button on a miss — only Check (retry) + Cancel.
-    expect(screen.queryByRole("button", { name: "Open" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Open" }),
+    ).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Check" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument();
   });
@@ -122,7 +131,9 @@ describe("PasswordDialog", () => {
     await user.type(screen.getByLabelText("Password"), "pw");
     await user.click(screen.getByRole("button", { name: "Check" }));
     act(() => invokeCtl.reject?.("Cannot open file: gone"));
-    expect(await screen.findByText("Cannot open file: gone")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Cannot open file: gone"),
+    ).toBeInTheDocument();
   });
 
   it("should_toggle_password_visibility", async () => {
@@ -137,7 +148,9 @@ describe("PasswordDialog", () => {
   it("should_close_only_via_cancel_or_escape", async () => {
     const user = userEvent.setup();
     const { onCancel } = setup();
-    const dialog = await screen.findByRole("dialog", { name: "Password required" });
+    const dialog = await screen.findByRole("dialog", {
+      name: "Password required",
+    });
     expect(dialog).toBeInTheDocument();
     const backdrop = dialog.querySelector(":scope > [aria-hidden='true']");
     expect(backdrop).not.toBeNull();

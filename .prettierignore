@@ -1,0 +1,14 @@
+# Ignore artifacts:
+build
+coverage
+dist
+dist-ssr
+test-results/
+playwright-report/
+playwright/.cache/
+src-tauri/target/
+src-tauri/binaries/
+vendor/7zz-cache/
+# graphify generated outputs (regenerated via `graphify update`; formatting
+# them only creates churn, e.g. 25k-line graph.html)
+graphify-out/

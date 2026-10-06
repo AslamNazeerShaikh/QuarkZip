@@ -34,48 +34,48 @@ Model: `opencode/muse-spark-1.3-contributor-free` via OpenCode Zen (reasoning ef
 
 ## Repo layout (target project)
 
-| Path | Purpose |
-|---|---|
-| `src/` | React + Tailwind v4 frontend (`main.tsx`, `App.tsx`, `index.css`) |
-| `src-tauri/` | Rust backend (`lib.rs` commands, `main.rs` launcher, `tauri.conf.json`) |
-| `src-tauri/binaries/` | Pinned 7zz sidecars (fetch-at-build, gitignored) |
-| `scripts/fetch-7zz.sh` | Pinned 7-Zip fetch + normalize script |
-| `docs/7zz-binaries.md` | Asset table, sidecar naming, license notes |
+| Path                   | Purpose                                                                 |
+| ---------------------- | ----------------------------------------------------------------------- |
+| `src/`                 | React + Tailwind v4 frontend (`main.tsx`, `App.tsx`, `index.css`)       |
+| `src-tauri/`           | Rust backend (`lib.rs` commands, `main.rs` launcher, `tauri.conf.json`) |
+| `src-tauri/binaries/`  | Pinned 7zz sidecars (fetch-at-build, gitignored)                        |
+| `scripts/fetch-7zz.sh` | Pinned 7-Zip fetch + normalize script                                   |
+| `docs/7zz-binaries.md` | Asset table, sidecar naming, license notes                              |
 
 ## Agents
 
-| Agent | Purpose |
-|-------|---------|
-| `tauri-app-assistant` | Main coach (default): features, 7zz wiring, UI |
-| `rust-developer` | PRIMARY for Rust: strict quality rules (use for all `src-tauri/` work) |
-| `code-reviewer` | Reviews against the checklist (argv safety, streaming, virtualization) |
-| `test-writer` | Proposes harness on demand, writes tests |
-| `documentation-writer` | Keeps root `README.md` + `docs/7zz-binaries.md` in sync |
+| Agent                  | Purpose                                                                |
+| ---------------------- | ---------------------------------------------------------------------- |
+| `tauri-app-assistant`  | Main coach (default): features, 7zz wiring, UI                         |
+| `rust-developer`       | PRIMARY for Rust: strict quality rules (use for all `src-tauri/` work) |
+| `code-reviewer`        | Reviews against the checklist (argv safety, streaming, virtualization) |
+| `test-writer`          | Proposes harness on demand, writes tests                               |
+| `documentation-writer` | Keeps root `README.md` + `docs/7zz-binaries.md` in sync                |
 
 ## Skills
 
-| Skill | Description |
-|-------|-------------|
+| Skill               | Description                                            |
+| ------------------- | ------------------------------------------------------ |
 | `tauri-development` | Sidecar spawning, Tauri commands, capabilities, checks |
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `dev` | `npm run tauri dev` |
-| `build` | `npm run build` (`tsc && vite build`) |
-| `tauri-build` | `npm run tauri build` (installers) |
-| `check` | `npm run build` + `cargo check` in `src-tauri/` |
-| `fetch-7zz` | `./scripts/fetch-7zz.sh` |
-| `clean` | `rm -rf dist src-tauri/target` |
+| Command       | Description                                     |
+| ------------- | ----------------------------------------------- |
+| `dev`         | `npm run tauri dev`                             |
+| `build`       | `npm run build` (`tsc && vite build`)           |
+| `tauri-build` | `npm run tauri build` (installers)              |
+| `check`       | `npm run build` + `cargo check` in `src-tauri/` |
+| `fetch-7zz`   | `./scripts/fetch-7zz.sh`                        |
+| `clean`       | `rm -rf dist src-tauri/target`                  |
 
 ## MCP
 
-| Server | Purpose |
-|--------|---------|
-| `ui-skills` | UI skill registry (frontend patterns) |
-| `github` | GitHub access (uses `GITHUB_PERSONAL_ACCESS_TOKEN` env) |
-| `whiteboard` | Whiteboard review sessions |
+| Server       | Purpose                                                 |
+| ------------ | ------------------------------------------------------- |
+| `ui-skills`  | UI skill registry (frontend patterns)                   |
+| `github`     | GitHub access (uses `GITHUB_PERSONAL_ACCESS_TOKEN` env) |
+| `whiteboard` | Whiteboard review sessions                              |
 
 ## Guardrails
 
@@ -86,20 +86,24 @@ Model: `opencode/muse-spark-1.3-contributor-free` via OpenCode Zen (reasoning ef
 ## Usage
 
 ### Switch Agent
+
 ```
 > agent code-reviewer
 ```
 
 ### Run Command
+
 ```
 > dev
 > fetch-7zz
 ```
 
 ### Knowledge graph
+
 ```
 > /graphify
 ```
+
 (`graphify update .` after code changes once `graphify-out/` exists; see `AGENTS.md`)
 
 ## Documentation

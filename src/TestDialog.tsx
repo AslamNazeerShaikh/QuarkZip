@@ -5,7 +5,9 @@ import { Button } from "./components/ui/button";
 import { useLanguage } from "./i18n/LanguageContext";
 import { isPasswordError } from "./password";
 
-type Phase = { running: true; pct: number } | { running: false; ok: boolean; message: string };
+type Phase =
+  | { running: true; pct: number }
+  | { running: false; ok: boolean; message: string };
 
 function clampPct(value: number): number {
   if (!Number.isFinite(value)) return 0;
@@ -41,9 +43,14 @@ export default function TestDialog({
     const channel = new Channel<number>((pct) => {
       if (alive) setPhase({ running: true, pct: clampPct(pct) });
     });
-    invoke<string>("test_archive", { path: archive, password, onProgress: channel })
+    invoke<string>("test_archive", {
+      path: archive,
+      password,
+      onProgress: channel,
+    })
       .then(() => {
-        if (alive) setPhase({ running: false, ok: true, message: t("test.pass") });
+        if (alive)
+          setPhase({ running: false, ok: true, message: t("test.pass") });
       })
       .catch((e) => {
         if (!alive) return;
@@ -95,11 +102,23 @@ export default function TestDialog({
           }`}
         >
           {phase.running ? (
-            <ShieldCheck size={24} aria-hidden className="text-[var(--qz-primary)]" />
+            <ShieldCheck
+              size={24}
+              aria-hidden
+              className="text-[var(--qz-primary)]"
+            />
           ) : phase.ok ? (
-            <CheckCircle2 size={24} aria-hidden className="text-[var(--qz-success)]" />
+            <CheckCircle2
+              size={24}
+              aria-hidden
+              className="text-[var(--qz-success)]"
+            />
           ) : (
-            <XCircle size={24} aria-hidden className="text-[var(--qz-danger)]" />
+            <XCircle
+              size={24}
+              aria-hidden
+              className="text-[var(--qz-danger)]"
+            />
           )}
         </span>
         <h2
@@ -132,7 +151,11 @@ export default function TestDialog({
           </div>
         )}
         <div className="mt-5 flex items-center justify-center">
-          <Button onClick={onOk} disabled={phase.running} autoFocus={!phase.running}>
+          <Button
+            onClick={onOk}
+            disabled={phase.running}
+            autoFocus={!phase.running}
+          >
             {t("common.ok")}
           </Button>
         </div>

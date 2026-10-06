@@ -6,13 +6,13 @@ Pinned: **7-Zip 26.03 (2026-09-03)**, 64-bit only. Source:
 
 ## Assets we use
 
-| File                 | Arch              | Contents                       |
-| -------------------- | ----------------- | ------------------------------ |
-| `7z2603-mac.tar.xz`  | macOS arm64+x64   | One tar for both Mac arches    |
-| `7z2603-linux-x64.tar.xz`   | Linux x86-64 | Console `7zz`             |
-| `7z2603-linux-arm64.tar.xz` | Linux arm64  | Console `7zz`             |
-| `7z2603-extra.7z`    | Windows x64 + arm64   | `x64/7za.exe` + `arm64/7za.exe` standalone consoles (VERIFIED) |
-| `7z2603-arm64.exe`   | Windows arm64     | Full installer, cached only — future full-codec (RAR) work |
+| File                        | Arch                | Contents                                                       |
+| --------------------------- | ------------------- | -------------------------------------------------------------- |
+| `7z2603-mac.tar.xz`         | macOS arm64+x64     | One tar for both Mac arches                                    |
+| `7z2603-linux-x64.tar.xz`   | Linux x86-64        | Console `7zz`                                                  |
+| `7z2603-linux-arm64.tar.xz` | Linux arm64         | Console `7zz`                                                  |
+| `7z2603-extra.7z`           | Windows x64 + arm64 | `x64/7za.exe` + `arm64/7za.exe` standalone consoles (VERIFIED) |
+| `7z2603-arm64.exe`          | Windows arm64       | Full installer, cached only — future full-codec (RAR) work     |
 
 Run `./scripts/fetch-7zz.sh`. It downloads to `vendor/7zz-cache/`,
 normalizes to Tauri sidecar names in `src-tauri/binaries/`, and prints

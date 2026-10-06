@@ -13,21 +13,15 @@ test("launch shows empty state with only theme control in footer", async ({
   app,
 }) => {
   await expect(app.getByText("No archive open")).toBeVisible();
-  await expect(
-    app.getByRole("button", { name: "Open archive" }),
-  ).toBeVisible();
+  await expect(app.getByRole("button", { name: "Open archive" })).toBeVisible();
   await expect(app.getByText("No entries")).toBeVisible();
   await expect(app.locator("header")).toContainText("QuarkZip");
   // No archive-dependent actions yet.
-  await expect(
-    app.getByRole("button", { name: "Extract" }),
-  ).not.toBeVisible();
+  await expect(app.getByRole("button", { name: "Extract" })).not.toBeVisible();
   await expect(
     app.getByRole("button", { name: "Open new…" }),
   ).not.toBeVisible();
-  await expect(
-    app.getByRole("button", { name: "Change theme" }),
-  ).toBeVisible();
+  await expect(app.getByRole("button", { name: "Change theme" })).toBeVisible();
 });
 
 test("cancelled picker keeps the empty state", async ({ app }) => {
@@ -53,9 +47,7 @@ test("opening an archive lists rows, titles the window, seeds dest", async ({
   await expect(
     app.getByRole("button", { name: "Extract", exact: true }),
   ).toBeEnabled();
-  await expect(
-    app.getByRole("button", { name: "Open new…" }),
-  ).toBeVisible();
+  await expect(app.getByRole("button", { name: "Open new…" })).toBeVisible();
   await expect(
     app.getByRole("button", { name: "Choose where to extract" }),
   ).toContainText("/tmp");
@@ -85,17 +77,13 @@ test("missing info shows the details fallback", async ({ app }) => {
   await addArchive(app, PATH, { count: 1, info: null });
   await openViaButton(app, PATH);
   await expect(app.getByText("file-1.txt", { exact: true })).toBeVisible();
-  await expect(
-    app.getByText(/Details unavailable/),
-  ).toBeVisible();
+  await expect(app.getByText(/Details unavailable/)).toBeVisible();
 });
 
 test("info error shows the details fallback", async ({ app }) => {
   await addArchive(app, PATH, { count: 1, infoError: "no summary" });
   await openViaButton(app, PATH);
-  await expect(
-    app.getByText(/Details unavailable/),
-  ).toBeVisible();
+  await expect(app.getByText(/Details unavailable/)).toBeVisible();
 });
 
 test("overview shows container and content metadata", async ({ app }) => {

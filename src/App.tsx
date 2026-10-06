@@ -113,7 +113,9 @@ export default function App() {
   const [dest, setDest] = useState("");
   const [extracting, setExtracting] = useState(false);
   const [confirming, setConfirming] = useState(false);
-  const [selectedPaths, setSelectedPaths] = useState<ReadonlySet<string>>(new Set());
+  const [selectedPaths, setSelectedPaths] = useState<ReadonlySet<string>>(
+    new Set(),
+  );
   const [doneInfo, setDoneInfo] = useState<ExtractResult | null>(null);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [aboutInfo, setAboutInfo] = useState<AppInfo | null>(null);
@@ -125,7 +127,9 @@ export default function App() {
   // so encrypted content keeps working after unlocking).
   const [passwordOpen, setPasswordOpen] = useState(false);
   const [pendingPath, setPendingPath] = useState<string | null>(null);
-  const [passwordMode, setPasswordMode] = useState<"open" | "extract" | "test">("open");
+  const [passwordMode, setPasswordMode] = useState<"open" | "extract" | "test">(
+    "open",
+  );
   const [archivePassword, setArchivePassword] = useState<string | null>(null);
 
   function askPassword(path: string, mode: "open" | "extract" | "test") {
@@ -161,7 +165,10 @@ export default function App() {
     setError(null);
     setDoneInfo(null);
     try {
-      const list = await invoke<ArchiveEntry[]>("list_archive", { path, password });
+      const list = await invoke<ArchiveEntry[]>("list_archive", {
+        path,
+        password,
+      });
       setArchive(path);
       setEntries(list);
       setArchivePassword(password);
@@ -169,7 +176,10 @@ export default function App() {
       // Details are best-effort: the table must work even if the
       // summary parse fails (or the backend predates `info_archive`).
       try {
-        const summary = await invoke<ArchiveInfo>("info_archive", { path, password });
+        const summary = await invoke<ArchiveInfo>("info_archive", {
+          path,
+          password,
+        });
         setInfo(summary);
       } catch {
         setInfo(null);
@@ -287,178 +297,178 @@ export default function App() {
             : "rounded-[20px] border border-[var(--qz-window-border)] shadow-[var(--qz-shadow-window)]"
         }`}
       >
-      <TitleBar archive={archive} hidden={isMac} maximized={maximized} />
-      {/* 28px rhythm on the content sides/bottom; no top pad. The drop
+        <TitleBar archive={archive} hidden={isMac} maximized={maximized} />
+        {/* 28px rhythm on the content sides/bottom; no top pad. The drop
           frame is window-fixed (not main-absolute), so its top edge floats
           in the title strip instead of crossing the card. */}
-      <main className="relative flex min-h-0 flex-1 flex-col px-7 pb-7">
-        {dragging && (
-          <div className="pointer-events-none fixed inset-3.5 z-10 flex items-center justify-center rounded-[20px] border-[1.5px] border-dotted border-[var(--qz-primary)] bg-[var(--qz-primary)]/10">
-            <p className="font-medium text-[var(--qz-text)]">
-              {t("app.dropHint")}
+        <main className="relative flex min-h-0 flex-1 flex-col px-7 pb-7">
+          {dragging && (
+            <div className="pointer-events-none fixed inset-3.5 z-10 flex items-center justify-center rounded-[20px] border-[1.5px] border-dotted border-[var(--qz-primary)] bg-[var(--qz-primary)]/10">
+              <p className="font-medium text-[var(--qz-text)]">
+                {t("app.dropHint")}
+              </p>
+            </div>
+          )}
+          {error && (
+            <p role="alert" className="pb-2 text-[var(--qz-danger)]">
+              {error}
             </p>
-          </div>
-        )}
-        {error && (
-          <p role="alert" className="pb-2 text-[var(--qz-danger)]">
-            {error}
-          </p>
-        )}
-        {/* 50/50 vertical split: overview card above, table below. */}
-        <div className="flex min-h-0 flex-1 flex-col gap-7">
-          <ArchiveOverview
-            archive={archive}
-            info={info}
-            loading={loading}
-            onOpen={() => void openArchive()}
-            onTest={() => setTestOpen(true)}
-            onChecksum={() => setChecksumOpen(true)}
-          />
-          <div className="flex min-h-0 flex-[1_1_50%] flex-col">
-            <ArchiveTable
-              data={entries}
-              page={page}
-              pageSize={pageSize}
-              onSelectionChange={setSelectedPaths}
+          )}
+          {/* 50/50 vertical split: overview card above, table below. */}
+          <div className="flex min-h-0 flex-1 flex-col gap-7">
+            <ArchiveOverview
+              archive={archive}
+              info={info}
+              loading={loading}
+              onOpen={() => void openArchive()}
+              onTest={() => setTestOpen(true)}
+              onChecksum={() => setChecksumOpen(true)}
             />
-          </div>
-        </div>
-        {/* Action bar in normal flow — nothing overlaps. */}
-        <footer className="flex shrink-0 items-center justify-between gap-4 pt-7">
-          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
-            {archive && (
-              <>
-                <Button
-                  size="bar"
-                  onClick={() => setConfirming(true)}
-                  disabled={!dest || extracting || entries.length === 0}
-                  className="shrink-0"
-                >
-                  <Download size={14} aria-hidden />
-                  {extracting ? t("app.extracting") : t("app.extract")}
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="bar"
-                  onClick={() => void openArchive()}
-                  className="shrink-0"
-                >
-                  {t("app.openNew")}
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="bar"
-                  onClick={() => void chooseDest()}
-                  title={dest || t("app.chooseDest")}
-                  aria-label={t("app.chooseDest")}
-                  className="min-w-0 flex-1"
-                >
-                  <span className="flex w-full min-w-0 items-center justify-center gap-2">
-                    <FolderOpen size={14} aria-hidden className="shrink-0" />
-                    <span className="min-w-0 flex-1 truncate text-center">
-                      {dest || t("app.chooseFolder")}
-                    </span>
-                    <ChevronDown
-                      size={14}
-                      aria-hidden
-                      className="shrink-0 text-[var(--qz-faint)]"
-                    />
-                  </span>
-                </Button>
-              </>
-            )}
-          </div>
-          <div className="flex shrink-0 items-center gap-2">
-            {archive && (
-              <Pagination
+            <div className="flex min-h-0 flex-[1_1_50%] flex-col">
+              <ArchiveTable
+                data={entries}
                 page={page}
-                pageCount={entries.length === 0 ? 0 : pageCount}
                 pageSize={pageSize}
-                total={entries.length}
-                onPage={setPage}
-                onPageSize={(size) => {
-                  setPageSize(size);
-                  setPage(0);
-                }}
+                onSelectionChange={setSelectedPaths}
               />
-            )}
-            <ThemeSwitch choice={choice} onChange={setChoice} />
-            <LanguageSwitch />
-            {/* Icon-only shell like ThemeSwitch: h-9, 10px radius, 1px
-                border, card shadow. Hover/tip names it (aria-label + title). */}
-            <div className="flex h-9 shrink-0 items-center rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-1 shadow-[var(--qz-shadow-card)]">
-              <button
-                type="button"
-                onClick={openAbout}
-                aria-label="About QuarkZip"
-                title="About QuarkZip"
-                className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-colors outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
-              >
-                <Info size={18} aria-hidden />
-              </button>
             </div>
           </div>
-        </footer>
-      </main>
-      <ExtractDialog
-        open={confirming}
-        selected={selectedPaths.size}
-        total={entries.length}
-        dest={dest}
-        onCancel={() => setConfirming(false)}
-        onConfirm={() => {
-          setConfirming(false);
-          void extract();
-        }}
-      />
-      {doneInfo && (
-        <ExtractDoneDialog
-          open
-          result={doneInfo}
-          onOk={() => setDoneInfo(null)}
+          {/* Action bar in normal flow — nothing overlaps. */}
+          <footer className="flex shrink-0 items-center justify-between gap-4 pt-7">
+            <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
+              {archive && (
+                <>
+                  <Button
+                    size="bar"
+                    onClick={() => setConfirming(true)}
+                    disabled={!dest || extracting || entries.length === 0}
+                    className="shrink-0"
+                  >
+                    <Download size={14} aria-hidden />
+                    {extracting ? t("app.extracting") : t("app.extract")}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="bar"
+                    onClick={() => void openArchive()}
+                    className="shrink-0"
+                  >
+                    {t("app.openNew")}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="bar"
+                    onClick={() => void chooseDest()}
+                    title={dest || t("app.chooseDest")}
+                    aria-label={t("app.chooseDest")}
+                    className="min-w-0 flex-1"
+                  >
+                    <span className="flex w-full min-w-0 items-center justify-center gap-2">
+                      <FolderOpen size={14} aria-hidden className="shrink-0" />
+                      <span className="min-w-0 flex-1 truncate text-center">
+                        {dest || t("app.chooseFolder")}
+                      </span>
+                      <ChevronDown
+                        size={14}
+                        aria-hidden
+                        className="shrink-0 text-[var(--qz-faint)]"
+                      />
+                    </span>
+                  </Button>
+                </>
+              )}
+            </div>
+            <div className="flex shrink-0 items-center gap-2">
+              {archive && (
+                <Pagination
+                  page={page}
+                  pageCount={entries.length === 0 ? 0 : pageCount}
+                  pageSize={pageSize}
+                  total={entries.length}
+                  onPage={setPage}
+                  onPageSize={(size) => {
+                    setPageSize(size);
+                    setPage(0);
+                  }}
+                />
+              )}
+              <ThemeSwitch choice={choice} onChange={setChoice} />
+              <LanguageSwitch />
+              {/* Icon-only shell like ThemeSwitch: h-9, 10px radius, 1px
+                border, card shadow. Hover/tip names it (aria-label + title). */}
+              <div className="flex h-9 shrink-0 items-center rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-1 shadow-[var(--qz-shadow-card)]">
+                <button
+                  type="button"
+                  onClick={openAbout}
+                  aria-label="About QuarkZip"
+                  title="About QuarkZip"
+                  className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-colors outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+                >
+                  <Info size={18} aria-hidden />
+                </button>
+              </div>
+            </div>
+          </footer>
+        </main>
+        <ExtractDialog
+          open={confirming}
+          selected={selectedPaths.size}
+          total={entries.length}
+          dest={dest}
+          onCancel={() => setConfirming(false)}
+          onConfirm={() => {
+            setConfirming(false);
+            void extract();
+          }}
         />
-      )}
-      <AboutDialog
-        open={aboutOpen}
-        info={aboutInfo}
-        onOk={() => setAboutOpen(false)}
-      />
-      {archive && (
-        <>
-          <TestDialog
-            open={testOpen}
-            archive={archive}
-            password={archivePassword}
-            onOk={() => setTestOpen(false)}
-            onPasswordError={() => {
-              // Never unlocked for this operation: swap the raw 7zz error
-              // for the password gate; verifying reopens the test.
-              setTestOpen(false);
-              askPassword(archive, "test");
-            }}
+        {doneInfo && (
+          <ExtractDoneDialog
+            open
+            result={doneInfo}
+            onOk={() => setDoneInfo(null)}
           />
-          <ChecksumDialog
-            open={checksumOpen}
-            archive={archive}
-            onClose={() => setChecksumOpen(false)}
-          />
-        </>
-      )}
-      {passwordOpen && pendingPath && (
-        <PasswordDialog
-          open
-          archive={pendingPath}
-          acceptLabel={
-            passwordMode === "extract"
-              ? t("app.extract")
-              : passwordMode === "test"
-                ? t("overview.test")
-                : t("password.open")
-          }
-          onAccept={acceptPassword}
-          onCancel={closePasswordGate}
+        )}
+        <AboutDialog
+          open={aboutOpen}
+          info={aboutInfo}
+          onOk={() => setAboutOpen(false)}
         />
-      )}
+        {archive && (
+          <>
+            <TestDialog
+              open={testOpen}
+              archive={archive}
+              password={archivePassword}
+              onOk={() => setTestOpen(false)}
+              onPasswordError={() => {
+                // Never unlocked for this operation: swap the raw 7zz error
+                // for the password gate; verifying reopens the test.
+                setTestOpen(false);
+                askPassword(archive, "test");
+              }}
+            />
+            <ChecksumDialog
+              open={checksumOpen}
+              archive={archive}
+              onClose={() => setChecksumOpen(false)}
+            />
+          </>
+        )}
+        {passwordOpen && pendingPath && (
+          <PasswordDialog
+            open
+            archive={pendingPath}
+            acceptLabel={
+              passwordMode === "extract"
+                ? t("app.extract")
+                : passwordMode === "test"
+                  ? t("overview.test")
+                  : t("password.open")
+            }
+            onAccept={acceptPassword}
+            onCancel={closePasswordGate}
+          />
+        )}
       </div>
     </div>
   );
