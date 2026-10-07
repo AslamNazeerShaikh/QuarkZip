@@ -20,7 +20,7 @@ Components reference `--qz-*` role tokens only, never raw hex.
 | `--qz-bg`                                               | `#ececec`                         | `#1e1e1e`                         | window / frame background               |
 | `--qz-surface`                                          | `#ffffff`                         | `#282828`                         | cards, controls                         |
 | `--qz-surface-2`                                        | `#f5f5f7`                         | `#323232`                         | soft fills, tracks, hovers              |
-| `--qz-border`                                           | `#c6c6c8`                         | `#38383a`                         | separators (opaque, never text)         |
+| `--qz-border`                                           | `#c6c6c8`                         | `#4a4a4a`                         | separators (opaque, never text)         |
 | `--qz-text`                                             | `#000000`                         | `#ffffff`                         | labelColor body text                    |
 | `--qz-muted`                                            | `#3c3c43`                         | `#ebebf5`                         | secondaryLabel, full-strength for AA    |
 | `--qz-faint`                                            | `#6e6e73`                         | `#98989f`                         | micro-labels ONLY (see rule 5)          |

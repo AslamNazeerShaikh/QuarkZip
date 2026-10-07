@@ -60,9 +60,9 @@
     "semantic_hash": ""
   },
   "src-tauri/tauri.conf.json": {
-    "mtime": 1791140341.4399478,
-    "seen": 1791140710.614899,
-    "ast_hash": "d5e3c399ab104d6273e8a63861b642bc",
+    "mtime": 1791366319.2515883,
+    "seen": 1791366419.859702,
+    "ast_hash": "d572cfd2fb2b0454442e914767c7cd0b",
     "semantic_hash": ""
   },
   "src/App.tsx": {
@@ -552,15 +552,15 @@
     "semantic_hash": ""
   },
   "docs/color-system.md": {
-    "mtime": 1791363186.8123522,
-    "seen": 1791363209.01125,
-    "ast_hash": "03bc1e91f1c361268c3dd0da85d31ac4",
+    "mtime": 1791366397.3076165,
+    "seen": 1791366419.859797,
+    "ast_hash": "c64ac9f730504a4f2877438f7d0691cf",
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791363084.638713,
-    "seen": 1791363209.011251,
-    "ast_hash": "474ee3897adf5ac56ab42e5247fcd54d",
+    "mtime": 1791366401.9998188,
+    "seen": 1791366419.859798,
+    "ast_hash": "e6a8b6ebe8446d11ae9afe0988f3ba1b",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {

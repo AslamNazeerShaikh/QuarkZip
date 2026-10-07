@@ -171,7 +171,7 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
 
 ## Layout
 
-Single window (990×660 default, Tauri `tauri.conf.json`), no sidebar: slim
+Single window (800×675 default/minimum, Tauri `tauri.conf.json`), no sidebar: slim
 drag strip (`h-14`), then an equal vertical split — `ArchiveOverview`
 above (expanded: `flex-1`; collapsed: `flex-none`, action row only),
 table (`flex-1`) below — then the action
