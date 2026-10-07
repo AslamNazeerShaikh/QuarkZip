@@ -19,6 +19,9 @@ describe("LanguageSwitch", () => {
     await user.click(screen.getByRole("button", { name: "Change language" }));
     const listbox = screen.getByRole("listbox", { name: "Language" });
     expect(listbox).toBeInTheDocument();
+    // Card-row control: opens inward from its left edge, never past the
+    // card's left side.
+    expect(listbox).toHaveClass("left-0");
     expect(screen.getByRole("option", { name: "English" })).toBeInTheDocument();
     await user.click(screen.getByRole("option", { name: "हिन्दी" }));
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();

@@ -10,7 +10,7 @@
   "8": "compilerOptions",
   "9": "mcp",
   "10": "devDependencies",
-  "11": "react",
+  "11": "ArchiveOverview.tsx",
   "12": "checksum.rs",
   "13": "Opencode Configuration for QuarkZip",
   "14": "MacPacker reference (upstream)",
@@ -73,7 +73,8 @@
   "71": "agents",
   "72": "vite.config.ts",
   "73": "ExtractDialog.tsx",
-  "75": "useLanguage",
+  "74": "lint-staged",
+  "75": "App.tsx",
   "76": "bridge.cpp",
   "77": "sevenzip.rs",
   "78": "pull-hig.mjs",
@@ -212,6 +213,5 @@
   "212": "Token fields",
   "213": "Web views",
   "214": "macOS design (QuarkZip)",
-  "215": "macos-design-reviewer.md",
-  "216": "App.tsx"
+  "215": "macos-design-reviewer.md"
 }

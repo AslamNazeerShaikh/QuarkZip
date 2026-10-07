@@ -19,7 +19,10 @@ vi.mock("@tauri-apps/api/webview", () => ({
   }),
 }));
 
-const extractCtl = vi.hoisted(() => ({ fail: true }));
+const extractCtl = vi.hoisted(() => ({
+  fail: true,
+  calls: [] as Array<{ dest: string; files: string[] }>,
+}));
 
 const listCtl = vi.hoisted(() => ({
   deferList: false,
@@ -170,10 +173,13 @@ vi.mock("@tauri-apps/api/core", () => ({
       return Promise.resolve("Everything is Ok");
     }
     if (cmd === "extract_archive") {
-      const { path, password } = (args ?? {}) as {
+      const { path, dest, files, password } = (args ?? {}) as {
         path: string;
+        dest: string;
+        files: string[];
         password: string | null;
       };
+      extractCtl.calls.push({ dest, files });
       // locked.zip without a password fails the 7zz way (per-file errors);
       // the app must gate instead of showing them.
       if (path === "/tmp/locked.zip" && !password) {
@@ -200,6 +206,7 @@ vi.mock("@tauri-apps/plugin-os", () => ({
 beforeEach(() => {
   osCtl.platform = "linux";
   extractCtl.fail = true;
+  extractCtl.calls = [];
   listCtl.deferList = false;
   listCtl.releaseList = null;
   listCtl.calls = [];
@@ -469,6 +476,53 @@ describe("drag and drop", () => {
     );
     await user.click(await screen.findByRole("button", { name: "Cancel" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("should_collapse_select_everything_to_server_side_all", async () => {
+    // 10M guard: selecting every row must still extract via the empty
+    // file list — never a 10M-path argv over IPC.
+    extractCtl.fail = false;
+    const user = userEvent.setup();
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
+    });
+    await user.click(
+      await screen.findByRole("checkbox", { name: "Select dropped.txt" }),
+    );
+    await user.click(
+      await screen.findByRole("button", { name: "Extract Selected" }),
+    );
+    expect(
+      await screen.findByRole("dialog", { name: "Extract selected files?" }),
+    ).toBeInTheDocument();
+    await user.click(await screen.findByRole("button", { name: "Proceed" }));
+    expect(
+      await screen.findByRole("dialog", { name: "Extraction complete" }),
+    ).toBeInTheDocument();
+    expect(extractCtl.calls).toHaveLength(1);
+    expect(extractCtl.calls[0].files).toEqual([]);
+  });
+
+  it("should_shrink_pagination_while_theme_is_out_and_restore_after", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
+    });
+    await expect(await screen.findByText("1 / 1")).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Change theme" }));
+    // Full shell yields to the icon naming the page.
+    expect(
+      await screen.findByRole("button", { name: /Show pagination/ }),
+    ).toBeVisible();
+    expect(screen.queryByText("1 / 1")).not.toBeInTheDocument();
+    // Choosing minimizes the segment and restores the shell.
+    await user.click(screen.getByRole("button", { name: "Dark" }));
+    expect(
+      await screen.findByRole("button", { name: "Change theme" }),
+    ).toBeVisible();
+    expect(await screen.findByText("1 / 1")).toBeVisible();
   });
 
   it("should_open_test_dialog_from_overview_that_backdrop_cannot_close", async () => {

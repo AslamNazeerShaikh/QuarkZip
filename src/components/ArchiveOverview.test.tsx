@@ -189,6 +189,28 @@ describe("ArchiveOverview", () => {
     expect(row.parentElement?.firstElementChild).toBe(row);
   });
 
+  it("should_shift_controls_left_on_collapse_and_back_on_expand", async () => {
+    const user = userEvent.setup();
+    render(
+      <ArchiveOverview
+        archive="/tmp/qz-sample.7z"
+        info={INFO}
+        loading={false}
+        onOpen={() => {}}
+        middleControls={<button>Pager</button>}
+        utilityControls={<button>Theme</button>}
+      />,
+    );
+    const row = screen.getByTestId("card-controls");
+    // Expanded: More owns the left end.
+    expect(row.parentElement?.firstElementChild).not.toBe(row);
+    await user.click(screen.getByRole("button", { name: "Collapse details" }));
+    expect(row.parentElement?.firstElementChild).toBe(row);
+    await user.click(screen.getByRole("button", { name: "Expand details" }));
+    expect(screen.getByRole("button", { name: "More" })).toBeInTheDocument();
+    expect(row.parentElement?.firstElementChild).not.toBe(row);
+  });
+
   it("should_ride_controls_in_the_action_row_when_open", () => {
     render(
       <ArchiveOverview

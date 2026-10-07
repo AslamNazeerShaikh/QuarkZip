@@ -646,3 +646,26 @@ pub fn run() {
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn should_report_existing_and_missing_paths() {
+        // The live file is taken; a unique sibling is free (process id +
+        // nanos make collisions across parallel runs implausible).
+        let taken = std::env::current_exe().expect("test binary path");
+        assert!(path_exists(taken.to_string_lossy().into_owned()));
+        let free = std::env::temp_dir().join(format!(
+            "quarkzip-probe-{}-{}.zip",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .expect("clock")
+                .as_nanos()
+        ));
+        assert!(!free.exists());
+        assert!(!path_exists(free.to_string_lossy().into_owned()));
+    }
+}
