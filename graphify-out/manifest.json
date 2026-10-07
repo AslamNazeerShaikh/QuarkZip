@@ -66,9 +66,9 @@
     "semantic_hash": ""
   },
   "src/App.tsx": {
-    "mtime": 1791398688.7849057,
-    "seen": 1791399005.595776,
-    "ast_hash": "8d266837dcbf565df3db5e1d49e86528",
+    "mtime": 1791400002.2832022,
+    "seen": 1791400091.2683399,
+    "ast_hash": "471cc17e2e3736ee35cabc253b32562a",
     "semantic_hash": ""
   },
   "src/main.tsx": {
@@ -504,9 +504,9 @@
     "semantic_hash": ""
   },
   "src/components/ui/button.tsx": {
-    "mtime": 1791399748.6938124,
-    "seen": 1791399785.375167,
-    "ast_hash": "2d99e4dc9cab6778f0c0e26627163e96",
+    "mtime": 1791400047.786876,
+    "seen": 1791400091.268352,
+    "ast_hash": "3615912b5c17139a34174dc401bb5b33",
     "semantic_hash": ""
   },
   "src/components/ui/card.tsx": {
@@ -552,15 +552,15 @@
     "semantic_hash": ""
   },
   "docs/color-system.md": {
-    "mtime": 1791398985.8528833,
-    "seen": 1791399005.595871,
-    "ast_hash": "4acb2de122f2f2aef51006b38fc58f48",
+    "mtime": 1791400080.0508053,
+    "seen": 1791400091.268437,
+    "ast_hash": "6accb4cd59916a085b8495cd18b73a89",
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791399752.0839803,
-    "seen": 1791399785.375256,
-    "ast_hash": "9ce61a4780630be7e25aee5e875489a6",
+    "mtime": 1791400039.2251852,
+    "seen": 1791400091.268438,
+    "ast_hash": "8b4dcb12bf832834c26b9286d7a7f0bb",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -996,9 +996,9 @@
     "semantic_hash": ""
   },
   "src/components/TitleBar.tsx": {
-    "mtime": 1791399741.306071,
-    "seen": 1791399785.375166,
-    "ast_hash": "f81393b124b13f3e32316b836a1bdc18",
+    "mtime": 1791400002.276328,
+    "seen": 1791400091.268351,
+    "ast_hash": "33963e07663b1cc19d40cbfba4c91fbf",
     "semantic_hash": ""
   },
   "src/hooks/useTheme.ts": {
@@ -1134,9 +1134,9 @@
     "semantic_hash": ""
   },
   "scripts/contrast-check.py": {
-    "mtime": 1791398608.4188738,
-    "seen": 1791399005.595767,
-    "ast_hash": "d07710365a49413798ab397c5a58fdb1",
+    "mtime": 1791400024.3648503,
+    "seen": 1791400091.268331,
+    "ast_hash": "0d4b407eb2a02c06ceb7bcec7bb529e1",
     "semantic_hash": ""
   },
   "skills-lock.json": {

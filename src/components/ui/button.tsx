@@ -11,30 +11,32 @@ type Variant =
   | "highlight";
 type Size = "default" | "sm" | "bar" | "icon";
 
+/// Every action variant shares the Pagination/ThemeSwitch shell chrome:
+/// translucent material, 10px radius, 1px border, card shadow, centered
+/// content at the h-9 chrome height (height itself comes from `size`).
+/// Hues survive as translucent tints (`.qz-tint-*`) with body-text labels —
+/// a hue fails AA on its own tint — so icons at usage sites carry the hue
+/// (Extract Selected/ListChecks in accent, Extract All/Download in green).
 const VARIANTS: Record<Variant, string> = {
-  // Reference: solid accent CTA h38–42, 8–10px radius, 14px/500 white.
-  // Transparent border keeps the fill box identical to the bordered
-  // secondary buttons sharing the row (border-box makes the 1px outline
-  // eat into their fill, so a borderless primary would read 2px bigger).
+  // Accent-tinted shell: the emphasized action without a solid fill.
   primary:
-    "bg-[var(--qz-primary)] text-[var(--qz-on-primary)] border border-transparent hover:bg-[var(--qz-primary-hover)]",
+    "qz-tint-accent border border-[var(--qz-border)] text-[var(--qz-text)] hover:opacity-90",
   // Reference: material shell with 1px subtle border, dark text. Hover
   // uses a translucent wash (an opaque fill would kill the blur).
   secondary:
     "qz-material-bar border border-[var(--qz-border)] text-[var(--qz-text)] hover:bg-black/5 dark:hover:bg-white/10",
   ghost: "text-[var(--qz-text)] hover:bg-[var(--qz-surface-2)]",
-  // Confirm dialog: orange Cancel, blue Proceed (AA pairs in color-system).
+  // Confirm dialogs: orange-tint Cancel, blue-tint Proceed.
   warning:
-    "bg-[var(--qz-warning-soft)] text-[var(--qz-warning)] hover:opacity-80",
+    "qz-tint-orange border border-[var(--qz-border)] text-[var(--qz-text)] hover:opacity-90",
   accent:
-    "bg-[var(--qz-info)] text-[var(--qz-on-primary)] border border-transparent hover:opacity-90",
-  // User-requested solid actions (deviation from the one-hue rule, see
-  // color-system.md rule 1): green Extract All, yellow Open. Opaque fills
-  // (glass-safe) with per-theme text; hover via opacity so no extra pairs.
+    "qz-tint-info border border-[var(--qz-border)] text-[var(--qz-text)] hover:opacity-90",
+  // User-requested solid actions, softened to tinted shells (hues kept):
+  // green Extract All, yellow Open.
   success:
-    "bg-[var(--qz-extract)] text-[var(--qz-extract-text)] border border-transparent hover:opacity-90",
+    "qz-tint-green border border-[var(--qz-border)] text-[var(--qz-text)] hover:opacity-90",
   highlight:
-    "bg-[var(--qz-open)] text-[var(--qz-open-text)] border border-transparent hover:opacity-90",
+    "qz-tint-yellow border border-[var(--qz-border)] text-[var(--qz-text)] hover:opacity-90",
 };
 
 const SIZES: Record<Size, string> = {
@@ -62,7 +64,7 @@ export function Button({
     <button
       type={type}
       className={cn(
-        "inline-flex cursor-pointer items-center justify-center gap-2 rounded-[9px] font-medium whitespace-nowrap transition-colors outline-none select-none",
+        "inline-flex cursor-pointer items-center justify-center gap-2 rounded-[10px] font-medium whitespace-nowrap shadow-[var(--qz-shadow-card)] transition outline-none select-none",
         "focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40",
         "disabled:pointer-events-none disabled:opacity-50",
         VARIANTS[variant],

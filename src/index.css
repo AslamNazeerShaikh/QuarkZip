@@ -30,18 +30,17 @@
   /* Accent system: default blue. `--qz-accent` is the raw system hue
      (selection tint, focus ring); `--qz-primary*` is the AA-tuned CTA ramp
      (measured pairs in color-system.md). Override per accent below.
-     `--qz-extract*` (green solid) and `--qz-open*` (yellow solid) back the
-     user-requested Extract All / Open buttons — a deliberate deviation
-     from the one-hue rule (see color-system.md rule 1). */
+     `--qz-extract` (green) and `--qz-open` (yellow) are the user-requested
+     action hues: they tint shell backgrounds (`.qz-tint-*`) and paint
+     action icons — never body text (a hue fails AA on its own tint). */
   --qz-accent: #007aff;
   --qz-primary: #0070eb;
   --qz-primary-hover: #005fc7;
   --qz-primary-soft: #dbebfc;
   --qz-on-primary: #ffffff;
   --qz-extract: #1f7a33;
-  --qz-extract-text: #ffffff;
   --qz-open: #9c7a00;
-  --qz-open-text: #000000;
+  --qz-open-soft: #f3ecd9;
   --qz-success: #1f7a33;
   --qz-success-soft: #e5f2e7;
   --qz-info: #0b5bd3;
@@ -153,9 +152,8 @@
   /* Solid action fills keep per-theme text (unlike the accent CTA
      exception): light green takes white, dark green takes black. */
   --qz-extract: #4cc38a;
-  --qz-extract-text: #000000;
   --qz-open: #ffd60a;
-  --qz-open-text: #000000;
+  --qz-open-soft: #38331f;
   --qz-success: #4cc38a;
   --qz-success-soft: #14291f;
   --qz-info: #82aaff;
@@ -243,11 +241,67 @@
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   backdrop-filter: blur(20px) saturate(180%);
 }
+/* Tinted chrome shells: the exact Pagination/ThemeSwitch look with the
+   hue carried as a translucent tint. Labels stay body text (a hue fails
+   AA on its own tint — verified in color-system.md); icons at usage
+   sites carry the hue. Each declares the plain bar fill first so engines
+   without `color-mix` still render the neutral shell. */
+.qz-tint-accent,
+.qz-tint-info,
+.qz-tint-green,
+.qz-tint-yellow,
+.qz-tint-orange {
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+}
+.qz-tint-accent {
+  background: var(--qz-bar-bg);
+  background: color-mix(in srgb, var(--qz-primary) 14%, var(--qz-bar-bg));
+}
+.qz-tint-info {
+  background: var(--qz-bar-bg);
+  background: color-mix(in srgb, var(--qz-info) 14%, var(--qz-bar-bg));
+}
+.qz-tint-green {
+  background: var(--qz-bar-bg);
+  background: color-mix(in srgb, var(--qz-extract) 14%, var(--qz-bar-bg));
+}
+.qz-tint-yellow {
+  background: var(--qz-bar-bg);
+  background: color-mix(in srgb, var(--qz-open) 16%, var(--qz-bar-bg));
+}
+.qz-tint-orange {
+  background: var(--qz-bar-bg);
+  background: color-mix(in srgb, var(--qz-warning) 14%, var(--qz-bar-bg));
+}
 @media (prefers-reduced-transparency: reduce) {
   .qz-material-bar {
     background: var(--qz-surface);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+  }
+  .qz-tint-accent,
+  .qz-tint-info,
+  .qz-tint-green,
+  .qz-tint-yellow,
+  .qz-tint-orange {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .qz-tint-accent {
+    background: var(--qz-primary-soft);
+  }
+  .qz-tint-info {
+    background: var(--qz-info-soft);
+  }
+  .qz-tint-green {
+    background: var(--qz-success-soft);
+  }
+  .qz-tint-yellow {
+    background: var(--qz-open-soft);
+  }
+  .qz-tint-orange {
+    background: var(--qz-warning-soft);
   }
 }
 

@@ -76,14 +76,16 @@ Linux custom bar left; the empty state's card CTA owns opening.
 
 shadcn-style API (`variant` + `size`), reference tokens underneath:
 
-- `Button`: primary = solid accent CTA h-10, 9px radius, 14px/500
-  (`--qz-on-primary` text both modes, per-accent AA pairs in color-system);
-  secondary = surface + 1px border; ghost = text-only. Sizes default
+- `Button`: shell-chrome API (`variant` + `size`) over reference tokens —
+  every variant shares the Pagination/ThemeSwitch look (translucent
+  material, 10px radius, 1px border, card shadow, centered content):
+  `primary`/`accent`/`success`/`highlight`/`warning` are accent/blue/
+  green/yellow/orange translucent tints (`.qz-tint-*`, body-text labels —
+  a hue fails AA on its own tint — hue carried by icons at usage sites),
+  `secondary` the neutral shell, `ghost` text-only. Sizes default
   (h-10, modal actions)/`sm` (h-8, small dialog utilities)/`bar` (h-9 —
   the universal chrome height: footer actions, card-row buttons, titlebar
-  actions, all matching the Pagination/ThemeSwitch shells)/icon. One
-  primary action per view (plus the user-requested green Extract All and
-  yellow Open solids).
+  actions, all matching the Pagination/ThemeSwitch shells)/icon.
 - `Card`: surface, 13px radius, 1px border, card shadow. `CardTitle` 16/600,
   `CardDescription` 13px muted, content scrolls internally (`min-h-0`).
 - `Badge`: StatusPill language — 999px, 11px/600, 6px dot + text.

@@ -828,7 +828,7 @@
       "file_type": "code",
       "norm_label": "button()",
       "source_file": "src/components/ui/button.tsx",
-      "source_location": "L51"
+      "source_location": "L53"
     },
     {
       "id": "src_lib_format_formatcount",
@@ -1800,7 +1800,7 @@
       "file_type": "code",
       "norm_label": "close()",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L159"
+      "source_location": "L161"
     },
     {
       "id": "src_components_titlebar_titlebar_minimize",
@@ -1812,7 +1812,7 @@
       "file_type": "code",
       "norm_label": "minimize()",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L151"
+      "source_location": "L153"
     },
     {
       "id": "src_components_titlebar_titlebar_stopdrag",
@@ -1824,7 +1824,7 @@
       "file_type": "code",
       "norm_label": "stopdrag()",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L168"
+      "source_location": "L170"
     },
     {
       "id": "src_components_titlebar_titlebar_togglemaximize",
@@ -1836,7 +1836,7 @@
       "file_type": "code",
       "norm_label": "togglemaximize()",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L141"
+      "source_location": "L143"
     },
     {
       "id": "src_i18n_i18n_test_switcher",
@@ -5113,7 +5113,7 @@
       "file_type": "code",
       "norm_label": "sizes",
       "source_file": "src/components/ui/button.tsx",
-      "source_location": "L40"
+      "source_location": "L42"
     },
     {
       "id": "src_components_ui_button_variants",
@@ -5124,7 +5124,7 @@
       "file_type": "code",
       "norm_label": "variants",
       "source_file": "src/components/ui/button.tsx",
-      "source_location": "L14"
+      "source_location": "L20"
     },
     {
       "id": "src_components_ui_card",
@@ -11674,7 +11674,7 @@
       "node_kind": "heading",
       "norm_label": "deliberate deviations (with rationale)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L261"
+      "source_location": "L263"
     },
     {
       "id": "docs_ui_guidelines_design_direction",
@@ -11698,7 +11698,7 @@
       "node_kind": "heading",
       "norm_label": "interaction / states",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L250"
+      "source_location": "L252"
     },
     {
       "id": "docs_ui_guidelines_layout",
@@ -11710,7 +11710,7 @@
       "node_kind": "heading",
       "norm_label": "layout",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L234"
+      "source_location": "L236"
     },
     {
       "id": "docs_ui_guidelines_quarkzip_ui_guidelines",
@@ -16439,14 +16439,14 @@
       "source_location": "L39"
     },
     {
-      "id": "docs_color_system_measured_contrast_scripts_contrast_check_py_34_34_gated_pass_documented_exceptions",
-      "label": "Measured contrast (`scripts/contrast-check.py`: 34/34 gated PASS + documented exceptions)",
+      "id": "docs_color_system_measured_contrast_scripts_contrast_check_py_40_40_gated_pass_documented_exceptions",
+      "label": "Measured contrast (`scripts/contrast-check.py`: 40/40 gated PASS + documented exceptions)",
       "_origin": "ast",
       "community": 27,
       "community_name": "QuarkZip color system",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "measured contrast (`scripts/contrast-check.py`: 34/34 gated pass + documented exceptions)",
+      "norm_label": "measured contrast (`scripts/contrast-check.py`: 40/40 gated pass + documented exceptions)",
       "source_file": "docs/color-system.md",
       "source_location": "L68"
     },
@@ -16472,7 +16472,7 @@
       "node_kind": "heading",
       "norm_label": "rules",
       "source_file": "docs/color-system.md",
-      "source_location": "L88"
+      "source_location": "L86"
     },
     {
       "id": "docs_color_system_tokens_src_index_css",
@@ -29525,7 +29525,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L161",
+      "source_location": "L163",
       "weight": 1.0
     },
     {
@@ -29537,7 +29537,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L153",
+      "source_location": "L155",
       "weight": 1.0
     },
     {
@@ -29549,7 +29549,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L143",
+      "source_location": "L145",
       "weight": 1.0
     },
     {
@@ -29573,7 +29573,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/ui/button.tsx",
-      "source_location": "L64",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -31133,7 +31133,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L141",
+      "source_location": "L143",
       "weight": 1.0
     },
     {
@@ -31145,7 +31145,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L151",
+      "source_location": "L153",
       "weight": 1.0
     },
     {
@@ -31157,7 +31157,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L159",
+      "source_location": "L161",
       "weight": 1.0
     },
     {
@@ -51927,7 +51927,7 @@
     },
     {
       "source": "docs_color_system_quarkzip_color_system",
-      "target": "docs_color_system_measured_contrast_scripts_contrast_check_py_34_34_gated_pass_documented_exceptions",
+      "target": "docs_color_system_measured_contrast_scripts_contrast_check_py_40_40_gated_pass_documented_exceptions",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -51944,7 +51944,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/color-system.md",
-      "source_location": "L88",
+      "source_location": "L86",
       "weight": 1.0
     },
     {
@@ -52417,7 +52417,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L234",
+      "source_location": "L236",
       "weight": 1.0
     },
     {
@@ -52439,7 +52439,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L250",
+      "source_location": "L252",
       "weight": 1.0
     },
     {
@@ -52450,7 +52450,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L261",
+      "source_location": "L263",
       "weight": 1.0
     },
     {
@@ -56663,7 +56663,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L168",
+      "source_location": "L170",
       "weight": 1.0
     },
     {
@@ -56729,7 +56729,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/ui/button.tsx",
-      "source_location": "L14",
+      "source_location": "L20",
       "weight": 1.0
     },
     {
@@ -56751,7 +56751,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/ui/button.tsx",
-      "source_location": "L40",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -56762,7 +56762,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/ui/button.tsx",
-      "source_location": "L51",
+      "source_location": "L53",
       "weight": 1.0
     },
     {
@@ -65890,5 +65890,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "d14fd0028039005311a81fd2208a064b27de4630"
+  "built_at_commit": "6462a423024c78ae78ffc526cf2ef4850a989c2b"
 }

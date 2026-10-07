@@ -620,7 +620,11 @@ export default function App() {
                   disabled={!dest || extracting || totalEntries === 0}
                   className="shrink-0"
                 >
-                  <ListChecks size={14} aria-hidden />
+                  <ListChecks
+                    size={14}
+                    aria-hidden
+                    className="text-[var(--qz-primary)]"
+                  />
                   {extracting ? t("app.extracting") : t("app.extractSelected")}
                 </Button>
                 <Button
@@ -630,7 +634,11 @@ export default function App() {
                   disabled={!dest || extracting || totalEntries === 0}
                   className="shrink-0"
                 >
-                  <Download size={14} aria-hidden />
+                  <Download
+                    size={14}
+                    aria-hidden
+                    className="text-[var(--qz-extract)]"
+                  />
                   {t("app.extractAll")}
                 </Button>
                 <Button
