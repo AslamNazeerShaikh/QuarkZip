@@ -704,6 +704,80 @@ pub fn extract_output_is_noop(stdout: &str) -> bool {
     stdout.lines().any(|l| l.trim() == "No files to process")
 }
 
+/// Archive extensions stripped (case-insensitive, innermost first) when
+/// deriving the default extract subfolder from the archive file name
+/// (`data.tar.gz` → `data`, `photo.ZIP` → `photo`). Kept in sync with the
+/// frontend's `defaultFolderName` — same list, same loop.
+const ARCHIVE_EXTENSIONS: &[&str] = &[
+    "7z", "zip", "tar", "gz", "tgz", "bz2", "xz", "zst", "rar", "wim", "iso", "cab", "dmg", "lzma",
+];
+
+/// Default extract subfolder for an archive path: file name without
+/// directories and without archive extensions. Falls back to `"extracted"`
+/// when nothing usable remains (extension-only names like `.7z`).
+pub fn default_folder_name(archive_path: &str) -> String {
+    let base = archive_path
+        .rsplit(['/', '\\'])
+        .next()
+        .unwrap_or(archive_path);
+    let mut stem = base;
+    loop {
+        let Some(dot) = stem.rfind('.') else { break };
+        let (head, ext) = (&stem[..dot], &stem[dot + 1..]);
+        if ext.is_empty() || head.is_empty() {
+            break;
+        }
+        if ARCHIVE_EXTENSIONS.contains(&ext.to_ascii_lowercase().as_str()) {
+            stem = head;
+        } else {
+            break;
+        }
+    }
+    if stem.is_empty() || stem == "." || stem == ".." {
+        return "extracted".to_string();
+    }
+    // Dotfiles with no real stem (`.7z`) have nothing usable left — but
+    // `.bashrc` (or `.bashrc.zip` → `.bashrc`) is a real name, kept.
+    if let Some(rest) = stem.strip_prefix('.') {
+        if !rest.contains('.')
+            && (rest.is_empty() || ARCHIVE_EXTENSIONS.contains(&rest.to_ascii_lowercase().as_str()))
+        {
+            return "extracted".to_string();
+        }
+    }
+    stem.to_string()
+}
+
+/// Validation failure code for [`validate_folder_name`] (the frontend maps
+/// each to its localized message; the codes are the contract).
+pub type FolderNameError = &'static str;
+
+/// Validates a user-typed extract subfolder name for APFS creation under a
+/// chosen destination: non-empty after trimming, ≤255 UTF-8 bytes (APFS
+/// limit), not `.`/`..`, and free of `/`, NUL, `:` (Finder swaps it with
+/// `/`) and other C0 controls. Lone surrogates cannot occur in Rust `&str`
+/// (always valid Unicode) — the TypeScript mirror adds that check for
+/// UTF-16 input. Uniqueness (`dest/<name>` must not exist) is checked
+/// separately via [`path_exists`] — one `metadata` call, O(1).
+pub fn validate_folder_name(name: &str) -> Result<(), FolderNameError> {
+    if name.trim().is_empty() {
+        return Err("empty");
+    }
+    if name.len() > 255 {
+        return Err("too_long");
+    }
+    if name == "." || name == ".." {
+        return Err("reserved");
+    }
+    if name
+        .chars()
+        .any(|c| c == '/' || c == '\0' || c == ':' || c.is_control())
+    {
+        return Err("invalid_chars");
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -940,6 +1014,38 @@ Attributes = A -rw-r--r--
         ));
         assert!(!extract_output_is_noop("Everything is Ok\n"));
         assert!(!extract_output_is_noop(""));
+    }
+
+    #[test]
+    fn should_derive_folder_name_without_archive_extensions() {
+        assert_eq!(default_folder_name("/tmp/photo.zip"), "photo");
+        assert_eq!(default_folder_name("/tmp/data.tar.gz"), "data");
+        assert_eq!(default_folder_name("C:\\Users\\me\\backup.7Z"), "backup");
+        assert_eq!(default_folder_name("/tmp/my.backup.7z"), "my.backup");
+        assert_eq!(default_folder_name("/tmp/archive.tgz"), "archive");
+        assert_eq!(default_folder_name("/tmp/notes.txt"), "notes.txt");
+        assert_eq!(default_folder_name("/tmp/noext"), "noext");
+        assert_eq!(default_folder_name("/tmp/.7z"), "extracted");
+        assert_eq!(default_folder_name("/tmp/.bashrc"), ".bashrc");
+        assert_eq!(default_folder_name("/tmp/.bashrc.zip"), ".bashrc");
+    }
+
+    #[test]
+    fn should_reject_bad_folder_names_for_apfs() {
+        assert_eq!(validate_folder_name("  "), Err("empty"));
+        assert_eq!(validate_folder_name(""), Err("empty"));
+        assert_eq!(validate_folder_name("."), Err("reserved"));
+        assert_eq!(validate_folder_name(".."), Err("reserved"));
+        assert_eq!(validate_folder_name("a/b"), Err("invalid_chars"));
+        assert_eq!(validate_folder_name("a:b"), Err("invalid_chars"));
+        assert_eq!(validate_folder_name("a\0b"), Err("invalid_chars"));
+        assert_eq!(validate_folder_name("a\tb"), Err("invalid_chars"));
+        // 255 UTF-8 bytes pass; 256 fail (4-byte emoji count 4 each).
+        assert!(validate_folder_name(&"a".repeat(255)).is_ok());
+        assert_eq!(validate_folder_name(&"a".repeat(256)), Err("too_long"));
+        assert_eq!(validate_folder_name(&"😀".repeat(64)), Err("too_long"));
+        assert!(validate_folder_name(&"😀".repeat(63)).is_ok());
+        assert!(validate_folder_name("café ünïcode").is_ok());
     }
 
     #[test]

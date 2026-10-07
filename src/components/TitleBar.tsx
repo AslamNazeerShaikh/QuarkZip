@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { Copy, Minus, Square, X } from "lucide-react";
+import { Copy, FolderOpen, Minus, Square, X } from "lucide-react";
 import type { MouseEvent } from "react";
 import { useLanguage } from "../i18n/LanguageContext";
 
@@ -10,6 +10,10 @@ interface TitleBarProps {
   hidden?: boolean;
   /// Owned by the parent (it also drives the flush maximized layout).
   maximized: boolean;
+  /// Opens the archive picker (moved here from the footer: mac right,
+  /// Linux left, title always centered).
+  onOpen: () => void;
+  openDisabled?: boolean;
 }
 
 /// Custom client-side title bar for borderless windows (`decorations: false`).
@@ -23,9 +27,15 @@ export default function TitleBar({
   archive,
   hidden,
   maximized,
+  onOpen,
+  openDisabled = false,
 }: TitleBarProps) {
   const { t } = useLanguage();
   if (hidden) {
+    // Overlay strip: grid keeps the title truly centered while Open sits
+    // right. The left cell stays empty so the title never slides under the
+    // floating traffic lights (x20); the glass strip uses glass tokens
+    // (dark in both themes — the backdrop is wallpaper, not a surface).
     return (
       <div
         data-tauri-drag-region
@@ -33,9 +43,10 @@ export default function TitleBar({
           if (e.button === 0) void invoke("drag_window");
         }}
         data-testid="mac-titlebar"
-        className="flex h-12 shrink-0 cursor-default items-center justify-center px-[76px] text-[var(--qz-glass-text)] select-none"
+        className="grid h-12 shrink-0 cursor-default grid-cols-[1fr_auto_1fr] items-center px-4 select-none"
       >
-        <span className="max-w-[60vw] truncate px-2 text-center text-[13px]">
+        <div aria-hidden />
+        <span className="max-w-[40vw] truncate px-2 text-center text-[13px] text-[var(--qz-glass-text)]">
           <span className="font-semibold">QuarkZip</span>
           {archive && (
             <span className="text-[var(--qz-glass-muted)]">
@@ -44,6 +55,18 @@ export default function TitleBar({
             </span>
           )}
         </span>
+        <div className="flex items-center justify-end">
+          <button
+            type="button"
+            onMouseDown={stopDrag}
+            onClick={onOpen}
+            disabled={openDisabled}
+            className="flex h-8 items-center gap-1.5 rounded-[8px] border border-black/10 px-3 text-[13px] font-medium whitespace-nowrap text-[var(--qz-glass-text)] transition-colors outline-none hover:bg-black/5 focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40 disabled:pointer-events-none disabled:opacity-50"
+          >
+            <FolderOpen size={14} aria-hidden />
+            {t("app.openNew")}
+          </button>
+        </div>
       </div>
     );
   }
@@ -91,8 +114,19 @@ export default function TitleBar({
       onDoubleClick={() => void toggleMaximize()}
       className="grid h-12 shrink-0 cursor-default grid-cols-[1fr_auto_1fr] items-center pr-2 pl-4 select-none"
     >
-      {/* Left: app mark keeps the centered title truly centered. */}
-      <div className="flex items-center gap-2" aria-hidden>
+      {/* Left: Open sits here on Linux (window controls own the right);
+          the app mark rides along so the centered title stays balanced. */}
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onMouseDown={stopDrag}
+          onClick={onOpen}
+          disabled={openDisabled}
+          className="flex h-8 items-center gap-1.5 rounded-[9px] border border-[var(--qz-border)] px-3 text-[13px] font-medium whitespace-nowrap text-[var(--qz-text)] transition-colors outline-none hover:bg-black/5 focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40 disabled:pointer-events-none disabled:opacity-50 dark:hover:bg-white/10"
+        >
+          <FolderOpen size={14} aria-hidden />
+          {t("app.openNew")}
+        </button>
         <span className="h-2.5 w-2.5 rounded-full bg-[var(--qz-primary)]" />
       </div>
 

@@ -16,11 +16,14 @@ test("launch shows empty state with only theme control in footer", async ({
   await expect(app.getByRole("button", { name: "Open archive" })).toBeVisible();
   await expect(app.getByText("No entries")).toBeVisible();
   await expect(app.locator("header")).toContainText("QuarkZip");
-  // No archive-dependent actions yet.
-  await expect(app.getByRole("button", { name: "Extract" })).not.toBeVisible();
+  // No archive-dependent actions yet (Open lives in the titlebar now).
   await expect(
-    app.getByRole("button", { name: "Open new…" }),
+    app.getByRole("button", { name: "Extract Selected" }),
   ).not.toBeVisible();
+  await expect(
+    app.getByRole("button", { name: "Extract All" }),
+  ).not.toBeVisible();
+  await expect(app.getByRole("button", { name: "Open new…" })).toBeVisible();
   await expect(app.getByRole("button", { name: "Change theme" })).toBeVisible();
 });
 
@@ -43,10 +46,11 @@ test("opening an archive lists rows, titles the window, seeds dest", async ({
   const seen = await calls(app);
   expect(seen.setTitle.at(-1)).toBe(`QuarkZip | "Path: ${PATH}"`);
 
-  // Footer actions appear; dest defaults beside the archive.
+  // Extract actions appear; dest defaults beside the archive.
   await expect(
-    app.getByRole("button", { name: "Extract", exact: true }),
+    app.getByRole("button", { name: "Extract Selected" }),
   ).toBeEnabled();
+  await expect(app.getByRole("button", { name: "Extract All" })).toBeEnabled();
   await expect(app.getByRole("button", { name: "Open new…" })).toBeVisible();
   await expect(
     app.getByRole("button", { name: "Choose where to extract" }),

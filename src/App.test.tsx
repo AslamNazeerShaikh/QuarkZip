@@ -154,6 +154,9 @@ vi.mock("@tauri-apps/api/core", () => ({
       }
       return Promise.reject(`unexpected command ${cmd}`);
     }
+    if (cmd === "path_exists") {
+      return Promise.resolve(false);
+    }
     if (cmd === "test_archive") {
       const { path, password } = (args ?? {}) as {
         path: string;
@@ -298,7 +301,10 @@ describe("drag and drop", () => {
       ),
     ).toBeInTheDocument();
     // Tree intact: footer actions + overview populated, no blank canvas.
-    expect(screen.getByRole("button", { name: "Extract" })).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Extract Selected" }),
+    ).toBeVisible();
+    expect(screen.getByRole("button", { name: "Extract All" })).toBeVisible();
     expect(screen.getAllByText("Store")).toHaveLength(2);
     expect(screen.getAllByText("10,021")).toHaveLength(2);
     // Engine extras stay behind More, even at 10k rows.
@@ -350,10 +356,16 @@ describe("drag and drop", () => {
     dragHandlers[dragHandlers.length - 1]?.({
       payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
     });
+    // Open moved to the titlebar (left on Linux, right on macOS).
     expect(
       await screen.findByRole("button", { name: "Open new…" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Extract" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Extract Selected" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Extract All" }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Choose where to extract" }),
     ).toBeInTheDocument();
@@ -362,12 +374,14 @@ describe("drag and drop", () => {
   it("should_show_app_name_and_path_in_centered_window_title", async () => {
     const { container } = render(<App />);
     const header = container.querySelector("header");
-    expect(header?.textContent).toBe("QuarkZip");
+    expect(header?.textContent).toContain("QuarkZip");
     dragHandlers[dragHandlers.length - 1]?.({
       payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
     });
     await screen.findByText("dropped.txt");
-    expect(header?.textContent).toBe('QuarkZip | "Path: /tmp/dropped.zip"');
+    expect(header?.textContent).toContain(
+      'QuarkZip | "Path: /tmp/dropped.zip"',
+    );
   });
 
   it("should_confirm_then_report_extract_failure_in_status", async () => {
@@ -378,11 +392,11 @@ describe("drag and drop", () => {
     });
     // dirname is mocked to /tmp, so Extract enables; the invoke mock
     // rejects unknown commands, exercising the error status path.
-    const extract = await screen.findByRole("button", { name: "Extract" });
+    const extract = await screen.findByRole("button", { name: "Extract All" });
     expect(extract).toBeEnabled();
     await user.click(extract);
     expect(
-      await screen.findByRole("dialog", { name: "Extract files?" }),
+      await screen.findByRole("dialog", { name: "Extract all files?" }),
     ).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Proceed" }));
     expect(
@@ -402,7 +416,9 @@ describe("drag and drop", () => {
     dragHandlers[dragHandlers.length - 1]?.({
       payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
     });
-    await user.click(await screen.findByRole("button", { name: "Extract" }));
+    await user.click(
+      await screen.findByRole("button", { name: "Extract All" }),
+    );
     await user.click(await screen.findByRole("button", { name: "Proceed" }));
     expect(
       await screen.findByRole("dialog", { name: "Extraction complete" }),
@@ -412,13 +428,31 @@ describe("drag and drop", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
+  it("should_offer_extract_all_when_selected_pressed_with_no_selection", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
+    });
+    await user.click(
+      await screen.findByRole("button", { name: "Extract Selected" }),
+    );
+    expect(
+      await screen.findByRole("dialog", { name: "Nothing selected" }),
+    ).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Cancel" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
   it("should_close_confirm_dialog_when_cancel_clicked", async () => {
     const user = userEvent.setup();
     render(<App />);
     dragHandlers[dragHandlers.length - 1]?.({
       payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
     });
-    await user.click(await screen.findByRole("button", { name: "Extract" }));
+    await user.click(
+      await screen.findByRole("button", { name: "Extract All" }),
+    );
     await user.click(await screen.findByRole("button", { name: "Cancel" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
@@ -520,7 +554,9 @@ describe("drag and drop", () => {
       payload: { type: "drop", paths: ["/tmp/locked.zip"] },
     });
     await screen.findByText("locked.txt");
-    await user.click(await screen.findByRole("button", { name: "Extract" }));
+    await user.click(
+      await screen.findByRole("button", { name: "Extract All" }),
+    );
     await user.click(await screen.findByRole("button", { name: "Proceed" }));
     // No failure popup — the password gate opens instead.
     expect(
@@ -550,7 +586,9 @@ describe("drag and drop", () => {
       payload: { type: "drop", paths: ["/tmp/locked.zip"] },
     });
     await screen.findByText("locked.txt");
-    await user.click(await screen.findByRole("button", { name: "Extract" }));
+    await user.click(
+      await screen.findByRole("button", { name: "Extract All" }),
+    );
     await user.click(await screen.findByRole("button", { name: "Proceed" }));
     expect(
       await screen.findByRole("dialog", { name: "Password required" }),

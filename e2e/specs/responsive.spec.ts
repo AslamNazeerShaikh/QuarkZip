@@ -20,17 +20,17 @@ test("wide-screen total count stays hidden", async ({ app }) => {
   await openViaButton(app, "/tmp/narrow.zip");
   await expect(app.getByText("1 / 2")).toBeVisible();
   // Present in the DOM (wide screens show it) but hidden here: scope to
-  // the footer so the overview "Files" count does not match.
+  // the card controls so the overview "Files" count does not match.
   await expect(
-    app.locator("footer").getByText("150", { exact: true }),
+    app.getByTestId("card-controls").getByText("150", { exact: true }),
   ).toBeHidden();
 });
 
 test("dialogs stay usable at window size", async ({ app }) => {
   await addArchive(app, "/tmp/narrow.zip", { count: 5 });
   await openViaButton(app, "/tmp/narrow.zip");
-  await app.getByRole("button", { name: "Extract", exact: true }).click();
-  const dialog = app.getByRole("dialog", { name: "Extract files?" });
+  await app.getByRole("button", { name: "Extract All" }).click();
+  const dialog = app.getByRole("dialog", { name: "Extract all files?" });
   await expect(dialog).toBeVisible();
   const box = await dialog.boundingBox();
   expect(box?.width).toBeLessThanOrEqual(792);

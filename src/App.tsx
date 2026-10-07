@@ -4,7 +4,13 @@ import { dirname } from "@tauri-apps/api/path";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { platform } from "@tauri-apps/plugin-os";
-import { Download, ChevronDown, FolderOpen, Info } from "lucide-react";
+import {
+  Download,
+  ChevronDown,
+  FolderOpen,
+  Info,
+  ListChecks,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ArchiveTable, {
   type SortDir,
@@ -160,7 +166,17 @@ export default function App() {
   const [pageSize, setPageSize] = useState<PageSize>(100);
   const [dest, setDest] = useState("");
   const [extracting, setExtracting] = useState(false);
-  const [confirming, setConfirming] = useState(false);
+  // Extract confirm mode: `selected` (K of N), `all` (whole archive), or
+  // `empty` (Selected pressed with nothing checked — offers Extract All).
+  const [confirming, setConfirming] = useState<
+    "selected" | "all" | "empty" | null
+  >(null);
+  // Remembers the dialog's resolved destination + mode across the password
+  // gate, so the retry extracts exactly what was confirmed.
+  const [pendingExtract, setPendingExtract] = useState<{
+    mode: "selected" | "all" | "empty";
+    finalDest: string;
+  } | null>(null);
   const [selectedPaths, setSelectedPaths] = useState<ReadonlySet<string>>(
     new Set(),
   );
@@ -424,17 +440,31 @@ export default function App() {
     setDoneInfo(null);
   }
 
-  async function extract(passwordOverride: string | null = null) {
-    if (!archive || !dest || extracting) return;
-    const files = [...selectedPaths];
-    // Empty selection extracts everything server-side (no 10M path list
-    // crosses IPC); otherwise only the chosen in-archive paths.
-    const count = files.length === 0 ? totalEntries : files.length;
+  async function extract(
+    mode: "selected" | "all" | "empty",
+    finalDest: string,
+    passwordOverride: string | null = null,
+  ) {
+    if (!archive || !finalDest || extracting) return;
+    // O(1) full extraction: an empty file list extracts everything
+    // server-side, so 10M paths never cross IPC. A page-by-page "select
+    // everything" collapses to the same (identical result, no argv blowup).
+    const selectAll =
+      mode !== "selected" ||
+      selectedPaths.size === 0 ||
+      selectedPaths.size >= totalEntries;
+    const files = selectAll ? [] : [...selectedPaths];
+    const count = selectAll ? totalEntries : files.length;
     const password = passwordOverride ?? archivePassword;
     setExtracting(true);
     try {
-      await invoke("extract_archive", { path: archive, dest, files, password });
-      setDoneInfo({ ok: true, fileCount: count, dest });
+      await invoke("extract_archive", {
+        path: archive,
+        dest: finalDest,
+        files,
+        password,
+      });
+      setDoneInfo({ ok: true, fileCount: count, dest: finalDest });
     } catch (e) {
       const message = typeof e === "string" ? e : String(e);
       if (isPasswordError(message) && passwordOverride === null) {
@@ -442,7 +472,7 @@ export default function App() {
         // instead of dumping raw per-file 7zz errors. Cancel keeps state.
         if (archive) askPassword(archive, "extract");
       } else {
-        setDoneInfo({ ok: false, message, dest });
+        setDoneInfo({ ok: false, message, dest: finalDest });
       }
     } finally {
       setExtracting(false);
@@ -455,7 +485,8 @@ export default function App() {
     closePasswordGate();
     if (passwordMode === "extract") {
       setArchivePassword(password);
-      void extract(password);
+      const req = pendingExtract ?? { mode: "all" as const, finalDest: dest };
+      void extract(req.mode, req.finalDest, password);
     } else if (passwordMode === "test") {
       setArchivePassword(password);
       setTestOpen(true);
@@ -477,7 +508,13 @@ export default function App() {
             : "rounded-[20px] border border-[var(--qz-window-border)] shadow-[var(--qz-shadow-window)]"
         }`}
       >
-        <TitleBar archive={archive} hidden={isMac} maximized={maximized} />
+        <TitleBar
+          archive={archive}
+          hidden={isMac}
+          maximized={maximized}
+          onOpen={() => void openArchive()}
+          openDisabled={loading}
+        />
         {/* 28px rhythm on the content sides/bottom; no top pad. The drop
           frame traces the window edge: the flush mac/maximized window
           (native ~12px corners) vs. the floating Linux card (20px card
@@ -511,6 +548,37 @@ export default function App() {
               onOpen={() => void openArchive()}
               onTest={() => setTestOpen(true)}
               onChecksum={() => setChecksumOpen(true)}
+              middleControls={
+                archive ? (
+                  <Pagination
+                    page={page}
+                    pageCount={totalEntries === 0 ? 0 : pageCount}
+                    pageSize={pageSize}
+                    total={totalEntries}
+                    onPage={changePage}
+                    onPageSize={changePageSize}
+                  />
+                ) : undefined
+              }
+              utilityControls={
+                <>
+                  <ThemeSwitch choice={choice} onChange={setChoice} />
+                  <LanguageSwitch />
+                  {/* Icon-only shell like ThemeSwitch: h-9, 10px radius, 1px
+                    border, card shadow. Hover/tip names it (aria-label + title). */}
+                  <div className="qz-material-bar flex h-9 shrink-0 items-center rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]">
+                    <button
+                      type="button"
+                      onClick={openAbout}
+                      aria-label="About QuarkZip"
+                      title="About QuarkZip"
+                      className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-colors outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+                    >
+                      <Info size={18} aria-hidden />
+                    </button>
+                  </div>
+                </>
+              }
             />
             <div className="flex min-h-0 flex-1 flex-col">
               <ArchiveTable
@@ -526,78 +594,57 @@ export default function App() {
               />
             </div>
           </div>
-          {/* Action bar in normal flow — nothing overlaps. */}
-          <footer className="flex shrink-0 items-center justify-between gap-4 pt-7">
-            <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
-              {archive && (
-                <>
-                  <Button
-                    size="bar"
-                    onClick={() => setConfirming(true)}
-                    disabled={!dest || extracting || totalEntries === 0}
-                    className="shrink-0"
-                  >
-                    <Download size={14} aria-hidden />
-                    {extracting ? t("app.extracting") : t("app.extract")}
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="bar"
-                    onClick={() => void openArchive()}
-                    className="shrink-0"
-                  >
-                    {t("app.openNew")}
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="bar"
-                    onClick={() => void chooseDest()}
-                    title={dest || t("app.chooseDest")}
-                    aria-label={t("app.chooseDest")}
-                    className="min-w-0 flex-1"
-                  >
-                    <span className="flex w-full min-w-0 items-center justify-center gap-2">
-                      <FolderOpen size={14} aria-hidden className="shrink-0" />
-                      <span className="min-w-0 flex-1 truncate text-center">
-                        {dest || t("app.chooseFolder")}
-                      </span>
-                      <ChevronDown
-                        size={14}
-                        aria-hidden
-                        className="shrink-0 text-[var(--qz-faint)]"
-                      />
-                    </span>
-                  </Button>
-                </>
-              )}
-            </div>
-            <div className="flex shrink-0 items-center gap-2">
-              {archive && (
-                <Pagination
-                  page={page}
-                  pageCount={totalEntries === 0 ? 0 : pageCount}
-                  pageSize={pageSize}
-                  total={totalEntries}
-                  onPage={changePage}
-                  onPageSize={changePageSize}
-                />
-              )}
-              <ThemeSwitch choice={choice} onChange={setChoice} />
-              <LanguageSwitch />
-              {/* Icon-only shell like ThemeSwitch: h-9, 10px radius, 1px
-                border, card shadow. Hover/tip names it (aria-label + title). */}
-              <div className="qz-material-bar flex h-9 shrink-0 items-center rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]">
-                <button
-                  type="button"
-                  onClick={openAbout}
-                  aria-label="About QuarkZip"
-                  title="About QuarkZip"
-                  className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-colors outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+          {/* Extract action bar in normal flow — nothing overlaps. Full
+            horizontal width: the destination chooser absorbs every spare
+            pixel and truncates, resizing live with the window. */}
+          <footer className="flex shrink-0 items-center gap-2 pt-7">
+            {archive && (
+              <>
+                <Button
+                  size="bar"
+                  onClick={() =>
+                    setConfirming(
+                      selectedPaths.size === 0 ? "empty" : "selected",
+                    )
+                  }
+                  disabled={!dest || extracting || totalEntries === 0}
+                  className="shrink-0"
                 >
-                  <Info size={18} aria-hidden />
-                </button>
-              </div>
-            </div>
+                  <ListChecks size={14} aria-hidden />
+                  {extracting ? t("app.extracting") : t("app.extractSelected")}
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="bar"
+                  onClick={() => setConfirming("all")}
+                  disabled={!dest || extracting || totalEntries === 0}
+                  className="shrink-0"
+                >
+                  <Download size={14} aria-hidden />
+                  {t("app.extractAll")}
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="bar"
+                  onClick={() => void chooseDest()}
+                  title={dest || t("app.chooseDest")}
+                  aria-label={t("app.chooseDest")}
+                  className="min-w-0 flex-1"
+                >
+                  <span className="flex w-full min-w-0 items-center justify-center gap-2">
+                    <FolderOpen size={14} aria-hidden className="shrink-0" />
+                    <span className="min-w-0 flex-1 truncate text-center">
+                      {dest || t("app.chooseFolder")}
+                    </span>
+                    <ChevronDown
+                      size={14}
+                      aria-hidden
+                      className="shrink-0 text-[var(--qz-faint)]"
+                    />
+                  </span>
+                </Button>
+              </>
+            )}
           </footer>
         </main>
         <LoadDialog
@@ -609,14 +656,18 @@ export default function App() {
           onCancel={cancelLoading}
         />
         <ExtractDialog
-          open={confirming}
+          open={confirming !== null}
+          mode={confirming ?? "all"}
           selected={selectedPaths.size}
           total={totalEntries}
           dest={dest}
-          onCancel={() => setConfirming(false)}
-          onConfirm={() => {
-            setConfirming(false);
-            void extract();
+          archivePath={archive ?? ""}
+          onCancel={() => setConfirming(null)}
+          onConfirm={(finalDest) => {
+            const mode = confirming ?? "all";
+            setConfirming(null);
+            setPendingExtract({ mode, finalDest });
+            void extract(mode, finalDest);
           }}
         />
         {doneInfo && (

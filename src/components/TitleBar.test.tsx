@@ -25,8 +25,11 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 
 describe("TitleBar", () => {
+  const noop = () => {};
   it("should_render_window_controls_when_mounted", () => {
-    const { container } = render(<TitleBar archive={null} maximized={false} />);
+    const { container } = render(
+      <TitleBar archive={null} maximized={false} onOpen={noop} />,
+    );
     const header = container.querySelector("header");
     expect(header).toHaveAttribute("data-tauri-drag-region");
     expect(
@@ -40,26 +43,60 @@ describe("TitleBar", () => {
 
   it("should_show_archive_path_in_centered_title", () => {
     const { container } = render(
-      <TitleBar archive="/tmp/a.zip" maximized={false} />,
+      <TitleBar archive="/tmp/a.zip" maximized={false} onOpen={noop} />,
     );
-    expect(container.querySelector("header")?.textContent).toBe(
+    // Header also carries the Open action now — assert the title part.
+    expect(container.querySelector("header")?.textContent).toContain(
       'QuarkZip | "Path: /tmp/a.zip"',
     );
   });
 
   it("should_show_restore_when_maximized", () => {
-    render(<TitleBar archive={null} maximized />);
+    render(<TitleBar archive={null} maximized onOpen={noop} />);
     expect(screen.getByRole("button", { name: "Restore" })).toBeInTheDocument();
   });
 
   it("should_call_window_actions_when_buttons_clicked", async () => {
     const user = userEvent.setup();
-    render(<TitleBar archive={null} maximized={false} />);
+    render(<TitleBar archive={null} maximized={false} onOpen={noop} />);
     await user.click(screen.getByRole("button", { name: "Minimize" }));
     await user.click(screen.getByRole("button", { name: "Maximize" }));
     await user.click(screen.getByRole("button", { name: "Close" }));
     expect(controls.minimize).toHaveBeenCalled();
     expect(controls.toggleMaximize).toHaveBeenCalled();
     expect(controls.close).toHaveBeenCalled();
+  });
+
+  it("should_offer_open_on_the_left_when_linux", () => {
+    const onOpen = vi.fn();
+    const { container } = render(
+      <TitleBar archive={null} maximized={false} onOpen={onOpen} />,
+    );
+    const header = container.querySelector("header");
+    expect(header).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Open new…" }),
+    ).toBeInTheDocument();
+  });
+
+  it("should_offer_open_on_the_right_when_macos_overlay", async () => {
+    const user = userEvent.setup();
+    const onOpen = vi.fn();
+    render(
+      <TitleBar archive={null} hidden maximized={false} onOpen={onOpen} />,
+    );
+    const open = screen.getByRole("button", { name: "Open new…" });
+    expect(open).toBeInTheDocument();
+    // Title stays centered between the spacer and the button.
+    expect(open.closest("[data-testid='mac-titlebar']")).not.toBeNull();
+    await user.click(open);
+    expect(onOpen).toHaveBeenCalledOnce();
+  });
+
+  it("should_disable_open_while_loading", () => {
+    render(
+      <TitleBar archive={null} maximized={false} onOpen={noop} openDisabled />,
+    );
+    expect(screen.getByRole("button", { name: "Open new…" })).toBeDisabled();
   });
 });

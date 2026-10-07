@@ -68,9 +68,9 @@ test("single selection drives the confirm-dialog count", async ({ app }) => {
   await expect(
     app.getByRole("checkbox", { name: "Select all" }),
   ).toHaveAttribute("aria-checked", "mixed");
-  await app.getByRole("button", { name: "Extract", exact: true }).click();
+  await app.getByRole("button", { name: "Extract Selected" }).click();
   await expect(
-    app.getByRole("dialog", { name: "Extract files?" }),
+    app.getByRole("dialog", { name: "Extract selected files?" }),
   ).toContainText("1 of 5 selected files");
   await app.getByRole("button", { name: "Cancel" }).click();
   // Toggling again clears the selection.
@@ -129,6 +129,6 @@ test("archive with zero entries shows empty state and 0/0", async ({ app }) => {
   await expect(app.getByText("No entries")).toBeVisible();
   await expect(app.getByText("0 / 0")).toBeVisible();
   await expect(
-    app.getByRole("button", { name: "Extract", exact: true }),
+    app.getByRole("button", { name: "Extract Selected" }),
   ).toBeDisabled();
 });

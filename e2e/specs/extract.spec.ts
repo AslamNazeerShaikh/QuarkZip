@@ -16,10 +16,12 @@ async function openPack(app: Parameters<typeof openViaButton>[0]) {
   await expect(app.getByText("file-1.txt")).toBeVisible();
 }
 
-test("confirm shows all-count and dest, cancel dismisses", async ({ app }) => {
+test("extract-all confirm shows total count and dest, cancel dismisses", async ({
+  app,
+}) => {
   await openPack(app);
-  await app.getByRole("button", { name: "Extract", exact: true }).click();
-  const dialog = app.getByRole("dialog", { name: "Extract files?" });
+  await app.getByRole("button", { name: "Extract All" }).click();
+  const dialog = app.getByRole("dialog", { name: "Extract all files?" });
   await expect(dialog).toContainText("All 3 files will be extracted to");
   await expect(dialog).toContainText("/tmp");
   await app.getByRole("button", { name: "Cancel" }).click();
@@ -28,41 +30,66 @@ test("confirm shows all-count and dest, cancel dismisses", async ({ app }) => {
   expect((await calls(app)).extracts).toHaveLength(0);
 });
 
-test("confirm shows selected-of-total count", async ({ app }) => {
+test("extract-selected confirm shows selected-of-total count", async ({
+  app,
+}) => {
   await addArchive(app, PATH, {
     entries: [{ path: "a.txt" }, { path: "b.txt" }, { path: "c.txt" }],
   });
   await openViaButton(app, PATH);
   await app.getByRole("checkbox", { name: "Select a.txt" }).click();
   await app.getByRole("checkbox", { name: "Select c.txt" }).click();
-  await app.getByRole("button", { name: "Extract", exact: true }).click();
+  await app.getByRole("button", { name: "Extract Selected" }).click();
   await expect(
-    app.getByRole("dialog", { name: "Extract files?" }),
+    app.getByRole("dialog", { name: "Extract selected files?" }),
   ).toContainText("2 of 3 selected files");
 });
 
-test("escape and backdrop click cancel the confirm", async ({ app }) => {
+test("extract-selected with nothing checked offers extract-all", async ({
+  app,
+}) => {
   await openPack(app);
-  await app.getByRole("button", { name: "Extract", exact: true }).click();
-  const dialog = app.getByRole("dialog", { name: "Extract files?" });
+  await app.getByRole("button", { name: "Extract Selected" }).click();
+  const dialog = app.getByRole("dialog", { name: "Nothing selected" });
+  await expect(dialog).toContainText("extract all 3 files instead?");
+  await dialog.getByRole("button", { name: "Extract All" }).click();
+  await expect(
+    app.getByRole("dialog", { name: "Extraction complete" }),
+  ).toContainText("3 files extracted to");
+  const seen = await calls(app);
+  expect(seen.extracts).toHaveLength(1);
+  expect(seen.extracts[0].files).toEqual([]);
+});
+
+test("escape cancels the confirm, backdrop never dismisses", async ({
+  app,
+}) => {
+  await openPack(app);
+  await app.getByRole("button", { name: "Extract All" }).click();
+  const dialog = app.getByRole("dialog", { name: "Extract all files?" });
   await expect(dialog).toBeVisible();
   await app.keyboard.press("Escape");
   await expect(dialog).toHaveCount(0);
 
-  await app.getByRole("button", { name: "Extract", exact: true }).click();
+  await app.getByRole("button", { name: "Extract All" }).click();
   await expect(
-    app.getByRole("dialog", { name: "Extract files?" }),
+    app.getByRole("dialog", { name: "Extract all files?" }),
   ).toBeVisible();
-  // Far-left edge is backdrop (dialog card is centered).
+  // Far-left edge is backdrop (dialog card is centered): documented inert,
+  // so the popup survives the click — buttons or Esc only.
   await app.mouse.click(8, 300);
-  await expect(app.getByRole("dialog", { name: "Extract files?" })).toHaveCount(
-    0,
-  );
+  await expect(
+    app.getByRole("dialog", { name: "Extract all files?" }),
+  ).toBeVisible();
+  await app.getByRole("button", { name: "Cancel" }).click();
+  await expect(
+    app.getByRole("dialog", { name: "Extract all files?" }),
+  ).toHaveCount(0);
 });
 
 test("successful extract shows the completion dialog", async ({ app }) => {
   await openPack(app);
-  await app.getByRole("button", { name: "Extract", exact: true }).click();
+  await app.getByRole("button", { name: "Extract All" }).click();
   await app.getByRole("button", { name: "Proceed" }).click();
   const done = app.getByRole("dialog", { name: "Extraction complete" });
   await expect(done).toContainText("3 files extracted to");
@@ -85,7 +112,7 @@ test("extract sends only the selected in-archive paths", async ({ app }) => {
   });
   await openViaButton(app, PATH);
   await app.getByRole("checkbox", { name: "Select b.txt" }).click();
-  await app.getByRole("button", { name: "Extract", exact: true }).click();
+  await app.getByRole("button", { name: "Extract Selected" }).click();
   await app.getByRole("button", { name: "Proceed" }).click();
   await expect(
     app.getByRole("dialog", { name: "Extraction complete" }),
@@ -94,10 +121,41 @@ test("extract sends only the selected in-archive paths", async ({ app }) => {
   expect(seen.extracts[0].files).toEqual(["b.txt"]);
 });
 
+test("subfolder option extracts into dest slash name", async ({ app }) => {
+  await openPack(app);
+  await app.getByRole("button", { name: "Extract All" }).click();
+  const dialog = app.getByRole("dialog", { name: "Extract all files?" });
+  await app
+    .getByRole("checkbox", { name: "Extract into a new subfolder" })
+    .click();
+  // Prefilled from the archive basename (pack.zip → pack).
+  await expect(app.getByLabel("Subfolder name")).toHaveValue("pack");
+  await expect(dialog).toContainText("/tmp/pack");
+  await app.getByRole("button", { name: "Proceed" }).click();
+  await expect(
+    app.getByRole("dialog", { name: "Extraction complete" }),
+  ).toContainText("/tmp/pack");
+  const seen = await calls(app);
+  expect(seen.extracts[0].dest).toBe("/tmp/pack");
+});
+
+test("colliding subfolder blocks proceed", async ({ app }) => {
+  await openPack(app);
+  await app.evaluate(() => {
+    window.__e2e.state.existingPaths = ["/tmp/pack"];
+  });
+  await app.getByRole("button", { name: "Extract All" }).click();
+  await app
+    .getByRole("checkbox", { name: "Extract into a new subfolder" })
+    .click();
+  await expect(app.getByText("already exists here")).toBeVisible();
+  await expect(app.getByRole("button", { name: "Proceed" })).toBeDisabled();
+});
+
 test("failed extract shows the failure dialog", async ({ app }) => {
   await openPack(app);
   await failNextExtract(app, "disk full (e2e)");
-  await app.getByRole("button", { name: "Extract", exact: true }).click();
+  await app.getByRole("button", { name: "Extract All" }).click();
   await app.getByRole("button", { name: "Proceed" }).click();
   const failed = app.getByRole("dialog", { name: "Extraction failed" });
   await expect(failed).toContainText("disk full (e2e)");
@@ -113,7 +171,7 @@ test("destination picker updates where files go", async ({ app }) => {
   await expect(
     app.getByRole("button", { name: "Choose where to extract" }),
   ).toContainText("/home/user/out");
-  await app.getByRole("button", { name: "Extract", exact: true }).click();
+  await app.getByRole("button", { name: "Extract All" }).click();
   await app.getByRole("button", { name: "Proceed" }).click();
   await expect(
     app.getByRole("dialog", { name: "Extraction complete" }),
@@ -131,10 +189,11 @@ test("cancelled destination picker keeps the old dest", async ({ app }) => {
   ).toContainText("/tmp");
 });
 
-test("extract is disabled for an empty archive", async ({ app }) => {
+test("extract buttons are disabled for an empty archive", async ({ app }) => {
   await addArchive(app, "/tmp/empty.zip", { count: 0 });
   await openViaButton(app, "/tmp/empty.zip");
   await expect(
-    app.getByRole("button", { name: "Extract", exact: true }),
+    app.getByRole("button", { name: "Extract Selected" }),
   ).toBeDisabled();
+  await expect(app.getByRole("button", { name: "Extract All" })).toBeDisabled();
 });

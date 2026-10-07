@@ -9,7 +9,7 @@ test("readout, total, and nav buttons", async ({ app }) => {
   await openBig(app);
   await expect(app.getByText("1 / 3")).toBeVisible();
   await expect(
-    app.locator("footer").getByText("250", { exact: true }),
+    app.getByTestId("card-controls").getByText("250", { exact: true }),
   ).toBeVisible();
   await expect(
     app.getByRole("button", { name: "Previous page" }),

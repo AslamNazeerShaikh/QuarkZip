@@ -1,17 +1,24 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
-import ExtractDialog from "./ExtractDialog";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import ExtractDialog, { type ExtractMode } from "./ExtractDialog";
 
-function setup(selected: number, total = 10021) {
+const invokeMock = vi.hoisted(() => vi.fn());
+vi.mock("@tauri-apps/api/core", () => ({
+  invoke: invokeMock,
+}));
+
+function setup(mode: ExtractMode = "selected", selected = 12, total = 10021) {
   const onCancel = vi.fn();
   const onConfirm = vi.fn();
   render(
     <ExtractDialog
       open
+      mode={mode}
       selected={selected}
       total={total}
       dest="/tmp/out"
+      archivePath="/tmp/photo.zip"
       onCancel={onCancel}
       onConfirm={onConfirm}
     />,
@@ -19,45 +26,126 @@ function setup(selected: number, total = 10021) {
   return { onCancel, onConfirm };
 }
 
+beforeEach(() => {
+  invokeMock.mockReset();
+  invokeMock.mockResolvedValue(false);
+});
+
 describe("ExtractDialog", () => {
   it("should_show_selected_of_total_when_selection_given", () => {
-    setup(12);
+    setup("selected");
     expect(
-      screen.getByRole("dialog", { name: "Extract files?" }),
+      screen.getByRole("dialog", { name: "Extract selected files?" }),
     ).toBeInTheDocument();
     // Counts share one element with the static copy: match the whole line.
     expect(screen.getByText(/12 of 10,021 selected files/)).toBeInTheDocument();
     expect(screen.getByText("/tmp/out")).toBeInTheDocument();
   });
 
-  it("should_show_all_files_when_nothing_selected", () => {
-    setup(0, 6);
+  it("should_show_all_files_when_mode_all", () => {
+    setup("all", 0, 6);
+    expect(
+      screen.getByRole("dialog", { name: "Extract all files?" }),
+    ).toBeInTheDocument();
     expect(screen.getByText(/All 6 files/)).toBeInTheDocument();
+  });
+
+  it("should_offer_extract_all_when_nothing_selected", () => {
+    setup("empty", 0, 6);
+    expect(
+      screen.getByRole("dialog", { name: "Nothing selected" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/extract all 6 files instead/)).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Extract All" }),
+    ).toBeInTheDocument();
   });
 
   it("should_confirm_or_cancel_when_buttons_clicked", async () => {
     const user = userEvent.setup();
-    const { onCancel, onConfirm } = setup(3);
+    const { onCancel, onConfirm } = setup("selected", 3);
     await user.click(screen.getByRole("button", { name: "Proceed" }));
     expect(onConfirm).toHaveBeenCalledOnce();
+    expect(onConfirm).toHaveBeenCalledWith("/tmp/out");
     await user.click(screen.getByRole("button", { name: "Cancel" }));
     expect(onCancel).toHaveBeenCalledOnce();
   });
 
   it("should_cancel_when_escape_pressed", async () => {
     const user = userEvent.setup();
-    const { onCancel } = setup(3);
+    const { onCancel } = setup("selected", 3);
     await user.keyboard("{Escape}");
     expect(onCancel).toHaveBeenCalledOnce();
+  });
+
+  it("should_prefill_the_archive_basename_when_folder_checked", async () => {
+    const user = userEvent.setup();
+    setup("all", 0, 6);
+    await user.click(
+      screen.getByRole("checkbox", { name: "Extract into a new subfolder" }),
+    );
+    expect(screen.getByLabelText("Subfolder name")).toHaveValue("photo");
+  });
+
+  it("should_block_proceed_on_colliding_names", async () => {
+    const user = userEvent.setup();
+    invokeMock.mockResolvedValue(true);
+    setup("all", 0, 6);
+    await user.click(
+      screen.getByRole("checkbox", { name: "Extract into a new subfolder" }),
+    );
+    await waitFor(() =>
+      expect(screen.getByText(/already exists here/)).toBeInTheDocument(),
+    );
+    expect(screen.getByRole("button", { name: "Proceed" })).toBeDisabled();
+  });
+
+  it("should_confirm_into_the_subfolder_when_name_is_free", async () => {
+    const user = userEvent.setup();
+    invokeMock.mockResolvedValue(false);
+    const { onConfirm } = setup("selected", 3);
+    await user.click(
+      screen.getByRole("checkbox", { name: "Extract into a new subfolder" }),
+    );
+    const field = screen.getByLabelText("Subfolder name");
+    await user.clear(field);
+    await user.type(field, "mine");
+    await waitFor(() =>
+      expect(invokeMock).toHaveBeenCalledWith("path_exists", {
+        path: "/tmp/out/mine",
+      }),
+    );
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Proceed" })).toBeEnabled(),
+    );
+    expect(screen.getByText("/tmp/out/mine")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Proceed" }));
+    expect(onConfirm).toHaveBeenCalledWith("/tmp/out/mine");
+  });
+
+  it("should_reject_reserved_names_without_probing", async () => {
+    const user = userEvent.setup();
+    const { onConfirm } = setup("all", 0, 6);
+    await user.click(
+      screen.getByRole("checkbox", { name: "Extract into a new subfolder" }),
+    );
+    const field = screen.getByLabelText("Subfolder name");
+    await user.clear(field);
+    await user.type(field, "..");
+    expect(screen.getByText(/reserved names/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Proceed" })).toBeDisabled();
+    expect(onConfirm).not.toHaveBeenCalled();
   });
 
   it("should_render_nothing_when_closed", () => {
     render(
       <ExtractDialog
         open={false}
+        mode="all"
         selected={0}
         total={0}
         dest=""
+        archivePath=""
         onCancel={() => {}}
         onConfirm={() => {}}
       />,

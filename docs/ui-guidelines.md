@@ -114,19 +114,35 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   (h-9 shell, 28px icon button, 8px inner radius — like collapsed
   `ThemeSwitch`); hover/title and aria-labels name them.
 - Action bar (`App.tsx` footer, in normal flow below the table — nothing
-  floats or overlaps), left to right: accent `Extract` CTA (opens the
-  confirm dialog), `Open new…`,
-  destination chooser (grows full width to the pagination control: folder
-  icon + centered path + chevron indicator, native directory picker,
-  defaults to the archive's own folder) + inline `role="status"` result;
-  right = `Pagination` + shell-styled `About` (opens the About dialog) +
-  `LanguageSwitch` + `ThemeSwitch`. Confirm runs `extract_archive`
-  (`7zz x -o<dest> [files...] -y`) with the checked rows, or everything
-  when nothing is checked.
+  floats or overlaps): `Extract Selected` (primary CTA with `ListChecks`
+  icon; disabled with no dest/while extracting/on empty archives — with
+  nothing checked it opens the Nothing-selected confirm instead),
+  `Extract All` (secondary shell with `Download` icon, same disabled
+  rules), then the destination chooser (grows full width to the window
+  edge: folder icon + centered path + chevron indicator, native directory
+  picker, defaults to the archive's own folder, truncates live on resize).
+  `Open new…` lives in the titlebar, not here: macOS overlay strip right,
+  Linux custom bar left (title stays centered via the 1fr-auto-1fr grid on
+  both; the button opts out of the native drag with `stopDrag`, disabled
+  while a listing is in flight).
 - `ExtractDialog`: centered modal (dim backdrop, 16px radius, 180ms pop,
-  Esc cancel, reduced-motion safe) — big centered icon, the
-  destination, `K of N selected` (or `All N`) file count, orange Cancel +
-  blue Proceed (`Button` warning/accent variants, AA pairs in color-system).
+  Esc cancel, reduced-motion safe) in three modes — `selected`
+  (`ListChecks` tile, `K of N selected files`), `all` (`Download` tile,
+  `All N files`), `empty` (warning tile, `No files are selected — extract
+all N instead?` with an `Extract All` confirm). Big centered icon, the
+  (live final) destination, orange Cancel + blue Proceed/Extract All
+  (`Button` warning/accent variants, AA pairs in color-system).
+  Every mode carries the subfolder section: an unchecked
+  `Extract into a new subfolder` checkbox revealing a name field
+  prefilled with the archive basename (`photo.zip` → `photo`, `data.tar.gz`
+  → `data`), editable, validated for APFS (UTF-8 only incl. lone-surrogate
+  rejection, ≤255 bytes, no `/ :` or controls, not `.`/`..`) with inline
+  errors plus a debounced backend uniqueness probe (`path_exists` on
+  `dest/<name>` — Proceed stays disabled while checking, taken, or
+  invalid). Confirm runs `extract_archive` (`7zz x -o<dest> [files...] -y`)
+  with the checked rows, or everything when the mode is `all`/`empty`
+  (a page-by-page select-everything collapses to the empty list too, so
+  10M paths never cross IPC).
   The backdrop never dismisses — buttons or Esc only. Any dialog rendered
   inside a material (`backdrop-filter`) ancestor must portal to
   `document.body`, or `fixed inset-0` centers on the ancestor instead of
@@ -178,10 +194,14 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   metadata for advanced users while the table shrinks; collapsing hides
   the toggle, and re-expanding shows it without reshowing the extras.
   Below the details (always, once an archive is open —
-  even when the summary is unavailable) sits the integrity action row,
-  right-aligned: equal-width (`w-32`) secondary `sm` `Test`
-  (`test_archive`) and `Checksum` (`checksum_file`) buttons opening their
-  dialogs.
+  even when the summary is unavailable) sits the integrity action row:
+  `More`/`Less` left, the `Pagination` + `ThemeSwitch` + `LanguageSwitch` +
+  `About` cluster middle (same h-9 shells, wrapping under on narrow
+  windows), and equal-width (`w-32`) secondary `sm` `Test`
+  (`test_archive`) and `Checksum` (`checksum_file`) buttons plus the
+  collapse chevron right, opening their dialogs. With no archive the card
+  shows the centered empty state with the Theme/Language/About utilities
+  in an extreme-left row of their own.
   The card collapses via the chevron toggle beside `Checksum` (same
   secondary `sm` shell, square icon-only, arrow rotates with the state):
   collapsed it shrink-wraps to the action row (`flex-none`) and the table

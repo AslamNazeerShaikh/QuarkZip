@@ -22,6 +22,8 @@ both unit-tested without a binary (`npm run test:rust`).
 | `test_archive`        | `path`, `password?`, `onProgress: Channel<u32>`               | `"Everything is Ok"` (`7zz t -bsp1`, percent streamed)                                                                  |
 | `checksum_file`       | `path`, `algorithm`, `onProgress: Channel<u32>`               | lowercase hex digest (MD5 / SHA-1 / SHA-256 / SHA-512)                                                                  |
 | `cancel_checksum`     | —                                                             | aborts the in-flight `checksum_file`                                                                                    |
+| `path_exists`         | `path`                                                        | `bool` — one `metadata` call; backs the extract subfolder uniqueness check (`dest/<name>` must be free)                 |
+| `cancel_checksum`     | —                                                             | aborts the in-flight `checksum_file`                                                                                    |
 | `drag_window`         | —                                                             | starts a native drag (custom title strip)                                                                               |
 | `greet`               | `name`                                                        | scaffold sample, unused by the UI                                                                                       |
 | `set_liquid_glass`    | `enabled: bool`                                               | toggles the native glass window background (macOS; no-op elsewhere)                                                     |
@@ -82,3 +84,9 @@ process` surface as errors. Long stderr/stdout is tail-truncated
    opens the password gate instead of erroring; the verified password is
    remembered per open archive so Test/Extract keep working on encrypted
    content. Content-scope vs header-scope behavior: `docs/passwords.md`.
+8. **Extract subfolders validate twice.** `archive::validate_folder_name`
+   (non-empty, ≤255 UTF-8 bytes, not `.`/`..`, no `/`, NUL, `:` or C0
+   controls — mirrored in `src/lib/extractFolder.ts`, which additionally
+   rejects lone surrogates impossible in Rust `&str`) gates the dialog;
+   `path_exists` probes `dest/<name>` uniqueness (debounced, stale wins
+   lose). 7zz creates the final folder itself (`-o<dest>/<name>`).

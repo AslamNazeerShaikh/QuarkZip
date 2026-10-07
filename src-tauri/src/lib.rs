@@ -511,6 +511,14 @@ fn cancel_checksum() {
     CHECKSUM_CANCEL.store(true, Ordering::SeqCst);
 }
 
+/// Reports whether a filesystem path already exists (one `metadata` call).
+/// Backs the extract dialog's subfolder uniqueness check: `dest/<name>`
+/// must not exist, so extraction never merges into a colliding folder.
+#[tauri::command]
+fn path_exists(path: String) -> bool {
+    std::fs::metadata(&path).is_ok()
+}
+
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
@@ -632,6 +640,7 @@ pub fn run() {
             test_archive,
             checksum_file,
             cancel_checksum,
+            path_exists,
             set_liquid_glass
         ])
         .run(tauri::generate_context!())

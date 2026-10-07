@@ -169,4 +169,38 @@ describe("ArchiveOverview", () => {
     expect(screen.getByText("—")).toBeInTheDocument();
     expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
   });
+
+  it("should_ride_controls_in_the_action_row_when_open", () => {
+    render(
+      <ArchiveOverview
+        archive="/tmp/qz-sample.7z"
+        info={INFO}
+        loading={false}
+        onOpen={() => {}}
+        middleControls={<button>Pager</button>}
+        utilityControls={<button>Theme</button>}
+      />,
+    );
+    const row = screen.getByTestId("card-controls");
+    expect(row).toHaveTextContent("Pager");
+    expect(row).toHaveTextContent("Theme");
+    // Test/Checksum keep the right end of the same row.
+    expect(screen.getByRole("button", { name: "Test" })).toBeInTheDocument();
+  });
+
+  it("should_pin_utilities_left_when_no_archive", () => {
+    render(
+      <ArchiveOverview
+        archive={null}
+        info={null}
+        loading={false}
+        onOpen={() => {}}
+        utilityControls={<button>Theme</button>}
+      />,
+    );
+    expect(screen.getByRole("button", { name: "Theme" })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Test" }),
+    ).not.toBeInTheDocument();
+  });
 });

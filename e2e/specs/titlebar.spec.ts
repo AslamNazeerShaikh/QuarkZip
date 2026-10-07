@@ -38,10 +38,19 @@ test("opening an archive records the window title", async ({ app }) => {
   expect(seen.setTitle.at(-1)).toBe('QuarkZip | "Path: /tmp/titled.zip"');
 });
 
-test("macOS platform hides the custom titlebar", async ({ page }) => {
+test("open lives in the titlebar, left on linux", async ({ app }) => {
+  const header = app.locator("header");
+  await expect(header.getByRole("button", { name: "Open new…" })).toBeVisible();
+});
+
+test("macOS overlay keeps open on the right with a centered title", async ({
+  page,
+}) => {
   await page.goto("/?platform=macos");
   await page.evaluate(() => window.__e2e.reset());
+  // No custom window controls there — the overlay strip owns the bar.
   await expect(page.locator("header")).toHaveCount(0);
-  // The app itself still works without the bar.
-  await expect(page.getByText("No archive open")).toBeVisible();
+  const bar = page.getByTestId("mac-titlebar");
+  await expect(bar.getByRole("button", { name: "Open new…" })).toBeVisible();
+  await expect(bar).toContainText("QuarkZip");
 });

@@ -68,6 +68,8 @@ export default function ArchiveOverview({
   onOpen,
   onTest = () => {},
   onChecksum = () => {},
+  middleControls,
+  utilityControls,
 }: {
   archive: string | null;
   info: ArchiveInfo | null;
@@ -75,6 +77,12 @@ export default function ArchiveOverview({
   onOpen: () => void;
   onTest?: () => void;
   onChecksum?: () => void;
+  /// Pagination cluster: rendered only when open, ahead of the utilities
+  /// in the action-row middle.
+  middleControls?: ReactNode;
+  /// Theme / Language / About cluster: left-aligned row of its own when
+  /// empty, middle of the action row (after pagination) when open.
+  utilityControls?: ReactNode;
 }) {
   const { t } = useLanguage();
   // Three card states. Startup (no archive): flex-1, sharing the column
@@ -142,27 +150,40 @@ export default function ArchiveOverview({
       }
     >
       {!archive ? (
-        <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3 px-6 py-8 text-center">
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--qz-primary-soft)]">
-            <Archive
-              size={20}
-              aria-hidden
-              className="text-[var(--qz-primary)]"
-            />
-          </span>
-          <div>
-            <CardTitle>{t("overview.emptyTitle")}</CardTitle>
-            <CardDescription className="mt-1">
-              {t("overview.emptyDesc")}
-            </CardDescription>
+        <div className="flex min-h-0 flex-1 flex-col">
+          <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3 px-6 py-8 text-center">
+            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--qz-primary-soft)]">
+              <Archive
+                size={20}
+                aria-hidden
+                className="text-[var(--qz-primary)]"
+              />
+            </span>
+            <div>
+              <CardTitle>{t("overview.emptyTitle")}</CardTitle>
+              <CardDescription className="mt-1">
+                {t("overview.emptyDesc")}
+              </CardDescription>
+            </div>
+            <Button
+              onClick={onOpen}
+              disabled={loading}
+              className="mt-1 min-w-40"
+            >
+              <PackageOpen size={16} aria-hidden />
+              {loading ? t("overview.reading") : t("overview.openCta")}
+            </Button>
+            <p className="text-xs text-[var(--qz-faint)]">
+              {t("overview.powered")}
+            </p>
           </div>
-          <Button onClick={onOpen} disabled={loading} className="mt-1 min-w-40">
-            <PackageOpen size={16} aria-hidden />
-            {loading ? t("overview.reading") : t("overview.openCta")}
-          </Button>
-          <p className="text-xs text-[var(--qz-faint)]">
-            {t("overview.powered")}
-          </p>
+          {/* Utilities live here until an archive opens: extreme left,
+            same card padding as the open action row. */}
+          {utilityControls && (
+            <div className="flex flex-wrap items-center justify-start gap-2 px-5 pb-5">
+              {utilityControls}
+            </div>
+          )}
         </div>
       ) : (
         <div className="flex min-h-0 flex-1 flex-col">
@@ -310,8 +331,10 @@ export default function ArchiveOverview({
           summary — pinned to the card bottom, available collapsed,
           loading, or when details are unavailable. The More toggle sits
           left in the same row (same shell as Test/Checksum); it hides
-          with the collapsed card and never auto-reopens the extras. */}
-          <div className="flex items-center justify-between gap-2 px-5 pt-4 pb-5">
+          with the collapsed card and never auto-reopens the extras.
+          Pagination + utilities ride the middle (between More and Test),
+          wrapping under on narrow windows. */}
+          <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-2 px-5 pt-4 pb-5">
             <div>
               {!collapsed && (
                 <Button
@@ -329,6 +352,15 @@ export default function ArchiveOverview({
                 </Button>
               )}
             </div>
+            {(middleControls || utilityControls) && (
+              <div
+                data-testid="card-controls"
+                className="flex min-w-0 flex-wrap items-center gap-2"
+              >
+                {middleControls}
+                {utilityControls}
+              </div>
+            )}
             {actionButtons}
           </div>
         </div>
