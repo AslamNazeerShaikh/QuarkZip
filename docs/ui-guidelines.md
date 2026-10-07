@@ -112,17 +112,21 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   8px inner radii. Segmented behavior (sliding indicator) preserved.
   The page-size menu hugs its trigger (`left-0`, `w-max min-w-full`, 8px
   gap) with option text insets matching the trigger (`px-2`), so list
-  edges and text align with the control below. A jump-to-page field
-  (`spinbutton`, same h-7 inner shell) sits past Next: only clean
+  edges and text align with the control below. The readout and the
+  jump field are one combined control (`[<input>] / <total>`, `spinbutton`,
+  same h-7 inner shell, input sized to the page count): only clean
   in-range numbers jump silently on Enter; anything else (`66abc`,
   out-of-range, non-numeric, empty) opens
   an Invalid-page confirm (warning icon, valid range shown, Jump lands on
   the read-off page / Cancel reverts to the open page). Escape/blur
-  reverts, hidden on single pages. While the theme segment is out,
+  reverts; single pages show a static `1 / 1` (empty: `0 / 0`). The
+  page-size listbox portals to `document.body`, viewport-anchored above
+  its shell — card `overflow-hidden` would otherwise clip it on the short
+  collapsed card. While the theme segment is out,
   pagination shrinks to one icon button (naming the current page,
   re-expanding on click) and returns to full width when it minimizes —
-  the card row never overflows at 800px. Edge-anchored menus open
-  inward instead (`LanguageSwitch` uses `left-0` inside the card row) so floating lists never touch the sidewalls. The footer `About` and
+  the card row never overflows at 800px. `LanguageSwitch` portals the
+  same way (its menu is taller than the collapsed card) so floating lists never clip or touch the sidewalls. The footer `About` and
   `LanguageSwitch` controls reuse the same shell as icon-only buttons
   (h-9 shell, 28px icon button, 8px inner radius — like collapsed
   `ThemeSwitch`); hover/title and aria-labels name them.

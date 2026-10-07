@@ -1,4 +1,10 @@
-import { addArchive, expect, openViaButton, test } from "../fixtures";
+import {
+  addArchive,
+  expect,
+  expectPage,
+  openViaButton,
+  test,
+} from "../fixtures";
 
 async function openBig(app: Parameters<typeof openViaButton>[0]) {
   await addArchive(app, "/tmp/big.zip", { count: 250 });
@@ -7,7 +13,7 @@ async function openBig(app: Parameters<typeof openViaButton>[0]) {
 
 test("readout, total, and nav buttons", async ({ app }) => {
   await openBig(app);
-  await expect(app.getByText("1 / 3")).toBeVisible();
+  await expectPage(app, 1, 3);
   await expect(
     app.getByTestId("card-controls").getByText("250", { exact: true }),
   ).toBeVisible();
@@ -17,7 +23,7 @@ test("readout, total, and nav buttons", async ({ app }) => {
   await expect(app.getByRole("button", { name: "Next page" })).toBeEnabled();
 
   await app.getByRole("button", { name: "Next page" }).click();
-  await expect(app.getByText("2 / 3")).toBeVisible();
+  await expectPage(app, 2, 3);
   await expect(app.getByText("file-101.txt", { exact: true })).toBeVisible();
   await expect(app.getByText("file-1.txt", { exact: true })).not.toBeVisible();
   await expect(
@@ -25,11 +31,11 @@ test("readout, total, and nav buttons", async ({ app }) => {
   ).toBeEnabled();
 
   await app.getByRole("button", { name: "Next page" }).click();
-  await expect(app.getByText("3 / 3")).toBeVisible();
+  await expectPage(app, 3, 3);
   await expect(app.getByRole("button", { name: "Next page" })).toBeDisabled();
 
   await app.getByRole("button", { name: "Previous page" }).click();
-  await expect(app.getByText("2 / 3")).toBeVisible();
+  await expectPage(app, 2, 3);
 });
 
 test("page-size menu lists every option and applies it", async ({ app }) => {
@@ -62,7 +68,7 @@ test("choosing All shows a single page", async ({ app }) => {
 test("size change resets to the first page", async ({ app }) => {
   await openBig(app);
   await app.getByRole("button", { name: "Next page" }).click();
-  await expect(app.getByText("2 / 3")).toBeVisible();
+  await expectPage(app, 2, 3);
   await app.getByRole("button", { name: "Rows per page" }).click();
   await app
     .getByRole("listbox", { name: "Rows per page" })
@@ -123,20 +129,20 @@ test("jump field navigates directly and confirms weird input", async ({
   await expect(jump).toHaveValue("1");
   await jump.fill("3");
   await jump.press("Enter");
-  await expect(app.getByText("3 / 3")).toBeVisible();
+  await expectPage(app, 3, 3);
   await expect(app.getByText("file-201.txt", { exact: true })).toBeVisible();
   // Trailing garbage confirms first, then Jump lands on the read-off page.
   await jump.fill("2xyz");
   await jump.press("Enter");
   await expect(app.getByRole("dialog", { name: "Invalid page" })).toBeVisible();
   await app.getByRole("button", { name: "Jump" }).click();
-  await expect(app.getByText("2 / 3")).toBeVisible();
+  await expectPage(app, 2, 3);
   // Out of range no longer jumps silently: confirm popup first.
   await jump.fill("99");
   await jump.press("Enter");
   await expect(app.getByRole("dialog", { name: "Invalid page" })).toBeVisible();
   await app.getByRole("button", { name: "Jump" }).click();
-  await expect(app.getByText("3 / 3")).toBeVisible();
+  await expectPage(app, 3, 3);
   // Cancel reverts to the open page without navigating.
   await jump.fill("1");
   await jump.press("Escape");
@@ -146,5 +152,5 @@ test("jump field navigates directly and confirms weird input", async ({
   await expect(app.getByRole("dialog", { name: "Invalid page" })).toBeVisible();
   await app.getByRole("button", { name: "Cancel" }).click();
   await expect(jump).toHaveValue("3");
-  await expect(app.getByText("3 / 3")).toBeVisible();
+  await expectPage(app, 3, 3);
 });

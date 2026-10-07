@@ -20,9 +20,53 @@ function setup(page = 0) {
 }
 
 describe("Pagination", () => {
+  it("should_size_the_input_to_the_page_count", () => {
+    const { rerender } = render(
+      <Pagination
+        page={0}
+        pageCount={3}
+        pageSize={100}
+        total={250}
+        onPage={() => {}}
+        onPageSize={() => {}}
+      />,
+    );
+    // 1 digit → floor width.
+    expect(screen.getByRole("spinbutton", { name: "Go to page" })).toHaveStyle({
+      width: "40px",
+    });
+    rerender(
+      <Pagination
+        page={100008}
+        pageCount={100011}
+        pageSize={100}
+        total={10001002}
+        onPage={() => {}}
+        onPageSize={() => {}}
+      />,
+    );
+    // 6 digits → 6*8+16.
+    expect(screen.getByRole("spinbutton", { name: "Go to page" })).toHaveStyle({
+      width: "64px",
+    });
+  });
+
+  it("should_portal_the_size_menu_past_card_overflow", async () => {
+    const user = userEvent.setup();
+    setup();
+    await user.click(screen.getByRole("button", { name: "Rows per page" }));
+    const menu = screen.getByRole("listbox", { name: "Rows per page" });
+    // Viewport-anchored at <body>, never inside the clipping card.
+    expect(menu.parentElement).toBe(document.body);
+  });
+
   it("should_show_page_readout_and_total", () => {
     setup();
-    expect(screen.getByText("1 / 3")).toBeInTheDocument();
+    // Combined jump+readout: editable current page plus the total.
+    expect(screen.getByRole("spinbutton", { name: "Go to page" })).toHaveValue(
+      "1",
+    );
+    expect(screen.getByText("/ 3")).toBeInTheDocument();
     expect(screen.getByText("250")).toBeInTheDocument();
   });
 
@@ -42,7 +86,9 @@ describe("Pagination", () => {
       />,
     );
     // Full shell gone; icon names the page.
-    expect(screen.queryByText("2 / 3")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("spinbutton", { name: "Go to page" }),
+    ).not.toBeInTheDocument();
     const icon = screen.getByRole("button", {
       name: "Show pagination — 2 / 3",
     });
@@ -59,7 +105,10 @@ describe("Pagination", () => {
         onPageSize={() => {}}
       />,
     );
-    expect(screen.getByText("2 / 3")).toBeInTheDocument();
+    expect(screen.getByRole("spinbutton", { name: "Go to page" })).toHaveValue(
+      "2",
+    );
+    expect(screen.getByText("/ 3")).toBeInTheDocument();
   });
 
   it("should_disable_prev_on_first_page", () => {

@@ -10,6 +10,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { formatCount } from "../lib/format";
 import { useLanguage } from "../i18n/LanguageContext";
+import { menuAbove, usePortaledMenu } from "./usePortaledMenu";
 import { Button } from "./ui/button";
 
 export const PAGE_SIZES = [100, 1000, 5000, 10000] as const;
@@ -26,9 +27,12 @@ function formatSize(size: PageSize, allLabel: string): string {
   return size === "all" ? allLabel : formatCount(size);
 }
 
-/// Jump-to-page field: type a number, Enter jumps (clamped 1..pageCount),
-/// Escape/blur reverts without navigating. Hidden on single pages. Same
-/// h-7 inner shell as the size trigger so the row stays one height.
+/// Jump-to-page field merged with the readout: `[<input>] / <total>`.
+/// Type a number, Enter jumps; only clean in-range numbers jump silently
+/// (see below). The input sizes to the page count so it never wastes
+/// shell width. Single pages show a static `1 / 1` (nothing to jump to),
+/// empty listings `0 / 0`. Same h-7 inner shell as the size trigger so
+/// the row stays one height.
 ///
 /// Out-of-range or non-numeric input does NOT jump directly: a confirm
 /// popup names the valid range and offers Jump (same clamp logic) or
@@ -62,7 +66,9 @@ function PageJump({
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [pending]);
-  if (pageCount <= 1) return null;
+  // Width fits the page count (8px per tabular digit + padding, 40px
+  // floor) — the shell never pays for digits it doesn't have.
+  const inputWidth = Math.max(40, String(pageCount).length * 8 + 16);
   function revert() {
     setText(String(page + 1));
   }
@@ -100,28 +106,34 @@ function PageJump({
   }
   return (
     <>
-      <input
-        type="text"
-        inputMode="numeric"
-        role="spinbutton"
-        aria-label={t("pagination.goToPage")}
-        aria-valuemin={1}
-        aria-valuemax={pageCount}
-        aria-valuenow={page + 1}
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            commit();
-          } else if (e.key === "Escape") {
-            revert();
-            e.currentTarget.blur();
-          }
-        }}
-        onBlur={revert}
-        className="h-7 w-14 rounded-[7px] bg-transparent px-1 text-center text-[var(--qz-muted)] tabular-nums outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
-      />
+      <span className="flex items-center text-[var(--qz-muted)] tabular-nums">
+        <input
+          type="text"
+          inputMode="numeric"
+          role="spinbutton"
+          aria-label={t("pagination.goToPage")}
+          aria-valuemin={1}
+          aria-valuemax={pageCount}
+          aria-valuenow={page + 1}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              commit();
+            } else if (e.key === "Escape") {
+              revert();
+              e.currentTarget.blur();
+            }
+          }}
+          onBlur={revert}
+          style={{ width: inputWidth }}
+          className="h-7 rounded-[7px] bg-transparent px-1 text-center text-[var(--qz-muted)] tabular-nums outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+        />
+        <span className="pr-1 whitespace-nowrap">
+          / {formatCount(pageCount)}
+        </span>
+      </span>
       {pending &&
         // Portaled to <body>: every material ancestor (`backdrop-filter`)
         // traps `fixed` positioning, which would squeeze this window-modal
@@ -192,14 +204,22 @@ function PageSizeMenu({
   const [active, setActive] = useState(() => options.indexOf(pageSize));
   const rootRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const { menuRef, rect } = usePortaledMenu(open, rootRef);
   const { t } = useLanguage();
   const allLabel = t("pagination.all");
 
   // Closes on outside click or Escape — same pattern as ThemeSwitch.
+  // The portal lives outside the trigger: menu presses must not read as
+  // "outside" (they would unmount the menu before click fires).
   useEffect(() => {
     if (!open) return;
     const onPointerDown = (e: PointerEvent) => {
-      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+      const target = e.target as Node;
+      if (
+        !rootRef.current?.contains(target) &&
+        !menuRef.current?.contains(target)
+      )
+        setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -264,37 +284,65 @@ function PageSizeMenu({
           className={`transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
-      {open && (
-        <div
-          role="listbox"
-          aria-label={t("pagination.rowsPerPage")}
-          onKeyDown={onListKey}
-          className="qz-material-bar animate-qz-pop absolute bottom-full left-0 mb-2 w-max min-w-full rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]"
-        >
-          {options.map((size, i) => {
-            const selected = size === pageSize;
-            return (
-              <button
-                key={size}
-                type="button"
-                role="option"
-                aria-selected={selected}
-                onClick={() => choose(size)}
-                onMouseEnter={() => setActive(i)}
-                className={`flex h-8 w-full items-center justify-between gap-4 rounded-[7px] px-2 tabular-nums transition-colors ${
-                  i === active
-                    ? "bg-[var(--qz-primary-soft)] text-[var(--qz-text)]"
-                    : "text-[var(--qz-muted)]"
-                } ${selected ? "font-semibold text-[var(--qz-primary)]" : ""}`}
-              >
-                {formatSize(size, allLabel)}
-                {selected && <Check size={14} aria-hidden />}
-              </button>
-            );
-          })}
-        </div>
-      )}
+      {open &&
+        rect &&
+        createPortal(
+          <div
+            ref={menuRef}
+            role="listbox"
+            aria-label={t("pagination.rowsPerPage")}
+            onKeyDown={onListKey}
+            // Viewport-anchored above the trigger (see hook): never
+            // clipped by the card, options hug the trigger's left edge.
+            style={menuAbove(rect)}
+            className="qz-material-bar animate-qz-pop z-50 w-max rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]"
+          >
+            {options.map((size, i) => {
+              const selected = size === pageSize;
+              return (
+                <button
+                  key={size}
+                  type="button"
+                  role="option"
+                  aria-selected={selected}
+                  onClick={() => choose(size)}
+                  onMouseEnter={() => setActive(i)}
+                  className={`flex h-8 w-full items-center justify-between gap-4 rounded-[7px] px-2 tabular-nums transition-colors ${
+                    i === active
+                      ? "bg-[var(--qz-primary-soft)] text-[var(--qz-text)]"
+                      : "text-[var(--qz-muted)]"
+                  } ${selected ? "font-semibold text-[var(--qz-primary)]" : ""}`}
+                >
+                  {formatSize(size, allLabel)}
+                  {selected && <Check size={14} aria-hidden />}
+                </button>
+              );
+            })}
+          </div>,
+          document.body,
+        )}
     </div>
+  );
+}
+
+/// Readout for un-jumpable states: `0 / 0` when empty, static `1 / 1`
+/// on a single page (no input — nothing to jump to). Anything pageable
+/// renders the combined jump+readout instead.
+function PageJumpOrReadout({
+  page,
+  pageCount,
+  onPage,
+}: {
+  page: number;
+  pageCount: number;
+  onPage: (p: number) => void;
+}) {
+  if (pageCount > 1)
+    return <PageJump page={page} pageCount={pageCount} onPage={onPage} />;
+  return (
+    <span className="min-w-16 text-center text-[var(--qz-muted)] tabular-nums">
+      {pageCount === 0 ? `0 / 0` : `1 / 1`}
+    </span>
   );
 }
 
@@ -367,11 +415,7 @@ export default function Pagination({
       >
         <ChevronLeft size={16} aria-hidden />
       </button>
-      <span className="min-w-16 text-center text-[var(--qz-muted)] tabular-nums">
-        {pageCount === 0
-          ? `0 / 0`
-          : `${formatCount(page + 1)} / ${formatCount(pageCount)}`}
-      </span>
+      <PageJumpOrReadout page={page} pageCount={pageCount} onPage={onPage} />
       <button
         type="button"
         aria-label={t("pagination.nextPage")}
@@ -381,7 +425,6 @@ export default function Pagination({
       >
         <ChevronRight size={16} aria-hidden />
       </button>
-      <PageJump page={page} pageCount={pageCount} onPage={onPage} />
       <span className="hidden pr-2 text-[var(--qz-muted)] tabular-nums min-[1100px]:inline">
         {formatCount(total)}
       </span>

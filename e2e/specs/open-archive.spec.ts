@@ -158,3 +158,21 @@ test("more hides with no extras, row stays centered", async ({ app }) => {
     await row.evaluate((el) => el.parentElement?.firstElementChild === el),
   ).toBe(true);
 });
+
+test("collapsed card menus stay hittable (portaled, never clipped)", async ({
+  app,
+}) => {
+  await addArchive(app, PATH, { count: 3 });
+  await openViaButton(app, PATH);
+  await app.getByRole("button", { name: "Collapse details" }).click();
+  // Language menu: an in-card upward menu would be taller than the short
+  // collapsed card and `overflow-hidden` would clip it into unclickable.
+  await app.getByRole("button", { name: "Change language" }).click();
+  const langMenu = app.getByRole("listbox", { name: "Language" });
+  await expect(langMenu).toBeVisible();
+  expect(
+    await langMenu.evaluate((el) => el.parentElement === document.body),
+  ).toBe(true);
+  await langMenu.getByRole("option", { name: "हिन्दी" }).click();
+  await expect(app.getByRole("button", { name: "भाषा बदलें" })).toBeVisible();
+});

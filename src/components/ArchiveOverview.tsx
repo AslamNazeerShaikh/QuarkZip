@@ -111,7 +111,8 @@ export default function ArchiveOverview({
   // Integrity checks ride inside the controls cluster (icon-only squares,
   // like the collapse chevron) — Test between Pagination and Theme,
   // Checksum between Test and Theme — with About last. Only the collapse
-  // chevron keeps the row's end.
+  // chevron keeps the row's end. Glyphs run 18px like the Theme/Language/
+  // About icons (14px read lost next to them).
   const clusterChecks = (
     <>
       <Button
@@ -122,7 +123,7 @@ export default function ArchiveOverview({
         title={testLabel}
         className="w-9 px-0"
       >
-        <ShieldCheck size={14} aria-hidden />
+        <ShieldCheck size={18} aria-hidden />
       </Button>
       <Button
         variant="secondary"
@@ -132,7 +133,7 @@ export default function ArchiveOverview({
         title={checksumLabel}
         className="w-9 px-0"
       >
-        <Hash size={14} aria-hidden />
+        <Hash size={18} aria-hidden />
       </Button>
     </>
   );

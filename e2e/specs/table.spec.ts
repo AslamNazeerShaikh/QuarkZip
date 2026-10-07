@@ -1,6 +1,7 @@
 import {
   addArchive,
   expect,
+  expectPage,
   openViaButton,
   stubPicker,
   test,
@@ -103,7 +104,7 @@ test("selection survives page changes", async ({ app }) => {
     .getByRole("checkbox", { name: "Select file-1.txt", exact: true })
     .click();
   await app.getByRole("button", { name: "Next page" }).click();
-  await expect(app.getByText("2 / 3")).toBeVisible();
+  await expectPage(app, 2, 3);
   await app.getByRole("button", { name: "Previous page" }).click();
   await expect(
     app.getByRole("checkbox", { name: "Select file-1.txt", exact: true }),

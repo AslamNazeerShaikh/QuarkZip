@@ -1,5 +1,11 @@
 /// Real production window size (792x660): layout must hold together.
-import { addArchive, expect, openViaButton, test } from "../fixtures";
+import {
+  addArchive,
+  expect,
+  expectPage,
+  openViaButton,
+  test,
+} from "../fixtures";
 
 test.use({ viewport: { width: 792, height: 660 } });
 
@@ -11,14 +17,14 @@ test("app fits without horizontal overflow", async ({ app }) => {
   );
   expect(overflow).toBeLessThanOrEqual(1);
   await expect(app.getByText("file-1.txt", { exact: true })).toBeVisible();
-  await expect(app.getByText("1 / 2")).toBeVisible();
+  await expectPage(app, 1, 2);
   await expect(app.locator("header")).toContainText("narrow.zip");
 });
 
 test("wide-screen total count stays hidden", async ({ app }) => {
   await addArchive(app, "/tmp/narrow.zip", { count: 150 });
   await openViaButton(app, "/tmp/narrow.zip");
-  await expect(app.getByText("1 / 2")).toBeVisible();
+  await expectPage(app, 1, 2);
   // Present in the DOM (wide screens show it) but hidden here: scope to
   // the card controls so the overview "Files" count does not match.
   await expect(

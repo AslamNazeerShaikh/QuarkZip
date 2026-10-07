@@ -1,7 +1,7 @@
 /// Shared Playwright fixtures: every test starts on a fresh app with a
 /// reset fake backend. `window.__e2e` (see e2e/mocks/backend.ts) drives
 /// scenarios from the spec side.
-import { test as base, type Page } from "@playwright/test";
+import { test as base, type Page, expect } from "@playwright/test";
 
 export interface E2ECalls {
   setTitle: string[];
@@ -37,7 +37,7 @@ export const test = base.extend<{
   },
 });
 
-export { expect } from "@playwright/test";
+export { expect };
 
 /** Register a canned archive with `count` generic text files. */
 export async function addArchive(
@@ -92,6 +92,18 @@ export async function openViaButton(page: Page, path: string): Promise<void> {
 /** Open an archive through a simulated OS file drop. */
 export async function openViaDrop(page: Page, path: string): Promise<void> {
   await page.evaluate((p) => window.__e2e.drop([p]), path);
+}
+
+/** Assert the combined jump+readout shows page `current` of `total`. */
+export async function expectPage(
+  page: Page,
+  current: number,
+  total: number,
+): Promise<void> {
+  await expect(
+    page.getByRole("spinbutton", { name: "Go to page" }),
+  ).toHaveValue(String(current));
+  await expect(page.getByText(`/ ${total}`, { exact: true })).toBeVisible();
 }
 
 export async function calls(page: Page): Promise<E2ECalls> {

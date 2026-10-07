@@ -244,9 +244,14 @@ describe("ArchiveOverview", () => {
         }
       />,
     );
-    // Icon-only squares carrying the accessible names.
+    // Icon-only squares carrying the accessible names, 18px glyphs like
+    // the Theme/Language/About icons.
     expect(screen.getByRole("button", { name: "Test" })).toHaveClass("w-9");
     expect(screen.getByRole("button", { name: "Checksum" })).toHaveClass("w-9");
+    for (const name of ["Test", "Checksum"] as const) {
+      const svg = screen.getByRole("button", { name }).querySelector("svg");
+      expect(svg?.getAttribute("width")).toBe("18");
+    }
     // Cluster order: Pager, Test, Checksum, Theme, About.
     const html = screen.getByTestId("card-controls").innerHTML;
     const order = ["Pager", '"Test"', '"Checksum"', "Theme", "About"].map((s) =>

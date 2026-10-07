@@ -1,4 +1,10 @@
-import { addArchive, expect, openViaButton, test } from "../fixtures";
+import {
+  addArchive,
+  expect,
+  expectPage,
+  openViaButton,
+  test,
+} from "../fixtures";
 import type { Page } from "@playwright/test";
 
 async function openSwitcher(app: Page) {
@@ -72,15 +78,17 @@ test("expanding theme shrinks pagination to an icon and back", async ({
 }) => {
   await addArchive(app, "/tmp/t.zip", { count: 250 });
   await openViaButton(app, "/tmp/t.zip");
-  await expect(app.getByText("1 / 3")).toBeVisible();
+  await expectPage(app, 1, 3);
   await openSwitcher(app);
   // The full shell yields while the segment is out.
   await expect(
     app.getByRole("button", { name: /Show pagination/ }),
   ).toBeVisible();
-  await expect(app.getByText("1 / 3")).not.toBeVisible();
+  await expect(app.getByRole("spinbutton", { name: "Go to page" })).toHaveCount(
+    0,
+  );
   // Choosing minimizes the segment and restores the shell.
   await app.getByRole("button", { name: "Dark" }).click();
   await expect(app.getByRole("button", { name: "Change theme" })).toBeVisible();
-  await expect(app.getByText("1 / 3")).toBeVisible();
+  await expectPage(app, 1, 3);
 });
