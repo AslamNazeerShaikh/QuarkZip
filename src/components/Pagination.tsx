@@ -70,13 +70,16 @@ function PageJump({
     revert();
   }
   function commit() {
+    // Leading digits win ("66abc" → 66): in range jumps silently, out of
+    // range confirms with the clamped target. Pure garbage ("abc", "")
+    // confirms with page 1 as the only sane default.
     const trimmed = text.trim();
-    const n = /^\d+$/.test(trimmed) ? Number.parseInt(trimmed, 10) : NaN;
+    const head = trimmed.match(/^\d+/);
+    const n = head ? Number.parseInt(head[0], 10) : NaN;
     if (Number.isInteger(n) && n >= 1 && n <= pageCount) {
       jumpTo(n);
       return;
     }
-    // Weird input: confirm, showing where Jump would land (same clamp).
     const target = Number.isInteger(n)
       ? Math.min(Math.max(n, 1), pageCount)
       : 1;

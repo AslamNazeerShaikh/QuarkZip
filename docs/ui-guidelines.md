@@ -103,7 +103,8 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   gap) with option text insets matching the trigger (`px-2`), so list
   edges and text align with the control below. A jump-to-page field
   (`spinbutton`, same h-7 inner shell) sits past Next: clean in-range
-  numbers jump silently on Enter; out-of-range or non-numeric input opens
+  numbers jump silently on Enter (leading digits win, so `66abc` means
+  66); out-of-range or digit-free input opens
   an Invalid-page confirm (warning icon, valid range shown, Jump runs the
   same clamp / Cancel reverts to the open page). Escape/blur reverts,
   hidden on single pages. Edge-anchored menus open

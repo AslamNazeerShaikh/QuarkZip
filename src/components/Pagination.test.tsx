@@ -195,6 +195,20 @@ describe("Pagination page jump", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("should_jump_on_leading_digits_and_confirm_the_rest", async () => {
+    const user = userEvent.setup();
+    const { onPage } = setupJump();
+    const field = screen.getByRole("spinbutton", { name: "Go to page" });
+    // Trailing garbage is ignored when the head is a good page.
+    await user.clear(field);
+    await user.type(field, "2xyz");
+    await user.keyboard("{Enter}");
+    expect(onPage).toHaveBeenCalledWith(1);
+    expect(
+      screen.queryByRole("dialog", { name: "Invalid page" }),
+    ).not.toBeInTheDocument();
+  });
+
   it("should_confirm_weird_input_with_jump_or_cancel", async () => {
     const user = userEvent.setup();
     const { onPage } = setupJump();

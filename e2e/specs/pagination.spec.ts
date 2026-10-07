@@ -125,6 +125,10 @@ test("jump field navigates directly and confirms weird input", async ({
   await jump.press("Enter");
   await expect(app.getByText("3 / 3")).toBeVisible();
   await expect(app.getByText("file-201.txt", { exact: true })).toBeVisible();
+  // Leading digits win: trailing garbage is ignored for good pages.
+  await jump.fill("2xyz");
+  await jump.press("Enter");
+  await expect(app.getByText("2 / 3")).toBeVisible();
   // Out of range no longer jumps silently: confirm popup first.
   await jump.fill("99");
   await jump.press("Enter");
