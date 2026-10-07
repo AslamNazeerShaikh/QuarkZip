@@ -66,9 +66,9 @@
     "semantic_hash": ""
   },
   "src/App.tsx": {
-    "mtime": 1791366786.0786958,
-    "seen": 1791367140.6315992,
-    "ast_hash": "416956462f4deb8baca9b0bfed0db7b9",
+    "mtime": 1791367684.587357,
+    "seen": 1791367705.248279,
+    "ast_hash": "4d5f72bba1d8ce25a023bad36be5d6dc",
     "semantic_hash": ""
   },
   "src/main.tsx": {
@@ -552,9 +552,9 @@
     "semantic_hash": ""
   },
   "docs/color-system.md": {
-    "mtime": 1791367547.1685915,
-    "seen": 1791367560.000185,
-    "ast_hash": "1b8c6b564385fc733f11de1ac341dfcd",
+    "mtime": 1791367699.1118956,
+    "seen": 1791367705.248377,
+    "ast_hash": "a6f14da63516e4deaa948e1250a3a846",
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
@@ -1938,9 +1938,9 @@
     "semantic_hash": ""
   },
   "docs/macos-native.md": {
-    "mtime": 1791367537.6146624,
-    "seen": 1791367560.0001862,
-    "ast_hash": "ad83301589cc95b27e3d6dbc41666305",
+    "mtime": 1791367689.2325776,
+    "seen": 1791367705.248378,
+    "ast_hash": "5a3dcd009c32f3aff86b16e0f50c21d0",
     "semantic_hash": ""
   }
 }

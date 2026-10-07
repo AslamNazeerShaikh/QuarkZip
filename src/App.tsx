@@ -341,7 +341,7 @@ export default function App() {
   return (
     <div
       data-testid="app-root"
-      className={`h-screen w-screen ${isMac ? "bg-[var(--qz-frame-bg)]" : "bg-transparent"} ${maximized || isMac ? "" : "p-5"}`}
+      className={`h-screen w-screen bg-transparent ${maximized || isMac ? "" : "p-5"}`}
     >
       <div
         data-testid="app-frame"

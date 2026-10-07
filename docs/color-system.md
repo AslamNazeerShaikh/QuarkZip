@@ -15,23 +15,23 @@ Ratios below are measured outputs of `scripts/contrast-check.py`
 
 Components reference `--qz-*` role tokens only, never raw hex.
 
-| Token                                                   | Light                             | Dark                              | Role                                        |
-| ------------------------------------------------------- | --------------------------------- | --------------------------------- | ------------------------------------------- |
-| `--qz-bg`                                               | `#ececec`                         | `#1e1e1e`                         | window / frame background                   |
-| `--qz-surface`                                          | `#ffffff`                         | `#282828`                         | cards, controls                             |
-| `--qz-surface-2`                                        | `#f5f5f7`                         | `#323232`                         | soft fills, tracks, hovers                  |
-| `--qz-border`                                           | `#c6c6c8`                         | `#4a4a4a`                         | separators (opaque, never text)             |
-| `--qz-text`                                             | `#000000`                         | `#ffffff`                         | labelColor body text                        |
-| `--qz-muted`                                            | `#3c3c43`                         | `#ebebf5`                         | secondaryLabel, full-strength for AA        |
-| `--qz-faint`                                            | `#6e6e73`                         | `#98989f`                         | micro-labels ONLY (see rule 5)              |
-| `--qz-accent`                                           | system hue                        | system hue                        | raw accent (selection tint, focus ring)     |
-| `--qz-primary` / `-hover` / `-soft` / `--qz-on-primary` | per-accent table below            | per-accent table below            | CTA fills (accent-driven)                   |
-| `--qz-success` / `-soft`                                | `#1f7a33` / `#e5f2e7`             | `#4cc38a` / `#14291f`             | success pills                               |
-| `--qz-info` / `-soft` / `-dot`                          | `#0b5bd3` / `#e8f0fe` / `#0b5bd3` | `#82aaff` / `#16233d` / `#82aaff` | info pills                                  |
-| `--qz-warning` / `-soft` / `-dot`                       | `#8a4d00` / `#fff1dd` / `#b36200` | `#e8a33d` / `#33270f` / `#e8a33d` | warning pills                               |
-| `--qz-danger` / `-soft`                                 | `#c92a22` / `#fdeceb`             | `#ff6961` / `#3a1f1e`             | danger pills, errors                        |
-| `--qz-bar-bg`                                           | `rgba(236,236,236,0.72)`          | `rgba(30,30,30,0.72)`             | translucent chrome fill (see materials)     |
-| `--qz-frame-bg`                                         | `rgba(236,236,236,0.25)`          | `rgba(30,30,30,0.25)`             | glass wash, macOS only (§8 in macos-native) |
+| Token                                                   | Light                             | Dark                              | Role                                          |
+| ------------------------------------------------------- | --------------------------------- | --------------------------------- | --------------------------------------------- |
+| `--qz-bg`                                               | `#ececec`                         | `#1e1e1e`                         | window / frame background                     |
+| `--qz-surface`                                          | `#ffffff`                         | `#282828`                         | cards, controls                               |
+| `--qz-surface-2`                                        | `#f5f5f7`                         | `#323232`                         | soft fills, tracks, hovers                    |
+| `--qz-border`                                           | `#c6c6c8`                         | `#4a4a4a`                         | separators (opaque, never text)               |
+| `--qz-text`                                             | `#000000`                         | `#ffffff`                         | labelColor body text                          |
+| `--qz-muted`                                            | `#3c3c43`                         | `#ebebf5`                         | secondaryLabel, full-strength for AA          |
+| `--qz-faint`                                            | `#6e6e73`                         | `#98989f`                         | micro-labels ONLY (see rule 5)                |
+| `--qz-accent`                                           | system hue                        | system hue                        | raw accent (selection tint, focus ring)       |
+| `--qz-primary` / `-hover` / `-soft` / `--qz-on-primary` | per-accent table below            | per-accent table below            | CTA fills (accent-driven)                     |
+| `--qz-success` / `-soft`                                | `#1f7a33` / `#e5f2e7`             | `#4cc38a` / `#14291f`             | success pills                                 |
+| `--qz-info` / `-soft` / `-dot`                          | `#0b5bd3` / `#e8f0fe` / `#0b5bd3` | `#82aaff` / `#16233d` / `#82aaff` | info pills                                    |
+| `--qz-warning` / `-soft` / `-dot`                       | `#8a4d00` / `#fff1dd` / `#b36200` | `#e8a33d` / `#33270f` / `#e8a33d` | warning pills                                 |
+| `--qz-danger` / `-soft`                                 | `#c92a22` / `#fdeceb`             | `#ff6961` / `#3a1f1e`             | danger pills, errors                          |
+| `--qz-bar-bg`                                           | `rgba(236,236,236,0.72)`          | `rgba(30,30,30,0.72)`             | translucent chrome fill (see materials)       |
+| `--qz-frame-bg`                                         | `rgba(236,236,236,0.12)`          | `rgba(30,30,30,0.2)`              | glass wash on frame only (§8 in macos-native) |
 
 ## Accent system (`data-accent`, default blue)
 

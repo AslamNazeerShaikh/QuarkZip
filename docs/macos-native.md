@@ -122,7 +122,8 @@ Figma-based design handoff begins.
 The main window sits on real Liquid Glass: `window-vibrancy@0.8.1`
 `apply_liquid_glass` with the **Sidebar** style, radius 26, non-opaque,
 interactive (`lib.rs` `apply_window_glass`, macOS only), and the
-`--qz-frame-bg` 25% neutral wash lays over it. Replaces the earlier
+`--qz-frame-bg` thin neutral wash (12% light / 20% dark, frame only —
+never the root: stacked coats multiply into a milky veil) lays over it. Replaces the earlier
 `NSVisualEffectView` WindowBackground frost (2026-10-08: it rendered
 flat — no visible transparency — so the ban on Liquid Glass was lifted
 for the window background by explicit user decision).
