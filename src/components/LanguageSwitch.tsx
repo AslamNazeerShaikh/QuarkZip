@@ -45,7 +45,7 @@ export default function LanguageSwitch() {
       ref={rootRef}
       role="group"
       aria-label={t("lang.language")}
-      className="relative flex h-9 shrink-0 items-center rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-1 shadow-[var(--qz-shadow-card)]"
+      className="qz-material-bar relative flex h-9 shrink-0 items-center rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]"
     >
       <button
         ref={buttonRef}
@@ -71,7 +71,7 @@ export default function LanguageSwitch() {
           aria-label={t("lang.language")}
           // Right-anchored: this control sits at the window's right edge,
           // so the menu opens inward (right-0) instead of hitting the wall.
-          className="animate-qz-pop absolute right-0 bottom-full mb-2 w-max min-w-full rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-1 shadow-[var(--qz-shadow-card)]"
+          className="qz-material-bar animate-qz-pop absolute right-0 bottom-full mb-2 w-max min-w-full rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]"
         >
           {LOCALES.map((locale) => {
             const selected = locale.code === lang;

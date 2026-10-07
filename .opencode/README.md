@@ -44,19 +44,21 @@ Model: `opencode/muse-spark-1.3-contributor-free` via OpenCode Zen (reasoning ef
 
 ## Agents
 
-| Agent                  | Purpose                                                                |
-| ---------------------- | ---------------------------------------------------------------------- |
-| `tauri-app-assistant`  | Main coach (default): features, 7zz wiring, UI                         |
-| `rust-developer`       | PRIMARY for Rust: strict quality rules (use for all `src-tauri/` work) |
-| `code-reviewer`        | Reviews against the checklist (argv safety, streaming, virtualization) |
-| `test-writer`          | Proposes harness on demand, writes tests                               |
-| `documentation-writer` | Keeps root `README.md` + `docs/7zz-binaries.md` in sync                |
+| Agent                   | Purpose                                                                |
+| ----------------------- | ---------------------------------------------------------------------- |
+| `tauri-app-assistant`   | Main coach (default): features, 7zz wiring, UI                         |
+| `rust-developer`        | PRIMARY for Rust: strict quality rules (use for all `src-tauri/` work) |
+| `code-reviewer`         | Reviews against the checklist (argv safety, streaming, virtualization) |
+| `test-writer`           | Proposes harness on demand, writes tests                               |
+| `documentation-writer`  | Keeps root `README.md` + `docs/7zz-binaries.md` in sync                |
+| `macos-design-reviewer` | Native macOS UI review (palette, accents, materials, no liquid glass)  |
 
 ## Skills
 
-| Skill               | Description                                            |
-| ------------------- | ------------------------------------------------------ |
-| `tauri-development` | Sidecar spawning, Tauri commands, capabilities, checks |
+| Skill               | Description                                                                              |
+| ------------------- | ---------------------------------------------------------------------------------------- |
+| `tauri-development` | Sidecar spawning, Tauri commands, capabilities, checks                                   |
+| `macos-design`      | Native macOS rules; full HIG audits via installed `apple-design` skill + `ui-skills` MCP |
 
 ## Commands
 

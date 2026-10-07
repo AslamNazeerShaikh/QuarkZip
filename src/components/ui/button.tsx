@@ -5,7 +5,7 @@ type Variant = "primary" | "secondary" | "ghost" | "warning" | "accent";
 type Size = "default" | "sm" | "bar" | "icon";
 
 const VARIANTS: Record<Variant, string> = {
-  // Reference: solid green CTA h38–42, 8–10px radius, 14px/500 white.
+  // Reference: solid accent CTA h38–42, 8–10px radius, 14px/500 white.
   // Transparent border keeps the fill box identical to the bordered
   // secondary buttons sharing the row (border-box makes the 1px outline
   // eat into their fill, so a borderless primary would read 2px bigger).

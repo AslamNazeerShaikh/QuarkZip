@@ -197,7 +197,7 @@ export default function ChecksumDialog({
                 <div
                   role="listbox"
                   aria-label={t("checksum.algorithmList")}
-                  className="animate-qz-pop absolute top-full right-0 left-0 z-10 mt-1 rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-1 shadow-[var(--qz-shadow-card)]"
+                  className="qz-material-bar animate-qz-pop absolute top-full right-0 left-0 z-10 mt-1 rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]"
                 >
                   {ALGOS.map((option) => {
                     const selected = option.id === algo;

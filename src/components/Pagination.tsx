@@ -106,7 +106,7 @@ function PageSizeMenu({
           role="listbox"
           aria-label={t("pagination.rowsPerPage")}
           onKeyDown={onListKey}
-          className="animate-qz-pop absolute bottom-full left-0 mb-2 w-max min-w-full rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-1 shadow-[var(--qz-shadow-card)]"
+          className="qz-material-bar animate-qz-pop absolute bottom-full left-0 mb-2 w-max min-w-full rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]"
         >
           {OPTIONS.map((size, i) => {
             const selected = size === pageSize;
@@ -155,7 +155,7 @@ export default function Pagination({
 }) {
   const { t } = useLanguage();
   return (
-    <div className="flex h-9 items-center gap-1 rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] px-1 shadow-[var(--qz-shadow-card)]">
+    <div className="qz-material-bar flex h-9 items-center gap-1 rounded-[10px] border border-[var(--qz-border)] px-1 shadow-[var(--qz-shadow-card)]">
       <PageSizeMenu pageSize={pageSize} onPageSize={onPageSize} />
       <button
         type="button"

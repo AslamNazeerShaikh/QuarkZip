@@ -451,7 +451,7 @@ export default function App() {
               <LanguageSwitch />
               {/* Icon-only shell like ThemeSwitch: h-9, 10px radius, 1px
                 border, card shadow. Hover/tip names it (aria-label + title). */}
-              <div className="flex h-9 shrink-0 items-center rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-1 shadow-[var(--qz-shadow-card)]">
+              <div className="qz-material-bar flex h-9 shrink-0 items-center rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]">
                 <button
                   type="button"
                   onClick={openAbout}

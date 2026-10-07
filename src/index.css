@@ -4,10 +4,14 @@
    so the UI can switch statically (Light/Dark) or follow the OS (System). */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* QuarkZip design tokens — warm neutral reference palette (Brightway analysis):
-   app #F7F6F3, surface #FFFFFF / #FBFBFA, text #171717 / #666 / #8A8A8A,
-   border #E7E7E3, CTA green #147A5A. Components reference `--qz-*` role
-   tokens only, never raw hex (see docs/color-system.md + docs/ui-guidelines.md).
+/* QuarkZip design tokens — native macOS semantic palette (Sequoia-era,
+   pre-glass): AppKit roles approximated for the webview (Apple: use APIs,
+   never hard-code — here CSS custom properties ARE the API).
+   windowBackground #ECECEC / controlBackground #FFF, dark #1E1E1E/#282828;
+   label/secondaryLabel semantics; system accent (default blue) drives
+   primary CTA + focus + selection; status hues stay fixed per meaning.
+   Components reference `--qz-*` role tokens only, never raw hex
+   (see docs/color-system.md + docs/ui-guidelines.md + docs/macos-native.md).
    Dark ramp is hand-built, not a mechanical reverse.
    Radius ladder: window 20 / card 13 / input+button 9 / nav+segment 8 / pill 999.
    Shadows: card 0 1px 2px rgba(0,0,0,.03) only; overlays use the modal/drawer
@@ -16,61 +20,123 @@
   --qz-font:
     "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
     system-ui, sans-serif;
-  --qz-bg: #f7f6f3;
+  --qz-bg: #ececec;
   --qz-surface: #ffffff;
-  --qz-surface-2: #fbfbfa;
-  --qz-border: #e7e7e3;
-  --qz-text: #171717;
-  --qz-muted: #666666;
-  --qz-faint: #8a8a8a;
-  --qz-primary: #147a5a;
-  --qz-primary-hover: #0f6248;
-  --qz-primary-soft: #e7f5ed;
+  --qz-surface-2: #f5f5f7;
+  --qz-border: #c6c6c8;
+  --qz-text: #000000;
+  --qz-muted: #3c3c43;
+  --qz-faint: #6e6e73;
+  /* Accent system: default blue. `--qz-accent` is the raw system hue
+     (selection tint, focus ring); `--qz-primary*` is the AA-tuned CTA ramp
+     (measured pairs in color-system.md). Override per accent below. */
+  --qz-accent: #007aff;
+  --qz-primary: #0070eb;
+  --qz-primary-hover: #005fc7;
+  --qz-primary-soft: #dbebfc;
   --qz-on-primary: #ffffff;
-  --qz-accent: #3d73d9;
-  --qz-success: #147a5a;
-  --qz-success-soft: #e7f5ed;
-  --qz-info: #2f5fc4;
-  --qz-info-dot: #3d73d9;
-  --qz-info-soft: #edf3ff;
-  --qz-warning: #9a5b0b;
-  --qz-warning-dot: #d97a18;
-  --qz-warning-soft: #fff3e4;
-  --qz-danger: #a94444;
-  --qz-danger-soft: #fbecec;
+  --qz-success: #1f7a33;
+  --qz-success-soft: #e5f2e7;
+  --qz-info: #0b5bd3;
+  --qz-info-dot: #0b5bd3;
+  --qz-info-soft: #e8f0fe;
+  --qz-warning: #8a4d00;
+  --qz-warning-dot: #b36200;
+  --qz-warning-soft: #fff1dd;
+  --qz-danger: #c92a22;
+  --qz-danger-soft: #fdeceb;
+  /* Translucent chrome (title strip, footer shells, menus, table header):
+     blur + saturation over a translucent fill, content scrolls underneath.
+     Never on content cards (legibility). Falls back to solid surface
+     under prefers-reduced-transparency (see bottom). */
+  --qz-bar-bg: rgba(236, 236, 236, 0.72);
   --qz-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.03);
   /* Window frame: the app card floats in a transparent margin, but any
      shadow must fully decay inside it — a blur wider than the margin gets
      sliced at the window edge, and that hard cutoff (sharpest at the
      corners) is what reads as "pointy". So: compact soft blur only. */
-  --qz-window-border: #e7e7e3;
+  --qz-window-border: #c6c6c8;
   --qz-shadow-window:
-    0 6px 14px rgba(23, 23, 23, 0.12), 0 2px 5px rgba(23, 23, 23, 0.06);
+    0 6px 14px rgba(0, 0, 0, 0.12), 0 2px 5px rgba(0, 0, 0, 0.06);
+}
+
+/* Accent overrides (light). Order: accent, primary, hover, soft, on. */
+[data-accent="purple"] {
+  --qz-accent: #5e5ce6;
+  --qz-primary: #5e5ce6;
+  --qz-primary-hover: #3f3de1;
+  --qz-primary-soft: #e8e8fc;
+  --qz-on-primary: #ffffff;
+}
+[data-accent="pink"] {
+  --qz-accent: #ff2d55;
+  --qz-primary: #ea002d;
+  --qz-primary-hover: #c60026;
+  --qz-primary-soft: #fcdbe2;
+  --qz-on-primary: #ffffff;
+}
+[data-accent="red"] {
+  --qz-accent: #ff3b30;
+  --qz-primary: #ed0d00;
+  --qz-primary-hover: #c90b00;
+  --qz-primary-soft: #fcdddb;
+  --qz-on-primary: #ffffff;
+}
+[data-accent="orange"] {
+  --qz-accent: #ff9500;
+  --qz-primary: #b36200;
+  --qz-primary-hover: #8f4e00;
+  --qz-primary-soft: #f4e9db;
+  --qz-on-primary: #ffffff;
+}
+[data-accent="yellow"] {
+  --qz-accent: #9c7a00;
+  --qz-primary: #9c7a00;
+  --qz-primary-hover: #a88700;
+  --qz-primary-soft: #f1ecdb;
+  --qz-on-primary: #000000;
+}
+[data-accent="green"] {
+  --qz-accent: #248a3d;
+  --qz-primary: #23863b;
+  --qz-primary-hover: #1c6a2f;
+  --qz-primary-soft: #e0eee4;
+  --qz-on-primary: #ffffff;
+}
+[data-accent="graphite"] {
+  --qz-accent: #6e6e73;
+  --qz-primary: #6e6e73;
+  --qz-primary-hover: #5d5d61;
+  --qz-primary-soft: #ebebeb;
+  --qz-on-primary: #ffffff;
 }
 
 .dark {
-  --qz-bg: #191614;
-  --qz-surface: #221f1c;
-  --qz-surface-2: #292524;
-  --qz-border: rgba(255, 255, 255, 0.1);
-  --qz-text: #f5f4f1;
-  --qz-muted: #a8a29e;
-  --qz-faint: #78716c;
-  --qz-primary: #3aa57f;
-  --qz-primary-hover: #4fbf94;
-  --qz-on-primary: #101613;
-  --qz-primary-soft: rgba(58, 165, 127, 0.15);
-  --qz-accent: #7aa5e8;
-  --qz-success: #3aa57f;
-  --qz-success-soft: #1e2e28;
-  --qz-info: #7aa5e8;
-  --qz-info-dot: #7aa5e8;
-  --qz-info-soft: #1e2a3f;
+  --qz-bg: #1e1e1e;
+  --qz-surface: #282828;
+  --qz-surface-2: #323232;
+  --qz-border: #38383a;
+  --qz-text: #ffffff;
+  --qz-muted: #ebebf5;
+  --qz-faint: #98989f;
+  /* Dark on-accent is black: bright fills keep their hue while passing AA
+     (white text on system brights fails; Apple ships it anyway — we don't). */
+  --qz-accent: #0a84ff;
+  --qz-primary: #0a84ff;
+  --qz-primary-hover: #0072e5;
+  --qz-primary-soft: #243546;
+  --qz-on-primary: #000000;
+  --qz-success: #4cc38a;
+  --qz-success-soft: #14291f;
+  --qz-info: #82aaff;
+  --qz-info-dot: #82aaff;
+  --qz-info-soft: #16233d;
   --qz-warning: #e8a33d;
   --qz-warning-dot: #e8a33d;
   --qz-warning-soft: #33270f;
-  --qz-danger: #e08a8a;
-  --qz-danger-soft: #382222;
+  --qz-danger: #ff6961;
+  --qz-danger-soft: #3a1f1e;
+  --qz-bar-bg: rgba(30, 30, 30, 0.72);
   --qz-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
   /* Dark needs a harder outline + deeper shadow: the frame must read
      against near-black wallpapers where a faint border disappears. The
@@ -80,6 +146,72 @@
   --qz-shadow-window:
     0 0 0 1px rgba(255, 255, 255, 0.05), 0 6px 14px rgba(0, 0, 0, 0.45),
     0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.dark[data-accent="purple"] {
+  --qz-accent: #7d7aff;
+  --qz-primary: #7d7aff;
+  --qz-primary-hover: #7676ff;
+  --qz-primary-soft: #343346;
+  --qz-on-primary: #000000;
+}
+.dark[data-accent="pink"] {
+  --qz-accent: #ff375f;
+  --qz-primary: #ff375f;
+  --qz-primary-hover: #ff1342;
+  --qz-primary-soft: #462a30;
+  --qz-on-primary: #000000;
+}
+.dark[data-accent="red"] {
+  --qz-accent: #ff453a;
+  --qz-primary: #ff453a;
+  --qz-primary-hover: #ff2316;
+  --qz-primary-soft: #462c2b;
+  --qz-on-primary: #000000;
+}
+.dark[data-accent="orange"] {
+  --qz-accent: #ff9f0a;
+  --qz-primary: #ff9f0a;
+  --qz-primary-hover: #e58b00;
+  --qz-primary-soft: #463924;
+  --qz-on-primary: #000000;
+}
+.dark[data-accent="yellow"] {
+  --qz-accent: #ffd60a;
+  --qz-primary: #ffd60a;
+  --qz-primary-hover: #e5bf00;
+  --qz-primary-soft: #464024;
+  --qz-on-primary: #000000;
+}
+.dark[data-accent="green"] {
+  --qz-accent: #30d158;
+  --qz-primary: #30d158;
+  --qz-primary-hover: #28b54b;
+  --qz-primary-soft: #29402f;
+  --qz-on-primary: #000000;
+}
+.dark[data-accent="graphite"] {
+  --qz-accent: #98989f;
+  --qz-primary: #98989f;
+  --qz-primary-hover: #86868e;
+  --qz-primary-soft: #383839;
+  --qz-on-primary: #000000;
+}
+
+/* Translucent chrome shell: blur + saturation, content scrolls under.
+   Apply to title strip, footer control shells, menus, table header —
+   never content cards. Solid-surface fallback below. */
+.qz-material-bar {
+  background: var(--qz-bar-bg);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .qz-material-bar {
+    background: var(--qz-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 }
 
 /* Base type: Inter everywhere, one size across the whole app. */

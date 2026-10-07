@@ -27,11 +27,12 @@
       "rust-developer",
       "code-reviewer",
       "test-writer",
-      "documentation-writer"
+      "documentation-writer",
+      "macos-design-reviewer"
     ]
   },
   "skills": {
-    "enabled": ["tauri-development"]
+    "enabled": ["tauri-development", "macos-design"]
   },
   "commands": {
     "custom": [

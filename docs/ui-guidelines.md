@@ -9,19 +9,24 @@ Distilled from the Brightway reference analysis
 
 ## Design direction
 
-Premium native desktop app: clean, calm, restrained, spacious. Soft neutral
-backgrounds, minimal shadows, thin borders, medium-weight typography, rounded
-controls, single thin outline icon set (Lucide, 16–20px, quiet gray).
+Native macOS utility (Sequoia-era, pre-glass): clean, calm, restrained,
+spacious. System neutrals, accent-driven interaction (blue default,
+8-accent system), translucent chrome over solid content, medium-weight
+typography, rounded controls, single thin outline icon set (Lucide,
+16–20px, quiet gray). Full brief: `docs/macos-native.md`.
 
-Explicit non-goals: Material/Bootstrap/admin-dashboard look, gradients,
-glassmorphism (no blur/translucency anywhere), neon, heavy shadows, 2px dark
-borders, vertical table gridlines, bold-everything type, dark-mode-by-default
-(dark exists via the theme switch but light is home).
+Explicit non-goals: liquid glass / glassmorphism anywhere (rule 6 in
+color-system.md), Material/Bootstrap/admin-dashboard look, gradients,
+neon, heavy shadows, 2px dark borders, vertical table gridlines,
+bold-everything type, dark-mode-by-default (dark exists via the theme
+switch but System is home).
 
 ## Tokens
 
-Palette, roles, and measured contrast live in `docs/color-system.md`.
-Supporting scales (all from the reference):
+Palette, roles, accent system, and measured contrast live in
+`docs/color-system.md`. Translucent chrome (`.qz-material-bar`: title
+strip, footer shells, menus, table header) over solid content cards —
+never the reverse. Supporting scales (all from the reference):
 
 - Spacing (8px grid): `4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 48`.
   One rhythm everywhere: 28px gutters on the content sides/bottom, no top
@@ -60,9 +65,9 @@ drag strip with ellipsis.
 
 shadcn-style API (`variant` + `size`), reference tokens underneath:
 
-- `Button`: primary = solid green CTA h-10, 9px radius, 14px/500
-  (`--qz-on-primary` text both modes); secondary = surface + 1px border;
-  ghost = text-only. Sizes default/`sm`/`bar` (36px footer height matching
+- `Button`: primary = solid accent CTA h-10, 9px radius, 14px/500
+  (`--qz-on-primary` text both modes, per-accent AA pairs in color-system);
+  secondary = surface + 1px border; ghost = text-only. Sizes default/`sm`/`bar` (36px footer height matching
   the Pagination/ThemeSwitch shells)/icon. One primary action per view.
 - `Card`: surface, 13px radius, 1px border, card shadow. `CardTitle` 16/600,
   `CardDescription` 13px muted, content scrolls internally (`min-h-0`).
@@ -93,7 +98,7 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   (h-9 shell, 28px icon button, 8px inner radius — like collapsed
   `ThemeSwitch`); hover/title and aria-labels name them.
 - Action bar (`App.tsx` footer, in normal flow below the table — nothing
-  floats or overlaps), left to right: green `Extract` CTA (opens the
+  floats or overlaps), left to right: accent `Extract` CTA (opens the
   confirm dialog), `Open new…`,
   destination chooser (grows full width to the pagination control: folder
   icon + centered path + chevron indicator, native directory picker,
