@@ -28,6 +28,7 @@ export interface FakeInfo {
   host_os: string[];
   container_size: number | null;
   container_modified: number | null;
+  extra: Record<string, string>;
 }
 
 export interface FakeArchive {
@@ -122,6 +123,7 @@ function defaultInfo(entryCount: number): FakeInfo {
     host_os: ["Unix"],
     container_size: 1024,
     container_modified: 1_759_623_585,
+    extra: {},
   };
 }
 

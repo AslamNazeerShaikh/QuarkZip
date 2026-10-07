@@ -1,5 +1,11 @@
-import { Archive, Hash, PackageOpen, ShieldCheck } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import {
+  Archive,
+  Hash,
+  MoreHorizontal,
+  PackageOpen,
+  ShieldCheck,
+} from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
 import { formatCount, formatDateTimeLocal, formatSize } from "../lib/format";
 import { Button } from "./ui/button";
 import { Card, CardDescription, CardTitle } from "./ui/card";
@@ -25,6 +31,7 @@ export interface ArchiveInfo {
   host_os: string[];
   container_size: number | null;
   container_modified: number | null;
+  extra: Record<string, string>;
 }
 
 function formatEpoch(secs: number | null): string {
@@ -70,11 +77,24 @@ export default function ArchiveOverview({
   onChecksum?: () => void;
 }) {
   const { t } = useLanguage();
-  // Collapsed card shrinks to the integrity action row only; the table
-  // below (flex-1) absorbs the freed space. Pagination is untouched —
-  // page size/row count never depended on the card.
+  // Three card states. Startup (no archive): flex-1, sharing the column
+  // equally with the table. Open: shrink-wrapped around the fixed 16-cell
+  // grid (never an internal scrollbar); the table absorbs the rest.
+  // Collapsed: action row only. `showExtra` grows the card with the full
+  // engine metadata for advanced users (table shrinks); collapsing hides
+  // it all, and re-expanding shows the Extra button without the extras
+  // until pressed again. A new archive resets the toggle.
   const [collapsed, setCollapsed] = useState(false);
+  const [showExtra, setShowExtra] = useState(false);
+  useEffect(() => {
+    setShowExtra(false);
+  }, [archive]);
   const toggleLabel = collapsed ? t("overview.expand") : t("overview.collapse");
+  const extraLabel = showExtra ? t("overview.less") : t("overview.more");
+  function toggleCollapsed() {
+    if (collapsed) setShowExtra(false);
+    setCollapsed((c) => !c);
+  }
   const actionButtons = (
     <div className="flex flex-wrap justify-end gap-2">
       <Button variant="secondary" size="sm" onClick={onTest} className="w-32">
@@ -95,7 +115,7 @@ export default function ArchiveOverview({
       <Button
         variant="secondary"
         size="sm"
-        onClick={() => setCollapsed((c) => !c)}
+        onClick={toggleCollapsed}
         aria-expanded={!collapsed}
         aria-label={toggleLabel}
         title={toggleLabel}
@@ -110,14 +130,15 @@ export default function ArchiveOverview({
   return (
     // Fixed-geometry card: the 16-cell grid is identical for every
     // archive (`—` for N/A), the ratio track always reserves its row, and
-    // the card shrink-wraps its content — never an internal scrollbar.
-    // The table below absorbs all leftover space (it is the only
-    // scroller besides menus and dropdowns).
+    // the open card shrink-wraps its content — never an internal
+    // scrollbar. Startup (empty) shares the column equally with the table.
+    // The table absorbs all leftover space (it is the only scroller
+    // besides menus and dropdowns).
     <Card
       className={
-        collapsed && archive
-          ? "flex flex-none flex-col overflow-hidden"
-          : "flex min-h-0 flex-none flex-col overflow-hidden"
+        archive
+          ? "flex min-h-0 flex-none flex-col overflow-hidden"
+          : "flex min-h-0 flex-1 flex-col overflow-hidden"
       }
     >
       {!archive ? (
@@ -280,6 +301,21 @@ export default function ArchiveOverview({
                         />
                       </div>
                     </section>
+                    {showExtra && Object.keys(info.extra).length > 0 && (
+                      // Advanced metadata, maximum engine detail. Capped so
+                      // a pathological key count can never squeeze the table
+                      // out — typical archives (1–2 rows) never scroll.
+                      <section
+                        aria-label={t("overview.sectionExtra")}
+                        className="max-h-40 min-h-0 overflow-y-auto"
+                      >
+                        <div className="grid grid-cols-2 gap-x-6 gap-y-4 md:grid-cols-4">
+                          {Object.entries(info.extra).map(([k, v]) => (
+                            <Meta key={k} label={k} value={v || "—"} />
+                          ))}
+                        </div>
+                      </section>
+                    )}
                   </div>
                 ) : (
                   <p className="py-6 text-center text-sm text-[var(--qz-muted)]">
@@ -291,8 +327,29 @@ export default function ArchiveOverview({
           )}
           {/* Integrity actions need only the open archive, not the parsed
           summary — pinned to the card bottom, available collapsed,
-          loading, or when details are unavailable. */}
-          <div className="px-5 pt-4 pb-5">{actionButtons}</div>
+          loading, or when details are unavailable. The More toggle sits
+          left in the same row (same shell as Test/Checksum); it hides
+          with the collapsed card and never auto-reopens the extras. */}
+          <div className="flex items-center justify-between gap-2 px-5 pt-4 pb-5">
+            <div>
+              {!collapsed && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setShowExtra((s) => !s)}
+                  aria-expanded={showExtra}
+                  aria-label={extraLabel}
+                  title={extraLabel}
+                  disabled={!info}
+                  className="w-32"
+                >
+                  <MoreHorizontal size={14} aria-hidden />
+                  {extraLabel}
+                </Button>
+              )}
+            </div>
+            {actionButtons}
+          </div>
         </div>
       )}
     </Card>

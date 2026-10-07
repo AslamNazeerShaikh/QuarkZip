@@ -151,17 +151,20 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   `docs/passwords.md`.
 - `ArchiveTable` reports checkbox selection via `onSelectionChange`
   (cleared on each new listing); `App` feeds it to the dialog + extract.
-- `ArchiveOverview`: fixed-geometry overview card — centered empty state
-  (icon tile + title + description + primary CTA + hint); once open, no
-  card header and no pills (path lives in the centered window title;
-  format/encryption/solid already have grid rows): the details start
-  straight into the fixed 4×4 metadata grid (micro-label + 14px medium
-  value). The 16 cells are identical for every archive type — `—` fills
-  N/A (7z-only Headers/Method/Solid/Blocks, entry-derived Host OS and
-  Algorithms, Zip64-only extras are dropped, never rendered): no layout
-  shift, no card scrollbar, ever. The ratio cell always reserves its
-  progressbar track (empty fill when unmeasurable). Columns: Name flexes, Modified
-  is fixed at `w-64`. Below the details (always, once an archive is open —
+- `ArchiveOverview`: three-state overview card — startup (no archive) shares
+  the column equally with the table (both `flex-1`, centered empty state:
+  icon tile + title + description + primary CTA + hint); once open, the
+  card shrink-wraps a fixed 4×4 metadata grid (micro-label + 14px medium
+  value, no card header, no pills: path lives in the centered window
+  title) that is identical for every archive type — `—` fills N/A
+  (7z-only Headers/Method/Solid/Blocks, entry-derived Host OS and
+  Algorithms): no layout shift, no card scrollbar, ever. The ratio cell
+  always reserves its progressbar track (empty fill when unmeasurable).
+  A `More`/`Less` toggle (secondary `sm`, left of the action row, same
+  shell as Test/Checksum) grows the card with the engine's full header
+  metadata for advanced users while the table shrinks; collapsing hides
+  the toggle, and re-expanding shows it without reshowing the extras.
+  Below the details (always, once an archive is open —
   even when the summary is unavailable) sits the integrity action row,
   right-aligned: equal-width (`w-32`) secondary `sm` `Test`
   (`test_archive`) and `Checksum` (`checksum_file`) buttons opening their
@@ -181,12 +184,13 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
 ## Layout
 
 Single window (800×675 default/minimum, Tauri `tauri.conf.json`), no sidebar: slim
-drag strip (`h-14`), then the content column: `ArchiveOverview` above
-shrink-wraps its fixed grid (expanded and collapsed alike — `flex-none`;
-collapsed shows the action row only), the table (`flex-1`) absorbs all
-leftover space below — then the action
-bar, all on the 28px rhythm. Only the table, menus, and dropdowns scroll;
-the card never does. The
+drag strip (`h-14`), then the content column: startup shares it equally
+(`ArchiveOverview` and table both `flex-1`); once open, the card
+shrink-wraps its fixed grid and the table (`flex-1`) absorbs all
+leftover space (growing the card via More shrinks the table) — then the
+action bar, all on the 28px rhythm. Only the table, menus, dropdowns,
+and the More panel (pathological key counts only) scroll; the card
+itself never does. The
 table scroller carries no bottom padding, so at max scroll the last row
 lands exactly on the viewport bottom (no dead zone), with or without
 pagination.

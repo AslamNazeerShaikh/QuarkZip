@@ -22,6 +22,7 @@ const INFO: ArchiveInfo = {
   host_os: ["Unix"],
   container_size: 255,
   container_modified: 1791569985,
+  extra: { "64-bit": "+", Characteristics: "Zip64" },
 };
 
 describe("ArchiveOverview", () => {
@@ -107,9 +108,9 @@ describe("ArchiveOverview", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("should_render_fixed_schema_with_no_extra_section_or_scroller", () => {
-    // Engine extras (64-bit, Characteristics, …) never reach the card:
-    // same 16 cells for every archive, card shrink-wraps, no scrollbar.
+  it("should_hide_engine_extras_until_more_pressed", async () => {
+    // Fixed 16-cell grid up front; maximum metadata only behind More.
+    const user = userEvent.setup();
     const { container } = render(
       <ArchiveOverview
         archive="/tmp/qz-sample.7z"
@@ -118,10 +119,41 @@ describe("ArchiveOverview", () => {
         onOpen={() => {}}
       />,
     );
-    expect(
-      screen.queryByRole("region", { name: "More details" }),
-    ).not.toBeInTheDocument();
     expect(container.querySelector(".overflow-y-auto")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("region", { name: "Additional details" }),
+    ).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "More" }));
+    expect(
+      screen.getByRole("region", { name: "Additional details" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Zip64")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Less" }));
+    expect(
+      screen.queryByRole("region", { name: "Additional details" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("should_hide_more_button_when_collapsed_and_not_reopen_extras", async () => {
+    const user = userEvent.setup();
+    render(
+      <ArchiveOverview
+        archive="/tmp/qz-sample.7z"
+        info={INFO}
+        loading={false}
+        onOpen={() => {}}
+      />,
+    );
+    await user.click(screen.getByRole("button", { name: "More" }));
+    expect(screen.getByText("Zip64")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Collapse details" }));
+    expect(
+      screen.queryByRole("button", { name: "More" }),
+    ).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Expand details" }));
+    // Button back, extras not reshown until pressed again.
+    expect(screen.getByRole("button", { name: "More" })).toBeInTheDocument();
+    expect(screen.queryByText("Zip64")).not.toBeInTheDocument();
   });
 
   it("should_reserve_the_ratio_row_without_measurable_ratio", () => {

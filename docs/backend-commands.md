@@ -25,15 +25,15 @@ both unit-tested without a binary (`npm run test:rust`).
 | `greet`               | `name`                                                   | scaffold sample, unused by the UI                                                       |
 | `set_liquid_glass`    | `enabled: bool`                                          | toggles the native glass window background (macOS; no-op elsewhere)                     |
 
-## `ArchiveInfo` schema (fixed 16 cells)
+## `ArchiveInfo` schema (fixed 16 cells + More panel)
 
 `summarize_archive_info` consumes exactly six header keys
-(`Type`, `Physical Size`, `Headers Size`, `Method`, `Solid`, `Blocks`);
-everything else the engine reports is dropped, never rendered — the card
-grid is identical for every archive (`—` for N/A), so it never grows rows
-or scrolls. Measured against 7zz 26.03 (`l -slt`):
+(`Type`, `Physical Size`, `Headers Size`, `Method`, `Solid`, `Blocks`)
+for the fixed card grid; everything else the engine reports rides along
+in `extra` for the card's More panel (advanced users) and never grows
+the grid. Measured against 7zz 26.03 (`l -slt`):
 
-| Format   | Type | Physical | Headers | Method¹ | Solid | Blocks | Dropped as extras                   |
+| Format   | Type | Physical | Headers | Method¹ | Solid | Blocks | More-panel extras                   |
 | -------- | ---- | -------- | ------- | ------- | ----- | ------ | ----------------------------------- |
 | zip      | ✓    | ✓        | —       | —       | —     | —      | `64-bit`, `Characteristics` (Zip64) |
 | 7z plain | ✓    | ✓        | ✓       | ✓       | −     | ✓      | —                                   |

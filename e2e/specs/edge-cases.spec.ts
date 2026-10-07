@@ -86,7 +86,7 @@ test("archive path with spaces and quotes titles correctly", async ({
   await expect(app.getByText("file-1.txt")).toBeVisible();
 });
 
-test("rich info renders the fixed schema with no extra section", async ({
+test("rich info keeps extras behind More and respects collapse", async ({
   app,
 }) => {
   await addArchive(app, "/tmp/rich.7z", {
@@ -110,15 +110,28 @@ test("rich info renders the fixed schema with no extra section", async ({
       host_os: ["Windows"],
       container_size: 4096,
       container_modified: 1_759_623_585,
+      extra: { Tail: "yes" },
     },
   });
   await openViaButton(app, "/tmp/rich.7z");
   await expect(app.getByText("7zAES")).toBeVisible();
   await expect(app.getByText("LZMA2 · BCJ")).toBeVisible();
-  // Fixed 16-cell schema: engine extras never grow card rows.
-  await expect(app.getByRole("region", { name: "More details" })).toHaveCount(
-    0,
-  );
+  // Fixed grid up front; extras only behind More; collapse hides the
+  // toggle and re-expand does not reshow the extras.
+  await expect(
+    app.getByRole("region", { name: "Additional details" }),
+  ).toHaveCount(0);
+  await app.getByRole("button", { name: "More" }).click();
+  await expect(
+    app.getByRole("region", { name: "Additional details" }),
+  ).toContainText("yes");
+  await app.getByRole("button", { name: "Collapse details" }).click();
+  await expect(app.getByRole("button", { name: "More" })).toHaveCount(0);
+  await app.getByRole("button", { name: "Expand details" }).click();
+  await expect(app.getByRole("button", { name: "More" })).toBeVisible();
+  await expect(
+    app.getByRole("region", { name: "Additional details" }),
+  ).toHaveCount(0);
 });
 
 test("single-entry archive has no pagination beyond one page", async ({

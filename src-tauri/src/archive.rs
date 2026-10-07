@@ -278,6 +278,10 @@ pub struct ArchiveInfo {
     pub host_os: Vec<String>,
     pub container_size: Option<u64>,
     pub container_modified: Option<u64>,
+    /// Unconsumed header keys (`64-bit`, `Characteristics`, `Code Page`,
+    /// …): shown only in the card's More panel for advanced users, never
+    /// in the fixed 16-cell grid.
+    pub extra: std::collections::BTreeMap<String, String>,
 }
 
 /// Parse `7zz l -slt` output into an [`ArchiveInfo`].
@@ -449,11 +453,25 @@ pub fn summarize_archive_info(
         cipher_tokens.into_iter().collect::<Vec<_>>().join(" + ")
     };
 
-    // Fixed 16-cell schema (see ArchiveOverview): only the six known
-    // header keys are consumed. Anything else the engine reports
-    // (`64-bit`, `Characteristics`, `Code Page`, `Multivolume`, …) is an
-    // unbounded, per-format-varying set that would grow extra card rows —
-    // it is deliberately not shipped to the UI.
+    // Fixed 16-cell grid (see ArchiveOverview) consumes only the six
+    // known header keys. Everything else the engine reports (`64-bit`,
+    // `Characteristics`, `Code Page`, `Multivolume`, …) is an unbounded,
+    // per-format-varying set: it ships in `extra` for the card's More
+    // panel (advanced users) and never grows the fixed grid.
+    let known = [
+        "Type",
+        "Physical Size",
+        "Headers Size",
+        "Method",
+        "Solid",
+        "Blocks",
+    ];
+    let extra: std::collections::BTreeMap<String, String> = header
+        .iter()
+        .filter(|(k, _)| !known.contains(&k.as_str()))
+        .map(|(k, v)| (k.clone(), v.clone()))
+        .collect();
+
     ArchiveInfo {
         container_format: header.remove("Type"),
         physical_size: header.remove("Physical Size").and_then(|s| s.parse().ok()),
@@ -473,6 +491,7 @@ pub fn summarize_archive_info(
         host_os: host_os.into_iter().collect(),
         container_size: None,
         container_modified: None,
+        extra,
     }
 }
 

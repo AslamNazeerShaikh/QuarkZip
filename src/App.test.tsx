@@ -134,6 +134,7 @@ vi.mock("@tauri-apps/api/core", () => ({
           host_os: ["Unix"],
           container_size: 1403808,
           container_modified: 1791563723,
+          extra: { "64-bit": "+", Characteristics: "Zip64" },
         });
       }
       return Promise.reject(`unexpected command ${cmd}`);
@@ -270,6 +271,7 @@ describe("drag and drop", () => {
   it("should_survive_stress_shaped_listing_without_blanking", async () => {
     // Regression: hostile names (200-char runs, unicode, `=`, spaces,
     // null sizes/dates, folders) must render, not unmount the tree.
+    const user = userEvent.setup();
     render(<App />);
     dragHandlers[dragHandlers.length - 1]?.({
       payload: { type: "drop", paths: ["/tmp/stress.zip"] },
@@ -284,6 +286,10 @@ describe("drag and drop", () => {
     expect(screen.getByRole("button", { name: "Extract" })).toBeVisible();
     expect(screen.getAllByText("Store")).toHaveLength(2);
     expect(screen.getAllByText("10,021")).toHaveLength(2);
+    // Engine extras stay behind More, even at 10k rows.
+    expect(screen.queryByText("Zip64")).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "More" }));
+    expect(screen.getByText("Zip64")).toBeInTheDocument();
   });
 
   it("should_keep_previous_listing_when_open_is_cancelled", async () => {
