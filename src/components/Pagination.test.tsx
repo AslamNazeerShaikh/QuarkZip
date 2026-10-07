@@ -195,18 +195,18 @@ describe("Pagination page jump", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("should_jump_on_leading_digits_and_confirm_the_rest", async () => {
+  it("should_confirm_trailing_garbage_with_read_off_target", async () => {
     const user = userEvent.setup();
     const { onPage } = setupJump();
     const field = screen.getByRole("spinbutton", { name: "Go to page" });
-    // Trailing garbage is ignored when the head is a good page.
+    // "2xyz" reads off page 2 but still confirms first.
     await user.clear(field);
     await user.type(field, "2xyz");
     await user.keyboard("{Enter}");
+    expect(onPage).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Invalid page" })).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Jump" }));
     expect(onPage).toHaveBeenCalledWith(1);
-    expect(
-      screen.queryByRole("dialog", { name: "Invalid page" }),
-    ).not.toBeInTheDocument();
   });
 
   it("should_confirm_weird_input_with_jump_or_cancel", async () => {

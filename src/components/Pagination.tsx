@@ -70,18 +70,21 @@ function PageJump({
     revert();
   }
   function commit() {
-    // Leading digits win ("66abc" → 66): in range jumps silently, out of
-    // range confirms with the clamped target. Pure garbage ("abc", "")
-    // confirms with page 1 as the only sane default.
+    // Only a clean in-range number jumps silently. Everything else —
+    // out-of-range, trailing garbage ("66abc"), pure garbage, empty —
+    // confirms first; Jump lands on the read-off page (leading digits,
+    // clamped) and Cancel reverts.
     const trimmed = text.trim();
-    const head = trimmed.match(/^\d+/);
-    const n = head ? Number.parseInt(head[0], 10) : NaN;
-    if (Number.isInteger(n) && n >= 1 && n <= pageCount) {
-      jumpTo(n);
-      return;
+    if (/^\d+$/.test(trimmed)) {
+      const n = Number.parseInt(trimmed, 10);
+      if (n >= 1 && n <= pageCount) {
+        jumpTo(n);
+        return;
+      }
     }
-    const target = Number.isInteger(n)
-      ? Math.min(Math.max(n, 1), pageCount)
+    const head = trimmed.match(/^\d+/);
+    const target = head
+      ? Math.min(Math.max(Number.parseInt(head[0], 10), 1), pageCount)
       : 1;
     setPending({ raw: text, target });
   }

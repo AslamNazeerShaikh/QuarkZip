@@ -438,9 +438,9 @@
     "semantic_hash": ""
   },
   "e2e/specs/pagination.spec.ts": {
-    "mtime": 1791389887.816237,
-    "seen": 1791389916.038469,
-    "ast_hash": "13a167e4174506178ff27271203ff53b",
+    "mtime": 1791390120.8797576,
+    "seen": 1791390125.328659,
+    "ast_hash": "21a6d0bee4c12ce022f29e049ae6abce",
     "semantic_hash": ""
   },
   "e2e/specs/responsive.spec.ts": {
@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791389906.0347416,
-    "seen": 1791389916.038579,
-    "ast_hash": "156ed903e6ac9f1c3209f626d44bec31",
+    "mtime": 1791390114.2961242,
+    "seen": 1791390125.3287702,
+    "ast_hash": "679c20fbc6dadcc56e24c43908574fda",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -948,15 +948,15 @@
     "semantic_hash": ""
   },
   "src/components/Pagination.test.tsx": {
-    "mtime": 1791389878.5842938,
-    "seen": 1791389916.038489,
-    "ast_hash": "b54b46dee0186c8c9708cb040e9c7fb9",
+    "mtime": 1791390061.940466,
+    "seen": 1791390125.32868,
+    "ast_hash": "20030efe38d9b3a7868ad995681091b1",
     "semantic_hash": ""
   },
   "src/components/Pagination.tsx": {
-    "mtime": 1791389861.7407782,
-    "seen": 1791389916.03849,
-    "ast_hash": "d3e37bb8d0b5cabe23b30ec1188075ba",
+    "mtime": 1791390054.7049968,
+    "seen": 1791390125.32868,
+    "ast_hash": "6b291a768f020c5c8871ccc5660edd2a",
     "semantic_hash": ""
   },
   "src/components/PasswordDialog.test.tsx": {

@@ -102,12 +102,12 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   The page-size menu hugs its trigger (`left-0`, `w-max min-w-full`, 8px
   gap) with option text insets matching the trigger (`px-2`), so list
   edges and text align with the control below. A jump-to-page field
-  (`spinbutton`, same h-7 inner shell) sits past Next: clean in-range
-  numbers jump silently on Enter (leading digits win, so `66abc` means
-  66); out-of-range or digit-free input opens
-  an Invalid-page confirm (warning icon, valid range shown, Jump runs the
-  same clamp / Cancel reverts to the open page). Escape/blur reverts,
-  hidden on single pages. Edge-anchored menus open
+  (`spinbutton`, same h-7 inner shell) sits past Next: only clean
+  in-range numbers jump silently on Enter; anything else (`66abc`,
+  out-of-range, non-numeric, empty) opens
+  an Invalid-page confirm (warning icon, valid range shown, Jump lands on
+  the read-off page / Cancel reverts to the open page). Escape/blur
+  reverts, hidden on single pages. Edge-anchored menus open
   inward instead (`LanguageSwitch` uses `right-0` at the window's right
   edge) so floating lists never touch the sidewalls. The footer `About` and
   `LanguageSwitch` controls reuse the same shell as icon-only buttons
