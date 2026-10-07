@@ -80,6 +80,9 @@ async function setWindowTitle(archive: string | null): Promise<void> {
 export default function App() {
   const { choice, setChoice } = useTheme();
   const { t } = useLanguage();
+  // While the theme segment is out, pagination shrinks to its icon so the
+  // card row never overflows at 800px; minimizing restores full width.
+  const [themeOpen, setThemeOpen] = useState(false);
   // macOS uses an overlay title bar (traffic lights float over the webview,
   // set in Rust), so TitleBar renders a slim drag strip there instead of the
   // Linux custom window controls.
@@ -557,12 +560,19 @@ export default function App() {
                     total={totalEntries}
                     onPage={changePage}
                     onPageSize={changePageSize}
+                    compact={themeOpen}
+                    onExpand={() => setThemeOpen(false)}
                   />
                 ) : undefined
               }
               utilityControls={
                 <>
-                  <ThemeSwitch choice={choice} onChange={setChoice} />
+                  <ThemeSwitch
+                    choice={choice}
+                    onChange={setChoice}
+                    expanded={themeOpen}
+                    onExpandedChange={setThemeOpen}
+                  />
                   <LanguageSwitch />
                   {/* Icon-only shell like ThemeSwitch: h-9, 10px radius, 1px
                     border, card shadow. Hover/tip names it (aria-label + title). */}
@@ -614,7 +624,7 @@ export default function App() {
                   {extracting ? t("app.extracting") : t("app.extractSelected")}
                 </Button>
                 <Button
-                  variant="secondary"
+                  variant="success"
                   size="bar"
                   onClick={() => setConfirming("all")}
                   disabled={!dest || extracting || totalEntries === 0}

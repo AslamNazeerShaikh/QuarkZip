@@ -39,18 +39,43 @@ test("opening an archive records the window title", async ({ app }) => {
 });
 
 test("open lives in the titlebar, left on linux", async ({ app }) => {
+  // Empty state owns no Open — the card CTA does that job.
+  await expect(
+    app.getByRole("button", { name: "Open new…" }),
+  ).not.toBeVisible();
+  await addArchive(app, "/tmp/titled.zip", { count: 1 });
+  await openViaButton(app, "/tmp/titled.zip");
   const header = app.locator("header");
   await expect(header.getByRole("button", { name: "Open new…" })).toBeVisible();
 });
 
-test("macOS overlay keeps open on the right with a centered title", async ({
-  page,
-}) => {
+test("long paths middle-truncate, keeping the file name", async ({ app }) => {
+  const path = "/very/long/directory/chain/that/keeps/going/on/forever.zip";
+  await addArchive(app, path, { count: 1 });
+  await openViaButton(app, path);
+  await expect(app.locator("header")).toContainText("forever.zip");
+});
+
+test("macOS overlay hides open until an archive is open", async ({ page }) => {
   await page.goto("/?platform=macos");
   await page.evaluate(() => window.__e2e.reset());
   // No custom window controls there — the overlay strip owns the bar.
   await expect(page.locator("header")).toHaveCount(0);
   const bar = page.getByTestId("mac-titlebar");
-  await expect(bar.getByRole("button", { name: "Open new…" })).toBeVisible();
+  await expect(
+    bar.getByRole("button", { name: "Open new…" }),
+  ).not.toBeVisible();
   await expect(bar).toContainText("QuarkZip");
+});
+
+test("macOS overlay shows open on the right once open", async ({ page }) => {
+  await page.goto("/?platform=macos");
+  await page.evaluate(() => window.__e2e.reset());
+  await page.evaluate(() =>
+    window.__e2e.addArchive("/tmp/m.zip", { count: 1 }),
+  );
+  await page.evaluate(() => window.__e2e.drop(["/tmp/m.zip"]));
+  const bar = page.getByTestId("mac-titlebar");
+  await expect(bar.getByRole("button", { name: "Open new…" })).toBeVisible();
+  await expect(bar).toContainText("m.zip");
 });

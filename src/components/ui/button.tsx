@@ -1,7 +1,14 @@
 import type { ButtonHTMLAttributes } from "react";
 import { cn } from "./utils";
 
-type Variant = "primary" | "secondary" | "ghost" | "warning" | "accent";
+type Variant =
+  | "primary"
+  | "secondary"
+  | "ghost"
+  | "warning"
+  | "accent"
+  | "success"
+  | "highlight";
 type Size = "default" | "sm" | "bar" | "icon";
 
 const VARIANTS: Record<Variant, string> = {
@@ -21,6 +28,13 @@ const VARIANTS: Record<Variant, string> = {
     "bg-[var(--qz-warning-soft)] text-[var(--qz-warning)] hover:opacity-80",
   accent:
     "bg-[var(--qz-info)] text-[var(--qz-on-primary)] border border-transparent hover:opacity-90",
+  // User-requested solid actions (deviation from the one-hue rule, see
+  // color-system.md rule 1): green Extract All, yellow Open. Opaque fills
+  // (glass-safe) with per-theme text; hover via opacity so no extra pairs.
+  success:
+    "bg-[var(--qz-extract)] text-[var(--qz-extract-text)] border border-transparent hover:opacity-90",
+  highlight:
+    "bg-[var(--qz-open)] text-[var(--qz-open-text)] border border-transparent hover:opacity-90",
 };
 
 const SIZES: Record<Size, string> = {

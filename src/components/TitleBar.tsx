@@ -10,10 +10,69 @@ interface TitleBarProps {
   hidden?: boolean;
   /// Owned by the parent (it also drives the flush maximized layout).
   maximized: boolean;
-  /// Opens the archive picker (moved here from the footer: mac right,
-  /// Linux left, title always centered).
+  /// Opens another archive: shown only once an archive is open (mac
+  /// right, Linux left), title always centered. Hidden on the empty
+  /// state — the card's own CTA owns opening there.
   onOpen: () => void;
   openDisabled?: boolean;
+}
+
+/// Window title with middle-truncated archive path: the app name + prefix
+/// never shrink, the directory portion takes the ellipsis, and the file
+/// name always survives (`…/photo.zip`, never `…/pho`). Short titles sit
+/// centered; long ones expand into every free pixel (pure flex, so window
+/// resizes reflow it live). Full path on hover.
+function ArchiveTitle({ archive }: { archive: string }) {
+  const { t } = useLanguage();
+  const prefix = t("titlebar.pathPrefix");
+  const m = archive.match(/^(.*[/\\])([^/\\]+)$/);
+  const dir = m ? m[1] : archive;
+  const file = m ? m[2] : "";
+  return (
+    <span className="flex min-w-0 items-center justify-center" title={archive}>
+      <span className="shrink-0 font-semibold">QuarkZip</span>
+      <span className="shrink-0 text-[var(--qz-glass-muted)]">
+        {" "}
+        | &quot;{prefix}
+      </span>
+      {file ? (
+        <>
+          <span className="truncate text-[var(--qz-glass-muted)]">{dir}</span>
+          <span className="shrink-0 text-[var(--qz-glass-muted)]">
+            {file}&quot;
+          </span>
+        </>
+      ) : (
+        <span className="truncate text-[var(--qz-glass-muted)]">
+          {dir}&quot;
+        </span>
+      )}
+    </span>
+  );
+}
+
+/// Linux twin of the split above in window-chrome tokens (glass tokens are
+/// mac-strip only — everywhere else the title sits on theme surfaces).
+function ArchiveTitleThemed({ archive }: { archive: string }) {
+  const { t } = useLanguage();
+  const prefix = t("titlebar.pathPrefix");
+  const m = archive.match(/^(.*[/\\])([^/\\]+)$/);
+  const dir = m ? m[1] : archive;
+  const file = m ? m[2] : "";
+  return (
+    <span className="flex min-w-0 items-center justify-center" title={archive}>
+      <span className="shrink-0 font-semibold">QuarkZip</span>
+      <span className="shrink-0 text-[var(--qz-muted)]"> | &quot;{prefix}</span>
+      {file ? (
+        <>
+          <span className="truncate text-[var(--qz-muted)]">{dir}</span>
+          <span className="shrink-0 text-[var(--qz-muted)]">{file}&quot;</span>
+        </>
+      ) : (
+        <span className="truncate text-[var(--qz-muted)]">{dir}&quot;</span>
+      )}
+    </span>
+  );
 }
 
 /// Custom client-side title bar for borderless windows (`decorations: false`).
@@ -23,6 +82,10 @@ interface TitleBarProps {
 /// On macOS (`hidden`) the window uses an overlay title bar: traffic lights
 /// float over the webview, so this renders a slim drag strip with a left
 /// inset clearing the lights — no window buttons, no native title.
+///
+/// Both bars share one grid (`minmax` sides, `auto` center): the center
+/// never blows the bar out — it shrinks first and the path truncates in
+/// the middle — and Open appears only with an archive open.
 export default function TitleBar({
   archive,
   hidden,
@@ -31,11 +94,13 @@ export default function TitleBar({
   openDisabled = false,
 }: TitleBarProps) {
   const { t } = useLanguage();
+  // Yellow solid (user-requested action color): opaque on glass too.
+  const openClass =
+    "flex h-8 items-center gap-1.5 rounded-[8px] border border-transparent bg-[var(--qz-open)] px-3 text-[13px] font-medium whitespace-nowrap text-[var(--qz-open-text)] transition-opacity outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40 disabled:pointer-events-none disabled:opacity-50";
   if (hidden) {
-    // Overlay strip: grid keeps the title truly centered while Open sits
-    // right. The left cell stays empty so the title never slides under the
-    // floating traffic lights (x20); the glass strip uses glass tokens
-    // (dark in both themes — the backdrop is wallpaper, not a surface).
+    // Overlay strip: with an archive the title claims every pixel past
+    // the 76px light inset; empty it falls back to the symmetric inset
+    // so bare "QuarkZip" stays exactly centered.
     return (
       <div
         data-tauri-drag-region
@@ -43,29 +108,31 @@ export default function TitleBar({
           if (e.button === 0) void invoke("drag_window");
         }}
         data-testid="mac-titlebar"
-        className="grid h-12 shrink-0 cursor-default grid-cols-[1fr_auto_1fr] items-center px-4 select-none"
+        className={`grid h-12 shrink-0 cursor-default grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] items-center select-none ${
+          archive ? "pr-4 pl-[76px]" : "px-[76px]"
+        }`}
       >
         <div aria-hidden />
-        <span className="max-w-[40vw] truncate px-2 text-center text-[13px] text-[var(--qz-glass-text)]">
-          <span className="font-semibold">QuarkZip</span>
-          {archive && (
-            <span className="text-[var(--qz-glass-muted)]">
-              {" "}
-              | &quot;{t("titlebar.path", { path: archive })}&quot;
-            </span>
+        <span className="max-w-full min-w-0 px-2 text-center text-[13px] text-[var(--qz-glass-text)]">
+          {archive ? (
+            <ArchiveTitle archive={archive} />
+          ) : (
+            <span className="font-semibold">QuarkZip</span>
           )}
         </span>
-        <div className="flex items-center justify-end">
-          <button
-            type="button"
-            onMouseDown={stopDrag}
-            onClick={onOpen}
-            disabled={openDisabled}
-            className="flex h-8 items-center gap-1.5 rounded-[8px] border border-black/10 px-3 text-[13px] font-medium whitespace-nowrap text-[var(--qz-glass-text)] transition-colors outline-none hover:bg-black/5 focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40 disabled:pointer-events-none disabled:opacity-50"
-          >
-            <FolderOpen size={14} aria-hidden />
-            {t("app.openNew")}
-          </button>
+        <div className="flex min-w-0 items-center justify-end">
+          {archive && (
+            <button
+              type="button"
+              onMouseDown={stopDrag}
+              onClick={onOpen}
+              disabled={openDisabled}
+              className={openClass}
+            >
+              <FolderOpen size={14} aria-hidden />
+              {t("app.openNew")}
+            </button>
+          )}
         </div>
       </div>
     );
@@ -112,32 +179,35 @@ export default function TitleBar({
         if (e.button === 0) void invoke("drag_window");
       }}
       onDoubleClick={() => void toggleMaximize()}
-      className="grid h-12 shrink-0 cursor-default grid-cols-[1fr_auto_1fr] items-center pr-2 pl-4 select-none"
+      className="grid h-12 shrink-0 cursor-default grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] items-center pr-2 pl-4 select-none"
     >
       {/* Left: Open sits here on Linux (window controls own the right);
           the app mark rides along so the centered title stays balanced. */}
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onMouseDown={stopDrag}
-          onClick={onOpen}
-          disabled={openDisabled}
-          className="flex h-8 items-center gap-1.5 rounded-[9px] border border-[var(--qz-border)] px-3 text-[13px] font-medium whitespace-nowrap text-[var(--qz-text)] transition-colors outline-none hover:bg-black/5 focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40 disabled:pointer-events-none disabled:opacity-50 dark:hover:bg-white/10"
-        >
-          <FolderOpen size={14} aria-hidden />
-          {t("app.openNew")}
-        </button>
-        <span className="h-2.5 w-2.5 rounded-full bg-[var(--qz-primary)]" />
+      <div className="flex min-w-0 items-center gap-2">
+        {archive && (
+          <button
+            type="button"
+            onMouseDown={stopDrag}
+            onClick={onOpen}
+            disabled={openDisabled}
+            className={openClass}
+          >
+            <FolderOpen size={14} aria-hidden />
+            {t("app.openNew")}
+          </button>
+        )}
+        <span
+          aria-hidden
+          className="h-2.5 w-2.5 shrink-0 rounded-full bg-[var(--qz-primary)]"
+        />
       </div>
 
-      {/* Centered window title, ellipsis on overflow. */}
-      <span className="max-w-[52vw] truncate px-2 text-center text-[13px]">
-        <span className="font-semibold">QuarkZip</span>
-        {archive && (
-          <span className="text-[var(--qz-muted)]">
-            {" "}
-            | &quot;{t("titlebar.path", { path: archive })}&quot;
-          </span>
+      {/* Centered window title, middle-ellipsis on overflow. */}
+      <span className="max-w-full min-w-0 px-2 text-center text-[13px]">
+        {archive ? (
+          <ArchiveTitleThemed archive={archive} />
+        ) : (
+          <span className="font-semibold">QuarkZip</span>
         )}
       </span>
 

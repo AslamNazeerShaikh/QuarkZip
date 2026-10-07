@@ -72,3 +72,35 @@ export function joinDest(dest: string, subfolder: string | null): string {
   if (!subfolder) return dest;
   return `${dest.replace(/\/+$/, "")}/${subfolder.normalize("NFC")}`;
 }
+
+/// UTF-8 byte length of a name (what the 255 cap counts).
+export function utf8Length(name: string): number {
+  return new TextEncoder().encode(name).length;
+}
+
+/// Filesystem-safe local stamp (`2026-10-08_14-30-05`): date and time joined
+/// by an underscore, no colons/spaces — legal on APFS and sortable.
+export function dateStamp(d: Date = new Date()): string {
+  const p = (n: number) => String(n).padStart(2, "0");
+  return (
+    `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}` +
+    `_${p(d.getHours())}-${p(d.getMinutes())}-${p(d.getSeconds())}`
+  );
+}
+
+/// Appends `_dateStamp` to a folder name, trimming the head (char-safe, so
+/// multi-byte glyphs never split) when the result would pass 255 bytes.
+/// The stamp itself is never cut — the preview always shows when.
+export function appendDateStamp(name: string, d: Date = new Date()): string {
+  const base = name === "" ? "extracted" : name;
+  const stamp = dateStamp(d);
+  const full = `${base}_${stamp}`;
+  if (utf8Length(full) <= 255) return full;
+  const budget = 255 - utf8Length(`_${stamp}`);
+  let out = "";
+  for (const ch of base) {
+    if (utf8Length(out + ch) > budget) break;
+    out += ch;
+  }
+  return `${out}_${stamp}`;
+}

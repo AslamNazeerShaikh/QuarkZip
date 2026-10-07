@@ -12,7 +12,7 @@
   "titlebar.maximize": "मैक्सिमाइज़",
   "titlebar.restore": "रिस्टोर",
   "titlebar.close": "बंद करें",
-  "titlebar.path": "पथ: {path}",
+  "titlebar.pathPrefix": "पथ: ",
 
   "overview.emptyTitle": "कोई आर्काइव खुला नहीं है",
   "overview.emptyDesc": "7z, zip, tar या 30+ अन्य फ़ॉर्मैट खोलें — या कहीं भी फ़ाइल छोड़ें।",
@@ -77,6 +77,7 @@
   "pagination.jumpTitle": "अमान्य पृष्ठ",
   "pagination.jumpMessage": "पृष्ठ “{{raw}}” मौजूद नहीं है — पृष्ठ 1–{{max}} तक हैं। इसके बजाय पृष्ठ {{target}} पर जाएँ?",
   "pagination.jump": "जंप",
+  "pagination.expand": "पेजिनेशन दिखाएँ",
   "pagination.all": "सभी",
 
   "theme.group": "रंग थीम",
@@ -106,6 +107,8 @@
   "extract.folderErrorInvalidUnicode": "केवल मान्य UTF-8 टेक्स्ट उपयोग करें।",
   "extract.folderErrorExists": "इस नाम वाली फ़ाइल या फ़ोल्डर यहाँ पहले से मौजूद है।",
   "extract.folderChecking": "नाम जाँचा जा रहा है…",
+  "extract.folderLimit": "{used} / 255 बाइट्स (UTF-8)",
+  "extract.appendDate": "दिनांक-समय जोड़ें",
 
   "done.successTitle": "एक्सट्रैक्शन पूर्ण",
   "done.successFiles": "{count} फ़ाइलें यहाँ एक्सट्रैक्ट की गईं",

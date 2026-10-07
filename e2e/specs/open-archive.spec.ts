@@ -16,14 +16,17 @@ test("launch shows empty state with only theme control in footer", async ({
   await expect(app.getByRole("button", { name: "Open archive" })).toBeVisible();
   await expect(app.getByText("No entries")).toBeVisible();
   await expect(app.locator("header")).toContainText("QuarkZip");
-  // No archive-dependent actions yet (Open lives in the titlebar now).
+  // No archive-dependent actions yet (Open lives in the titlebar now,
+  // and only once an archive is open).
   await expect(
     app.getByRole("button", { name: "Extract Selected" }),
   ).not.toBeVisible();
   await expect(
     app.getByRole("button", { name: "Extract All" }),
   ).not.toBeVisible();
-  await expect(app.getByRole("button", { name: "Open new…" })).toBeVisible();
+  await expect(
+    app.getByRole("button", { name: "Open new…" }),
+  ).not.toBeVisible();
   await expect(app.getByRole("button", { name: "Change theme" })).toBeVisible();
 });
 
@@ -120,4 +123,26 @@ test("open new switches archives", async ({ app }) => {
   await expect(app.getByText("bbb.txt")).toBeVisible();
   await expect(app.getByText("aaa.txt")).not.toBeVisible();
   await expect(app.locator("header")).toContainText('"Path: /tmp/b.zip"');
+});
+
+test("collapsing the card shifts controls left, expanding restores", async ({
+  app,
+}) => {
+  await addArchive(app, PATH, { count: 3 });
+  await openViaButton(app, PATH);
+  const row = app.getByTestId("card-controls");
+  await expect(row).toBeVisible();
+  // Expanded: More owns the row's left end.
+  expect(
+    await row.evaluate((el) => el.parentElement?.firstElementChild !== el),
+  ).toBe(true);
+  await app.getByRole("button", { name: "Collapse details" }).click();
+  await expect(app.getByRole("button", { name: "More" })).not.toBeVisible();
+  // Collapsed: the More cell unmounts, controls take the left end.
+  expect(
+    await row.evaluate((el) => el.parentElement?.firstElementChild === el),
+  ).toBe(true);
+  await expect(row.getByRole("button", { name: "Change theme" })).toBeVisible();
+  await app.getByRole("button", { name: "Expand details" }).click();
+  await expect(app.getByRole("button", { name: "More" })).toBeVisible();
 });

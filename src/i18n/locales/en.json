@@ -12,7 +12,7 @@
   "titlebar.maximize": "Maximize",
   "titlebar.restore": "Restore",
   "titlebar.close": "Close",
-  "titlebar.path": "Path: {path}",
+  "titlebar.pathPrefix": "Path: ",
 
   "overview.emptyTitle": "No archive open",
   "overview.emptyDesc": "Open a 7z, zip, tar or 30+ other formats — or drop a file anywhere.",
@@ -77,6 +77,7 @@
   "pagination.jumpTitle": "Invalid page",
   "pagination.jumpMessage": "Page “{{raw}}” doesn’t exist — pages run 1–{{max}}. Jump to page {{target}} instead?",
   "pagination.jump": "Jump",
+  "pagination.expand": "Show pagination",
   "pagination.all": "All",
 
   "theme.group": "Color theme",
@@ -106,6 +107,8 @@
   "extract.folderErrorInvalidUnicode": "Use valid UTF-8 text only.",
   "extract.folderErrorExists": "A file or folder with this name already exists here.",
   "extract.folderChecking": "Checking name…",
+  "extract.folderLimit": "{used} / 255 bytes (UTF-8)",
+  "extract.appendDate": "Append date-time",
 
   "done.successTitle": "Extraction complete",
   "done.successFiles": "{count} files extracted to",

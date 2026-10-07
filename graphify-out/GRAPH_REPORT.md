@@ -1,16 +1,16 @@
-# Graph Report - QuarkZip  (2026-10-07)
+# Graph Report - QuarkZip  (2026-10-08)
 
 ## Corpus Check
-- 269 files · ~402,266 words
+- 269 files · ~404,135 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2313 nodes · 3388 edges · 216 communities (195 shown, 9 thin omitted)
+- 2319 nodes · 3405 edges · 215 communities (195 shown, 8 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b80b9b6a`
+- Built from commit: `dc80585c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -26,7 +26,7 @@
 - compilerOptions
 - mcp
 - devDependencies
-- ArchiveOverview.tsx
+- react
 - checksum.rs
 - Opencode Configuration for QuarkZip
 - MacPacker reference (upstream)
@@ -78,14 +78,13 @@
 - agents
 - vite.config.ts
 - ExtractDialog.tsx
-- lint-staged
-- TitleBar.tsx
+- useLanguage
 - bridge.cpp
 - sevenzip.rs
 - pull-hig.mjs
 - ArchiveTable.tsx
 - vitest
-- useLanguage
+- PasswordDialog.tsx
 - ChecksumDialog.tsx
 - AboutDialog.tsx
 - fetch-7z-src.sh
@@ -221,7 +220,7 @@
 - App.tsx
 
 ## God Nodes (most connected - your core abstractions)
-1. `useLanguage()` - 34 edges
+1. `useLanguage()` - 36 edges
 2. `vitest` - 21 edges
 3. `QzList` - 21 edges
 4. `App()` - 21 edges
@@ -247,7 +246,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (216 total, 9 thin omitted)
+## Communities (215 total, 8 thin omitted)
 
 ### Community 0 - "scripts"
 Cohesion: 0.12
@@ -262,8 +261,8 @@ Cohesion: 0.17
 Nodes (11): commands, custom, instructions, lsp, model, plugin, $schema, skills (+3 more)
 
 ### Community 3 - "package.json"
-Cohesion: 0.09
-Nodes (22): name, private, type, version, @fontsource/inter, husky, jsdom, lint-staged (+14 more)
+Cohesion: 0.08
+Nodes (23): lint-staged, src-tauri/**/*.rs, name, private, type, version, @fontsource/inter, husky (+15 more)
 
 ### Community 4 - "archive.rs"
 Cohesion: 0.06
@@ -293,9 +292,9 @@ Nodes (9): mcp, ui-skills, whiteboard, enabled, type, url, command, enabled (+1 
 Cohesion: 0.11
 Nodes (19): devDependencies, husky, jsdom, lint-staged, @playwright/test, prettier, tailwindcss, @tailwindcss/vite (+11 more)
 
-### Community 11 - "ArchiveOverview.tsx"
-Cohesion: 0.13
-Nodes (18): ArchiveOverview(), formatEpoch(), Badge(), BadgeVariant, DOTS, STYLES, Button(), Size (+10 more)
+### Community 11 - "react"
+Cohesion: 0.16
+Nodes (16): react, Badge(), BadgeVariant, DOTS, STYLES, Size, SIZES, Variant (+8 more)
 
 ### Community 12 - "checksum.rs"
 Cohesion: 0.11
@@ -310,8 +309,8 @@ Cohesion: 0.08
 Nodes (25): 0. File hierarchy (accurate, `main` root, ~361 entries), 10. Edge cases (changelog archaeology) + error paths, 11. QuarkZip takeaways (adopt / avoid / divergent), 12.1 The five apps (main `/compare`: 68 formats · 9 capabilities), 12.2 Capability matrix (verbatim descriptions; Y = Yes, P = Partial, – = No), 12.3 Format matrix, all 68 rows (cells are Read/Write; Y/P/–), 12.4 Staleness audit vs MacPacker v1.0.0 + reading for QuarkZip, 12. Appendix A — compare pages in full (`macpacker.app/en/compare*`, fetched Oct 2026) (+17 more)
 
 ### Community 15 - "lib.rs"
-Cohesion: 0.12
-Nodes (38): AppHandle, ArchiveInfo, Mutex, Send, apply_window_glass(), CHECKSUM_CANCEL, checksum_file(), ERROR_TAIL_CHARS (+30 more)
+Cohesion: 0.13
+Nodes (37): AppHandle, ArchiveInfo, Mutex, Send, apply_window_glass(), CHECKSUM_CANCEL, checksum_file(), ERROR_TAIL_CHARS (+29 more)
 
 ### Community 16 - "QuarkZip UI guidelines"
 Cohesion: 0.22
@@ -359,7 +358,7 @@ Nodes (5): description, identifier, permissions, $schema, windows
 
 ### Community 27 - "QuarkZip color system"
 Cohesion: 0.33
-Nodes (5): Accent system (`data-accent`, default blue), Measured contrast (`scripts/contrast-check.py`: 30/30 gated PASS + documented exceptions), QuarkZip color system, Rules, Tokens (`src/index.css`)
+Nodes (5): Accent system (`data-accent`, default blue), Measured contrast (`scripts/contrast-check.py`: 34/34 gated PASS + documented exceptions), QuarkZip color system, Rules, Tokens (`src/index.css`)
 
 ### Community 28 - "AkiZip reference (upstream)"
 Cohesion: 0.08
@@ -442,7 +441,7 @@ Cohesion: 0.22
 Nodes (8): 0. Download page (7-zip.org/download.html, 26.04), 1. Repo tree + build (`ip7z/7zip@main`, 1351 entries, Make-only), 2. Embedding API (no stable public C API for the full engine), 3. Formats, limits, technical claims, 4. History, reception, security, variants, 5. Licensing (repo `DOC/`, Wikipedia concurs), 6. Binding 7-Zip into our Rust backend (MacPacker-style) — feasible, phased, 7-Zip reference (upstream)
 
 ### Community 65 - "App"
-Cohesion: 0.05
+Cohesion: 0.06
 Nodes (50): set_decorations / set_title_bar_style async race, defer Overlay past the async style-mask rewrite, macOS needs flush opaque layout because the floating margin would show the desktop, transparent is creation-only so the rescued native bar stayed transparent, Rules for parallel macOS/Linux development, Steady state per-OS window settings, Steady state (what each OS gets today), What broke (2026-10-04, commit `644f03b`) (+42 more)
 
 ### Community 66 - "github"
@@ -474,12 +473,12 @@ Cohesion: 0.40
 Nodes (3): @tailwindcss/vite, @vitejs/plugin-react, e2eMocks
 
 ### Community 73 - "ExtractDialog.tsx"
-Cohesion: 0.29
-Nodes (9): count(), ExtractDialog(), ExtractMode, invokeMock, ARCHIVE_EXTENSIONS, defaultFolderName(), FolderNameError, joinDest() (+1 more)
+Cohesion: 0.27
+Nodes (12): count(), ExtractDialog(), ExtractMode, invokeMock, appendDateStamp(), ARCHIVE_EXTENSIONS, dateStamp(), defaultFolderName() (+4 more)
 
-### Community 75 - "TitleBar.tsx"
-Cohesion: 0.43
-Nodes (5): TitleBar(), close(), minimize(), toggleMaximize(), TitleBarProps
+### Community 75 - "useLanguage"
+Cohesion: 0.16
+Nodes (15): CHOICE_ICON, ThemeSwitch(), select(), setOpen(), ArchiveTitle(), ArchiveTitleThemed(), TitleBar(), close() (+7 more)
 
 ### Community 76 - "bridge.cpp"
 Cohesion: 0.08
@@ -494,16 +493,16 @@ Cohesion: 0.07
 Nodes (65): abstractOf(), ALL_PLATFORMS, anchorEntries(), anchorMapFor(), cellText(), collapseBlankLines(), collectReferences(), coveredPlatformsLine() (+57 more)
 
 ### Community 79 - "ArchiveTable.tsx"
-Cohesion: 0.11
-Nodes (16): lucide-react, ArchiveTable(), baseColumns(), Column, ROW_HEIGHT, SortDir, SortKey, LoadDialog() (+8 more)
+Cohesion: 0.14
+Nodes (11): lucide-react, ArchiveEntry, ArchiveTable(), baseColumns(), Column, ROW_HEIGHT, SortDir, SortKey (+3 more)
 
 ### Community 80 - "vitest"
 Cohesion: 0.09
-Nodes (19): @testing-library/react, @testing-library/user-event, vitest, ArchiveEntry, DragEvent, dragHandlers, extractCtl, listCtl (+11 more)
+Nodes (19): @testing-library/react, @testing-library/user-event, vitest, DragEvent, dragHandlers, extractCtl, listCtl, osCtl (+11 more)
 
-### Community 81 - "useLanguage"
-Cohesion: 0.21
-Nodes (12): clampPct(), PasswordDialog(), check(), Phase, clampPct(), Phase, TestDialog(), Switcher() (+4 more)
+### Community 81 - "PasswordDialog.tsx"
+Cohesion: 0.24
+Nodes (9): clampPct(), PasswordDialog(), check(), Phase, clampPct(), Phase, TestDialog(), isPasswordError() (+1 more)
 
 ### Community 82 - "ChecksumDialog.tsx"
 Cohesion: 0.24
@@ -1026,21 +1025,19 @@ Cohesion: 0.50
 Nodes (3): macOS design (QuarkZip), Non-negotiables, Reviews
 
 ### Community 216 - "App.tsx"
-Cohesion: 0.15
-Nodes (16): react, ARCHIVE_FILTERS, ExtractDoneDialog(), ExtractResult, ALL_OPTIONS, ALL_PAGE_CAP, formatSize(), PAGE_SIZES (+8 more)
+Cohesion: 0.12
+Nodes (22): react-dom, ARCHIVE_FILTERS, ArchiveOverview(), formatEpoch(), ExtractDoneDialog(), ExtractResult, LoadDialog(), LoadStats (+14 more)
 
 ## Knowledge Gaps
 - **1275 isolated node(s):** `REPO_ROOT`, `IMAGE_GLYPHS`, `SECTIONS`, `KEPT_PLATFORMS`, `DROPPED_PLATFORMS` (+1270 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1437 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1436 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **8 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `App()` connect `App` to `vitest`, `useLanguage`, `AboutDialog.tsx`, `App.tsx`, `LanguageContext.tsx`?**
+- **Why does `App()` connect `App` to `useLanguage`, `vitest`, `AboutDialog.tsx`, `App.tsx`, `LanguageContext.tsx`?**
   _High betweenness centrality (0.022) - this node is a cross-community bridge._
-- **Why does `Steady state per-OS window settings` connect `App` to `lib.rs`?**
-  _High betweenness centrality (0.020) - this node is a cross-community bridge._
 - **Why does `Color` connect `Color` to `hig-lookup.md`?**
   _High betweenness centrality (0.018) - this node is a cross-community bridge._
 - **What connects `REPO_ROOT`, `IMAGE_GLYPHS`, `SECTIONS` to the rest of the system?**
@@ -1048,6 +1045,8 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `scripts` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._
 - **Should `package.json` be split into smaller, more focused modules?**
-  _Cohesion score 0.08695652173913043 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08333333333333333 - nodes in this community are weakly interconnected._
 - **Should `archive.rs` be split into smaller, more focused modules?**
   _Cohesion score 0.056576576576576575 - nodes in this community are weakly interconnected._
+- **Should `backend.ts` be split into smaller, more focused modules?**
+  _Cohesion score 0.0896551724137931 - nodes in this community are weakly interconnected._

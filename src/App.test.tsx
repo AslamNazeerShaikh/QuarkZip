@@ -232,6 +232,20 @@ describe("App blank canvas", () => {
     expect(container.querySelectorAll("[role='row']")).toHaveLength(0);
   });
 
+  it("should_hide_open_new_until_an_archive_is_open", async () => {
+    render(<App />);
+    // Empty state: the card's own CTA owns opening.
+    expect(
+      screen.queryByRole("button", { name: "Open new…" }),
+    ).not.toBeInTheDocument();
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
+    });
+    expect(
+      await screen.findByRole("button", { name: "Open new…" }),
+    ).toBeInTheDocument();
+  });
+
   it("should_leave_no_button_focused_on_cold_start", () => {
     // No pre-selected CTA with a selection ring at launch.
     render(<App />);

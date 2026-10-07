@@ -27,6 +27,8 @@ Components reference `--qz-*` role tokens only, never raw hex.
 | `--qz-accent`                                           | system hue                        | system hue                        | raw accent (selection tint, focus ring)                   |
 | `--qz-primary` / `-hover` / `-soft` / `--qz-on-primary` | per-accent table below            | per-accent table below            | CTA fills (accent-driven)                                 |
 | `--qz-success` / `-soft`                                | `#1f7a33` / `#e5f2e7`             | `#4cc38a` / `#14291f`             | success pills                                             |
+| `--qz-extract` / `--qz-extract-text`                    | `#1f7a33` / white (5.40:1 PASS)   | `#4cc38a` / black (9.48:1 PASS)   | green Extract All solid (user exception, rule 1)          |
+| `--qz-open` / `--qz-open-text`                          | `#9c7a00` / black (5.20:1 PASS)   | `#ffd60a` / black (14.88:1 PASS)  | yellow titlebar Open solid (user exception, rule 1)       |
 | `--qz-info` / `-soft` / `-dot`                          | `#0b5bd3` / `#e8f0fe` / `#0b5bd3` | `#82aaff` / `#16233d` / `#82aaff` | info pills                                                |
 | `--qz-warning` / `-soft` / `-dot`                       | `#8a4d00` / `#fff1dd` / `#b36200` | `#e8a33d` / `#33270f` / `#e8a33d` | warning pills                                             |
 | `--qz-danger` / `-soft`                                 | `#c92a22` / `#fdeceb`             | `#ff6961` / `#3a1f1e`             | danger pills, errors                                      |
@@ -63,7 +65,7 @@ controls. `System` theme follows `prefers-color-scheme` live. Theme
 cross-fade 180ms. No accent switcher UI yet — `data-accent` defaults to
 blue; the switcher is tracked follow-up work.
 
-## Measured contrast (`scripts/contrast-check.py`: 30/30 gated PASS + documented exceptions)
+## Measured contrast (`scripts/contrast-check.py`: 34/34 gated PASS + documented exceptions)
 
 | Pair                                    | Ratio         | Needs | Result                                |
 | --------------------------------------- | ------------- | ----- | ------------------------------------- |
@@ -74,6 +76,10 @@ blue; the switcher is tracked follow-up work.
 | dark body `#fff` on `#1e1e1e`           | 16.67:1       | 4.5   | PASS                                  |
 | dark muted `#ebebf5` on `#1e1e1e`       | 14.08:1       | 4.5   | PASS                                  |
 | dark success/info/warning/danger pills  | 5.34–6.94:1   | 4.5   | PASS                                  |
+| light extract-all `#fff` on `#1f7a33`   | 5.40:1        | 4.5   | PASS (user exception, rule 1)         |
+| dark extract-all `#000` on `#4cc38a`    | 9.48:1        | 4.5   | PASS (user exception, rule 1)         |
+| light open-new `#000` on `#9c7a00`      | 5.20:1        | 4.5   | PASS (user exception, rule 1)         |
+| dark open-new `#000` on `#ffd60a`       | 14.88:1       | 4.5   | PASS (user exception, rule 1)         |
 | dark CTA fills + hovers (yellow)        | 11.78–14.88:1 | 4.5   | PASS                                  |
 | dark CTA fills + hovers (rest)          | 2.02–4.63:1   | 4.5   | Apple-parity exception, 2026-10-08    |
 | light faint `#6e6e73` on `#ececec`      | 4.29:1        | 4.5   | restricted micro-labels only (rule 5) |
@@ -83,7 +89,10 @@ blue; the switcher is tracked follow-up work.
 
 1. One hue, one meaning: accent encodes interaction (CTA, selection,
    focus, toggles); green/blue/amber/red encode status only. No second
-   accent hue; never body text in accent.
+   accent hue; never body text in accent. Deliberate user-driven exception
+   (2026-10-08): `Extract All` is a green solid (`--qz-extract`, white text
+   light / black text dark) and titlebar `Open new…` a yellow solid
+   (`--qz-open`, black text both themes) — measured AA pairs below.
 2. Never borrow a token outside its role (separator as text, accent as body).
 3. Dark ramp is hand-built, not a mechanical reverse; recheck every pair
    after any token change and re-record the table above.

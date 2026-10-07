@@ -69,9 +69,10 @@ export default function LanguageSwitch() {
         <div
           role="listbox"
           aria-label={t("lang.language")}
-          // Right-anchored: this control sits at the window's right edge,
-          // so the menu opens inward (right-0) instead of hitting the wall.
-          className="qz-material-bar animate-qz-pop absolute right-0 bottom-full mb-2 w-max min-w-full rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]"
+          // Left-anchored: the control rides the overview card's action row
+          // (middle or extreme left), never the window edge — a right-anchored
+          // menu would spill past the card's left side.
+          className="qz-material-bar animate-qz-pop absolute bottom-full left-0 mb-2 w-max min-w-full rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]"
         >
           {LOCALES.map((locale) => {
             const selected = locale.code === lang;

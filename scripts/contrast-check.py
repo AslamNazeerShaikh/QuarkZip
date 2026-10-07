@@ -44,6 +44,8 @@ LIGHT = [
     ("orange-hover", "#ffffff", "#8f4e00"),
     ("yellow", "#000000", "#9c7a00"),
     ("yellow-hover", "#000000", "#a88700"),
+    ("extract-all", "#ffffff", "#1f7a33"),
+    ("open-new", "#000000", "#9c7a00"),
     ("green", "#ffffff", "#23863b"),
     ("green-hover", "#ffffff", "#1c6a2f"),
     ("graphite", "#ffffff", "#6e6e73"),
@@ -58,6 +60,8 @@ DARK = [
     ("danger", "#ff6961", "#3a1f1e"),
     ("yellow", "#000000", "#ffd60a"),
     ("yellow-hover", "#000000", "#e5bf00"),
+    ("extract-all", "#000000", "#4cc38a"),
+    ("open-new", "#000000", "#ffd60a"),
 ]
 # Apple-parity exceptions: white CTA text on dark brights (below AA 4.5,
 # user decision 2026-10-08). Measured and reported, never gated.

@@ -54,7 +54,7 @@ scales (all from the reference):
 | Use                                       | Spec                                                    |
 | ----------------------------------------- | ------------------------------------------------------- |
 | Card title                                | 16px, 600                                               |
-| Window title (centered drag strip)        | 13px, app name 600 + `                                  | ` + muted full path, ellipsis |
+| Window title (drag strip)                 | 13px, app name 600 + `                                  | ` + muted path, middle-ellipsis (dirs truncate, file name survives) |
 | Body / value                              | 14px (`text-sm`), 400–500                               |
 | Secondary                                 | 13px, `--qz-muted`                                      |
 | Micro-label (column headers, meta labels) | 11px, 600, uppercase, `tracking-[0.06em]`, `--qz-faint` |
@@ -64,8 +64,13 @@ Numbers: comma thousands via `toLocaleString("en-US")`, sizes via
 `formatSize` (IEC `KiB…`), stamps via `formatModified`/`formatDateTimeLocal`
 (system time zone, AM/PM, `en-US` shape), `·` joins meta, never `|` or `/`.
 Window title follows the open archive: `QuarkZip | "Path: <full path>"`
-(plain `QuarkZip` otherwise; `setWindowTitle`, best-effort), centered in the
-drag strip with ellipsis.
+(plain `QuarkZip` otherwise; `setWindowTitle`, best-effort). Both bars
+share a `minmax` 1fr-auto-1fr grid so the title claims every free pixel
+(centered when short, filling when long, reflowing live on resize); long
+paths truncate the directory middle only — app name, prefix and file name
+never shrink (full path on hover). `Open new…` (yellow `highlight` solid,
+opaque on glass) renders only with an archive open: mac overlay right,
+Linux custom bar left; the empty state's card CTA owns opening.
 
 ## Components (`src/components/ui/` + feature components)
 
@@ -107,9 +112,11 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   out-of-range, non-numeric, empty) opens
   an Invalid-page confirm (warning icon, valid range shown, Jump lands on
   the read-off page / Cancel reverts to the open page). Escape/blur
-  reverts, hidden on single pages. Edge-anchored menus open
-  inward instead (`LanguageSwitch` uses `right-0` at the window's right
-  edge) so floating lists never touch the sidewalls. The footer `About` and
+  reverts, hidden on single pages. While the theme segment is out,
+  pagination shrinks to one icon button (naming the current page,
+  re-expanding on click) and returns to full width when it minimizes —
+  the card row never overflows at 800px. Edge-anchored menus open
+  inward instead (`LanguageSwitch` uses `left-0` inside the card row) so floating lists never touch the sidewalls. The footer `About` and
   `LanguageSwitch` controls reuse the same shell as icon-only buttons
   (h-9 shell, 28px icon button, 8px inner radius — like collapsed
   `ThemeSwitch`); hover/title and aria-labels name them.
@@ -117,8 +124,9 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   floats or overlaps): `Extract Selected` (primary CTA with `ListChecks`
   icon; disabled with no dest/while extracting/on empty archives — with
   nothing checked it opens the Nothing-selected confirm instead),
-  `Extract All` (secondary shell with `Download` icon, same disabled
-  rules), then the destination chooser (grows full width to the window
+  `Extract All` (green `success` solid with `Download` icon — a deliberate
+  user-driven deviation from the one-hue rule — same disabled rules),
+  then the destination chooser (grows full width to the window
   edge: folder icon + centered path + chevron indicator, native directory
   picker, defaults to the archive's own folder, truncates live on resize).
   `Open new…` lives in the titlebar, not here: macOS overlay strip right,
@@ -132,15 +140,18 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
 all N instead?` with an `Extract All` confirm). Big centered icon, the
   (live final) destination, orange Cancel + blue Proceed/Extract All
   (`Button` warning/accent variants, AA pairs in color-system).
-  Every mode carries the subfolder section: an unchecked
-  `Extract into a new subfolder` checkbox revealing a name field
-  prefilled with the archive basename (`photo.zip` → `photo`, `data.tar.gz`
-  → `data`), editable, validated for APFS (UTF-8 only incl. lone-surrogate
-  rejection, ≤255 bytes, no `/ :` or controls, not `.`/`..`) with inline
-  errors plus a debounced backend uniqueness probe (`path_exists` on
-  `dest/<name>` — Proceed stays disabled while checking, taken, or
-  invalid). Confirm runs `extract_archive` (`7zz x -o<dest> [files...] -y`)
-  with the checked rows, or everything when the mode is `all`/`empty`
+  Every mode carries the subfolder section (centered like the rest of
+  the card): an unchecked `Extract into a new subfolder` checkbox
+  revealing a centered name field prefilled with the archive basename
+  (`photo.zip` → `photo`, `data.tar.gz` → `data`), editable, validated
+  for APFS (UTF-8 only incl. lone-surrogate rejection, ≤255 bytes, no
+  `/ :` or controls, not `.`/`..`) with inline errors plus a debounced
+  backend uniqueness probe (`path_exists` on `dest/<name>` — Proceed
+  stays disabled while checking, taken, or invalid). A live
+  `N / 255 bytes (UTF-8)` budget and an `Append date-time` button
+  (`name_2026-10-08_14-30-05`, head-trimmed char-safe past the cap)
+  sit under the field; the live final path above is the preview. Confirm
+  runs `extract_archive` (`7zz x -o<dest> [files...] -y`)
   (a page-by-page select-everything collapses to the empty list too, so
   10M paths never cross IPC).
   The backdrop never dismisses — buttons or Esc only. Any dialog rendered
@@ -199,7 +210,9 @@ all N instead?` with an `Extract All` confirm). Big centered icon, the
   `About` cluster middle (same h-9 shells, wrapping under on narrow
   windows), and equal-width (`w-32`) secondary `sm` `Test`
   (`test_archive`) and `Checksum` (`checksum_file`) buttons plus the
-  collapse chevron right, opening their dialogs. With no archive the card
+  collapse chevron right, opening their dialogs. Collapsing unmounts the
+  More cell (no empty spacer), so the cluster shifts to the extreme left;
+  expanding puts it back. With no archive the card
   shows the centered empty state with the Theme/Language/About utilities
   in an extreme-left row of their own.
   The card collapses via the chevron toggle beside `Checksum` (same

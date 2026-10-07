@@ -26,6 +26,42 @@ describe("Pagination", () => {
     expect(screen.getByText("250")).toBeInTheDocument();
   });
 
+  it("should_shrink_to_an_icon_and_expand_back_when_compact", async () => {
+    const user = userEvent.setup();
+    const onExpand = vi.fn();
+    const { rerender } = render(
+      <Pagination
+        page={1}
+        pageCount={3}
+        pageSize={100}
+        total={250}
+        onPage={() => {}}
+        onPageSize={() => {}}
+        compact
+        onExpand={onExpand}
+      />,
+    );
+    // Full shell gone; icon names the page.
+    expect(screen.queryByText("2 / 3")).not.toBeInTheDocument();
+    const icon = screen.getByRole("button", {
+      name: "Show pagination — 2 / 3",
+    });
+    await user.click(icon);
+    expect(onExpand).toHaveBeenCalledOnce();
+    // Restored: full shell back.
+    rerender(
+      <Pagination
+        page={1}
+        pageCount={3}
+        pageSize={100}
+        total={250}
+        onPage={() => {}}
+        onPageSize={() => {}}
+      />,
+    );
+    expect(screen.getByText("2 / 3")).toBeInTheDocument();
+  });
+
   it("should_disable_prev_on_first_page", () => {
     setup();
     expect(

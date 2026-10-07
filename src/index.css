@@ -29,12 +29,19 @@
   --qz-faint: #6e6e73;
   /* Accent system: default blue. `--qz-accent` is the raw system hue
      (selection tint, focus ring); `--qz-primary*` is the AA-tuned CTA ramp
-     (measured pairs in color-system.md). Override per accent below. */
+     (measured pairs in color-system.md). Override per accent below.
+     `--qz-extract*` (green solid) and `--qz-open*` (yellow solid) back the
+     user-requested Extract All / Open buttons — a deliberate deviation
+     from the one-hue rule (see color-system.md rule 1). */
   --qz-accent: #007aff;
   --qz-primary: #0070eb;
   --qz-primary-hover: #005fc7;
   --qz-primary-soft: #dbebfc;
   --qz-on-primary: #ffffff;
+  --qz-extract: #1f7a33;
+  --qz-extract-text: #ffffff;
+  --qz-open: #9c7a00;
+  --qz-open-text: #000000;
   --qz-success: #1f7a33;
   --qz-success-soft: #e5f2e7;
   --qz-info: #0b5bd3;
@@ -143,6 +150,12 @@
   --qz-primary-hover: #0072e5;
   --qz-primary-soft: #243546;
   --qz-on-primary: #ffffff;
+  /* Solid action fills keep per-theme text (unlike the accent CTA
+     exception): light green takes white, dark green takes black. */
+  --qz-extract: #4cc38a;
+  --qz-extract-text: #000000;
+  --qz-open: #ffd60a;
+  --qz-open-text: #000000;
   --qz-success: #4cc38a;
   --qz-success-soft: #14291f;
   --qz-info: #82aaff;

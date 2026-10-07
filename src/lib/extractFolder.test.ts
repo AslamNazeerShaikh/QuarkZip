@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  appendDateStamp,
+  dateStamp,
   defaultFolderName,
   joinDest,
   validateFolderName,
@@ -38,5 +40,18 @@ describe("extractFolder", () => {
     expect(joinDest("/tmp/out", null)).toBe("/tmp/out");
     expect(joinDest("/tmp/out/", "photo")).toBe("/tmp/out/photo");
     expect(joinDest("/tmp/out", "photo")).toBe("/tmp/out/photo");
+  });
+
+  it("should_stamp_datetime_underscore_separated", () => {
+    const d = new Date(2026, 9, 8, 14, 5, 9);
+    expect(dateStamp(d)).toBe("2026-10-08_14-05-09");
+    expect(appendDateStamp("photo", d)).toBe("photo_2026-10-08_14-05-09");
+  });
+
+  it("should_trim_the_head_never_the_stamp_when_too_long", () => {
+    const d = new Date(2026, 9, 8, 14, 5, 9);
+    const out = appendDateStamp("a".repeat(250), d);
+    expect(new TextEncoder().encode(out).length).toBeLessThanOrEqual(255);
+    expect(out.endsWith("_2026-10-08_14-05-09")).toBe(true);
   });
 });

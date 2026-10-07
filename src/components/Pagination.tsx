@@ -4,6 +4,7 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  ListOrdered,
   TriangleAlert,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -299,6 +300,11 @@ function PageSizeMenu({
 
 /// Floating pagination controls: per-page selector, prev/next, page readout.
 /// Material shell matching the other footer controls.
+///
+/// While the theme segment is out (`compact`), the shell shrinks to one
+/// icon button — the row would otherwise overflow at 800px — and returns
+/// to full width the moment the segment minimizes. The icon names the
+/// current page and re-expands on click (by closing the theme segment).
 export default function Pagination({
   page,
   pageCount,
@@ -306,6 +312,8 @@ export default function Pagination({
   total,
   onPage,
   onPageSize,
+  compact = false,
+  onExpand,
 }: {
   page: number;
   pageCount: number;
@@ -313,8 +321,29 @@ export default function Pagination({
   total: number;
   onPage: (p: number) => void;
   onPageSize: (s: PageSize) => void;
+  compact?: boolean;
+  onExpand?: () => void;
 }) {
   const { t } = useLanguage();
+  if (compact) {
+    const label =
+      pageCount === 0
+        ? t("pagination.expand")
+        : `${t("pagination.expand")} — ${formatCount(page + 1)} / ${formatCount(pageCount)}`;
+    return (
+      <div className="qz-material-bar flex h-9 shrink-0 items-center rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]">
+        <button
+          type="button"
+          aria-label={label}
+          title={label}
+          onClick={onExpand}
+          className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-colors outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+        >
+          <ListOrdered size={18} aria-hidden />
+        </button>
+      </div>
+    );
+  }
   const allowAll = total <= ALL_PAGE_CAP;
   const options: PageSize[] = allowAll ? ALL_OPTIONS : [...PAGE_SIZES];
   // A bigger archive opened while "all" was active: coerce before the

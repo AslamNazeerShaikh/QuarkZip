@@ -137,6 +137,25 @@ describe("ExtractDialog", () => {
     expect(onConfirm).not.toHaveBeenCalled();
   });
 
+  it("should_show_the_byte_budget_and_append_a_datetime_stamp", async () => {
+    const user = userEvent.setup();
+    setup("all", 0, 6);
+    await user.click(
+      screen.getByRole("checkbox", { name: "Extract into a new subfolder" }),
+    );
+    // Live budget for the prefilled basename (photo = 5 bytes).
+    expect(screen.getByText("5 / 255 bytes (UTF-8)")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Append date-time" }));
+    const field = screen.getByLabelText("Subfolder name");
+    expect((field as HTMLInputElement).value).toMatch(
+      /^photo_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$/,
+    );
+    // Final-path preview tracks the name.
+    expect(
+      screen.getByText(/\/tmp\/out\/photo_\d{4}-\d{2}-\d{2}_/),
+    ).toBeInTheDocument();
+  });
+
   it("should_render_nothing_when_closed", () => {
     render(
       <ExtractDialog

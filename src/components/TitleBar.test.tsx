@@ -51,6 +51,48 @@ describe("TitleBar", () => {
     );
   });
 
+  it("should_keep_the_file_name_visible_on_long_paths", () => {
+    render(
+      <TitleBar
+        archive="/very/long/directory/chain/that/keeps/going/photo.zip"
+        maximized={false}
+        onOpen={noop}
+      />,
+    );
+    // Middle truncation: directory part ellipsizes, file name survives.
+    expect(
+      screen.getByText('photo.zip"', { exact: false }),
+    ).toBeInTheDocument();
+  });
+
+  it("should_hide_open_until_an_archive_is_open", () => {
+    const { rerender } = render(
+      <TitleBar archive={null} maximized={false} onOpen={noop} />,
+    );
+    expect(
+      screen.queryByRole("button", { name: "Open new…" }),
+    ).not.toBeInTheDocument();
+    rerender(<TitleBar archive="/tmp/a.zip" maximized={false} onOpen={noop} />);
+    expect(
+      screen.getByRole("button", { name: "Open new…" }),
+    ).toBeInTheDocument();
+  });
+
+  it("should_hide_mac_open_until_an_archive_is_open", () => {
+    const { rerender } = render(
+      <TitleBar archive={null} hidden maximized={false} onOpen={noop} />,
+    );
+    expect(
+      screen.queryByRole("button", { name: "Open new…" }),
+    ).not.toBeInTheDocument();
+    rerender(
+      <TitleBar archive="/tmp/a.zip" hidden maximized={false} onOpen={noop} />,
+    );
+    expect(
+      screen.getByRole("button", { name: "Open new…" }),
+    ).toBeInTheDocument();
+  });
+
   it("should_show_restore_when_maximized", () => {
     render(<TitleBar archive={null} maximized onOpen={noop} />);
     expect(screen.getByRole("button", { name: "Restore" })).toBeInTheDocument();
@@ -70,7 +112,7 @@ describe("TitleBar", () => {
   it("should_offer_open_on_the_left_when_linux", () => {
     const onOpen = vi.fn();
     const { container } = render(
-      <TitleBar archive={null} maximized={false} onOpen={onOpen} />,
+      <TitleBar archive="/tmp/a.zip" maximized={false} onOpen={onOpen} />,
     );
     const header = container.querySelector("header");
     expect(header).toBeInTheDocument();
@@ -83,7 +125,12 @@ describe("TitleBar", () => {
     const user = userEvent.setup();
     const onOpen = vi.fn();
     render(
-      <TitleBar archive={null} hidden maximized={false} onOpen={onOpen} />,
+      <TitleBar
+        archive="/tmp/a.zip"
+        hidden
+        maximized={false}
+        onOpen={onOpen}
+      />,
     );
     const open = screen.getByRole("button", { name: "Open new…" });
     expect(open).toBeInTheDocument();
@@ -95,7 +142,12 @@ describe("TitleBar", () => {
 
   it("should_disable_open_while_loading", () => {
     render(
-      <TitleBar archive={null} maximized={false} onOpen={noop} openDisabled />,
+      <TitleBar
+        archive="/tmp/a.zip"
+        maximized={false}
+        onOpen={noop}
+        openDisabled
+      />,
     );
     expect(screen.getByRole("button", { name: "Open new…" })).toBeDisabled();
   });

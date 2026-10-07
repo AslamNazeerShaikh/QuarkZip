@@ -1,11 +1,19 @@
 import { invoke } from "@tauri-apps/api/core";
-import { Check, Download, ListChecks, TriangleAlert } from "lucide-react";
+import {
+  CalendarClock,
+  Check,
+  Download,
+  ListChecks,
+  TriangleAlert,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { formatCount } from "../lib/format";
 import { useLanguage } from "../i18n/LanguageContext";
 import {
+  appendDateStamp,
   defaultFolderName,
   joinDest,
+  utf8Length,
   validateFolderName,
   type FolderNameError,
 } from "../lib/extractFolder";
@@ -184,15 +192,18 @@ export default function ExtractDialog({
           )}
         </p>
         <p className="mt-2 text-[13px] font-medium break-all">{finalDest}</p>
-        {/* Subfolder section: checkbox row, then the name field. */}
-        <div className="mt-4 border-t border-[var(--qz-border)] pt-4 text-left">
+        {/* Subfolder section, centered like everything else in the card:
+            checkbox row, name field, live byte budget, one-tap date-time
+            suffix (`name_2026-10-08_14-30-05`); the final-path preview
+            above shows the result. */}
+        <div className="mt-4 border-t border-[var(--qz-border)] pt-4 text-center">
           <button
             type="button"
             role="checkbox"
             aria-checked={createFolder}
             aria-label={t("extract.folderToggle")}
             onClick={() => setCreateFolder((v) => !v)}
-            className="flex w-full cursor-pointer items-center gap-2.5 outline-none"
+            className="flex w-full cursor-pointer items-center justify-center gap-2.5 outline-none"
           >
             <span
               aria-hidden
@@ -215,7 +226,7 @@ export default function ExtractDialog({
             </span>
           </button>
           {createFolder && (
-            <div className="mt-2.5 pl-7">
+            <div className="mt-2.5">
               <label
                 htmlFor="extract-folder-name"
                 className="text-[11px] font-semibold tracking-[0.06em] text-[var(--qz-faint)] uppercase"
@@ -230,8 +241,30 @@ export default function ExtractDialog({
                 placeholder={t("extract.folderPlaceholder")}
                 aria-invalid={errorKey !== null}
                 aria-describedby={errorKey ? "extract-folder-error" : undefined}
-                className="mt-1 h-9 w-full rounded-[9px] border border-[var(--qz-border)] bg-[var(--qz-surface)] px-3 text-[13px] text-[var(--qz-text)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+                className="mt-1 h-9 w-full rounded-[9px] border border-[var(--qz-border)] bg-[var(--qz-surface)] px-3 text-center text-[13px] text-[var(--qz-text)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
               />
+              <div className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
+                <span className="text-xs text-[var(--qz-faint)] tabular-nums">
+                  {t("extract.folderLimit", {
+                    used: String(utf8Length(folderName)),
+                  })}
+                </span>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() =>
+                    setFolderName((cur) =>
+                      appendDateStamp(
+                        cur === "" ? defaultFolderName(archivePath) : cur,
+                      ),
+                    )
+                  }
+                  className="h-7 px-2 text-xs"
+                >
+                  <CalendarClock size={13} aria-hidden />
+                  {t("extract.appendDate")}
+                </Button>
+              </div>
               {checking ? (
                 <p className="mt-1.5 text-xs text-[var(--qz-faint)]">
                   {t("extract.folderChecking")}

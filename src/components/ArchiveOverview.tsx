@@ -333,10 +333,12 @@ export default function ArchiveOverview({
           left in the same row (same shell as Test/Checksum); it hides
           with the collapsed card and never auto-reopens the extras.
           Pagination + utilities ride the middle (between More and Test),
-          wrapping under on narrow windows. */}
+          wrapping under on narrow windows. Collapsed, the More cell
+          unmounts entirely (not an empty spacer) so the middle cluster
+          shifts to the extreme left; expanding puts it back. */}
           <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-2 px-5 pt-4 pb-5">
-            <div>
-              {!collapsed && (
+            {!collapsed && (
+              <div>
                 <Button
                   variant="secondary"
                   size="sm"
@@ -350,8 +352,8 @@ export default function ArchiveOverview({
                   <MoreHorizontal size={14} aria-hidden />
                   {extraLabel}
                 </Button>
-              )}
-            </div>
+              </div>
+            )}
             {(middleControls || utilityControls) && (
               <div
                 data-testid="card-controls"

@@ -152,6 +152,24 @@ test("colliding subfolder blocks proceed", async ({ app }) => {
   await expect(app.getByRole("button", { name: "Proceed" })).toBeDisabled();
 });
 
+test("append date-time suffixes the subfolder with a preview", async ({
+  app,
+}) => {
+  await openPack(app);
+  await app.getByRole("button", { name: "Extract All" }).click();
+  await app
+    .getByRole("checkbox", { name: "Extract into a new subfolder" })
+    .click();
+  await app.getByRole("button", { name: "Append date-time" }).click();
+  await expect(app.getByLabel("Subfolder name")).toHaveValue(
+    /pack_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/,
+  );
+  await expect(app.getByRole("button", { name: "Proceed" })).toBeEnabled();
+  await app.getByRole("button", { name: "Proceed" }).click();
+  const seen = await calls(app);
+  expect(seen.extracts[0].dest).toMatch(/\/tmp\/pack_\d{4}-\d{2}-\d{2}_/);
+});
+
 test("failed extract shows the failure dialog", async ({ app }) => {
   await openPack(app);
   await failNextExtract(app, "disk full (e2e)");
