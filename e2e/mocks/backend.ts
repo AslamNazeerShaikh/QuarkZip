@@ -173,7 +173,40 @@ export async function handleInvoke(
     case "list_archive": {
       const archive = lookup(a.path as string);
       if (archive.listError) throw archive.listError;
-      return archive.entries;
+      return { total: archive.entries.length };
+    }
+    case "get_page": {
+      // P2: the backend holds the listing; pages arrive sliced and sorted
+      // server-side (comparators mirror the old client sort exactly).
+      const archive = lookup(a.path as string);
+      const page = a.page as number;
+      const pageSize = a.pageSize as number;
+      const sortKey = a.sortKey as string | null;
+      const sortDir = a.sortDir as string | null;
+      const rows = [...archive.entries];
+      if (sortKey) {
+        const value = (e: FakeEntry): string | number => {
+          if (sortKey === "size") return e.size ?? -1;
+          if (sortKey === "modified") return e.modified ?? "";
+          return e.path;
+        };
+        rows.sort((x, y) => {
+          const va = value(x);
+          const vb = value(y);
+          const ord =
+            typeof va === "number" && typeof vb === "number"
+              ? va - vb
+              : String(va).localeCompare(String(vb), undefined, {
+                  numeric: true,
+                });
+          return ord;
+        });
+        if (sortDir === "desc") rows.reverse();
+      }
+      return {
+        rows: rows.slice(page * pageSize, (page + 1) * pageSize),
+        total: rows.length,
+      };
     }
     case "info_archive": {
       const archive = lookup(a.path as string);

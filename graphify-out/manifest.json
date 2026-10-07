@@ -48,9 +48,9 @@
     "semantic_hash": ""
   },
   "src-tauri/src/lib.rs": {
-    "mtime": 1791367913.1444745,
-    "seen": 1791367979.86128,
-    "ast_hash": "e634a09ebb613798671523dda5d513a0",
+    "mtime": 1791387019.617255,
+    "seen": 1791387487.241996,
+    "ast_hash": "353e483c0c2414aa7f3511737cfcb47b",
     "semantic_hash": ""
   },
   "src-tauri/src/main.rs": {
@@ -66,9 +66,9 @@
     "semantic_hash": ""
   },
   "src/App.tsx": {
-    "mtime": 1791375608.561188,
-    "seen": 1791375612.578368,
-    "ast_hash": "e9c0076d50f711f9d652caa95f560ffa",
+    "mtime": 1791387478.7908645,
+    "seen": 1791387487.2419991,
+    "ast_hash": "4ea16534d96230a4406aedd076f43446",
     "semantic_hash": ""
   },
   "src/main.tsx": {
@@ -372,9 +372,9 @@
     "semantic_hash": ""
   },
   "e2e/mocks/backend.ts": {
-    "mtime": 1791384922.9791899,
-    "seen": 1791385051.37994,
-    "ast_hash": "1d2f190831f197640978432d96148e27",
+    "mtime": 1791387370.2863681,
+    "seen": 1791387487.241981,
+    "ast_hash": "354429302b41343e03bba2c2c614c166",
     "semantic_hash": ""
   },
   "e2e/mocks/core.ts": {
@@ -480,9 +480,9 @@
     "semantic_hash": ""
   },
   "src-tauri/src/archive.rs": {
-    "mtime": 1791384858.3046355,
-    "seen": 1791385051.379955,
-    "ast_hash": "637ea99a2eebb080debf7df6dab13071",
+    "mtime": 1791387083.5599566,
+    "seen": 1791387487.241995,
+    "ast_hash": "4b407e5cec3d1b1ee5316ada627e74fd",
     "semantic_hash": ""
   },
   "src-tauri/tests/list_archive_e2e.rs": {
@@ -492,9 +492,9 @@
     "semantic_hash": ""
   },
   "src/App.test.tsx": {
-    "mtime": 1791384935.9283779,
-    "seen": 1791385051.379958,
-    "ast_hash": "e737f4ec7e465848ef1a9792b5e99596",
+    "mtime": 1791387358.3948443,
+    "seen": 1791387487.2419991,
+    "ast_hash": "c65041881625a5f8692107e225fa4a21",
     "semantic_hash": ""
   },
   "src/components/ui/badge.tsx": {
@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791384946.6840994,
-    "seen": 1791385051.3800561,
-    "ast_hash": "de39cad5f94e53adfcacb4aac6b7ac8d",
+    "mtime": 1791387459.3123121,
+    "seen": 1791387487.242099,
+    "ast_hash": "666693b162a160cc78b796bcc4905dc4",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -828,9 +828,9 @@
     "semantic_hash": ""
   },
   "docs/backend-commands.md": {
-    "mtime": 1791384961.9019172,
-    "seen": 1791385051.380054,
-    "ast_hash": "ca20111d747c8de61f5e296a996765ef",
+    "mtime": 1791387478.303614,
+    "seen": 1791387487.242097,
+    "ast_hash": "2d43e982bcf7ea8e24cb2e9aab6e2b96",
     "semantic_hash": ""
   },
   "docs/i18n.md": {
@@ -888,15 +888,15 @@
     "semantic_hash": ""
   },
   "src/components/ArchiveTable.test.tsx": {
-    "mtime": 1791295021.818471,
-    "seen": 1791297347.39442,
-    "ast_hash": "238a45d4c3ee3a7db8b9e63a9c0604bc",
+    "mtime": 1791387478.8112817,
+    "seen": 1791387487.242002,
+    "ast_hash": "5e5d4539acee1978fca1ee4cfe3ff2a3",
     "semantic_hash": ""
   },
   "src/components/ArchiveTable.tsx": {
-    "mtime": 1791368461.2389765,
-    "seen": 1791368569.74348,
-    "ast_hash": "78724ae7abccbd74eff88c786ee9fe64",
+    "mtime": 1791387259.1482763,
+    "seen": 1791387487.242002,
+    "ast_hash": "147ece4ac47a3d8b6365e9e2d245c716",
     "semantic_hash": ""
   },
   "src/components/ChecksumDialog.test.tsx": {
@@ -1116,9 +1116,9 @@
     "semantic_hash": ""
   },
   "src-tauri/src/sevenzip.rs": {
-    "mtime": 1791314494.9161785,
-    "seen": 1791314548.120448,
-    "ast_hash": "e6f9bde91c53c4654b7d710710ecb29b",
+    "mtime": 1791386906.2810357,
+    "seen": 1791387487.241997,
+    "ast_hash": "d23a89adc7f209da20884a3eece40acc",
     "semantic_hash": ""
   },
   "src-tauri/tests/zz_ffi_list.rs": {
@@ -1938,9 +1938,9 @@
     "semantic_hash": ""
   },
   "docs/macos-native.md": {
-    "mtime": 1791375554.676769,
-    "seen": 1791375612.578479,
-    "ast_hash": "a4d4849082dc493574e7475283e62913",
+    "mtime": 1791387471.5918515,
+    "seen": 1791387487.2420979,
+    "ast_hash": "89c1c74dc0fe4a2d27ebab8947e74df3",
     "semantic_hash": ""
   }
 }

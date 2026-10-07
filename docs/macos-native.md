@@ -181,3 +181,8 @@ Hardening shipped:
   paint). No auto-reload exists at the wry layer — if it recurs, the
   `.ips` report in `~/Library/Logs/DiagnosticReports/` names the
   crashing subsystem; check it before assuming app code.
+- Follow-up (P2, 2026-10-08): a second blanking wave under 10M listings
+  showed a 5.5GB renderer heap, not a new crash — full IPC
+  materialization. Listings are now backend-held with paged IPC
+  (`get_page`) and server-side sort; the renderer holds one page.
+  Pending the user's 10M reopen on a restarted dev build (Rust changed).

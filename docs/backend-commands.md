@@ -12,18 +12,19 @@ both unit-tested without a binary (`npm run test:rust`).
 
 ## Commands
 
-| Command               | Args                                                     | Returns                                                                                 |
-| --------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| `list_archive`        | `path`, `password?`, `onProgress: Channel<ListProgress>` | `ArchiveEntry[]` (FFI enumerate, else `7zz l -slt [-p<pw>]`); stored for `info_archive` |
-| `info_archive`        | `path`, `password?`, `onProgress: Channel<ListProgress>` | `ArchiveInfo` (stored-listing summary, else listing + fs size/mtime)                    |
-| `cancel_list_archive` | —                                                        | aborts an in-flight `list/info_archive`; previous listing kept                          |
-| `extract_archive`     | `path`, `dest`, `files[]`, `password?`                   | 7zz stdout (`7zz x -o<dest> [files…] [-p<pw>] -y`); empty `files` = everything          |
-| `test_archive`        | `path`, `password?`, `onProgress: Channel<u32>`          | `"Everything is Ok"` (`7zz t -bsp1`, percent streamed)                                  |
-| `checksum_file`       | `path`, `algorithm`, `onProgress: Channel<u32>`          | lowercase hex digest (MD5 / SHA-1 / SHA-256 / SHA-512)                                  |
-| `cancel_checksum`     | —                                                        | aborts the in-flight `checksum_file`                                                    |
-| `drag_window`         | —                                                        | starts a native drag (custom title strip)                                               |
-| `greet`               | `name`                                                   | scaffold sample, unused by the UI                                                       |
-| `set_liquid_glass`    | `enabled: bool`                                          | toggles the native glass window background (macOS; no-op elsewhere)                     |
+| Command               | Args                                                          | Returns                                                                                                                 |
+| --------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `list_archive`        | `path`, `password?`, `onProgress: Channel<ListProgress>`      | `{ total }` — listing stays backend-held (`ListingState`); rows arrive via `get_page`                                   |
+| `get_page`            | `path`, `page`, `pageSize` (1–100000), `sortKey?`, `sortDir?` | `{ rows: ArchiveEntry[], total }` — server-sorted slice of the stored listing (`path` must match; stale requests error) |
+| `info_archive`        | `path`, `password?`, `onProgress: Channel<ListProgress>`      | `ArchiveInfo` (stored-listing summary, else listing + fs size/mtime)                                                    |
+| `cancel_list_archive` | —                                                             | aborts an in-flight `list/info_archive`; previous listing kept                                                          |
+| `extract_archive`     | `path`, `dest`, `files[]`, `password?`                        | 7zz stdout (`7zz x -o<dest> [files…] [-p<pw>] -y`); empty `files` = everything                                          |
+| `test_archive`        | `path`, `password?`, `onProgress: Channel<u32>`               | `"Everything is Ok"` (`7zz t -bsp1`, percent streamed)                                                                  |
+| `checksum_file`       | `path`, `algorithm`, `onProgress: Channel<u32>`               | lowercase hex digest (MD5 / SHA-1 / SHA-256 / SHA-512)                                                                  |
+| `cancel_checksum`     | —                                                             | aborts the in-flight `checksum_file`                                                                                    |
+| `drag_window`         | —                                                             | starts a native drag (custom title strip)                                                                               |
+| `greet`               | `name`                                                        | scaffold sample, unused by the UI                                                                                       |
+| `set_liquid_glass`    | `enabled: bool`                                               | toggles the native glass window background (macOS; no-op elsewhere)                                                     |
 
 ## `ArchiveInfo` schema (fixed 16 cells + More panel)
 

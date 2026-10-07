@@ -222,6 +222,7 @@ pub fn enumerate_detail(
             method,
             encrypted: encrypted_out != 0,
             host_os,
+            modified,
             is_folder,
         });
     }

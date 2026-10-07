@@ -6,7 +6,7 @@ import {
   Minus,
   PackageOpen,
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ArchiveEntry } from "../App";
 import { fileKind } from "../lib/fileKind";
 import { formatModified, formatSize } from "../lib/format";
@@ -15,15 +15,14 @@ import { useLanguage } from "../i18n/LanguageContext";
 export const ROW_HEIGHT = 36;
 const OVERSCAN = 10;
 
-type SortKey = "path" | "size" | "type" | "modified";
-type SortDir = "asc" | "desc";
+export type SortKey = "path" | "size" | "type" | "modified";
+export type SortDir = "asc" | "desc";
 
 interface Column {
   key: SortKey;
   headerKey: string;
   width: string;
   align: "left" | "center";
-  value: (row: ArchiveEntry) => string | number;
 }
 
 function baseColumns(): Column[] {
@@ -33,35 +32,26 @@ function baseColumns(): Column[] {
       headerKey: "table.colName",
       width: "flex-1",
       align: "left",
-      value: (r) => r.path,
     },
     {
       key: "type",
       headerKey: "table.colType",
       width: "w-24",
       align: "center",
-      value: (r) => fileKind(r.path, r.is_folder).label,
     },
     {
       key: "size",
       headerKey: "table.colSize",
       width: "w-32",
       align: "center",
-      value: (r) => r.size ?? -1,
     },
     {
       key: "modified",
       headerKey: "table.colModified",
       width: "w-64",
       align: "center",
-      value: (r) => r.modified ?? "",
     },
   ];
-}
-
-function compareValues(a: string | number, b: string | number): number {
-  if (typeof a === "number" && typeof b === "number") return a - b;
-  return String(a).localeCompare(String(b), undefined, { numeric: true });
 }
 
 function SortIcon({ state }: { state: SortDir | null }) {
@@ -121,8 +111,12 @@ function TableCheckbox({
 /// Hand-rolled archive table: sortable columns, windowed rows (only visible
 /// rows mount, so 10k-entry archives scroll smoothly), checkbox
 /// multi-select, and a native slim scrollbar. No table library — plain divs
-/// over the sorted data.
+/// over the served page.
 ///
+/// P2: sorting and paging are server-side — `data` is exactly the current
+/// page, `onSortKey` asks the backend to re-sort (header state comes back
+/// down as props), and selection resets per open archive (`listingId`),
+/// never per page turn, so it survives paging.
 /// Pagination is controlled by the parent: `page`/`pageSize` select a slice
 /// of the sorted rows; selection is global across pages. Selection belongs
 /// to one listing: a new `data` identity clears it, and every change is
@@ -131,15 +125,26 @@ export default function ArchiveTable({
   data,
   page,
   pageSize,
+  sortKey,
+  sortDir,
+  onSortKey,
+  listingId,
+  busy = false,
   onSelectionChange,
 }: {
   data: ArchiveEntry[];
   page: number;
   pageSize: number | "all";
+  sortKey: SortKey | null;
+  sortDir: SortDir;
+  onSortKey: (key: SortKey) => void;
+  /// Open archive path: selection resets when it changes (page turns keep
+  /// accumulating into the same set).
+  listingId: string | null;
+  /// A page fetch in flight: rows dim, sort headers hold still.
+  busy?: boolean;
   onSelectionChange?: (selected: ReadonlySet<string>) => void;
 }) {
-  const [sortKey, setSortKey] = useState<SortKey | null>(null);
-  const [sortDir, setSortDir] = useState<SortDir>("asc");
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
   const [scrollTop, setScrollTop] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -151,32 +156,11 @@ export default function ArchiveTable({
   const { t } = useLanguage();
   const folderLabel = t("filekind.folder");
   const fileLabel = t("filekind.file");
-  // Type-column sorting follows the displayed (translated) label.
-  const columns: Column[] = useMemo(() => {
-    const cols = baseColumns();
-    const typeCol = cols.find((c) => c.key === "type");
-    if (typeCol) {
-      typeCol.value = (r) =>
-        fileKind(r.path, r.is_folder, { folder: folderLabel, file: fileLabel })
-          .label;
-    }
-    return cols;
-  }, [folderLabel, fileLabel]);
+  const columns = baseColumns();
 
-  const sorted = useMemo(() => {
-    if (!sortKey) return data;
-    const column = columns.find((c) => c.key === sortKey);
-    if (!column) return data;
-    const ordered = [...data].sort((a, b) =>
-      compareValues(column.value(a), column.value(b)),
-    );
-    return sortDir === "asc" ? ordered : ordered.reverse();
-  }, [data, sortKey, sortDir, columns]);
-
-  const pageRows = useMemo(() => {
-    if (pageSize === "all") return sorted;
-    return sorted.slice(page * pageSize, (page + 1) * pageSize);
-  }, [sorted, page, pageSize]);
+  // `data` is already the served page in server order: no client sort,
+  // just the visible window over it.
+  const pageRows = data;
 
   // Reset scroll whenever the visible slice changes.
   useEffect(() => {
@@ -184,16 +168,17 @@ export default function ArchiveTable({
     setScrollTop(0);
   }, [page, pageSize, data]);
 
-  // A new listing is a new archive: drop stale selections.
-  const dataRef = useRef(data);
+  // A new listing is a new archive: drop stale selections. Page turns
+  // keep accumulating into the same set (it survives paging by design).
+  const listingRef = useRef(listingId);
   useEffect(() => {
-    if (dataRef.current !== data) {
-      dataRef.current = data;
+    if (listingRef.current !== listingId) {
+      listingRef.current = listingId;
       const empty = new Set<string>();
       setSelected(empty);
       selectionCb.current?.(empty);
     }
-  }, [data]);
+  }, [listingId]);
 
   // Visible window with overscan; jsdom reports no layout (clientHeight 0),
   // in which case render everything so tests and snapshots see full content.
@@ -213,12 +198,7 @@ export default function ArchiveTable({
     pageRows.length > 0 && pageRows.every((r) => selected.has(r.path));
 
   function toggleSort(key: SortKey) {
-    if (sortKey !== key) {
-      setSortKey(key);
-      setSortDir("asc");
-    } else {
-      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-    }
+    onSortKey(key);
   }
 
   function toggleAll() {
@@ -241,7 +221,10 @@ export default function ArchiveTable({
   }
 
   return (
-    <div className="relative min-h-0 w-full min-w-0 flex-1">
+    <div
+      aria-busy={busy}
+      className={`relative min-h-0 w-full min-w-0 flex-1 transition-opacity ${busy ? "opacity-60" : ""}`}
+    >
       <div className="qz-material-bar flex h-full min-h-0 w-full flex-col overflow-hidden rounded-[13px] border border-[var(--qz-border)] text-[13px]">
         {/* Header matches ROW_HEIGHT so it never reads slim next to rows.
             Translucent: rows scroll underneath like a native list header. */}
@@ -267,7 +250,8 @@ export default function ArchiveTable({
               key={column.key}
               type="button"
               onClick={() => toggleSort(column.key)}
-              className={`flex h-full cursor-pointer items-center gap-1 px-4 text-xs font-semibold tracking-wide text-[var(--qz-faint)] uppercase select-none ${
+              disabled={busy}
+              className={`flex h-full cursor-pointer items-center gap-1 px-4 text-xs font-semibold tracking-wide text-[var(--qz-faint)] uppercase select-none disabled:cursor-default ${
                 column.key === "path"
                   ? "min-w-0 flex-1"
                   : `${column.width} shrink-0 justify-center`

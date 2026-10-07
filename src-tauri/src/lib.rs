@@ -43,6 +43,17 @@ struct StoredListing {
     path: String,
     header: std::collections::BTreeMap<String, String>,
     facts: Vec<crate::archive::EntryFacts>,
+    /// Last applied server sort (key + desc). A page request with the same
+    /// pair skips re-sorting; anything else re-sorts in place first.
+    sort: Option<(crate::archive::PageSortKey, bool)>,
+}
+
+/// P2: listings stay backend-held; only the total crosses IPC on open.
+/// A 10M listing no longer materializes in the renderer (that peaked at
+/// ~5GB and killed WebContent) — pages arrive via [`get_page`].
+#[derive(serde::Serialize)]
+struct ListingOpened {
+    total: usize,
 }
 
 /// Listing progress snapshot streamed over a Channel while `7zz l -slt`
@@ -204,6 +215,9 @@ fn tail(text: &str) -> String {
 /// listing runs (totals are unknowable upfront); abort with
 /// [`cancel_list_archive`].
 ///
+/// P2: returns only the entry total — rows arrive page by page through
+/// [`get_page`], so the renderer never holds the full listing.
+///
 /// NOTE: like [`test_archive`], the frontend sends `onProgress` (Tauri
 /// camelCases command args on IPC by default).
 #[tauri::command]
@@ -213,7 +227,7 @@ async fn list_archive(
     path: String,
     password: Option<String>,
     on_progress: tauri::ipc::Channel<ListProgress>,
-) -> Result<Vec<archive::ArchiveEntry>, String> {
+) -> Result<ListingOpened, String> {
     LIST_CANCEL.store(false, Ordering::SeqCst);
     // P1: in-process engine first (unix), sidecar fallback on any engine
     // error. QUARKZIP_LIST_ENGINE=sidecar forces the legacy path.
@@ -243,12 +257,14 @@ async fn list_archive(
         .map_err(|e| format!("listing task failed: {e}"))?;
         match res {
             Ok(data) => {
+                let total = data.facts.len();
                 *state.current.lock().expect("listing state") = Some(StoredListing {
                     path: path.clone(),
                     header: data.header,
                     facts: data.facts,
+                    sort: None,
                 });
-                return Ok(data.entries);
+                return Ok(ListingOpened { total });
             }
             Err(e) if e == crate::sevenzip::CANCELLED => return Err(e),
             Err(e) => {
@@ -265,7 +281,64 @@ async fn list_archive(
     if code != Some(0) {
         return Err(String::from_utf8_lossy(&stderr).into_owned());
     }
-    Ok(archive::parse_list_slt(&String::from_utf8_lossy(&stdout)))
+    // Store for paging + info (no second 7zz run); only the total crosses.
+    let (header, facts) = archive::parse_listing_parts(&String::from_utf8_lossy(&stdout));
+    let total = facts.len();
+    *state.current.lock().expect("listing state") = Some(StoredListing {
+        path: path.clone(),
+        header,
+        facts,
+        sort: None,
+    });
+    Ok(ListingOpened { total })
+}
+
+/// Serves one page of the stored listing, sorting server-side on demand.
+/// `path` must match the open archive (a newer open replaces the store, so
+/// a mismatched path means this request is stale). `page_size` is capped at
+/// [`archive::MAX_PAGE_SIZE`]; `sort_dir` needs no `sort_key` to be absent —
+/// a lone direction is ignored. Sorting 10M rows takes seconds in release;
+/// the frontend disables paging controls while a page is in flight.
+#[tauri::command]
+async fn get_page(
+    state: tauri::State<'_, ListingState>,
+    path: String,
+    page: usize,
+    page_size: usize,
+    sort_key: Option<String>,
+    sort_dir: Option<String>,
+) -> Result<archive::Page, String> {
+    if page_size == 0 || page_size > archive::MAX_PAGE_SIZE {
+        return Err(format!("page_size must be 1..={}", archive::MAX_PAGE_SIZE));
+    }
+    let key = match sort_key.as_deref() {
+        None => None,
+        Some(k) => {
+            Some(archive::PageSortKey::parse(k).ok_or_else(|| format!("unknown sort key: {k}"))?)
+        }
+    };
+    let desc = sort_dir.as_deref() == Some("desc");
+    let mut store = state.current.lock().expect("listing state");
+    let stored = store.as_mut().ok_or("no open archive")?;
+    if stored.path != path {
+        return Err("listing changed; page request is stale".to_string());
+    }
+    let want = key.map(|k| (k, desc));
+    if want != stored.sort {
+        if let Some((k, d)) = want {
+            archive::sort_facts(&mut stored.facts, k, d);
+        }
+        // Clearing the sort restores enumerate order only on a fresh open;
+        // within one listing, going back to "unsorted" keeps current order
+        // (documented: the table never un-sorts mid-listing).
+        stored.sort = want;
+    }
+    let total = stored.facts.len();
+    let rows = archive::page_of(&stored.facts, page, page_size)
+        .iter()
+        .map(archive::entry_from_facts)
+        .collect();
+    Ok(archive::Page { rows, total })
 }
 #[tauri::command]
 async fn info_archive(
@@ -552,6 +625,7 @@ pub fn run() {
             greet,
             drag_window,
             list_archive,
+            get_page,
             info_archive,
             cancel_list_archive,
             extract_archive,

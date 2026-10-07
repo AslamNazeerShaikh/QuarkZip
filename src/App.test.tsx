@@ -38,31 +38,20 @@ vi.mock("@tauri-apps/api/core", () => ({
     listCtl.calls.push(cmd);
     if (cmd === "drag_window") return Promise.resolve();
     if (cmd === "cancel_list_archive") return Promise.resolve(null);
-    if (cmd === "list_archive") {
-      if (listCtl.deferList) {
-        return new Promise((resolve) => {
-          listCtl.releaseList = resolve as (value: unknown) => void;
-        });
-      }
-      const { path, password } = (args ?? {}) as {
-        path: string;
-        password: string | null;
-      };
-      // Encrypted fixture: no password → 7zz-style password failure.
-      if (path === "/tmp/secret.zip" && !password) {
-        return Promise.reject("Enter password:\nBreak signaled");
-      }
+    // P2: the backend holds the listing; list opens return the total,
+    // pages arrive through get_page (sliced here, like the server).
+    const entriesFor = (path: string) => {
       if (path === "/tmp/secret.zip") {
-        return Promise.resolve([
+        return [
           { path: "secret.txt", size: 5, modified: null, is_folder: false },
-        ]);
+        ];
       }
       if (path === "/tmp/locked.zip") {
         // Content-encrypted zip: names list without a password, but
         // extraction needs one — the reported Extract-before-password case.
-        return Promise.resolve([
+        return [
           { path: "locked.txt", size: 5, modified: null, is_folder: false },
-        ]);
+        ];
       }
       if (path === "/tmp/stress.zip") {
         // Stress-shaped listing: 10k entries with hostile names (200-char
@@ -106,11 +95,37 @@ vi.mock("@tauri-apps/api/core", () => ({
             is_folder: false,
           });
         }
-        return Promise.resolve(entries);
+        return entries;
       }
-      return Promise.resolve([
+      return [
         { path: "dropped.txt", size: 10, modified: null, is_folder: false },
-      ]);
+      ];
+    };
+    if (cmd === "list_archive") {
+      if (listCtl.deferList) {
+        return new Promise((resolve) => {
+          listCtl.releaseList = resolve as (value: unknown) => void;
+        });
+      }
+      const { path, password } = (args ?? {}) as {
+        path: string;
+        password: string | null;
+      };
+      // Encrypted fixture: no password → 7zz-style password failure.
+      if (path === "/tmp/secret.zip" && !password) {
+        return Promise.reject("Enter password:\nBreak signaled");
+      }
+      return Promise.resolve({ total: entriesFor(path).length });
+    }
+    if (cmd === "get_page") {
+      const { path, page, pageSize } = (args ?? {}) as {
+        path: string;
+        page: number;
+        pageSize: number;
+      };
+      const all = entriesFor(path);
+      const rows = all.slice(page * pageSize, (page + 1) * pageSize);
+      return Promise.resolve({ rows, total: all.length });
     }
     if (cmd === "info_archive") {
       const { path } = (args ?? {}) as { path: string };

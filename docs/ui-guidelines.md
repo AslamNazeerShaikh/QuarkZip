@@ -88,8 +88,12 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   7 chars — with slack, no ellipsis), Modified fixed at `w-64` showing the full local stamp
   (`formatModified`: system time zone, AM/PM, raw stamp on hover),
   horizontal separators only, checkbox multi-select with soft primary-tint
-  selection, native slim scrollbar (`.scroll-slim`), empty state centered on
-  both axes. The listing never contains the archive itself: `parse_list_slt`
+  selection (accumulates across pages, resets per archive), native slim
+  scrollbar (`.scroll-slim`), empty state centered on
+  both axes. Sorting and paging are server-side (`get_page`: natural path
+  order, null sizes first, folders-first type approximation — see
+  backend-commands.md); the renderer holds one page only, so 10M listings
+  never materialize in the webview. The listing never contains the archive itself: `parse_list_slt`
   skips the header block before the `----------` separator, so only real
   files/folders appear.
   reference empty state (16px icon + 14px gray text + 12px hint).

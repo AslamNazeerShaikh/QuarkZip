@@ -6,7 +6,10 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { platform } from "@tauri-apps/plugin-os";
 import { Download, ChevronDown, FolderOpen, Info } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import ArchiveTable from "./components/ArchiveTable";
+import ArchiveTable, {
+  type SortDir,
+  type SortKey,
+} from "./components/ArchiveTable";
 import TitleBar from "./components/TitleBar";
 import AboutDialog from "./components/AboutDialog";
 import PasswordDialog from "./components/PasswordDialog";
@@ -21,7 +24,10 @@ import LoadDialog, { type LoadStats } from "./components/LoadDialog";
 import ExtractDoneDialog, {
   type ExtractResult,
 } from "./components/ExtractDoneDialog";
-import Pagination, { type PageSize } from "./components/Pagination";
+import Pagination, {
+  ALL_PAGE_CAP,
+  type PageSize,
+} from "./components/Pagination";
 import ThemeSwitch from "./components/ThemeSwitch";
 import LanguageSwitch from "./components/LanguageSwitch";
 import { Button } from "./components/ui/button";
@@ -126,7 +132,17 @@ export default function App() {
     return () => window.removeEventListener("focus", release);
   }, []);
   const [archive, setArchive] = useState<string | null>(null);
-  const [entries, setEntries] = useState<ArchiveEntry[]>([]);
+  // P2: the renderer holds ONE page only. The full listing lives in the
+  // backend (`ListingState`); pages arrive via `get_page`, sorted
+  // server-side. A 10M listing no longer materializes here (~5GB death).
+  const [rows, setRows] = useState<ArchiveEntry[]>([]);
+  const [totalEntries, setTotalEntries] = useState(0);
+  const [sortKey, setSortKey] = useState<SortKey | null>(null);
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
+  // A page fetch in flight (page turns are ms; sorts of millions take
+  // seconds). Stale responses lose to the latest request id.
+  const [paging, setPaging] = useState(false);
+  const pageReqRef = useRef(0);
   const [info, setInfo] = useState<ArchiveInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -181,8 +197,40 @@ export default function App() {
     void loadAppInfo().then(setAboutInfo);
   }
 
-  const pageCount =
-    pageSize === "all" ? 1 : Math.ceil(entries.length / pageSize);
+  const pageCount = pageSize === "all" ? 1 : Math.ceil(totalEntries / pageSize);
+
+  /// One page from the backend store. Late responses stay silent when a
+  /// newer request (page turn, sort, or fresh open) has superseded them.
+  async function fetchPage(
+    path: string,
+    page: number,
+    size: number,
+    key: SortKey | null,
+    dir: SortDir,
+  ) {
+    const id = ++pageReqRef.current;
+    setPaging(true);
+    try {
+      const res = await invoke<{ rows: ArchiveEntry[]; total: number }>(
+        "get_page",
+        { path, page, pageSize: size, sortKey: key, sortDir: key ? dir : null },
+      );
+      if (pageReqRef.current !== id) return;
+      setRows(res.rows);
+      setTotalEntries(res.total);
+    } catch (e) {
+      if (pageReqRef.current !== id) return;
+      setError(typeof e === "string" ? e : String(e));
+    } finally {
+      if (pageReqRef.current === id) setPaging(false);
+    }
+  }
+
+  /// Numeric page size: "all" spans the whole listing (the menu hides it
+  /// past the spacer cap, so this never exceeds it).
+  function resolvedSize(size: PageSize, total: number): number {
+    return size === "all" ? Math.max(total, 1) : size;
+  }
 
   // New archive, or a shrink that strands the page: go back into range.
   useEffect(() => {
@@ -220,16 +268,30 @@ export default function App() {
       }
     });
     try {
-      const list = await invoke<ArchiveEntry[]>("list_archive", {
+      const opened = await invoke<{ total: number }>("list_archive", {
         path,
         password,
         onProgress: channel,
       });
       if (cancelLoadRef.current) return;
+      pageReqRef.current += 1;
       setArchive(path);
-      setEntries(list);
+      setTotalEntries(opened.total);
       setArchivePassword(password);
       void setWindowTitle(path);
+      // A stale "all" from a smaller listing cannot span a huge one (the
+      // menu hides it past the cap, but state can outlive it by a render).
+      let size = resolvedSize(pageSize, opened.total);
+      if (size > ALL_PAGE_CAP) {
+        size = 10000;
+        setPageSize(10000);
+      }
+      if (opened.total > 0) {
+        await fetchPage(path, 0, size, null, "asc");
+      } else {
+        setRows([]);
+      }
+      if (cancelLoadRef.current) return;
       // Details are best-effort: the table must work even if the
       // summary parse fails (or the backend predates `info_archive`).
       try {
@@ -261,7 +323,8 @@ export default function App() {
       } else {
         setError(message);
         setArchive(null);
-        setEntries([]);
+        setRows([]);
+        setTotalEntries(0);
         setInfo(null);
         setArchivePassword(null);
         setDest("");
@@ -302,6 +365,49 @@ export default function App() {
     return () => unlisten?.();
   }, []);
 
+  /// Page turn / size / sort: rows always come from the backend store.
+  /// Sort keeps the current page (like the old client sort); size resets
+  /// to the first page. Stale responses lose via the fetch request id.
+  function changePage(next: number) {
+    if (!archive) return;
+    setPage(next);
+    void fetchPage(
+      archive,
+      next,
+      resolvedSize(pageSize, totalEntries),
+      sortKey,
+      sortDir,
+    );
+  }
+
+  function changePageSize(size: PageSize) {
+    if (!archive) return;
+    setPageSize(size);
+    setPage(0);
+    void fetchPage(
+      archive,
+      0,
+      resolvedSize(size, totalEntries),
+      sortKey,
+      sortDir,
+    );
+  }
+
+  function changeSort(key: SortKey) {
+    if (!archive || paging) return;
+    const dir: SortDir =
+      sortKey !== key ? "asc" : sortDir === "asc" ? "desc" : "asc";
+    setSortKey(key);
+    setSortDir(dir);
+    void fetchPage(
+      archive,
+      page,
+      resolvedSize(pageSize, totalEntries),
+      key,
+      dir,
+    );
+  }
+
   async function openArchive() {
     const selected = await open({
       multiple: false,
@@ -321,7 +427,9 @@ export default function App() {
   async function extract(passwordOverride: string | null = null) {
     if (!archive || !dest || extracting) return;
     const files = [...selectedPaths];
-    const count = files.length === 0 ? entries.length : files.length;
+    // Empty selection extracts everything server-side (no 10M path list
+    // crosses IPC); otherwise only the chosen in-archive paths.
+    const count = files.length === 0 ? totalEntries : files.length;
     const password = passwordOverride ?? archivePassword;
     setExtracting(true);
     try {
@@ -406,9 +514,14 @@ export default function App() {
             />
             <div className="flex min-h-0 flex-1 flex-col">
               <ArchiveTable
-                data={entries}
+                data={rows}
                 page={page}
                 pageSize={pageSize}
+                sortKey={sortKey}
+                sortDir={sortDir}
+                onSortKey={changeSort}
+                listingId={archive}
+                busy={paging}
                 onSelectionChange={setSelectedPaths}
               />
             </div>
@@ -421,7 +534,7 @@ export default function App() {
                   <Button
                     size="bar"
                     onClick={() => setConfirming(true)}
-                    disabled={!dest || extracting || entries.length === 0}
+                    disabled={!dest || extracting || totalEntries === 0}
                     className="shrink-0"
                   >
                     <Download size={14} aria-hidden />
@@ -462,14 +575,11 @@ export default function App() {
               {archive && (
                 <Pagination
                   page={page}
-                  pageCount={entries.length === 0 ? 0 : pageCount}
+                  pageCount={totalEntries === 0 ? 0 : pageCount}
                   pageSize={pageSize}
-                  total={entries.length}
-                  onPage={setPage}
-                  onPageSize={(size) => {
-                    setPageSize(size);
-                    setPage(0);
-                  }}
+                  total={totalEntries}
+                  onPage={changePage}
+                  onPageSize={changePageSize}
                 />
               )}
               <ThemeSwitch choice={choice} onChange={setChoice} />
@@ -501,7 +611,7 @@ export default function App() {
         <ExtractDialog
           open={confirming}
           selected={selectedPaths.size}
-          total={entries.length}
+          total={totalEntries}
           dest={dest}
           onCancel={() => setConfirming(false)}
           onConfirm={() => {

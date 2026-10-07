@@ -284,15 +284,19 @@ pub struct ArchiveInfo {
     pub extra: std::collections::BTreeMap<String, String>,
 }
 
-/// Parse `7zz l -slt` output into an [`ArchiveInfo`].
+/// Split `7zz l -slt` output into its parts.
 ///
 /// The header (between `Listing archive:` and the `----------` separator)
 /// carries container keys (`Type`, `Physical Size`, …); every block after
 /// the separator is one entry with `Size`, `Packed Size`, `Method`,
 /// `Encrypted`, `Host OS` and either `Folder = +` (zip/tar) or `Attributes`
 /// (7z) marking directories.
-pub fn parse_archive_info(output: &str) -> ArchiveInfo {
-    use std::collections::{BTreeMap, BTreeSet};
+/// Shared by [`parse_archive_info`] and the sidecar open path, which stores
+/// the listing for server-side paging instead of re-running 7zz per page.
+pub fn parse_listing_parts(
+    output: &str,
+) -> (std::collections::BTreeMap<String, String>, Vec<EntryFacts>) {
+    use std::collections::BTreeMap;
 
     let mut header: BTreeMap<String, String> = BTreeMap::new();
     let mut in_header = false;
@@ -344,6 +348,13 @@ pub fn parse_archive_info(output: &str) -> ArchiveInfo {
     }
 
     let facts: Vec<EntryFacts> = blocks.iter().filter_map(block_to_facts).collect();
+    (header, facts)
+}
+
+/// Parse `7zz l -slt` output into an [`ArchiveInfo`] (header summary over
+/// the entry facts).
+pub fn parse_archive_info(output: &str) -> ArchiveInfo {
+    let (header, facts) = parse_listing_parts(output);
     summarize_archive_info(&header, &facts)
 }
 
@@ -358,6 +369,9 @@ pub struct EntryFacts {
     pub encrypted: bool,
     pub host_os: Option<String>,
     pub is_folder: bool,
+    /// Raw 7zz `Modified` stamp for display + sorting (mirrors
+    /// [`ArchiveEntry::modified`]; kept here so pages serve from facts).
+    pub modified: Option<String>,
 }
 
 /// Converts one `-slt` entry block into facts. Blocks without `Path`
@@ -376,6 +390,7 @@ fn block_to_facts(block: &std::collections::BTreeMap<String, String>) -> Option<
         method: block.get("Method").filter(|m| !m.is_empty()).cloned(),
         encrypted: block.get("Encrypted").is_some_and(|e| e == "+"),
         host_os: block.get("Host OS").filter(|s| !s.is_empty()).cloned(),
+        modified: block.get("Modified").filter(|s| !s.is_empty()).cloned(),
         is_folder,
     })
 }
@@ -493,6 +508,178 @@ pub fn summarize_archive_info(
         container_modified: None,
         extra,
     }
+}
+
+/// Cap for one page (`rows × 36px` spacer): past ~3.6M px engines clamp
+/// element height and virtualized rows misplace. The UI hides "show all"
+/// above the same cap, and `get_page` enforces it.
+pub const MAX_PAGE_SIZE: usize = 100_000;
+
+/// Sort column for server-side paging (mirrors the table's `SortKey`).
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum PageSortKey {
+    Path,
+    Size,
+    Type,
+    Modified,
+}
+
+impl PageSortKey {
+    pub fn parse(s: &str) -> Option<Self> {
+        match s {
+            "path" => Some(Self::Path),
+            "size" => Some(Self::Size),
+            "type" => Some(Self::Type),
+            "modified" => Some(Self::Modified),
+            _ => None,
+        }
+    }
+}
+
+/// One served page: display rows plus the listing total (unchanged by
+/// paging, so the UI can keep `1 / N` readouts without a second call).
+#[derive(Debug, serde::Serialize, PartialEq)]
+pub struct Page {
+    pub rows: Vec<ArchiveEntry>,
+    pub total: usize,
+}
+
+/// Natural order for archive paths: case-folded, digit runs by numeric
+/// value. Mirrors the table's `localeCompare(numeric: true)` for ASCII
+/// paths (the 10M fixture is zero-padded, where byte order agrees too).
+/// Fully-equal strings compare `Equal` so the stable sort below keeps
+/// input order — same as the table's comparator returning 0.
+pub fn cmp_natural(a: &str, b: &str) -> std::cmp::Ordering {
+    use std::cmp::Ordering;
+    fn runs(s: &str) -> Vec<(bool, &str)> {
+        let mut out = Vec::new();
+        let mut start = 0;
+        let mut digit: Option<bool> = None;
+        for (i, c) in s.char_indices() {
+            let d = c.is_ascii_digit();
+            match digit {
+                Some(cur) if cur == d => {}
+                _ => {
+                    if i > start || digit.is_some() {
+                        out.push((digit.unwrap_or(false), &s[start..i]));
+                    }
+                    start = i;
+                    digit = Some(d);
+                }
+            }
+        }
+        if digit.is_some() {
+            out.push((digit.unwrap_or(false), &s[start..]));
+        }
+        out
+    }
+    fn digits_value(run: &str) -> &str {
+        let trimmed = run.trim_start_matches('0');
+        if trimmed.is_empty() {
+            "0"
+        } else {
+            trimmed
+        }
+    }
+    let (mut ra, mut rb) = (runs(a).into_iter(), runs(b).into_iter());
+    loop {
+        match (ra.next(), rb.next()) {
+            (None, None) => return Ordering::Equal,
+            (None, _) => return Ordering::Less,
+            (_, None) => return Ordering::Greater,
+            (Some((da, xa)), Some((db, xb))) => {
+                if da && db {
+                    let (va, vb) = (digits_value(xa), digits_value(xb));
+                    match va.len().cmp(&vb.len()).then(va.cmp(vb)) {
+                        Ordering::Equal => {}
+                        other => return other,
+                    }
+                } else {
+                    // Case-folded compare; ties fall through to later runs
+                    // and finally `Equal` (stable order, like the table).
+                    let (fa, fb) = (xa.to_lowercase(), xb.to_lowercase());
+                    match fa.cmp(&fb) {
+                        Ordering::Equal => {}
+                        other => return other,
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// Extension rule mirroring `fileKind`: after the last `.`, lowercased
+/// (`""` when none). Folders sort before files; unknown extensions sort
+/// with `""` first — a locale-independent approximation of the table's
+/// translated-label sort (exact in `en` for the common cases).
+fn type_key(f: &EntryFacts) -> (u8, String, &str) {
+    if f.is_folder {
+        return (0, String::new(), f.path.as_str());
+    }
+    let ext = f
+        .path
+        .rfind('.')
+        .map(|i| f.path[i + 1..].to_lowercase())
+        .unwrap_or_default();
+    (1, ext, f.path.as_str())
+}
+
+/// Sorts facts in place, then reverses the whole vec for `desc` — exactly
+/// the table's old `[...rows].sort()` + `.reverse()` semantics, including
+/// null placement (`size` nulls first asc / last desc; `modified` nulls
+/// sort as `""`).
+pub fn sort_facts(facts: &mut [EntryFacts], key: PageSortKey, desc: bool) {
+    match key {
+        PageSortKey::Path => {
+            facts.sort_by(|a, b| cmp_natural(&a.path, &b.path));
+        }
+        PageSortKey::Size => {
+            facts.sort_by_key(|f| f.size.map_or(-1, |s| s as i128));
+        }
+        PageSortKey::Type => {
+            facts.sort_by(|a, b| {
+                type_key(a)
+                    .0
+                    .cmp(&type_key(b).0)
+                    .then(cmp_natural(&type_key(a).1, &type_key(b).1))
+                    .then(cmp_natural(type_key(a).2, type_key(b).2))
+            });
+        }
+        PageSortKey::Modified => {
+            facts.sort_by(|a, b| {
+                a.modified
+                    .as_deref()
+                    .unwrap_or("")
+                    .cmp(b.modified.as_deref().unwrap_or(""))
+            });
+        }
+    }
+    if desc {
+        facts.reverse();
+    }
+}
+
+/// Display row for one facts entry (mirrors the FFI enumerate mapping).
+pub fn entry_from_facts(f: &EntryFacts) -> ArchiveEntry {
+    ArchiveEntry {
+        path: f.path.clone(),
+        size: f.size,
+        modified: f.modified.clone(),
+        is_folder: f.is_folder,
+    }
+}
+
+/// Bounds-safe slice: out-of-range pages yield `[]`, never a panic.
+pub fn page_of(facts: &[EntryFacts], page: usize, page_size: usize) -> &[EntryFacts] {
+    if page_size == 0 {
+        return &[];
+    }
+    let start = page.saturating_mul(page_size);
+    if start >= facts.len() {
+        return &[];
+    }
+    let end = (start.saturating_add(page_size)).min(facts.len());
+    &facts[start..end]
 }
 
 /// True when 7zz output signals a password problem rather than corruption:
@@ -893,5 +1080,141 @@ Host OS = Unix
         assert_eq!(info.folder_count, 1);
         assert_eq!(info.max_depth, 2);
         assert_eq!(info.host_os, vec!["Unix".to_string()]);
+    }
+
+    fn fact(path: &str, size: Option<u64>, modified: Option<&str>, folder: bool) -> EntryFacts {
+        EntryFacts {
+            path: path.to_string(),
+            size,
+            packed_size: None,
+            method: None,
+            encrypted: false,
+            host_os: None,
+            modified: modified.map(str::to_string),
+            is_folder: folder,
+        }
+    }
+
+    fn sample_facts() -> Vec<EntryFacts> {
+        vec![
+            fact("photo.png", Some(200), Some("2026-09-02 11:00:00"), false),
+            fact("backup", None, None, true),
+            fact(
+                "docs/report.pdf",
+                Some(5000),
+                Some("2026-09-01 10:00:00"),
+                false,
+            ),
+            fact("notes.txt", Some(50), None, false),
+            fact("inner.zip", Some(9000), Some("2026-09-03 12:00:00"), false),
+        ]
+    }
+
+    fn paths(facts: &[EntryFacts]) -> Vec<&str> {
+        facts.iter().map(|f| f.path.as_str()).collect()
+    }
+
+    #[test]
+    fn should_order_paths_naturally_case_insensitive() {
+        assert_eq!(
+            cmp_natural("file-2.txt", "file-10.txt"),
+            std::cmp::Ordering::Less
+        );
+        assert_eq!(cmp_natural("Backup", "backup"), std::cmp::Ordering::Equal);
+        assert_eq!(cmp_natural("b", "a"), std::cmp::Ordering::Greater);
+    }
+
+    #[test]
+    fn should_sort_paths_asc_then_reverse_for_desc() {
+        let mut facts = sample_facts();
+        sort_facts(&mut facts, PageSortKey::Path, false);
+        assert_eq!(
+            paths(&facts),
+            [
+                "backup",
+                "docs/report.pdf",
+                "inner.zip",
+                "notes.txt",
+                "photo.png"
+            ]
+        );
+        sort_facts(&mut facts, PageSortKey::Path, true);
+        assert_eq!(
+            paths(&facts),
+            [
+                "photo.png",
+                "notes.txt",
+                "inner.zip",
+                "docs/report.pdf",
+                "backup"
+            ]
+        );
+    }
+
+    #[test]
+    fn should_sort_null_sizes_first_asc_and_last_desc() {
+        let mut facts = sample_facts();
+        sort_facts(&mut facts, PageSortKey::Size, false);
+        assert_eq!(paths(&facts)[0], "backup");
+        assert_eq!(paths(&facts).last(), Some(&"inner.zip"));
+        sort_facts(&mut facts, PageSortKey::Size, true);
+        assert_eq!(paths(&facts)[0], "inner.zip");
+    }
+
+    #[test]
+    fn should_sort_folders_before_files_by_extension() {
+        let mut facts = sample_facts();
+        sort_facts(&mut facts, PageSortKey::Type, false);
+        let ordered = paths(&facts);
+        assert_eq!(ordered[0], "backup");
+        // Extensions ascend after the folder: pdf, png, txt, zip.
+        assert_eq!(
+            ordered[1..],
+            ["docs/report.pdf", "photo.png", "notes.txt", "inner.zip"]
+        );
+    }
+
+    #[test]
+    fn should_sort_modified_as_raw_strings_with_nulls_first() {
+        let mut facts = sample_facts();
+        sort_facts(&mut facts, PageSortKey::Modified, false);
+        assert_eq!(
+            paths(&facts),
+            [
+                "backup",
+                "notes.txt",
+                "docs/report.pdf",
+                "photo.png",
+                "inner.zip"
+            ]
+        );
+    }
+
+    #[test]
+    fn should_page_bounds_safely() {
+        let facts = sample_facts();
+        assert_eq!(page_of(&facts, 0, 2).len(), 2);
+        assert_eq!(page_of(&facts, 2, 2).len(), 1);
+        assert!(page_of(&facts, 9, 2).is_empty());
+        assert!(page_of(&facts, 0, 0).is_empty());
+        assert!(page_of(&facts, usize::MAX, 100).is_empty());
+    }
+
+    #[test]
+    fn should_map_facts_to_display_entries() {
+        let entry = entry_from_facts(&fact("a.txt", Some(6), Some("2026-01-01 00:00:00"), false));
+        assert_eq!(entry.path, "a.txt");
+        assert_eq!(entry.size, Some(6));
+        assert_eq!(entry.modified.as_deref(), Some("2026-01-01 00:00:00"));
+        assert!(!entry.is_folder);
+    }
+
+    #[test]
+    fn should_reject_unknown_sort_keys() {
+        assert_eq!(PageSortKey::parse("path"), Some(PageSortKey::Path));
+        assert_eq!(PageSortKey::parse("size"), Some(PageSortKey::Size));
+        assert_eq!(PageSortKey::parse("type"), Some(PageSortKey::Type));
+        assert_eq!(PageSortKey::parse("modified"), Some(PageSortKey::Modified));
+        assert_eq!(PageSortKey::parse("crc"), None);
     }
 }
