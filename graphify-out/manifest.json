@@ -552,9 +552,9 @@
     "semantic_hash": ""
   },
   "docs/color-system.md": {
-    "mtime": 1791367699.1118956,
-    "seen": 1791367705.248377,
-    "ast_hash": "a6f14da63516e4deaa948e1250a3a846",
+    "mtime": 1791368158.1221092,
+    "seen": 1791368171.354997,
+    "ast_hash": "e3dbb713a8720d9388ff8d607e33d7e0",
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
@@ -996,9 +996,9 @@
     "semantic_hash": ""
   },
   "src/components/TitleBar.tsx": {
-    "mtime": 1791295021.8190117,
-    "seen": 1791297347.394429,
-    "ast_hash": "fbdbe88e0d47f0713cf9004e45153341",
+    "mtime": 1791368142.5895188,
+    "seen": 1791368171.354917,
+    "ast_hash": "dd82f02e89e860ed70c1c5524d28bb07",
     "semantic_hash": ""
   },
   "src/hooks/useTheme.ts": {

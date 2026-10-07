@@ -16069,7 +16069,7 @@
       "node_kind": "heading",
       "norm_label": "accent system (`data-accent`, default blue)",
       "source_file": "docs/color-system.md",
-      "source_location": "L36"
+      "source_location": "L37"
     },
     {
       "id": "docs_color_system_measured_contrast_scripts_contrast_check_py_44_44_pass",
@@ -16081,7 +16081,7 @@
       "node_kind": "heading",
       "norm_label": "measured contrast (`scripts/contrast-check.py`, 44/44 pass)",
       "source_file": "docs/color-system.md",
-      "source_location": "L61"
+      "source_location": "L62"
     },
     {
       "id": "docs_color_system_quarkzip_color_system",
@@ -16105,7 +16105,7 @@
       "node_kind": "heading",
       "norm_label": "rules",
       "source_file": "docs/color-system.md",
-      "source_location": "L76"
+      "source_location": "L77"
     },
     {
       "id": "docs_color_system_tokens_src_index_css",
@@ -50073,7 +50073,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/color-system.md",
-      "source_location": "L36",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -50084,7 +50084,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/color-system.md",
-      "source_location": "L61",
+      "source_location": "L62",
       "weight": 1.0
     },
     {
@@ -50095,7 +50095,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/color-system.md",
-      "source_location": "L76",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -63469,5 +63469,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "af6cdb15078adbe8e6c9ae57204a75466d084aed"
+  "built_at_commit": "b82a1ebd25037c58552166473f71661525e25a99"
 }
