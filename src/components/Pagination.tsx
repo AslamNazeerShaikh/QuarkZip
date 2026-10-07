@@ -6,27 +6,33 @@ import { useLanguage } from "../i18n/LanguageContext";
 export const PAGE_SIZES = [100, 1000, 5000, 10000] as const;
 export type PageSize = (typeof PAGE_SIZES)[number] | "all";
 
-const OPTIONS: PageSize[] = [...PAGE_SIZES, "all"];
+const ALL_OPTIONS: PageSize[] = [...PAGE_SIZES, "all"];
+/// "Show all" renders through the windowed table, whose spacer div is
+/// `rows × 36px` tall — past ~3.6M px (100k rows) engines clamp element
+/// height and rows misplace/clip. Above the cap the option hides and an
+/// active "all" coerces back to the largest page.
+export const ALL_PAGE_CAP = 100_000;
 
 function formatSize(size: PageSize, allLabel: string): string {
   return size === "all" ? allLabel : formatCount(size);
 }
 
 /// Floating pagination controls: per-page selector, prev/next, page readout.
-/// Solid surface with the card shadow — no glassmorphism (reference bans
-/// blur/translucency). 10px control radius, 7px inner actions.
+/// Material shell matching the other footer controls.
 ///
 /// The page-size menu is a custom listbox (not a native `<select>`): native
 /// option popups are painted by the OS and ignore the app theme.
 function PageSizeMenu({
   pageSize,
+  options,
   onPageSize,
 }: {
   pageSize: PageSize;
+  options: PageSize[];
   onPageSize: (s: PageSize) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState(() => OPTIONS.indexOf(pageSize));
+  const [active, setActive] = useState(() => options.indexOf(pageSize));
   const rootRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const { t } = useLanguage();
@@ -61,7 +67,7 @@ function PageSizeMenu({
   function onButtonKey(e: React.KeyboardEvent) {
     if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      setActive(OPTIONS.indexOf(pageSize));
+      setActive(options.indexOf(pageSize));
       setOpen(true);
     }
   }
@@ -69,13 +75,13 @@ function PageSizeMenu({
   function onListKey(e: React.KeyboardEvent) {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setActive((i) => (i + 1) % OPTIONS.length);
+      setActive((i) => (i + 1) % options.length);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setActive((i) => (i - 1 + OPTIONS.length) % OPTIONS.length);
+      setActive((i) => (i - 1 + options.length) % options.length);
     } else if (e.key === "Enter") {
       e.preventDefault();
-      choose(OPTIONS[active]);
+      choose(options[active]);
     }
   }
 
@@ -88,7 +94,7 @@ function PageSizeMenu({
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => {
-          setActive(OPTIONS.indexOf(pageSize));
+          setActive(options.indexOf(pageSize));
           setOpen((o) => !o);
         }}
         onKeyDown={onButtonKey}
@@ -108,7 +114,7 @@ function PageSizeMenu({
           onKeyDown={onListKey}
           className="qz-material-bar animate-qz-pop absolute bottom-full left-0 mb-2 w-max min-w-full rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]"
         >
-          {OPTIONS.map((size, i) => {
+          {options.map((size, i) => {
             const selected = size === pageSize;
             return (
               <button
@@ -136,8 +142,7 @@ function PageSizeMenu({
 }
 
 /// Floating pagination controls: per-page selector, prev/next, page readout.
-/// Solid surface with the card shadow — no glassmorphism (reference bans
-/// blur/translucency). 10px control radius, 7px inner actions.
+/// Material shell matching the other footer controls.
 export default function Pagination({
   page,
   pageCount,
@@ -154,9 +159,20 @@ export default function Pagination({
   onPageSize: (s: PageSize) => void;
 }) {
   const { t } = useLanguage();
+  const allowAll = total <= ALL_PAGE_CAP;
+  const options: PageSize[] = allowAll ? ALL_OPTIONS : [...PAGE_SIZES];
+  // A bigger archive opened while "all" was active: coerce before the
+  // spacer can overflow the engine's element-height limit.
+  useEffect(() => {
+    if (!allowAll && pageSize === "all") onPageSize(10000);
+  }, [allowAll, pageSize, onPageSize]);
   return (
     <div className="qz-material-bar flex h-9 items-center gap-1 rounded-[10px] border border-[var(--qz-border)] px-1 shadow-[var(--qz-shadow-card)]">
-      <PageSizeMenu pageSize={pageSize} onPageSize={onPageSize} />
+      <PageSizeMenu
+        pageSize={pageSize === "all" && !allowAll ? 10000 : pageSize}
+        options={options}
+        onPageSize={onPageSize}
+      />
       <button
         type="button"
         aria-label={t("pagination.prevPage")}

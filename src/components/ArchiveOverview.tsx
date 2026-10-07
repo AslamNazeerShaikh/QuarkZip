@@ -25,7 +25,6 @@ export interface ArchiveInfo {
   host_os: string[];
   container_size: number | null;
   container_modified: number | null;
-  extra: Record<string, string>;
 }
 
 function formatEpoch(secs: number | null): string {
@@ -109,11 +108,16 @@ export default function ArchiveOverview({
     </div>
   );
   return (
+    // Fixed-geometry card: the 16-cell grid is identical for every
+    // archive (`—` for N/A), the ratio track always reserves its row, and
+    // the card shrink-wraps its content — never an internal scrollbar.
+    // The table below absorbs all leftover space (it is the only
+    // scroller besides menus and dropdowns).
     <Card
       className={
         collapsed && archive
           ? "flex flex-none flex-col overflow-hidden"
-          : "flex min-h-0 flex-1 flex-col overflow-hidden"
+          : "flex min-h-0 flex-none flex-col overflow-hidden"
       }
     >
       {!archive ? (
@@ -147,7 +151,7 @@ export default function ArchiveOverview({
             /* Details hug the top (horizontal centering only, modest top
               inset) — no centering slack above/below. The action row
               below is pinned to the card bottom instead of scrolling. */
-            <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-5 pt-5">
+            <div className="flex flex-col px-5 pt-5">
               <div className="mx-auto w-full max-w-5xl">
                 {loading && !info ? (
                   <p className="py-6 text-center text-sm text-[var(--qz-muted)]">
@@ -242,24 +246,25 @@ export default function ArchiveOverview({
                                 })
                               : "—"}
                           </div>
-                          {info.total_unpacked > 0 && (
+                          {/* Track always reserves its row so the grid never
+                            shifts height between archives with and without
+                            a measurable ratio. */}
+                          <div
+                            className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[var(--qz-surface-2)]"
+                            role="progressbar"
+                            aria-valuenow={Math.round(
+                              info.compression_ratio * 100,
+                            )}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                          >
                             <div
-                              className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[var(--qz-surface-2)]"
-                              role="progressbar"
-                              aria-valuenow={Math.round(
-                                info.compression_ratio * 100,
-                              )}
-                              aria-valuemin={0}
-                              aria-valuemax={100}
-                            >
-                              <div
-                                className="h-full rounded-full bg-[var(--qz-primary)]"
-                                style={{
-                                  width: `${Math.min(100, info.compression_ratio * 100)}%`,
-                                }}
-                              />
-                            </div>
-                          )}
+                              className="h-full rounded-full bg-[var(--qz-primary)]"
+                              style={{
+                                width: `${info.total_unpacked > 0 ? Math.min(100, info.compression_ratio * 100) : 0}%`,
+                              }}
+                            />
+                          </div>
                         </div>
                         <Meta
                           label={t("overview.meta.algorithms")}
@@ -275,15 +280,6 @@ export default function ArchiveOverview({
                         />
                       </div>
                     </section>
-                    {Object.keys(info.extra).length > 0 && (
-                      <section aria-label={t("overview.sectionMore")}>
-                        <div className="grid grid-cols-2 gap-x-6 gap-y-4 md:grid-cols-4">
-                          {Object.entries(info.extra).map(([k, v]) => (
-                            <Meta key={k} label={k} value={v || "—"} />
-                          ))}
-                        </div>
-                      </section>
-                    )}
                   </div>
                 ) : (
                   <p className="py-6 text-center text-sm text-[var(--qz-muted)]">

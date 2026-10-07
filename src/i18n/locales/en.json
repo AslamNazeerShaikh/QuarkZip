@@ -39,7 +39,6 @@
   "overview.unavailable": "Details unavailable — the listing loaded but 7zz reported no summary.",
   "overview.sectionContainer": "Container",
   "overview.sectionContent": "Content",
-  "overview.sectionMore": "More details",
   "overview.test": "Test",
   "overview.checksum": "Checksum",
   "overview.collapse": "Collapse details",

@@ -151,13 +151,16 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   `docs/passwords.md`.
 - `ArchiveTable` reports checkbox selection via `onSelectionChange`
   (cleared on each new listing); `App` feeds it to the dialog + extract.
-- `ArchiveOverview`: the 50% overview card — centered empty state
+- `ArchiveOverview`: fixed-geometry overview card — centered empty state
   (icon tile + title + description + primary CTA + hint); once open, no
   card header and no pills (path lives in the centered window title;
   format/encryption/solid already have grid rows): the details start
-  straight into the 4-column metadata grids (micro-label + 14px medium value, block centered
-  on both axes via `m-auto`), progressbar with
-  `aria-valuenow` for the compression ratio. Columns: Name flexes, Modified
+  straight into the fixed 4×4 metadata grid (micro-label + 14px medium
+  value). The 16 cells are identical for every archive type — `—` fills
+  N/A (7z-only Headers/Method/Solid/Blocks, entry-derived Host OS and
+  Algorithms, Zip64-only extras are dropped, never rendered): no layout
+  shift, no card scrollbar, ever. The ratio cell always reserves its
+  progressbar track (empty fill when unmeasurable). Columns: Name flexes, Modified
   is fixed at `w-64`. Below the details (always, once an archive is open —
   even when the summary is unavailable) sits the integrity action row,
   right-aligned: equal-width (`w-32`) secondary `sm` `Test`
@@ -178,10 +181,12 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
 ## Layout
 
 Single window (800×675 default/minimum, Tauri `tauri.conf.json`), no sidebar: slim
-drag strip (`h-14`), then an equal vertical split — `ArchiveOverview`
-above (expanded: `flex-1`; collapsed: `flex-none`, action row only),
-table (`flex-1`) below — then the action
-bar, all on the 28px rhythm. Panels scroll internally, never the page. The
+drag strip (`h-14`), then the content column: `ArchiveOverview` above
+shrink-wraps its fixed grid (expanded and collapsed alike — `flex-none`;
+collapsed shows the action row only), the table (`flex-1`) absorbs all
+leftover space below — then the action
+bar, all on the 28px rhythm. Only the table, menus, and dropdowns scroll;
+the card never does. The
 table scroller carries no bottom padding, so at max scroll the last row
 lands exactly on the viewport bottom (no dead zone), with or without
 pagination.

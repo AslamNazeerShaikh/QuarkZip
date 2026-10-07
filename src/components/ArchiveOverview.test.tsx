@@ -22,7 +22,6 @@ const INFO: ArchiveInfo = {
   host_os: ["Unix"],
   container_size: 255,
   container_modified: 1791569985,
-  extra: { "Code Page": "UTF-8" },
 };
 
 describe("ArchiveOverview", () => {
@@ -106,5 +105,37 @@ describe("ArchiveOverview", () => {
     expect(
       screen.queryByRole("button", { name: "Expand details" }),
     ).not.toBeInTheDocument();
+  });
+
+  it("should_render_fixed_schema_with_no_extra_section_or_scroller", () => {
+    // Engine extras (64-bit, Characteristics, …) never reach the card:
+    // same 16 cells for every archive, card shrink-wraps, no scrollbar.
+    const { container } = render(
+      <ArchiveOverview
+        archive="/tmp/qz-sample.7z"
+        info={INFO}
+        loading={false}
+        onOpen={() => {}}
+      />,
+    );
+    expect(
+      screen.queryByRole("region", { name: "More details" }),
+    ).not.toBeInTheDocument();
+    expect(container.querySelector(".overflow-y-auto")).not.toBeInTheDocument();
+  });
+
+  it("should_reserve_the_ratio_row_without_measurable_ratio", () => {
+    // Zero-unpacked archives keep the track (empty fill) so the grid
+    // never shifts height between archives.
+    render(
+      <ArchiveOverview
+        archive="/tmp/empty.zip"
+        info={{ ...INFO, total_unpacked: 0, compression_ratio: 0 }}
+        loading={false}
+        onOpen={() => {}}
+      />,
+    );
+    const bar = screen.getByRole("progressbar");
+    expect(bar).toHaveAttribute("aria-valuenow", "0");
   });
 });

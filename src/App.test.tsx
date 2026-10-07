@@ -134,7 +134,6 @@ vi.mock("@tauri-apps/api/core", () => ({
           host_os: ["Unix"],
           container_size: 1403808,
           container_modified: 1791563723,
-          extra: {},
         });
       }
       return Promise.reject(`unexpected command ${cmd}`);

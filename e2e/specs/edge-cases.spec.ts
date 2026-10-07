@@ -86,7 +86,7 @@ test("archive path with spaces and quotes titles correctly", async ({
   await expect(app.getByText("file-1.txt")).toBeVisible();
 });
 
-test("rich info renders extra fields and security metadata", async ({
+test("rich info renders the fixed schema with no extra section", async ({
   app,
 }) => {
   await addArchive(app, "/tmp/rich.7z", {
@@ -110,14 +110,14 @@ test("rich info renders extra fields and security metadata", async ({
       host_os: ["Windows"],
       container_size: 4096,
       container_modified: 1_759_623_585,
-      extra: { Tail: "yes" },
     },
   });
   await openViaButton(app, "/tmp/rich.7z");
   await expect(app.getByText("7zAES")).toBeVisible();
   await expect(app.getByText("LZMA2 · BCJ")).toBeVisible();
-  await expect(app.getByRole("region", { name: "More details" })).toContainText(
-    "yes",
+  // Fixed 16-cell schema: engine extras never grow card rows.
+  await expect(app.getByRole("region", { name: "More details" })).toHaveCount(
+    0,
   );
 });
 

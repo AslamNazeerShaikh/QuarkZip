@@ -69,3 +69,55 @@ describe("Pagination", () => {
     ).not.toBeInTheDocument();
   });
 });
+
+describe("Pagination show-all cap", () => {
+  it("should_hide_all_above_the_spacer_cap", async () => {
+    const user = userEvent.setup();
+    render(
+      <Pagination
+        page={0}
+        pageCount={1}
+        pageSize={10000}
+        total={10_000_001}
+        onPage={() => {}}
+        onPageSize={() => {}}
+      />,
+    );
+    await user.click(screen.getByRole("button", { name: "Rows per page" }));
+    expect(
+      screen.queryByRole("option", { name: "All" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "10,000" })).toBeInTheDocument();
+  });
+
+  it("should_offer_all_within_the_cap", async () => {
+    const user = userEvent.setup();
+    render(
+      <Pagination
+        page={0}
+        pageCount={1}
+        pageSize={100}
+        total={1000}
+        onPage={() => {}}
+        onPageSize={() => {}}
+      />,
+    );
+    await user.click(screen.getByRole("button", { name: "Rows per page" }));
+    expect(screen.getByRole("option", { name: "All" })).toBeInTheDocument();
+  });
+
+  it("should_coerce_active_all_when_a_bigger_archive_opens", () => {
+    const onPageSize = vi.fn();
+    render(
+      <Pagination
+        page={0}
+        pageCount={1}
+        pageSize="all"
+        total={10_000_001}
+        onPage={() => {}}
+        onPageSize={onPageSize}
+      />,
+    );
+    expect(onPageSize).toHaveBeenCalledWith(10000);
+  });
+});

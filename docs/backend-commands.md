@@ -23,6 +23,28 @@ both unit-tested without a binary (`npm run test:rust`).
 | `cancel_checksum`     | —                                                        | aborts the in-flight `checksum_file`                                                    |
 | `drag_window`         | —                                                        | starts a native drag (custom title strip)                                               |
 | `greet`               | `name`                                                   | scaffold sample, unused by the UI                                                       |
+| `set_liquid_glass`    | `enabled: bool`                                          | toggles the native glass window background (macOS; no-op elsewhere)                     |
+
+## `ArchiveInfo` schema (fixed 16 cells)
+
+`summarize_archive_info` consumes exactly six header keys
+(`Type`, `Physical Size`, `Headers Size`, `Method`, `Solid`, `Blocks`);
+everything else the engine reports is dropped, never rendered — the card
+grid is identical for every archive (`—` for N/A), so it never grows rows
+or scrolls. Measured against 7zz 26.03 (`l -slt`):
+
+| Format   | Type | Physical | Headers | Method¹ | Solid | Blocks | Dropped as extras                   |
+| -------- | ---- | -------- | ------- | ------- | ----- | ------ | ----------------------------------- |
+| zip      | ✓    | ✓        | —       | —       | —     | —      | `64-bit`, `Characteristics` (Zip64) |
+| 7z plain | ✓    | ✓        | ✓       | ✓       | −     | ✓      | —                                   |
+| 7z solid | ✓    | ✓        | ✓       | ✓       | +     | ✓      | —                                   |
+| tar      | ✓    | ✓        | ✓       | —       | —     | —      | `Code Page`, `Characteristics`      |
+| gzip     | ✓    | —        | ✓       | —       | —     | —      | —                                   |
+
+¹ Header-level method exists only for 7z. The ALGORITHMS cell aggregates
+per-entry methods (empty for tar/gzip entries → `Store / none`); HOST OS
+likewise aggregates per-entry values (7z entries carry none → `—`).
+ON DISK / MODIFIED always resolve from filesystem stat, never the engine.
 
 ## Rules
 
