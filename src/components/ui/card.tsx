@@ -1,12 +1,12 @@
 import type { HTMLAttributes } from "react";
 import { cn } from "./utils";
 
-/// shadcn-style Card: white, 12–14px radius, 1px subtle border, ~no shadow.
+/// shadcn-style Card: material shell, 12–14px radius, 1px subtle border.
 export function Card({ className, ...rest }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
-        "rounded-[13px] border border-[var(--qz-border)] bg-[var(--qz-surface)] text-[var(--qz-text)] shadow-[var(--qz-shadow-card)]",
+        "qz-material-bar rounded-[13px] border border-[var(--qz-border)] text-[var(--qz-text)] shadow-[var(--qz-shadow-card)]",
         className,
       )}
       {...rest}

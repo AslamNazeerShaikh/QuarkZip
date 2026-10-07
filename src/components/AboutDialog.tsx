@@ -51,7 +51,7 @@ export default function AboutDialog({
         className="animate-qz-fade absolute inset-0 bg-black/25"
         aria-hidden
       />
-      <div className="animate-qz-pop relative max-h-[85vh] w-full max-w-md overflow-y-auto rounded-[16px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-5 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+      <div className="qz-material-bar animate-qz-pop relative max-h-[85vh] w-full max-w-md overflow-y-auto rounded-[16px] border border-[var(--qz-border)] p-5 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
         <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[var(--qz-primary-soft)]">
           <Info size={20} aria-hidden className="text-[var(--qz-primary)]" />
         </span>

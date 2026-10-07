@@ -9,11 +9,11 @@ Distilled from the Brightway reference analysis
 
 ## Design direction
 
-Native macOS utility (Tahoe-era glass window, solid content): clean, calm,
-spacious. System neutrals, accent-driven interaction (blue default,
-8-accent system), translucent chrome over solid content, medium-weight
-typography, rounded controls, single thin outline icon set (Lucide,
-16–20px, quiet gray). Full brief: `docs/macos-native.md`.
+Native macOS utility (Tahoe-era glass window, material shells): clean,
+calm, restrained, spacious. System neutrals, accent-driven interaction
+(blue default, 8-accent system), translucent material shells everywhere,
+medium-weight typography, rounded controls, single thin outline icon set
+(Lucide, 16–20px, quiet gray). Full brief: `docs/macos-native.md`.
 
 Explicit non-goals: CSS-imitated glass anywhere, glass on content/cards/
 controls (rule 6 in color-system.md), Material/Bootstrap/admin-dashboard
@@ -25,9 +25,12 @@ the window background only — see `docs/macos-native.md` §8.
 ## Tokens
 
 Palette, roles, accent system, and measured contrast live in
-`docs/color-system.md`. Translucent chrome (`.qz-material-bar`: title
-strip, footer shells, menus, table header) over solid content cards —
-never the reverse. Supporting scales (all from the reference):
+`docs/color-system.md`. Every component shell is translucent material
+(`.qz-material-bar`: frame, cards, table, dialogs, buttons, inputs,
+menus) — the pagination/theme/about shells are the reference look.
+Solid fills survive only inside components: progress tracks, soft status
+pills, readout boxes (their pairs are contrast-measured). Supporting
+scales (all from the reference):
 
 - Spacing (8px grid): `4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 48`.
   One rhythm everywhere: 28px gutters on the content sides/bottom, no top

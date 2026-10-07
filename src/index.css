@@ -135,13 +135,14 @@
   --qz-text: #ffffff;
   --qz-muted: #ebebf5;
   --qz-faint: #98989f;
-  /* Dark on-accent is black: bright fills keep their hue while passing AA
-     (white text on system brights fails; Apple ships it anyway — we don't). */
+  /* Dark on-primary is white (Apple parity, user decision 2026-10-08):
+     white-on-brights measures 2–3.7:1, below AA — a documented exception
+     in color-system.md. Yellow alone keeps black (1.41:1 white). */
   --qz-accent: #0a84ff;
   --qz-primary: #0a84ff;
   --qz-primary-hover: #0072e5;
   --qz-primary-soft: #243546;
-  --qz-on-primary: #000000;
+  --qz-on-primary: #ffffff;
   --qz-success: #4cc38a;
   --qz-success-soft: #14291f;
   --qz-info: #82aaff;
@@ -174,34 +175,36 @@
   --qz-primary: #7d7aff;
   --qz-primary-hover: #7676ff;
   --qz-primary-soft: #343346;
-  --qz-on-primary: #000000;
+  --qz-on-primary: #ffffff;
 }
 .dark[data-accent="pink"] {
   --qz-accent: #ff375f;
   --qz-primary: #ff375f;
   --qz-primary-hover: #ff1342;
   --qz-primary-soft: #462a30;
-  --qz-on-primary: #000000;
+  --qz-on-primary: #ffffff;
 }
 .dark[data-accent="red"] {
   --qz-accent: #ff453a;
   --qz-primary: #ff453a;
   --qz-primary-hover: #ff2316;
   --qz-primary-soft: #462c2b;
-  --qz-on-primary: #000000;
+  --qz-on-primary: #ffffff;
 }
 .dark[data-accent="orange"] {
   --qz-accent: #ff9f0a;
   --qz-primary: #ff9f0a;
   --qz-primary-hover: #e58b00;
   --qz-primary-soft: #463924;
-  --qz-on-primary: #000000;
+  --qz-on-primary: #ffffff;
 }
 .dark[data-accent="yellow"] {
   --qz-accent: #ffd60a;
   --qz-primary: #ffd60a;
   --qz-primary-hover: #e5bf00;
   --qz-primary-soft: #464024;
+  /* Yellow keeps black text: white-on-yellow is 1.41:1 (unreadable for
+     anyone), black is 14.88:1. Sole exception to white-on-primary. */
   --qz-on-primary: #000000;
 }
 .dark[data-accent="green"] {
@@ -209,14 +212,14 @@
   --qz-primary: #30d158;
   --qz-primary-hover: #28b54b;
   --qz-primary-soft: #29402f;
-  --qz-on-primary: #000000;
+  --qz-on-primary: #ffffff;
 }
 .dark[data-accent="graphite"] {
   --qz-accent: #98989f;
   --qz-primary: #98989f;
   --qz-primary-hover: #86868e;
   --qz-primary-soft: #383839;
-  --qz-on-primary: #000000;
+  --qz-on-primary: #ffffff;
 }
 
 /* Translucent chrome shell: blur + saturation, content scrolls under.

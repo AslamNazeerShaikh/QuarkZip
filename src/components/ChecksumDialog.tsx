@@ -157,7 +157,7 @@ export default function ChecksumDialog({
         className="animate-qz-fade absolute inset-0 bg-black/25"
         aria-hidden
       />
-      <div className="animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+      <div className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
         <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-primary-soft)]">
           <Hash size={24} aria-hidden className="text-[var(--qz-primary)]" />
         </span>
@@ -184,7 +184,7 @@ export default function ChecksumDialog({
                 aria-expanded={menuOpen}
                 disabled={running}
                 onClick={() => setMenuOpen((o) => !o)}
-                className="flex h-9 w-full cursor-pointer items-center justify-between rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] px-3 text-[13px] font-medium outline-none transition-colors hover:bg-[var(--qz-surface-2)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40 disabled:cursor-default disabled:opacity-50"
+                className="qz-material-bar flex h-9 w-full cursor-pointer items-center justify-between rounded-[10px] border border-[var(--qz-border)] px-3 text-[13px] font-medium outline-none transition-colors hover:bg-black/5 focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40 disabled:cursor-default disabled:opacity-50 dark:hover:bg-white/10"
               >
                 {algoLabel}
                 <ChevronDown
@@ -243,7 +243,7 @@ export default function ChecksumDialog({
               placeholder={t("checksum.expectedPlaceholder")}
               spellCheck={false}
               autoComplete="off"
-              className="mt-1 h-9 w-full rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface)] px-3 font-mono text-[13px] outline-none placeholder:font-sans placeholder:text-[var(--qz-faint)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40 disabled:opacity-50"
+              className="qz-material-bar mt-1 h-9 w-full rounded-[10px] border border-[var(--qz-border)] px-3 font-mono text-[13px] outline-none placeholder:font-sans placeholder:text-[var(--qz-faint)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40 disabled:opacity-50"
             />
           </div>
         </div>

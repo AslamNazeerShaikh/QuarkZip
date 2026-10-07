@@ -504,15 +504,15 @@
     "semantic_hash": ""
   },
   "src/components/ui/button.tsx": {
-    "mtime": 1791363099.1321323,
-    "seen": 1791363209.011167,
-    "ast_hash": "898fac482f9dc071886b056c1284ac6d",
+    "mtime": 1791368461.2389865,
+    "seen": 1791368569.743489,
+    "ast_hash": "5e461b3be5c8cc9dbcb2d61a0fe66c85",
     "semantic_hash": ""
   },
   "src/components/ui/card.tsx": {
-    "mtime": 1791293986.451145,
-    "seen": 1791294105.802361,
-    "ast_hash": "f15c50d284c7c6534dc51de935c929b2",
+    "mtime": 1791368461.2376518,
+    "seen": 1791368569.743489,
+    "ast_hash": "5478983e7127095e435d40a4a768c7f2",
     "semantic_hash": ""
   },
   "src/components/ui/separator.tsx": {
@@ -552,15 +552,15 @@
     "semantic_hash": ""
   },
   "docs/color-system.md": {
-    "mtime": 1791368158.1221092,
-    "seen": 1791368171.354997,
-    "ast_hash": "e3dbb713a8720d9388ff8d607e33d7e0",
+    "mtime": 1791368560.130728,
+    "seen": 1791368569.743566,
+    "ast_hash": "43a7f440f916168383324a1a39a72c64",
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791367533.9624739,
-    "seen": 1791367560.000187,
-    "ast_hash": "03b43ec1c7982094b2efde091eb2b61e",
+    "mtime": 1791368549.0917017,
+    "seen": 1791368569.743568,
+    "ast_hash": "381c183b47eace1f97745e080797bacb",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -870,9 +870,9 @@
     "semantic_hash": ""
   },
   "src/components/AboutDialog.tsx": {
-    "mtime": 1791295021.8183732,
-    "seen": 1791297347.394419,
-    "ast_hash": "a90f1f005fa6fed8e5e631d8a92663a0",
+    "mtime": 1791368484.4630136,
+    "seen": 1791368569.743479,
+    "ast_hash": "5bb748ef30863e677489512314463124",
     "semantic_hash": ""
   },
   "src/components/ArchiveOverview.test.tsx": {
@@ -894,9 +894,9 @@
     "semantic_hash": ""
   },
   "src/components/ArchiveTable.tsx": {
-    "mtime": 1791363024.6880207,
-    "seen": 1791363209.011156,
-    "ast_hash": "39352206de98fcb3c32711ed4d4ab900",
+    "mtime": 1791368461.2389765,
+    "seen": 1791368569.74348,
+    "ast_hash": "78724ae7abccbd74eff88c786ee9fe64",
     "semantic_hash": ""
   },
   "src/components/ChecksumDialog.test.tsx": {
@@ -906,9 +906,9 @@
     "semantic_hash": ""
   },
   "src/components/ChecksumDialog.tsx": {
-    "mtime": 1791363024.6880147,
-    "seen": 1791363209.011157,
-    "ast_hash": "bd541231a7329d8f6c9ab913f3bb0a47",
+    "mtime": 1791368494.8720672,
+    "seen": 1791368569.7434812,
+    "ast_hash": "548fd6d29c63bf0157e46243b9108f11",
     "semantic_hash": ""
   },
   "src/components/ExtractDialog.test.tsx": {
@@ -918,9 +918,9 @@
     "semantic_hash": ""
   },
   "src/components/ExtractDialog.tsx": {
-    "mtime": 1791295021.8186533,
-    "seen": 1791297347.394423,
-    "ast_hash": "b755861c7bd36135a8bdf294d22983b0",
+    "mtime": 1791368484.3654795,
+    "seen": 1791368569.743482,
+    "ast_hash": "af0dd8c5d0425af40422a57cb7061fff",
     "semantic_hash": ""
   },
   "src/components/ExtractDoneDialog.test.tsx": {
@@ -930,9 +930,9 @@
     "semantic_hash": ""
   },
   "src/components/ExtractDoneDialog.tsx": {
-    "mtime": 1791295021.8187065,
-    "seen": 1791297347.394424,
-    "ast_hash": "4c23c88ee93c41ba864aea54db9d13ad",
+    "mtime": 1791368484.4625835,
+    "seen": 1791368569.7434828,
+    "ast_hash": "028f2d07b7d15b3afe0e5739e11e99c3",
     "semantic_hash": ""
   },
   "src/components/LanguageSwitch.test.tsx": {
@@ -966,9 +966,9 @@
     "semantic_hash": ""
   },
   "src/components/PasswordDialog.tsx": {
-    "mtime": 1791295021.8188848,
-    "seen": 1791297347.394426,
-    "ast_hash": "200583263dcfa50f5e079777b5f8a718",
+    "mtime": 1791368494.864048,
+    "seen": 1791368569.743486,
+    "ast_hash": "89d44da323a4c844f1defd0d8a5bc178",
     "semantic_hash": ""
   },
   "src/components/TestDialog.test.tsx": {
@@ -978,9 +978,9 @@
     "semantic_hash": ""
   },
   "src/components/TestDialog.tsx": {
-    "mtime": 1791295021.8189363,
-    "seen": 1791297347.3944268,
-    "ast_hash": "3b84b59b4a0cdb548ce6be37a092273c",
+    "mtime": 1791368484.462603,
+    "seen": 1791368569.743487,
+    "ast_hash": "25f6f4e0354bc95a68a5e8dc6d0e5013",
     "semantic_hash": ""
   },
   "src/components/ThemeSwitch.tsx": {
@@ -1074,9 +1074,9 @@
     "semantic_hash": ""
   },
   "src/components/LoadDialog.tsx": {
-    "mtime": 1791314112.6805253,
-    "seen": 1791314548.120457,
-    "ast_hash": "15a84d1facab72e0f7af2a0e9f3d0aab",
+    "mtime": 1791368473.8145206,
+    "seen": 1791368569.743484,
+    "ast_hash": "277df1d1b2156e18fc8d58449410aed0",
     "semantic_hash": ""
   },
   "docs/macpacker-reference.md": {
@@ -1134,9 +1134,9 @@
     "semantic_hash": ""
   },
   "scripts/contrast-check.py": {
-    "mtime": 1791362971.9868886,
-    "seen": 1791363209.0111418,
-    "ast_hash": "8067b9adda5c3debbd0588c082c6ce11",
+    "mtime": 1791368507.0992048,
+    "seen": 1791368569.743468,
+    "ast_hash": "d917aa4067fb28321c614d11886a0316",
     "semantic_hash": ""
   },
   "skills-lock.json": {

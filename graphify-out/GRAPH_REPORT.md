@@ -1,7 +1,7 @@
 # Graph Report - QuarkZip  (2026-10-07)
 
 ## Corpus Check
-- 267 files · ~393,641 words
+- 267 files · ~393,773 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b82a1ebd`
+- Built from commit: `17e78bdb`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -358,7 +358,7 @@ Nodes (5): description, identifier, permissions, $schema, windows
 
 ### Community 27 - "QuarkZip color system"
 Cohesion: 0.33
-Nodes (5): Accent system (`data-accent`, default blue), Measured contrast (`scripts/contrast-check.py`, 44/44 PASS), QuarkZip color system, Rules, Tokens (`src/index.css`)
+Nodes (5): Accent system (`data-accent`, default blue), Measured contrast (`scripts/contrast-check.py`: 30/30 gated PASS + documented exceptions), QuarkZip color system, Rules, Tokens (`src/index.css`)
 
 ### Community 28 - "AkiZip reference (upstream)"
 Cohesion: 0.08

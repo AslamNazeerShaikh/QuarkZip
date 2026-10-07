@@ -242,7 +242,7 @@ export default function ArchiveTable({
 
   return (
     <div className="relative min-h-0 w-full min-w-0 flex-1">
-      <div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-[13px] border border-[var(--qz-border)] bg-[var(--qz-surface)] text-[13px]">
+      <div className="qz-material-bar flex h-full min-h-0 w-full flex-col overflow-hidden rounded-[13px] border border-[var(--qz-border)] text-[13px]">
         {/* Header matches ROW_HEIGHT so it never reads slim next to rows.
             Translucent: rows scroll underneath like a native list header. */}
         <div

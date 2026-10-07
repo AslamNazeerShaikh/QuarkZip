@@ -490,7 +490,7 @@
       "file_type": "code",
       "norm_label": "button()",
       "source_file": "src/components/ui/button.tsx",
-      "source_location": "L35"
+      "source_location": "L36"
     },
     {
       "id": "src_components_ui_card_card",
@@ -586,7 +586,7 @@
       "file_type": "code",
       "norm_label": "lum()",
       "source_file": "scripts/contrast-check.py",
-      "source_location": "L10"
+      "source_location": "L12"
     },
     {
       "id": "scripts_contrast_check_lum_lin",
@@ -598,7 +598,7 @@
       "file_type": "code",
       "norm_label": "lin()",
       "source_file": "scripts/contrast-check.py",
-      "source_location": "L14"
+      "source_location": "L16"
     },
     {
       "id": "scripts_contrast_check_ratio",
@@ -610,7 +610,7 @@
       "file_type": "code",
       "norm_label": "ratio()",
       "source_file": "scripts/contrast-check.py",
-      "source_location": "L20"
+      "source_location": "L22"
     },
     {
       "id": "opencode_plugins_graphify_setup",
@@ -4901,7 +4901,7 @@
       "file_type": "code",
       "norm_label": "sizes",
       "source_file": "src/components/ui/button.tsx",
-      "source_location": "L25"
+      "source_location": "L26"
     },
     {
       "id": "src_components_ui_button_variants",
@@ -11427,7 +11427,7 @@
       "node_kind": "heading",
       "norm_label": "components (`src/components/ui/` + feature components)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L65"
+      "source_location": "L68"
     },
     {
       "id": "docs_ui_guidelines_deliberate_deviations_with_rationale",
@@ -11439,7 +11439,7 @@
       "node_kind": "heading",
       "norm_label": "deliberate deviations (with rationale)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L197"
+      "source_location": "L200"
     },
     {
       "id": "docs_ui_guidelines_design_direction",
@@ -11463,7 +11463,7 @@
       "node_kind": "heading",
       "norm_label": "interaction / states",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L186"
+      "source_location": "L189"
     },
     {
       "id": "docs_ui_guidelines_layout",
@@ -11475,7 +11475,7 @@
       "node_kind": "heading",
       "norm_label": "layout",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L173"
+      "source_location": "L176"
     },
     {
       "id": "docs_ui_guidelines_quarkzip_ui_guidelines",
@@ -11511,7 +11511,7 @@
       "node_kind": "heading",
       "norm_label": "typography (inter, ofl)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L47"
+      "source_location": "L50"
     },
     {
       "id": "agents_skills_apple_design_references_hig_onboarding_additional_content",
@@ -16072,16 +16072,16 @@
       "source_location": "L37"
     },
     {
-      "id": "docs_color_system_measured_contrast_scripts_contrast_check_py_44_44_pass",
-      "label": "Measured contrast (`scripts/contrast-check.py`, 44/44 PASS)",
+      "id": "docs_color_system_measured_contrast_scripts_contrast_check_py_30_30_gated_pass_documented_exceptions",
+      "label": "Measured contrast (`scripts/contrast-check.py`: 30/30 gated PASS + documented exceptions)",
       "_origin": "ast",
       "community": 27,
       "community_name": "QuarkZip color system",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "measured contrast (`scripts/contrast-check.py`, 44/44 pass)",
+      "norm_label": "measured contrast (`scripts/contrast-check.py`: 30/30 gated pass + documented exceptions)",
       "source_file": "docs/color-system.md",
-      "source_location": "L62"
+      "source_location": "L66"
     },
     {
       "id": "docs_color_system_quarkzip_color_system",
@@ -16105,7 +16105,7 @@
       "node_kind": "heading",
       "norm_label": "rules",
       "source_file": "docs/color-system.md",
-      "source_location": "L77"
+      "source_location": "L82"
     },
     {
       "id": "docs_color_system_tokens_src_index_css",
@@ -27951,7 +27951,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "scripts/contrast-check.py",
-      "source_location": "L21",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -28647,7 +28647,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/ui/button.tsx",
-      "source_location": "L48",
+      "source_location": "L49",
       "weight": 1.0
     },
     {
@@ -29775,7 +29775,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "scripts/contrast-check.py",
-      "source_location": "L14",
+      "source_location": "L16",
       "weight": 1.0
     },
     {
@@ -50078,13 +50078,13 @@
     },
     {
       "source": "docs_color_system_quarkzip_color_system",
-      "target": "docs_color_system_measured_contrast_scripts_contrast_check_py_44_44_pass",
+      "target": "docs_color_system_measured_contrast_scripts_contrast_check_py_30_30_gated_pass_documented_exceptions",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/color-system.md",
-      "source_location": "L62",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -50095,7 +50095,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/color-system.md",
-      "source_location": "L77",
+      "source_location": "L82",
       "weight": 1.0
     },
     {
@@ -50557,7 +50557,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L173",
+      "source_location": "L176",
       "weight": 1.0
     },
     {
@@ -50568,7 +50568,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L186",
+      "source_location": "L189",
       "weight": 1.0
     },
     {
@@ -50579,7 +50579,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L197",
+      "source_location": "L200",
       "weight": 1.0
     },
     {
@@ -50601,7 +50601,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L47",
+      "source_location": "L50",
       "weight": 1.0
     },
     {
@@ -50612,7 +50612,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L65",
+      "source_location": "L68",
       "weight": 1.0
     },
     {
@@ -53670,7 +53670,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "scripts/contrast-check.py",
-      "source_location": "L10",
+      "source_location": "L12",
       "weight": 1.0
     },
     {
@@ -53681,7 +53681,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "scripts/contrast-check.py",
-      "source_location": "L20",
+      "source_location": "L22",
       "weight": 1.0
     },
     {
@@ -54704,7 +54704,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/ui/button.tsx",
-      "source_location": "L25",
+      "source_location": "L26",
       "weight": 1.0
     },
     {
@@ -54715,7 +54715,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/ui/button.tsx",
-      "source_location": "L35",
+      "source_location": "L36",
       "weight": 1.0
     },
     {
@@ -63469,5 +63469,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "b82a1ebd25037c58552166473f71661525e25a99"
+  "built_at_commit": "17e78bdb6d966099c2f24ca776e692c49cc64966"
 }

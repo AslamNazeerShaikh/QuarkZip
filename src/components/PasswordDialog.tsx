@@ -117,7 +117,7 @@ export default function PasswordDialog({
         className="animate-qz-fade absolute inset-0 bg-black/25"
         aria-hidden
       />
-      <div className="animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+      <div className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
         <span
           key={phase.name}
           className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full ${
@@ -174,7 +174,7 @@ export default function PasswordDialog({
             </label>
             <div
               key={attempts}
-              className={`mt-1 flex h-9 items-center rounded-[10px] border bg-[var(--qz-surface)] outline-none transition-colors focus-within:ring-2 focus-within:ring-[var(--qz-primary)]/40 ${
+              className={`qz-material-bar mt-1 flex h-9 items-center rounded-[10px] border outline-none transition-colors focus-within:ring-2 focus-within:ring-[var(--qz-primary)]/40 ${
                 phase.name === "wrong"
                   ? "animate-qz-shake border-[var(--qz-danger)]"
                   : "border-[var(--qz-border)]"

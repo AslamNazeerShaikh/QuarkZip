@@ -2,6 +2,8 @@
 
 Checks every text pair (body, muted, status pills, CTA fills incl. hover)
 at AA 4.5. Micro-label faint pairs are reported, not gated (restricted use).
+Dark CTA pairs are Apple-parity exceptions (white on brights, user decision
+2026-10-08 — yellow keeps black): reported, not gated.
 Usage: python3 scripts/contrast-check.py (exit nonzero on any AA fail).
 """
 import sys
@@ -54,22 +56,26 @@ DARK = [
     ("info", "#82aaff", "#16233d"),
     ("warning", "#e8a33d", "#33270f"),
     ("danger", "#ff6961", "#3a1f1e"),
-    ("blue", "#000000", "#0a84ff"),
-    ("blue-hover", "#000000", "#0072e5"),
-    ("purple", "#000000", "#7d7aff"),
-    ("purple-hover", "#000000", "#7676ff"),
-    ("pink", "#000000", "#ff375f"),
-    ("pink-hover", "#000000", "#ff1342"),
-    ("red", "#000000", "#ff453a"),
-    ("red-hover", "#000000", "#ff2316"),
-    ("orange", "#000000", "#ff9f0a"),
-    ("orange-hover", "#000000", "#e58b00"),
     ("yellow", "#000000", "#ffd60a"),
     ("yellow-hover", "#000000", "#e5bf00"),
-    ("green", "#000000", "#30d158"),
-    ("green-hover", "#000000", "#28b54b"),
-    ("graphite", "#000000", "#98989f"),
-    ("graphite-hover", "#000000", "#86868e"),
+]
+# Apple-parity exceptions: white CTA text on dark brights (below AA 4.5,
+# user decision 2026-10-08). Measured and reported, never gated.
+DARK_CTA_EXCEPTIONS = [
+    ("blue", "#ffffff", "#0a84ff"),
+    ("blue-hover", "#ffffff", "#0072e5"),
+    ("purple", "#ffffff", "#7d7aff"),
+    ("purple-hover", "#ffffff", "#7676ff"),
+    ("pink", "#ffffff", "#ff375f"),
+    ("pink-hover", "#ffffff", "#ff1342"),
+    ("red", "#ffffff", "#ff453a"),
+    ("red-hover", "#ffffff", "#ff2316"),
+    ("orange", "#ffffff", "#ff9f0a"),
+    ("orange-hover", "#ffffff", "#e58b00"),
+    ("green", "#ffffff", "#30d158"),
+    ("green-hover", "#ffffff", "#28b54b"),
+    ("graphite", "#ffffff", "#98989f"),
+    ("graphite-hover", "#ffffff", "#86868e"),
 ]
 
 failures = []
@@ -80,6 +86,10 @@ for mode, pairs in (("light", LIGHT), ("dark", DARK)):
         print(f"{'PASS' if ok else 'FAIL'}  {r:5.2f}:1  {mode} {label} ({fg} on {bg})")
         if not ok:
             failures.append(f"{mode} {label}")
+
+print("--- dark CTA (Apple-parity exceptions, documented, not gated) ---")
+for label, fg, bg in DARK_CTA_EXCEPTIONS:
+    print(f"INFO  {ratio(fg, bg):5.2f}:1  dark {label} ({fg} on {bg})")
 
 print("--- faint (micro-labels only, documented, not gated) ---")
 for mode, faint, bg in (("light", "#6e6e73", "#ececec"), ("dark", "#98989f", "#1e1e1e")):

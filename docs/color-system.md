@@ -37,21 +37,25 @@ Components reference `--qz-*` role tokens only, never raw hex.
 ## Accent system (`data-accent`, default blue)
 
 Eight macOS accents. `--qz-accent` is the raw system hue (rings,
-selection, toggles — never body text). `--qz-primary*` is the AA-tuned
-CTA ramp derived from it; dark on-accent is black so vivid fills keep
-their hue while passing (white text on system brights fails — Apple ships
-it anyway; we don't). Hover fills are checked with their own text color.
+selection, toggles — never body text). `--qz-primary*` is the CTA ramp
+derived from it; on-primary is white in both themes (Apple parity, user
+decision 2026-10-08) except yellow, which keeps black. Hover fills are
+checked with their own text color.
 
-| Accent   | Light fill / hover / on       | Dark fill / hover / on        |
-| -------- | ----------------------------- | ----------------------------- |
-| blue     | `#0070eb` / `#005fc7` / white | `#0a84ff` / `#0072e5` / black |
-| purple   | `#5e5ce6` / `#3f3de1` / white | `#7d7aff` / `#7676ff` / black |
-| pink     | `#ea002d` / `#c60026` / white | `#ff375f` / `#ff1342` / black |
-| red      | `#ed0d00` / `#c90b00` / white | `#ff453a` / `#ff2316` / black |
-| orange   | `#b36200` / `#8f4e00` / white | `#ff9f0a` / `#e58b00` / black |
-| yellow   | `#9c7a00` / `#a88700` / black | `#ffd60a` / `#e5bf00` / black |
-| green    | `#23863b` / `#1c6a2f` / white | `#30d158` / `#28b54b` / black |
-| graphite | `#6e6e73` / `#5d5d61` / white | `#98989f` / `#86868e` / black |
+| Accent   | Light fill / hover / on       | Dark fill / hover / on         |
+| -------- | ----------------------------- | ------------------------------ |
+| blue     | `#0070eb` / `#005fc7` / white | `#0a84ff` / `#0072e5` / white* |
+| purple   | `#5e5ce6` / `#3f3de1` / white | `#7d7aff` / `#7676ff` / white* |
+| pink     | `#ea002d` / `#c60026` / white | `#ff375f` / `#ff1342` / white* |
+| red      | `#ed0d00` / `#c90b00` / white | `#ff453a` / `#ff2316` / white* |
+| orange   | `#b36200` / `#8f4e00` / white | `#ff9f0a` / `#e58b00` / white* |
+| yellow   | `#9c7a00` / `#a88700` / black | `#ffd60a` / `#e5bf00` / black  |
+| green    | `#23863b` / `#1c6a2f` / white | `#30d158` / `#28b54b` / white* |
+| graphite | `#6e6e73` / `#5d5d61` / white | `#98989f` / `#86868e` / white* |
+
+`*` Apple-parity exception: white-on-bright measures 2.02–4.63:1
+(orange/green weakest), below AA — see measured table. Yellow keeps
+black (white-on-yellow is 1.41:1).
 
 Switching: `.dark`-class mechanism on `<html>` (Tailwind custom variant
 `@custom-variant dark`) × `data-accent`, plus `color-scheme` for native
@@ -59,20 +63,21 @@ controls. `System` theme follows `prefers-color-scheme` live. Theme
 cross-fade 180ms. No accent switcher UI yet — `data-accent` defaults to
 blue; the switcher is tracked follow-up work.
 
-## Measured contrast (`scripts/contrast-check.py`, 44/44 PASS)
+## Measured contrast (`scripts/contrast-check.py`: 30/30 gated PASS + documented exceptions)
 
-| Pair                                    | Ratio        | Needs | Result                                |
-| --------------------------------------- | ------------ | ----- | ------------------------------------- |
-| light body `#000` on `#ececec`          | 17.78:1      | 4.5   | PASS                                  |
-| light muted `#3c3c43` on `#ececec`      | 9.26:1       | 4.5   | PASS                                  |
-| light success/info/warning/danger pills | 4.68–6.01:1  | 4.5   | PASS                                  |
-| light CTA fills + hovers, all accents   | 4.50–7.08:1  | 4.5   | PASS                                  |
-| dark body `#fff` on `#1e1e1e`           | 16.67:1      | 4.5   | PASS                                  |
-| dark muted `#ebebf5` on `#1e1e1e`       | 14.08:1      | 4.5   | PASS                                  |
-| dark success/info/warning/danger pills  | 5.34–6.94:1  | 4.5   | PASS                                  |
-| dark CTA fills + hovers, all accents    | 4.54–14.88:1 | 4.5   | PASS                                  |
-| light faint `#6e6e73` on `#ececec`      | 4.29:1       | 4.5   | restricted micro-labels only (rule 5) |
-| dark faint `#98989f` on `#1e1e1e`       | 5.82:1       | 4.5   | PASS                                  |
+| Pair                                    | Ratio         | Needs | Result                                |
+| --------------------------------------- | ------------- | ----- | ------------------------------------- |
+| light body `#000` on `#ececec`          | 17.78:1       | 4.5   | PASS                                  |
+| light muted `#3c3c43` on `#ececec`      | 9.26:1        | 4.5   | PASS                                  |
+| light success/info/warning/danger pills | 4.68–6.01:1   | 4.5   | PASS                                  |
+| light CTA fills + hovers, all accents   | 4.50–7.08:1   | 4.5   | PASS                                  |
+| dark body `#fff` on `#1e1e1e`           | 16.67:1       | 4.5   | PASS                                  |
+| dark muted `#ebebf5` on `#1e1e1e`       | 14.08:1       | 4.5   | PASS                                  |
+| dark success/info/warning/danger pills  | 5.34–6.94:1   | 4.5   | PASS                                  |
+| dark CTA fills + hovers (yellow)        | 11.78–14.88:1 | 4.5   | PASS                                  |
+| dark CTA fills + hovers (rest)          | 2.02–4.63:1   | 4.5   | Apple-parity exception, 2026-10-08    |
+| light faint `#6e6e73` on `#ececec`      | 4.29:1        | 4.5   | restricted micro-labels only (rule 5) |
+| dark faint `#98989f` on `#1e1e1e`       | 5.82:1        | 4.5   | PASS                                  |
 
 ## Rules
 

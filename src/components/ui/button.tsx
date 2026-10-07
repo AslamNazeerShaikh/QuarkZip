@@ -11,9 +11,10 @@ const VARIANTS: Record<Variant, string> = {
   // eat into their fill, so a borderless primary would read 2px bigger).
   primary:
     "bg-[var(--qz-primary)] text-[var(--qz-on-primary)] border border-transparent hover:bg-[var(--qz-primary-hover)]",
-  // Reference: white with 1px subtle border, dark text.
+  // Reference: material shell with 1px subtle border, dark text. Hover
+  // uses a translucent wash (an opaque fill would kill the blur).
   secondary:
-    "bg-[var(--qz-surface)] text-[var(--qz-text)] border border-[var(--qz-border)] hover:bg-[var(--qz-surface-2)]",
+    "qz-material-bar border border-[var(--qz-border)] text-[var(--qz-text)] hover:bg-black/5 dark:hover:bg-white/10",
   ghost: "text-[var(--qz-text)] hover:bg-[var(--qz-surface-2)]",
   // Confirm dialog: orange Cancel, blue Proceed (AA pairs in color-system).
   warning:

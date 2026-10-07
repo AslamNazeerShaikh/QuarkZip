@@ -59,7 +59,7 @@ export default function LoadDialog({
         className="animate-qz-fade absolute inset-0 bg-black/25"
         aria-hidden
       />
-      <div className="animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] bg-[var(--qz-surface)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0.5)]">
+      <div className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0.5)]">
         <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-primary-soft)]">
           <FolderOpen
             size={24}
