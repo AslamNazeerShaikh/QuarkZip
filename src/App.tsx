@@ -193,11 +193,12 @@ export default function App() {
     cancelLoadRef.current = false;
     setError(null);
     setDoneInfo(null);
-    // Live counters from the backend (bytes + entries so far); ignored
-    // once a cancel lands so a late snapshot can't reopen the popup.
+    // Live counters from the backend (entries so far; bytes only on the
+    // sidecar path — the in-process engine has no stdout to measure).
+    // Ignored once a cancel lands so a late snapshot can't reopen popup.
     const channel = new Channel<LoadStats>((msg) => {
       if (!cancelLoadRef.current && msg && typeof msg === "object") {
-        setLoadStats({ bytes: msg.bytes, entries: msg.entries });
+        setLoadStats({ bytes: msg.bytes ?? null, entries: msg.entries });
       }
     });
     try {

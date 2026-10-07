@@ -2748,6 +2748,7 @@ dependencies = [
 name = "quarkzip"
 version = "0.1.0"
 dependencies = [
+ "cc",
  "digest",
  "md-5",
  "serde",

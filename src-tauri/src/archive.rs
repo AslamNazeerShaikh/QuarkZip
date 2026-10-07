@@ -341,6 +341,53 @@ pub fn parse_archive_info(output: &str) -> ArchiveInfo {
         blocks.push(block);
     }
 
+    let facts: Vec<EntryFacts> = blocks.iter().filter_map(block_to_facts).collect();
+    summarize_archive_info(&header, &facts)
+}
+
+/// One entry's summary facts, whether parsed from `-slt` text or pulled
+/// from the in-process engine: identical input, one [`summarize_archive_info`].
+#[derive(Debug, PartialEq, Clone)]
+pub struct EntryFacts {
+    pub path: String,
+    pub size: Option<u64>,
+    pub packed_size: Option<u64>,
+    pub method: Option<String>,
+    pub encrypted: bool,
+    pub host_os: Option<String>,
+    pub is_folder: bool,
+}
+
+/// Converts one `-slt` entry block into facts. Blocks without `Path`
+/// (stray header lines in multi-section listings) are skipped, exactly as
+/// the aggregation below used to.
+fn block_to_facts(block: &std::collections::BTreeMap<String, String>) -> Option<EntryFacts> {
+    let path = block.get("Path")?.clone();
+    let is_folder = block.get("Folder").is_some_and(|f| f == "+")
+        || block
+            .get("Attributes")
+            .is_some_and(|a| attributes_is_folder(a));
+    Some(EntryFacts {
+        path,
+        size: block.get("Size").and_then(|s| s.parse().ok()),
+        packed_size: block.get("Packed Size").and_then(|s| s.parse().ok()),
+        method: block.get("Method").filter(|m| !m.is_empty()).cloned(),
+        encrypted: block.get("Encrypted").is_some_and(|e| e == "+"),
+        host_os: block.get("Host OS").filter(|s| !s.is_empty()).cloned(),
+        is_folder,
+    })
+}
+
+/// Builds an [`ArchiveInfo`] from a header map plus per-entry facts —
+/// shared by the `-slt` text path and the in-process engine, so the two
+/// can never drift (A/B-tested on fixtures and the 10M archive).
+pub fn summarize_archive_info(
+    header: &std::collections::BTreeMap<String, String>,
+    facts: &[EntryFacts],
+) -> ArchiveInfo {
+    use std::collections::BTreeSet;
+
+    let mut header = header.clone();
     let mut file_count = 0usize;
     let mut folder_count = 0usize;
     let mut total_unpacked = 0u64;
@@ -351,34 +398,32 @@ pub fn parse_archive_info(output: &str) -> ArchiveInfo {
     let mut cipher_tokens: BTreeSet<String> = BTreeSet::new();
     let mut host_os: BTreeSet<String> = BTreeSet::new();
 
-    for b in &blocks {
-        let Some(path) = b.get("Path") else { continue };
-        let folder = b.get("Folder").is_some_and(|f| f == "+")
-            || b.get("Attributes").is_some_and(|a| attributes_is_folder(a));
-        if folder {
+    for f in facts {
+        if f.is_folder {
             folder_count += 1;
         } else {
             file_count += 1;
         }
-        if let Some(s) = b.get("Size").and_then(|s| s.parse::<u64>().ok()) {
-            if !folder {
+        if let Some(s) = f.size {
+            if !f.is_folder {
                 total_unpacked = total_unpacked.saturating_add(s);
             }
         }
-        if let Some(p) = b.get("Packed Size").and_then(|s| s.parse::<u64>().ok()) {
+        if let Some(p) = f.packed_size {
             total_packed = total_packed.saturating_add(p);
         }
-        let depth = path
+        let depth = f
+            .path
             .split(['/', '\\'])
             .filter(|seg| !seg.is_empty())
             .count();
         max_depth = max_depth.max(depth);
-        if let Some(m) = b.get("Method").filter(|m| !m.is_empty()) {
+        if let Some(m) = f.method.as_ref().filter(|m| !m.is_empty()) {
             methods.insert(m.clone());
         }
-        if b.get("Encrypted").is_some_and(|e| e == "+") {
+        if f.encrypted {
             encrypted_files += 1;
-            if let Some(m) = b.get("Method") {
+            if let Some(m) = &f.method {
                 for token in m.split_whitespace() {
                     let upper = token.to_ascii_uppercase();
                     if upper.contains("AES") || upper.contains("CRYPTO") {
@@ -388,7 +433,7 @@ pub fn parse_archive_info(output: &str) -> ArchiveInfo {
                 }
             }
         }
-        if let Some(os) = b.get("Host OS").filter(|s| !s.is_empty()) {
+        if let Some(os) = f.host_os.as_ref().filter(|s| !s.is_empty()) {
             host_os.insert(os.clone());
         }
     }
@@ -414,7 +459,7 @@ pub fn parse_archive_info(output: &str) -> ArchiveInfo {
         "Solid",
         "Blocks",
     ];
-    let extra: BTreeMap<String, String> = header
+    let extra: std::collections::BTreeMap<String, String> = header
         .iter()
         .filter(|(k, _)| !known.contains(&k.as_str()))
         .map(|(k, v)| (k.clone(), v.clone()))

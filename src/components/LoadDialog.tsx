@@ -4,7 +4,7 @@ import { useLanguage } from "../i18n/LanguageContext";
 import { formatCount, formatSize } from "../lib/format";
 
 export interface LoadStats {
-  bytes: number;
+  bytes: number | null;
   entries: number;
 }
 
@@ -44,7 +44,10 @@ export default function LoadDialog({
   const { t } = useLanguage();
   if (!open) return null;
   const secs = Math.max(0, elapsedMs / 1000);
-  const rate = stats && secs > 0 ? `${formatSize(stats.bytes / secs)}/s` : "—";
+  const rate =
+    stats?.bytes != null && secs > 0
+      ? `${formatSize(stats.bytes / secs)}/s`
+      : "—";
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -92,7 +95,7 @@ export default function LoadDialog({
           />
           <Stat
             label={t("loading.dataRead")}
-            value={stats ? formatSize(stats.bytes) : "—"}
+            value={stats?.bytes != null ? formatSize(stats.bytes) : "—"}
           />
           <Stat label={t("loading.elapsed")} value={`${Math.floor(secs)} s`} />
           <Stat label={t("loading.rate")} value={rate} />

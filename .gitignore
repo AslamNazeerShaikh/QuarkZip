@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 vendor/7zz-cache
+vendor/7z-src-cache
+vendor/7zip
 
 # Playwright e2e artifacts
 test-results/

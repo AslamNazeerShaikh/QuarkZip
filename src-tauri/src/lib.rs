@@ -1,6 +1,7 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 pub mod archive;
 pub mod checksum;
+pub mod sevenzip;
 
 use std::sync::atomic::{AtomicBool, Ordering};
 use tauri::Manager;
@@ -29,14 +30,30 @@ static CHECKSUM_CANCEL: AtomicBool = AtomicBool::new(false);
 /// between the two must still abort it instead of being cleared).
 static LIST_CANCEL: AtomicBool = AtomicBool::new(false);
 
+/// Backend-held listing for the in-process engine: one open flow's full
+/// detail set, so `info_archive` summarizes without re-running 7zz and
+/// future paging serves slices without re-enumerating. Single-window app:
+/// one listing at a time, replaced on every successful open.
+#[derive(Default)]
+struct ListingState {
+    current: std::sync::Mutex<Option<StoredListing>>,
+}
+
+struct StoredListing {
+    path: String,
+    header: std::collections::BTreeMap<String, String>,
+    facts: Vec<crate::archive::EntryFacts>,
+}
+
 /// Listing progress snapshot streamed over a Channel while `7zz l -slt`
 /// runs: raw stdout bytes collected plus entry blocks completed so far.
 /// The total is unknowable upfront (`l` reports no percent — verified
 /// against 7zz 26.03), so the frontend shows counters + an indeterminate
-/// bar, never a fake ETA.
+/// bar, never a fake ETA. `bytes` is None on the in-process path, which
+/// has no stdout to measure.
 #[derive(serde::Serialize, Clone)]
 struct ListProgress {
-    bytes: u64,
+    bytes: Option<u64>,
     entries: u64,
 }
 
@@ -151,7 +168,7 @@ async fn run_listing(
         if last_send.elapsed() >= std::time::Duration::from_millis(200) {
             last_send = std::time::Instant::now();
             let _ = on_progress.send(ListProgress {
-                bytes: counter.bytes(),
+                bytes: Some(counter.bytes()),
                 entries: counter.entries(),
             });
         }
@@ -192,11 +209,53 @@ fn tail(text: &str) -> String {
 #[tauri::command]
 async fn list_archive(
     app: tauri::AppHandle,
+    state: tauri::State<'_, ListingState>,
     path: String,
     password: Option<String>,
     on_progress: tauri::ipc::Channel<ListProgress>,
 ) -> Result<Vec<archive::ArchiveEntry>, String> {
     LIST_CANCEL.store(false, Ordering::SeqCst);
+    // P1: in-process engine first (unix), sidecar fallback on any engine
+    // error. QUARKZIP_LIST_ENGINE=sidecar forces the legacy path.
+    // Cancel never falls back: re-running a cancelled listing is wrong.
+    #[cfg(qz_ffi)]
+    let try_ffi = std::env::var("QUARKZIP_LIST_ENGINE").as_deref() != Ok("sidecar");
+    #[cfg(not(qz_ffi))]
+    let try_ffi = false;
+    if try_ffi {
+        let owned_path = path.clone();
+        let owned_pw = password.clone();
+        let progress_ffi = on_progress.clone();
+        let res = tokio::task::spawn_blocking(move || {
+            crate::sevenzip::enumerate_detail(
+                &owned_path,
+                owned_pw.as_deref(),
+                &mut |n: u64| {
+                    let _ = progress_ffi.send(ListProgress {
+                        bytes: None,
+                        entries: n,
+                    });
+                },
+                &LIST_CANCEL,
+            )
+        })
+        .await
+        .map_err(|e| format!("listing task failed: {e}"))?;
+        match res {
+            Ok(data) => {
+                *state.current.lock().expect("listing state") = Some(StoredListing {
+                    path: path.clone(),
+                    header: data.header,
+                    facts: data.facts,
+                });
+                return Ok(data.entries);
+            }
+            Err(e) if e == crate::sevenzip::CANCELLED => return Err(e),
+            Err(e) => {
+                eprintln!("[quarkzip] FFI listing failed ({e}), falling back to sidecar");
+            }
+        }
+    }
     let (code, stdout, stderr) = run_listing(
         &app,
         archive::list_args(&path, password.as_deref()),
@@ -211,10 +270,31 @@ async fn list_archive(
 #[tauri::command]
 async fn info_archive(
     app: tauri::AppHandle,
+    state: tauri::State<'_, ListingState>,
     path: String,
     password: Option<String>,
     on_progress: tauri::ipc::Channel<ListProgress>,
 ) -> Result<archive::ArchiveInfo, String> {
+    // Fast path: summarize the stored in-process listing (no second 7zz
+    // run). Path must match — a stale store belongs to another archive.
+    // The sidecar path below stays for fallback opens.
+    if let Some(stored) = state.current.lock().expect("listing state").as_ref() {
+        if stored.path == path {
+            let mut info = archive::summarize_archive_info(&stored.header, &stored.facts);
+            // Filesystem truth for the container itself (size + mtime).
+            if let Ok(meta) = std::fs::metadata(&path) {
+                info.container_size = Some(meta.len());
+                info.container_modified = meta
+                    .modified()
+                    .ok()
+                    .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
+                    .map(|d| d.as_secs());
+            }
+            return Ok(info);
+        }
+    }
+    // No flag reset here: info runs second in the same open flow, so a
+    // cancel landing between the two invokes must still abort it.
     // No flag reset here: info runs second in the same open flow, so a
     // cancel landing between the two invokes must still abort it.
     let (code, stdout, stderr) = run_listing(
@@ -366,6 +446,7 @@ fn greet(name: &str) -> String {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .manage(ListingState::default())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_opener::init())
