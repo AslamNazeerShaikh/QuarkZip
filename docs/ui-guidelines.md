@@ -9,19 +9,18 @@ Distilled from the Brightway reference analysis
 
 ## Design direction
 
-Native macOS utility (Sequoia-era, pre-glass): clean, calm, restrained,
+Native macOS utility (Tahoe-era glass window, solid content): clean, calm,
 spacious. System neutrals, accent-driven interaction (blue default,
 8-accent system), translucent chrome over solid content, medium-weight
 typography, rounded controls, single thin outline icon set (Lucide,
 16–20px, quiet gray). Full brief: `docs/macos-native.md`.
 
-Explicit non-goals: liquid glass anywhere, CSS-imitated glass anywhere
-(rule 6 in color-system.md), Material/Bootstrap/admin-dashboard look,
-gradients, neon, heavy shadows, 2px dark borders, vertical table
+Explicit non-goals: CSS-imitated glass anywhere, glass on content/cards/
+controls (rule 6 in color-system.md), Material/Bootstrap/admin-dashboard
+look, gradients, neon, heavy shadows, 2px dark borders, vertical table
 gridlines, bold-everything type, dark-mode-by-default (dark exists via
-the theme switch but System is home). The frosted window background is
-a native standard material (`NSVisualEffectView`), not glassmorphism —
-see `docs/macos-native.md` §8.
+the theme switch but System is home). Native Liquid Glass is allowed for
+the window background only — see `docs/macos-native.md` §8.
 
 ## Tokens
 

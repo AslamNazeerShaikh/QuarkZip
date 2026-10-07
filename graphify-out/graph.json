@@ -4,26 +4,13 @@
   "graph": {},
   "nodes": [
     {
-      "id": "src_components_archiveoverview_archiveinfo",
-      "label": "ArchiveInfo",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ArchiveOverview.tsx",
-      "file_type": "code",
-      "norm_label": "archiveinfo",
-      "source_file": "src/components/ArchiveOverview.tsx",
-      "source_location": "L9"
-    },
-    {
       "id": "src_components_loaddialog_loadstats",
       "label": "LoadStats",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "ArchiveOverview.tsx",
+      "community_name": "LoadDialog.tsx",
       "file_type": "code",
       "norm_label": "loadstats",
       "source_file": "src/components/LoadDialog.tsx",
@@ -36,7 +23,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "badgevariant",
       "source_file": "src/components/ui/badge.tsx",
@@ -49,7 +36,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "size",
       "source_file": "src/components/ui/button.tsx",
@@ -62,7 +49,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "variant",
       "source_file": "src/components/ui/button.tsx",
@@ -342,6 +329,19 @@
       "source_location": "L6"
     },
     {
+      "id": "src_components_archiveoverview_archiveinfo",
+      "label": "ArchiveInfo",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "vitest",
+      "file_type": "code",
+      "norm_label": "archiveinfo",
+      "source_file": "src/components/ArchiveOverview.tsx",
+      "source_location": "L9"
+    },
+    {
       "id": "src_components_passworddialog_phase",
       "label": "Phase",
       "_callable": true,
@@ -433,48 +433,12 @@
       "source_location": "L10"
     },
     {
-      "id": "src_components_archiveoverview_archiveoverview",
-      "label": "ArchiveOverview()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ArchiveOverview.tsx",
-      "file_type": "code",
-      "norm_label": "archiveoverview()",
-      "source_file": "src/components/ArchiveOverview.tsx",
-      "source_location": "L58"
-    },
-    {
-      "id": "src_components_archiveoverview_formatepoch",
-      "label": "formatEpoch()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ArchiveOverview.tsx",
-      "file_type": "code",
-      "norm_label": "formatepoch()",
-      "source_file": "src/components/ArchiveOverview.tsx",
-      "source_location": "L31"
-    },
-    {
-      "id": "src_components_archiveoverview_meta",
-      "label": "Meta()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ArchiveOverview.tsx",
-      "file_type": "code",
-      "norm_label": "meta()",
-      "source_file": "src/components/ArchiveOverview.tsx",
-      "source_location": "L38"
-    },
-    {
       "id": "src_components_loaddialog_loaddialog",
       "label": "LoadDialog()",
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "ArchiveOverview.tsx",
+      "community_name": "LoadDialog.tsx",
       "file_type": "code",
       "norm_label": "loaddialog()",
       "source_file": "src/components/LoadDialog.tsx",
@@ -486,59 +450,23 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "ArchiveOverview.tsx",
+      "community_name": "LoadDialog.tsx",
       "file_type": "code",
       "norm_label": "stat()",
       "source_file": "src/components/LoadDialog.tsx",
       "source_location": "L11"
     },
     {
-      "id": "src_lib_format_formatdatetimelocal",
-      "label": "formatDateTimeLocal()",
+      "id": "src_components_archiveoverview_meta",
+      "label": "Meta()",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
-      "community_name": "ArchiveOverview.tsx",
+      "community": 11,
+      "community_name": "react",
       "file_type": "code",
-      "norm_label": "formatdatetimelocal()",
-      "source_file": "src/lib/format.ts",
-      "source_location": "L46"
-    },
-    {
-      "id": "src_lib_format_formatmodified",
-      "label": "formatModified()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ArchiveOverview.tsx",
-      "file_type": "code",
-      "norm_label": "formatmodified()",
-      "source_file": "src/lib/format.ts",
-      "source_location": "L64"
-    },
-    {
-      "id": "src_lib_format_formatsize",
-      "label": "formatSize()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ArchiveOverview.tsx",
-      "file_type": "code",
-      "norm_label": "formatsize()",
-      "source_file": "src/lib/format.ts",
-      "source_location": "L30"
-    },
-    {
-      "id": "src_lib_format_getformatlocale",
-      "label": "getFormatLocale()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ArchiveOverview.tsx",
-      "file_type": "code",
-      "norm_label": "getformatlocale()",
-      "source_file": "src/lib/format.ts",
-      "source_location": "L21"
+      "norm_label": "meta()",
+      "source_file": "src/components/ArchiveOverview.tsx",
+      "source_location": "L38"
     },
     {
       "id": "src_components_ui_badge_badge",
@@ -546,11 +474,23 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "badge()",
       "source_file": "src/components/ui/badge.tsx",
       "source_location": "L26"
+    },
+    {
+      "id": "src_components_ui_button_button",
+      "label": "Button()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "button()",
+      "source_file": "src/components/ui/button.tsx",
+      "source_location": "L35"
     },
     {
       "id": "src_components_ui_card_card",
@@ -558,7 +498,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "card()",
       "source_file": "src/components/ui/card.tsx",
@@ -570,7 +510,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "cardcontent()",
       "source_file": "src/components/ui/card.tsx",
@@ -582,7 +522,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "carddescription()",
       "source_file": "src/components/ui/card.tsx",
@@ -594,7 +534,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "cardheader()",
       "source_file": "src/components/ui/card.tsx",
@@ -606,7 +546,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "cardtitle()",
       "source_file": "src/components/ui/card.tsx",
@@ -618,7 +558,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "separator()",
       "source_file": "src/components/ui/separator.tsx",
@@ -630,7 +570,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "cn()",
       "source_file": "src/components/ui/utils.ts",
@@ -1235,18 +1175,6 @@
       "norm_label": "listpath()",
       "source_file": "src/App.tsx",
       "source_location": "L186"
-    },
-    {
-      "id": "src_app_app_openabout",
-      "label": "openAbout()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 65,
-      "community_name": "App",
-      "file_type": "code",
-      "norm_label": "openabout()",
-      "source_file": "src/App.tsx",
-      "source_location": "L160"
     },
     {
       "id": "src_app_app_openarchive",
@@ -2371,6 +2299,30 @@
       "source_location": "L320"
     },
     {
+      "id": "src_components_archiveoverview_archiveoverview",
+      "label": "ArchiveOverview()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 79,
+      "community_name": "ArchiveTable.tsx",
+      "file_type": "code",
+      "norm_label": "archiveoverview()",
+      "source_file": "src/components/ArchiveOverview.tsx",
+      "source_location": "L58"
+    },
+    {
+      "id": "src_components_archiveoverview_formatepoch",
+      "label": "formatEpoch()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 79,
+      "community_name": "ArchiveTable.tsx",
+      "file_type": "code",
+      "norm_label": "formatepoch()",
+      "source_file": "src/components/ArchiveOverview.tsx",
+      "source_location": "L31"
+    },
+    {
       "id": "src_components_archivetable_archivetable",
       "label": "ArchiveTable()",
       "_callable": true,
@@ -2467,6 +2419,54 @@
       "source_location": "L77"
     },
     {
+      "id": "src_lib_format_formatdatetimelocal",
+      "label": "formatDateTimeLocal()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 79,
+      "community_name": "ArchiveTable.tsx",
+      "file_type": "code",
+      "norm_label": "formatdatetimelocal()",
+      "source_file": "src/lib/format.ts",
+      "source_location": "L46"
+    },
+    {
+      "id": "src_lib_format_formatmodified",
+      "label": "formatModified()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 79,
+      "community_name": "ArchiveTable.tsx",
+      "file_type": "code",
+      "norm_label": "formatmodified()",
+      "source_file": "src/lib/format.ts",
+      "source_location": "L64"
+    },
+    {
+      "id": "src_lib_format_formatsize",
+      "label": "formatSize()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 79,
+      "community_name": "ArchiveTable.tsx",
+      "file_type": "code",
+      "norm_label": "formatsize()",
+      "source_file": "src/lib/format.ts",
+      "source_location": "L30"
+    },
+    {
+      "id": "src_lib_format_getformatlocale",
+      "label": "getFormatLocale()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 79,
+      "community_name": "ArchiveTable.tsx",
+      "file_type": "code",
+      "norm_label": "getformatlocale()",
+      "source_file": "src/lib/format.ts",
+      "source_location": "L21"
+    },
+    {
       "id": "src_app_test_constructor",
       "label": "constructor()",
       "_callable": true,
@@ -2489,6 +2489,18 @@
       "norm_label": "openswitcher()",
       "source_file": "src/App.test.tsx",
       "source_location": "L449"
+    },
+    {
+      "id": "src_components_extractdialog_test_setup",
+      "label": "setup()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "vitest",
+      "file_type": "code",
+      "norm_label": "setup()",
+      "source_file": "src/components/ExtractDialog.test.tsx",
+      "source_location": "L6"
     },
     {
       "id": "src_components_pagination_test_setup",
@@ -2683,18 +2695,6 @@
       "source_location": "L15"
     },
     {
-      "id": "src_components_extractdialog_test_setup",
-      "label": "setup()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "useLanguage",
-      "file_type": "code",
-      "norm_label": "setup()",
-      "source_file": "src/components/ExtractDialog.test.tsx",
-      "source_location": "L6"
-    },
-    {
       "id": "src_components_extractdonedialog_extractdonedialog",
       "label": "ExtractDoneDialog()",
       "_callable": true,
@@ -2779,30 +2779,6 @@
       "source_location": "L141"
     },
     {
-      "id": "src_components_themeswitch_themeswitch",
-      "label": "ThemeSwitch()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "useLanguage",
-      "file_type": "code",
-      "norm_label": "themeswitch()",
-      "source_file": "src/components/ThemeSwitch.tsx",
-      "source_location": "L15"
-    },
-    {
-      "id": "src_components_themeswitch_themeswitch_select",
-      "label": "select()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "useLanguage",
-      "file_type": "code",
-      "norm_label": "select()",
-      "source_file": "src/components/ThemeSwitch.tsx",
-      "source_location": "L60"
-    },
-    {
       "id": "src_i18n_i18n_test_switcher",
       "label": "Switcher()",
       "_callable": true,
@@ -2851,6 +2827,18 @@
       "source_location": "L26"
     },
     {
+      "id": "src_app_app_openabout",
+      "label": "openAbout()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 84,
+      "community_name": "App.tsx",
+      "file_type": "code",
+      "norm_label": "openabout()",
+      "source_file": "src/App.tsx",
+      "source_location": "L160"
+    },
+    {
       "id": "src_components_aboutdialog_aboutdialog",
       "label": "AboutDialog()",
       "_callable": true,
@@ -2863,16 +2851,28 @@
       "source_location": "L10"
     },
     {
-      "id": "src_components_ui_button_button",
-      "label": "Button()",
+      "id": "src_components_themeswitch_themeswitch",
+      "label": "ThemeSwitch()",
       "_callable": true,
       "_origin": "ast",
       "community": 84,
       "community_name": "App.tsx",
       "file_type": "code",
-      "norm_label": "button()",
-      "source_file": "src/components/ui/button.tsx",
-      "source_location": "L35"
+      "norm_label": "themeswitch()",
+      "source_file": "src/components/ThemeSwitch.tsx",
+      "source_location": "L15"
+    },
+    {
+      "id": "src_components_themeswitch_themeswitch_select",
+      "label": "select()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 84,
+      "community_name": "App.tsx",
+      "file_type": "code",
+      "norm_label": "select()",
+      "source_file": "src/components/ThemeSwitch.tsx",
+      "source_location": "L60"
     },
     {
       "id": "src_lib_appinfo_buildvalue",
@@ -3099,44 +3099,11 @@
       "source_location": "L14"
     },
     {
-      "id": "src_components_archiveoverview",
-      "label": "ArchiveOverview.tsx",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ArchiveOverview.tsx",
-      "file_type": "code",
-      "norm_label": "archiveoverview.tsx",
-      "source_file": "src/components/ArchiveOverview.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_archiveoverview_test",
-      "label": "ArchiveOverview.test.tsx",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ArchiveOverview.tsx",
-      "file_type": "code",
-      "norm_label": "archiveoverview.test.tsx",
-      "source_file": "src/components/ArchiveOverview.test.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_archiveoverview_test_info",
-      "label": "INFO",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ArchiveOverview.tsx",
-      "file_type": "code",
-      "norm_label": "info",
-      "source_file": "src/components/ArchiveOverview.test.tsx",
-      "source_location": "L6"
-    },
-    {
       "id": "src_components_loaddialog",
       "label": "LoadDialog.tsx",
       "_origin": "ast",
       "community": 1,
-      "community_name": "ArchiveOverview.tsx",
+      "community_name": "LoadDialog.tsx",
       "file_type": "code",
       "norm_label": "loaddialog.tsx",
       "source_file": "src/components/LoadDialog.tsx",
@@ -3147,7 +3114,7 @@
       "label": "LoadDialog.test.tsx",
       "_origin": "ast",
       "community": 1,
-      "community_name": "ArchiveOverview.tsx",
+      "community_name": "LoadDialog.tsx",
       "file_type": "code",
       "norm_label": "loaddialog.test.tsx",
       "source_file": "src/components/LoadDialog.test.tsx",
@@ -3158,7 +3125,7 @@
       "label": "{ ChannelStub }",
       "_origin": "ast",
       "community": 1,
-      "community_name": "ArchiveOverview.tsx",
+      "community_name": "LoadDialog.tsx",
       "file_type": "code",
       "norm_label": "{ channelstub }",
       "source_file": "src/components/LoadDialog.test.tsx",
@@ -3169,33 +3136,11 @@
       "label": "invokeCtl",
       "_origin": "ast",
       "community": 1,
-      "community_name": "ArchiveOverview.tsx",
+      "community_name": "LoadDialog.tsx",
       "file_type": "code",
       "norm_label": "invokectl",
       "source_file": "src/components/LoadDialog.test.tsx",
       "source_location": "L16"
-    },
-    {
-      "id": "src_lib_format",
-      "label": "format.ts",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ArchiveOverview.tsx",
-      "file_type": "code",
-      "norm_label": "format.ts",
-      "source_file": "src/lib/format.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_lib_format_test",
-      "label": "format.test.ts",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "ArchiveOverview.tsx",
-      "file_type": "code",
-      "norm_label": "format.test.ts",
-      "source_file": "src/lib/format.test.ts",
-      "source_location": "L1"
     },
     {
       "id": "package_devdependencies",
@@ -4871,11 +4816,44 @@
       "source_location": "L101"
     },
     {
+      "id": "src_components_archiveoverview",
+      "label": "ArchiveOverview.tsx",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "archiveoverview.tsx",
+      "source_file": "src/components/ArchiveOverview.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_themeswitch",
+      "label": "ThemeSwitch.tsx",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "themeswitch.tsx",
+      "source_file": "src/components/ThemeSwitch.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_themeswitch_choice_icon",
+      "label": "CHOICE_ICON",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "choice_icon",
+      "source_file": "src/components/ThemeSwitch.tsx",
+      "source_location": "L6"
+    },
+    {
       "id": "src_components_ui_badge",
       "label": "badge.tsx",
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "badge.tsx",
       "source_file": "src/components/ui/badge.tsx",
@@ -4886,7 +4864,7 @@
       "label": "DOTS",
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "dots",
       "source_file": "src/components/ui/badge.tsx",
@@ -4897,7 +4875,7 @@
       "label": "STYLES",
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "styles",
       "source_file": "src/components/ui/badge.tsx",
@@ -4908,7 +4886,7 @@
       "label": "button.tsx",
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "button.tsx",
       "source_file": "src/components/ui/button.tsx",
@@ -4919,7 +4897,7 @@
       "label": "SIZES",
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "sizes",
       "source_file": "src/components/ui/button.tsx",
@@ -4930,7 +4908,7 @@
       "label": "VARIANTS",
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "variants",
       "source_file": "src/components/ui/button.tsx",
@@ -4941,7 +4919,7 @@
       "label": "card.tsx",
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "card.tsx",
       "source_file": "src/components/ui/card.tsx",
@@ -4952,7 +4930,7 @@
       "label": "separator.tsx",
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "separator.tsx",
       "source_file": "src/components/ui/separator.tsx",
@@ -4963,11 +4941,22 @@
       "label": "utils.ts",
       "_origin": "ast",
       "community": 11,
-      "community_name": "button.tsx",
+      "community_name": "react",
       "file_type": "code",
       "norm_label": "utils.ts",
       "source_file": "src/components/ui/utils.ts",
       "source_location": "L1"
+    },
+    {
+      "id": "ref_react",
+      "label": "react",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "react",
+      "file_type": "concept",
+      "norm_label": "react",
+      "source_file": "package.json",
+      "source_location": "L35"
     },
     {
       "id": "agents_skills_apple_design_references_hig_generative_ai_best_practices",
@@ -8106,7 +8095,7 @@
       "node_kind": "heading",
       "norm_label": "1. sources, verdicts, cross-checks",
       "source_file": "docs/macos-native.md",
-      "source_location": "L9"
+      "source_location": "L10"
     },
     {
       "id": "docs_macos_native_2_hig_groundings_with_citations",
@@ -8118,7 +8107,7 @@
       "node_kind": "heading",
       "norm_label": "2. hig groundings (with citations)",
       "source_file": "docs/macos-native.md",
-      "source_location": "L26"
+      "source_location": "L27"
     },
     {
       "id": "docs_macos_native_3_what_changed_in_this_pass_and_what_deliberately_didn_t",
@@ -8130,7 +8119,7 @@
       "node_kind": "heading",
       "norm_label": "3. what changed in this pass (and what deliberately didn't)",
       "source_file": "docs/macos-native.md",
-      "source_location": "L65"
+      "source_location": "L66"
     },
     {
       "id": "docs_macos_native_4_motion_springs_where_touchable_restraint_everywhere_else",
@@ -8142,7 +8131,7 @@
       "node_kind": "heading",
       "norm_label": "4. motion (springs where touchable, restraint everywhere else)",
       "source_file": "docs/macos-native.md",
-      "source_location": "L77"
+      "source_location": "L78"
     },
     {
       "id": "docs_macos_native_5_native_patterns_checklist_tauri_desktop",
@@ -8154,7 +8143,7 @@
       "node_kind": "heading",
       "norm_label": "5. native patterns checklist (tauri desktop)",
       "source_file": "docs/macos-native.md",
-      "source_location": "L86"
+      "source_location": "L87"
     },
     {
       "id": "docs_macos_native_6_skill_review_protocol",
@@ -8166,7 +8155,7 @@
       "node_kind": "heading",
       "norm_label": "6. skill + review protocol",
       "source_file": "docs/macos-native.md",
-      "source_location": "L98"
+      "source_location": "L99"
     },
     {
       "id": "docs_macos_native_7_mcp_verdict_no_new_servers",
@@ -8178,19 +8167,19 @@
       "node_kind": "heading",
       "norm_label": "7. mcp verdict: no new servers",
       "source_file": "docs/macos-native.md",
-      "source_location": "L109"
+      "source_location": "L110"
     },
     {
-      "id": "docs_macos_native_8_frosted_window_background_native_standard_material",
-      "label": "8. Frosted window background (native standard material)",
+      "id": "docs_macos_native_8_liquid_glass_window_background_native_macos_only",
+      "label": "8. Liquid-glass window background (native, macOS only)",
       "_origin": "ast",
       "community": 132,
       "community_name": "QuarkZip native macOS direction",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "8. frosted window background (native standard material)",
+      "norm_label": "8. liquid-glass window background (native, macos only)",
       "source_file": "docs/macos-native.md",
-      "source_location": "L119"
+      "source_location": "L120"
     },
     {
       "id": "docs_macos_native_quarkzip_native_macos_direction",
@@ -10192,6 +10181,17 @@
       "source_location": "L1"
     },
     {
+      "id": "src_tauri_src_lib_apply_window_glass",
+      "label": "apply_window_glass()",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "lib.rs",
+      "file_type": "code",
+      "norm_label": "apply_window_glass()",
+      "source_file": "src-tauri/src/lib.rs",
+      "source_location": "L454"
+    },
+    {
       "id": "src_tauri_src_lib_cancel_checksum",
       "label": "cancel_checksum()",
       "_origin": "ast",
@@ -10445,6 +10445,17 @@
       "source_location": ""
     },
     {
+      "id": "src_tauri_src_lib_run",
+      "label": "run()",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "lib.rs",
+      "file_type": "code",
+      "norm_label": "run()",
+      "source_file": "src-tauri/src/lib.rs",
+      "source_location": "L499"
+    },
+    {
       "id": "src_tauri_src_lib_run_listing",
       "label": "run_listing()",
       "_origin": "ast",
@@ -10476,6 +10487,17 @@
       "norm_label": "run_sidecar_progress()",
       "source_file": "src-tauri/src/lib.rs",
       "source_location": "L67"
+    },
+    {
+      "id": "src_tauri_src_lib_set_liquid_glass",
+      "label": "set_liquid_glass()",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "lib.rs",
+      "file_type": "code",
+      "norm_label": "set_liquid_glass()",
+      "source_file": "src-tauri/src/lib.rs",
+      "source_location": "L479"
     },
     {
       "id": "src_tauri_src_lib_storedlisting",
@@ -10529,6 +10551,17 @@
       "community_name": "lib.rs",
       "file_type": "code",
       "norm_label": "state",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "webviewwindow",
+      "label": "WebviewWindow",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "lib.rs",
+      "file_type": "code",
+      "norm_label": "webviewwindow",
       "source_file": "",
       "source_location": ""
     },
@@ -11394,7 +11427,7 @@
       "node_kind": "heading",
       "norm_label": "components (`src/components/ui/` + feature components)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L66"
+      "source_location": "L65"
     },
     {
       "id": "docs_ui_guidelines_deliberate_deviations_with_rationale",
@@ -11406,7 +11439,7 @@
       "node_kind": "heading",
       "norm_label": "deliberate deviations (with rationale)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L198"
+      "source_location": "L197"
     },
     {
       "id": "docs_ui_guidelines_design_direction",
@@ -11430,7 +11463,7 @@
       "node_kind": "heading",
       "norm_label": "interaction / states",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L187"
+      "source_location": "L186"
     },
     {
       "id": "docs_ui_guidelines_layout",
@@ -11442,7 +11475,7 @@
       "node_kind": "heading",
       "norm_label": "layout",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L174"
+      "source_location": "L173"
     },
     {
       "id": "docs_ui_guidelines_quarkzip_ui_guidelines",
@@ -11466,7 +11499,7 @@
       "node_kind": "heading",
       "norm_label": "tokens",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L26"
+      "source_location": "L25"
     },
     {
       "id": "docs_ui_guidelines_typography_inter_ofl",
@@ -11478,7 +11511,7 @@
       "node_kind": "heading",
       "norm_label": "typography (inter, ofl)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L48"
+      "source_location": "L47"
     },
     {
       "id": "agents_skills_apple_design_references_hig_onboarding_additional_content",
@@ -15551,7 +15584,7 @@
       "file_type": "document",
       "frontmatter": {
         "name": "macos-design",
-        "description": "Native macOS design rules for QuarkZip (Sequoia-era, pre-glass) \u2014 semantic palette, 8-accent system, standard materials, no liquid glass",
+        "description": "Native macOS design rules for QuarkZip (Tahoe-era glass window, solid content) \u2014 semantic palette, 8-accent system, native Liquid Glass window background only",
         "version": "1.0.0"
       },
       "node_kind": "page",
@@ -19307,17 +19340,6 @@
       "source_location": "L39"
     },
     {
-      "id": "src_tauri_src_lib_run",
-      "label": "run()",
-      "_origin": "ast",
-      "community": 65,
-      "community_name": "App",
-      "file_type": "code",
-      "norm_label": "run()",
-      "source_file": "src-tauri/src/lib.rs",
-      "source_location": "L447"
-    },
-    {
       "id": "src_tauri_tauri_conf",
       "label": "tauri.conf.json",
       "_origin": "ast",
@@ -22667,6 +22689,28 @@
       "source_location": "L1"
     },
     {
+      "id": "src_lib_format",
+      "label": "format.ts",
+      "_origin": "ast",
+      "community": 79,
+      "community_name": "ArchiveTable.tsx",
+      "file_type": "code",
+      "norm_label": "format.ts",
+      "source_file": "src/lib/format.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_lib_format_test",
+      "label": "format.test.ts",
+      "_origin": "ast",
+      "community": 79,
+      "community_name": "ArchiveTable.tsx",
+      "file_type": "code",
+      "norm_label": "format.test.ts",
+      "source_file": "src/lib/format.test.ts",
+      "source_location": "L1"
+    },
+    {
       "id": "ref_lucide_react",
       "label": "lucide-react",
       "_origin": "ast",
@@ -22942,6 +22986,28 @@
       "source_location": "L105"
     },
     {
+      "id": "src_components_archiveoverview_test",
+      "label": "ArchiveOverview.test.tsx",
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "vitest",
+      "file_type": "code",
+      "norm_label": "archiveoverview.test.tsx",
+      "source_file": "src/components/ArchiveOverview.test.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_archiveoverview_test_info",
+      "label": "INFO",
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "vitest",
+      "file_type": "code",
+      "norm_label": "info",
+      "source_file": "src/components/ArchiveOverview.test.tsx",
+      "source_location": "L6"
+    },
+    {
       "id": "src_components_archivetable_test",
       "label": "ArchiveTable.test.tsx",
       "_origin": "ast",
@@ -22995,6 +23061,17 @@
       "norm_label": "invokectl",
       "source_file": "src/components/ChecksumDialog.test.tsx",
       "source_location": "L16"
+    },
+    {
+      "id": "src_components_extractdialog_test",
+      "label": "ExtractDialog.test.tsx",
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "vitest",
+      "file_type": "code",
+      "norm_label": "extractdialog.test.tsx",
+      "source_file": "src/components/ExtractDialog.test.tsx",
+      "source_location": "L1"
     },
     {
       "id": "src_components_pagination_test",
@@ -23217,17 +23294,6 @@
       "source_location": "L1"
     },
     {
-      "id": "src_components_extractdialog_test",
-      "label": "ExtractDialog.test.tsx",
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "useLanguage",
-      "file_type": "code",
-      "norm_label": "extractdialog.test.tsx",
-      "source_file": "src/components/ExtractDialog.test.tsx",
-      "source_location": "L1"
-    },
-    {
       "id": "src_components_extractdonedialog",
       "label": "ExtractDoneDialog.tsx",
       "_origin": "ast",
@@ -23281,39 +23347,6 @@
       "norm_label": "page_sizes",
       "source_file": "src/components/Pagination.tsx",
       "source_location": "L6"
-    },
-    {
-      "id": "src_components_themeswitch",
-      "label": "ThemeSwitch.tsx",
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "useLanguage",
-      "file_type": "code",
-      "norm_label": "themeswitch.tsx",
-      "source_file": "src/components/ThemeSwitch.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_themeswitch_choice_icon",
-      "label": "CHOICE_ICON",
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "useLanguage",
-      "file_type": "code",
-      "norm_label": "choice_icon",
-      "source_file": "src/components/ThemeSwitch.tsx",
-      "source_location": "L6"
-    },
-    {
-      "id": "ref_react",
-      "label": "react",
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "useLanguage",
-      "file_type": "concept",
-      "norm_label": "react",
-      "source_file": "package.json",
-      "source_location": "L35"
     },
     {
       "id": "src_app",
@@ -29410,6 +29443,18 @@
       "weight": 1.0
     },
     {
+      "source": "src_tauri_src_lib_run",
+      "target": "src_tauri_src_lib_apply_window_glass",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src-tauri/src/lib.rs",
+      "source_location": "L526",
+      "weight": 1.0
+    },
+    {
       "source": "src_tauri_src_lib_run_listing",
       "target": "src_tauri_src_lib_run_sidecar_progress",
       "relation": "calls",
@@ -29431,6 +29476,18 @@
       "context": "call",
       "source_file": "src-tauri/src/lib.rs",
       "source_location": "L152",
+      "weight": 1.0
+    },
+    {
+      "source": "src_tauri_src_lib_set_liquid_glass",
+      "target": "src_tauri_src_lib_apply_window_glass",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src-tauri/src/lib.rs",
+      "source_location": "L483",
       "weight": 1.0
     },
     {
@@ -30763,6 +30820,18 @@
       "context": "generic_arg",
       "source_file": "src-tauri/src/lib.rs",
       "source_location": "L67",
+      "weight": 1.0
+    },
+    {
+      "source": "src_tauri_src_lib_set_liquid_glass",
+      "target": "src_tauri_src_lib_rs_string",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "generic_arg",
+      "source_file": "src-tauri/src/lib.rs",
+      "source_location": "L479",
       "weight": 1.0
     },
     {
@@ -35706,6 +35775,18 @@
       "weight": 1.0
     },
     {
+      "source": "src_tauri_src_lib_apply_window_glass",
+      "target": "webviewwindow",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "src-tauri/src/lib.rs",
+      "source_location": "L454",
+      "weight": 1.0
+    },
+    {
       "source": "src_tauri_src_lib_extract_archive",
       "target": "apphandle",
       "relation": "references",
@@ -35847,6 +35928,18 @@
       "context": "parameter_type",
       "source_file": "src-tauri/src/lib.rs",
       "source_location": "L67",
+      "weight": 1.0
+    },
+    {
+      "source": "src_tauri_src_lib_set_liquid_glass",
+      "target": "webviewwindow",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "src-tauri/src/lib.rs",
+      "source_location": "L479",
       "weight": 1.0
     },
     {
@@ -36447,6 +36540,18 @@
       "context": "return_type",
       "source_file": "src-tauri/src/lib.rs",
       "source_location": "L67",
+      "weight": 1.0
+    },
+    {
+      "source": "src_tauri_src_lib_set_liquid_glass",
+      "target": "src_tauri_src_lib_rs_result",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "return_type",
+      "source_file": "src-tauri/src/lib.rs",
+      "source_location": "L479",
       "weight": 1.0
     },
     {
@@ -50061,24 +50166,35 @@
     },
     {
       "source": "docs_macos_native_quarkzip_native_macos_direction",
+      "target": "docs_macos_native_1_sources_verdicts_cross_checks",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/macos-native.md",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_macos_native_quarkzip_native_macos_direction",
       "target": "docs_macos_native_7_mcp_verdict_no_new_servers",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/macos-native.md",
-      "source_location": "L109",
+      "source_location": "L110",
       "weight": 1.0
     },
     {
       "source": "docs_macos_native_quarkzip_native_macos_direction",
-      "target": "docs_macos_native_8_frosted_window_background_native_standard_material",
+      "target": "docs_macos_native_8_liquid_glass_window_background_native_macos_only",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/macos-native.md",
-      "source_location": "L119",
+      "source_location": "L120",
       "weight": 1.0
     },
     {
@@ -50089,7 +50205,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/macos-native.md",
-      "source_location": "L26",
+      "source_location": "L27",
       "weight": 1.0
     },
     {
@@ -50100,7 +50216,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/macos-native.md",
-      "source_location": "L65",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -50111,7 +50227,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/macos-native.md",
-      "source_location": "L77",
+      "source_location": "L78",
       "weight": 1.0
     },
     {
@@ -50122,18 +50238,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/macos-native.md",
-      "source_location": "L86",
-      "weight": 1.0
-    },
-    {
-      "source": "docs_macos_native_quarkzip_native_macos_direction",
-      "target": "docs_macos_native_1_sources_verdicts_cross_checks",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/macos-native.md",
-      "source_location": "L9",
+      "source_location": "L87",
       "weight": 1.0
     },
     {
@@ -50144,7 +50249,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/macos-native.md",
-      "source_location": "L98",
+      "source_location": "L99",
       "weight": 1.0
     },
     {
@@ -50452,7 +50557,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L174",
+      "source_location": "L173",
       "weight": 1.0
     },
     {
@@ -50463,7 +50568,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L187",
+      "source_location": "L186",
       "weight": 1.0
     },
     {
@@ -50474,7 +50579,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L198",
+      "source_location": "L197",
       "weight": 1.0
     },
     {
@@ -50485,7 +50590,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L26",
+      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -50496,7 +50601,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L48",
+      "source_location": "L47",
       "weight": 1.0
     },
     {
@@ -50507,7 +50612,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L66",
+      "source_location": "L65",
       "weight": 1.0
     },
     {
@@ -56210,13 +56315,35 @@
     },
     {
       "source": "src_tauri_src_lib",
+      "target": "src_tauri_src_lib_apply_window_glass",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src-tauri/src/lib.rs",
+      "source_location": "L454",
+      "weight": 1.0
+    },
+    {
+      "source": "src_tauri_src_lib",
+      "target": "src_tauri_src_lib_set_liquid_glass",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src-tauri/src/lib.rs",
+      "source_location": "L479",
+      "weight": 1.0
+    },
+    {
+      "source": "src_tauri_src_lib",
       "target": "src_tauri_src_lib_run",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src-tauri/src/lib.rs",
-      "source_location": "L447",
+      "source_location": "L499",
       "weight": 1.0
     },
     {
@@ -63342,5 +63469,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "5ea2200168e70f7dcd847f277c1c1b3279f997dd"
+  "built_at_commit": "cc128208338d7eb298ad1cafeec5c1ede14968b5"
 }

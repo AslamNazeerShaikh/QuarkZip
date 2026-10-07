@@ -1,6 +1,6 @@
 {
   "0": "scripts",
-  "1": "ArchiveOverview.tsx",
+  "1": "LoadDialog.tsx",
   "2": "opencode.json",
   "3": "package.json",
   "4": "archive.rs",
@@ -10,7 +10,7 @@
   "8": "compilerOptions",
   "9": "mcp",
   "10": "devDependencies",
-  "11": "button.tsx",
+  "11": "react",
   "12": "checksum.rs",
   "13": "Opencode Configuration for QuarkZip",
   "14": "MacPacker reference (upstream)",

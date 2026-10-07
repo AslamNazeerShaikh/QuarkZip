@@ -4,8 +4,8 @@
    so the UI can switch statically (Light/Dark) or follow the OS (System). */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* QuarkZip design tokens — native macOS semantic palette (Sequoia-era,
-   pre-glass): AppKit roles approximated for the webview (Apple: use APIs,
+/* QuarkZip design tokens — native macOS semantic palette (Tahoe-era:
+   AppKit roles approximated for the webview (Apple: use APIs,
    never hard-code — here CSS custom properties ARE the API).
    windowBackground #ECECEC / controlBackground #FFF, dark #1E1E1E/#282828;
    label/secondaryLabel semantics; system accent (default blue) drives
@@ -50,12 +50,12 @@
      Never on content cards (legibility). Falls back to solid surface
      under prefers-reduced-transparency (see bottom). */
   --qz-bar-bg: rgba(236, 236, 236, 0.72);
-  /* Frosted window tint (macOS only): 50% neutral fill laid over the
-     native NSVisualEffectView WindowBackground material (applied in
-     Rust; needs `macOSPrivateApi`). The blur comes from the system,
-     never CSS — backdrop-filter cannot blur the desktop through the
-     webview. Other platforms stay opaque (no system material there). */
-  --qz-frame-bg: rgba(236, 236, 236, 0.5);
+  /* Frosted window tint (macOS only): light neutral wash laid over the
+     native NSGlassEffectView (Sidebar style) behind the webview. Kept
+     thin (25%) so the glass refraction reads; legibility comes from the
+     glass luminosity adjustment plus solid content cards. Other
+     platforms stay opaque (no system glass there). */
+  --qz-frame-bg: rgba(236, 236, 236, 0.25);
   --qz-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.03);
   /* Window frame: the app card floats in a transparent margin, but any
      shadow must fully decay inside it — a blur wider than the margin gets
@@ -146,7 +146,7 @@
   --qz-danger: #ff6961;
   --qz-danger-soft: #3a1f1e;
   --qz-bar-bg: rgba(30, 30, 30, 0.72);
-  --qz-frame-bg: rgba(30, 30, 30, 0.5);
+  --qz-frame-bg: rgba(30, 30, 30, 0.25);
   --qz-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
   /* Dark needs a harder outline + deeper shadow: the frame must read
      against near-black wallpapers where a faint border disappears. The

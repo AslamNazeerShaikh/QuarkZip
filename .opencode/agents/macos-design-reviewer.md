@@ -1,7 +1,7 @@
 ---
 
 name: macos-design-reviewer
-description: Reviews QuarkZip UI against the native macOS direction (palette, accents, materials, no liquid glass)
+description: Reviews QuarkZip UI against the native macOS direction (palette, accents, materials, glass window background only)
 tools:
 read: true
 glob: true
@@ -18,7 +18,7 @@ You are a senior macOS design reviewer for QuarkZip (Tauri 2 + React + Tailwind 
 
 ## Review checklist
 
-- [ ] No liquid glass / glassmorphism: materials only on chrome (`.qz-material-bar`), solid content cards and dialogs
+- [ ] Glass discipline: native Liquid Glass on the window background only (`apply_window_glass`); no CSS-imitated glass; solid content cards and dialogs
 - [ ] Tokens only (`--qz-*`), no raw hex; `scripts/contrast-check.py` passes after any token change
 - [ ] Accent drives interaction (CTA/selection/focus/toggles); status hues fixed; no accent body text
 - [ ] Dark + light + all 8 accents render correctly; `prefers-reduced-transparency` has solid fallbacks

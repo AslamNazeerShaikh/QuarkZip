@@ -443,6 +443,58 @@ fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
+/// Frosted window background, macOS only. Native Liquid Glass
+/// (`NSGlassEffectView`, Sidebar style) behind the transparent webview;
+/// the CSS `--qz-frame-bg` tint lays over it. Idempotent (clears first)
+/// so re-application never stacks glass views. Falls back to the
+/// `NSVisualEffectView` WindowBackground standard material on macOS <26.
+/// Best-effort throughout: failures log to stderr and the CSS tint
+/// still renders.
+#[cfg(target_os = "macos")]
+fn apply_window_glass(window: &tauri::WebviewWindow) {
+    let _ = window_vibrancy::clear_liquid_glass(window);
+    let glass =
+        window_vibrancy::LiquidGlassOptions::new(window_vibrancy::NSGlassEffectViewStyle::Sidebar)
+            .radius(26.0)
+            .opaque(false)
+            .interactive(true);
+    if let Err(e) = window_vibrancy::apply_liquid_glass(window, glass) {
+        eprintln!("[quarkzip] liquid glass unavailable ({e}); trying vibrancy");
+        if let Err(e2) = window_vibrancy::apply_vibrancy(
+            window,
+            window_vibrancy::NSVisualEffectMaterial::WindowBackground,
+            None,
+            None,
+        ) {
+            eprintln!("[quarkzip] vibrancy unavailable: {e2}");
+        }
+    }
+}
+
+/// Toggles the frosted window background (macOS only; no-op elsewhere).
+/// Backs the future appearance control in settings. [`apply_window_glass`]
+/// is the enable path; disable clears the glass and restores the plain
+/// translucent frame.
+#[tauri::command]
+fn set_liquid_glass(window: tauri::WebviewWindow, enabled: bool) -> Result<(), String> {
+    #[cfg(target_os = "macos")]
+    {
+        if enabled {
+            apply_window_glass(&window);
+            Ok(())
+        } else {
+            window_vibrancy::clear_liquid_glass(&window)
+                .map(|_| ())
+                .map_err(|e| e.to_string())
+        }
+    }
+    #[cfg(not(target_os = "macos"))]
+    {
+        let _ = (window, enabled);
+        Ok(())
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -467,20 +519,11 @@ pub fn run() {
             if let Some(window) = app.get_webview_window("main") {
                 #[cfg(target_os = "macos")]
                 {
-                    // Frosted window background: native standard material
-                    // (`NSVisualEffectView` WindowBackground) behind the
-                    // webview; the CSS `--qz-frame-bg` tint (50%) lays over
-                    // it. Standard material only — never Liquid Glass
-                    // (see docs/macos-native.md). Best-effort: the CSS tint
-                    // still renders without the blur if this fails.
-                    if let Err(e) = window_vibrancy::apply_vibrancy(
-                        &window,
-                        window_vibrancy::NSVisualEffectMaterial::WindowBackground,
-                        None,
-                        None,
-                    ) {
-                        eprintln!("[quarkzip] vibrancy unavailable: {e:?}");
-                    }
+                    // Glass first (main thread here), then re-asserted after
+                    // the deferred overlay-style change below: the style-mask
+                    // rewrite can disturb inserted AppKit views, and the
+                    // helper is idempotent (clears before applying).
+                    apply_window_glass(&window);
                     let _ = window.set_decorations(true);
                     let deferred = window.clone();
                     std::thread::spawn(move || {
@@ -490,6 +533,8 @@ pub fn run() {
                         eprintln!("[quarkzip] overlay style applied: {style:?}");
                         let shown = deferred.show();
                         eprintln!("[quarkzip] window shown: {shown:?}");
+                        let glass = deferred.clone();
+                        let _ = deferred.run_on_main_thread(move || apply_window_glass(&glass));
                     });
                 }
                 #[cfg(not(target_os = "macos"))]
@@ -508,7 +553,8 @@ pub fn run() {
             extract_archive,
             test_archive,
             checksum_file,
-            cancel_checksum
+            cancel_checksum,
+            set_liquid_glass
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

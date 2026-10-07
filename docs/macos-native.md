@@ -1,9 +1,10 @@
 # QuarkZip native macOS direction
 
-Target: a Sequoia-era macOS utility — Finder-like calm, system accent,
-translucent chrome, full dark/light discipline. **Not** Liquid Glass
-(Tahoe): no refractive blur, no floating glass pills, no specular edges.
-Standard materials only. This doc is the researched basis; `color-system.md`
+Target: a Tahoe-era macOS utility — Finder-like calm, system accent,
+translucent chrome, full dark/light discipline. Native Liquid Glass for
+the window background only (§8); no floating glass pills, no glass on
+content/cards/controls, no CSS-imitated glass. This doc is the
+researched basis; `color-system.md`
 holds the measured palette, `ui-guidelines.md` the component rules.
 
 ## 1. Sources, verdicts, cross-checks
@@ -116,40 +117,41 @@ already serves all three Apple skills on demand with zero install.
 Decision: keep `ui-skills` + `github` + `whiteboard`; revisit only if a
 Figma-based design handoff begins.
 
-## 8. Frosted window background (native standard material)
+## 8. Liquid-glass window background (native, macOS only)
 
-The main window is frosted: `window-vibrancy@0.8.1` applies the
-`NSVisualEffectView` **WindowBackground** standard material behind the
-webview (`lib.rs` setup, macOS only, best-effort with stderr log), and
-the `--qz-frame-bg` 50% neutral tint lays over it. (The crate README
-suggests `macOSPrivateApi: true`, but our Tauri 2.12 schema rejects that
-key — and the effect manipulates `NSView` directly at runtime, so no
-config flag is needed.)
+The main window sits on real Liquid Glass: `window-vibrancy@0.8.1`
+`apply_liquid_glass` with the **Sidebar** style, radius 26, non-opaque,
+interactive (`lib.rs` `apply_window_glass`, macOS only), and the
+`--qz-frame-bg` 25% neutral wash lays over it. Replaces the earlier
+`NSVisualEffectView` WindowBackground frost (2026-10-08: it rendered
+flat — no visible transparency — so the ban on Liquid Glass was lifted
+for the window background by explicit user decision).
 
-Why this shape, per the HIG review (`liquid-glass.md › Review checklist`
-#1 — glass on app backgrounds is a defect; `materials.md › Standard
-materials` — choose materials by semantic meaning; `dark-mode.md ›
-Desktop (macOS)` — transparency in neutral component backgrounds):
+Why this shape, per the HIG (`liquid-glass.md › Which variant` —
+regular/sidebar glass for text-bearing surfaces, clear only over media;
+`liquid-glass.md › Tauri and Electron` — "Prefer real system materials
+over CSS imitation"):
 
-- Standard material, not Liquid Glass: the crate's `apply_liquid_glass`
-  (macOS 26+) is deliberately unused — standing project ban plus HIG
-  layer discipline. `WindowBackground` (10.14+) is the semantically
-  correct whole-window material; `Sidebar`/`Titlebar` would lie about
-  meaning. Tauri 2 needs 10.15+, so availability is safe.
-- Real system blur, not CSS imitation: `backdrop-filter` cannot blur the
-  desktop through the webview (`liquid-glass.md › Tauri and Electron`:
-  "Prefer real system materials over CSS imitation").
-- Layer discipline kept: only the window frame goes frosted; dialogs,
-  cards, table, and menus stay solid `--qz-surface`. Title strip shows
-  the frost (no fill of its own).
-- macOS only: other platforms have no system material here, so `App.tsx`
-  keeps them on opaque `--qz-bg` (a 50% tint over a sharp desktop with
-  no blur would look broken, not frosted). Linux/Windows/tests render
-  the opaque path.
-- Reduce Transparency: the native material responds on its own
-  (`liquid-glass.md › Tauri and Electron`); the CSS tint stays, which
-  over the now-opaque material still reads correctly. No custom
-  `NSWorkspace` plumbing until someone asks for it.
-- Legibility note: frame chrome text (title, 13px semibold) sits on the
-  material; content text stays on solid cards, so every measured pair
-  in `color-system.md` still holds.
+- Sidebar style, not Clear: the frame carries the title and control
+  shells, so it gets the luminosity-adjusting variant, not the
+  media-only one. `opaque(false)` keeps the desktop refracting through
+  instead of a solid backing box.
+- No webview reparenting: without `content_view`, the crate inserts the
+  glass below the existing content, and our transparent webview
+  composites over it — no `objc2` imports, no unsafe casts in our code.
+- Applied twice, idempotently: once in setup, once after the deferred
+  overlay-titlebar restyle via `run_on_main_thread` (the style-mask
+  rewrite can disturb inserted AppKit views; the helper clears before
+  applying so views never stack). This ordering gap is the likely
+  reason the old vibrancy never showed.
+- Fallback chain: glass fails on macOS <26 (`UnsupportedPlatformVersion`)
+  → `NSVisualEffectView` WindowBackground vibrancy → stderr log. macOS
+  26+ is the live path (dev machine runs 27.0.1).
+- `set_liquid_glass` Tauri command toggles it (apply/clear pair);
+  no-op off macOS. Currently unwired in the UI — backs the future
+  appearance control in settings.
+- macOS only, same as before: other platforms have no system glass, so
+  `App.tsx` keeps them on opaque `--qz-bg`. Content (dialogs, cards,
+  table, menus) stays solid everywhere, so every measured pair in
+  `color-system.md` still holds; Reduce Transparency is answered by the
+  native view itself.

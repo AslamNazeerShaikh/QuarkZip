@@ -48,9 +48,9 @@
     "semantic_hash": ""
   },
   "src-tauri/src/lib.rs": {
-    "mtime": 1791366786.0785673,
-    "seen": 1791367140.631596,
-    "ast_hash": "64db0cddfc0f33c595a75be4a05cca08",
+    "mtime": 1791367448.1010091,
+    "seen": 1791367560.000088,
+    "ast_hash": "0a9970e1ed2f814c714bb53b82536db1",
     "semantic_hash": ""
   },
   "src-tauri/src/main.rs": {
@@ -552,15 +552,15 @@
     "semantic_hash": ""
   },
   "docs/color-system.md": {
-    "mtime": 1791366805.1640236,
-    "seen": 1791367140.631687,
-    "ast_hash": "997b889befacef20b31eb0b34cf0294c",
+    "mtime": 1791367547.1685915,
+    "seen": 1791367560.000185,
+    "ast_hash": "1b8c6b564385fc733f11de1ac341dfcd",
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791366786.0780714,
-    "seen": 1791367140.6316879,
-    "ast_hash": "a140d2c6e11119d7fcb3aa77840fc3b6",
+    "mtime": 1791367533.9624739,
+    "seen": 1791367560.000187,
+    "ast_hash": "03b43ec1c7982094b2efde091eb2b61e",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -1926,21 +1926,21 @@
     "semantic_hash": ""
   },
   ".opencode/agents/macos-design-reviewer.md": {
-    "mtime": 1791363117.6347072,
-    "seen": 1791363209.0112362,
-    "ast_hash": "2212b239f9a7f329d0ad9473cab54898",
+    "mtime": 1791367528.0545018,
+    "seen": 1791367560.000171,
+    "ast_hash": "2141f55faeb992ef3a19bbfee91920b7",
     "semantic_hash": ""
   },
   ".opencode/skills/macos-design.md": {
-    "mtime": 1791363186.7533212,
-    "seen": 1791363209.011245,
-    "ast_hash": "544a47316354c2c4cb9b81ca6865713e",
+    "mtime": 1791367528.0537388,
+    "seen": 1791367560.000181,
+    "ast_hash": "be7b79e970261079b577d34e1f2c1073",
     "semantic_hash": ""
   },
   "docs/macos-native.md": {
-    "mtime": 1791366786.0779452,
-    "seen": 1791367140.6316879,
-    "ast_hash": "eb69537298d2b7350b980252d7a764b3",
+    "mtime": 1791367537.6146624,
+    "seen": 1791367560.0001862,
+    "ast_hash": "ad83301589cc95b27e3d6dbc41666305",
     "semantic_hash": ""
   }
 }

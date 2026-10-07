@@ -1,6 +1,6 @@
 ---
 name: macos-design
-description: Native macOS design rules for QuarkZip (Sequoia-era, pre-glass) — semantic palette, 8-accent system, standard materials, no liquid glass
+description: Native macOS design rules for QuarkZip (Tahoe-era glass window, solid content) — semantic palette, 8-accent system, native Liquid Glass window background only
 version: 1.0.0
 ---
 
@@ -11,9 +11,9 @@ Full brief: `docs/macos-native.md`. Palette + measured contrast:
 
 ## Non-negotiables
 
-- **No liquid glass, no glassmorphism, anywhere.** Standard materials
-  only: `.qz-material-bar` on chrome (title strip, footer shells, menus,
-  table header), solid `--qz-surface` content cards and dialogs.
+- **Liquid Glass only as the native window background** (macOS,
+  `apply_window_glass` in `lib.rs`). No CSS-imitated glass anywhere;
+  no glass on content, cards, dialogs, or controls — those stay solid.
 - **Tokens only.** Components reference `--qz-*` roles, never raw hex.
   After any token change: `python3 scripts/contrast-check.py` must pass
   (AA 4.5 every text pair) and the color-system table re-recorded.
