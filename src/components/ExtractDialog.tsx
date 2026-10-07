@@ -251,7 +251,7 @@ export default function ExtractDialog({
                 </span>
                 <Button
                   variant="secondary"
-                  size="sm"
+                  size="bar"
                   onClick={() =>
                     setFolderName((cur) =>
                       appendDateStamp(
@@ -259,7 +259,7 @@ export default function ExtractDialog({
                       ),
                     )
                   }
-                  className="h-7 px-2 text-xs"
+                  className="px-2 text-xs"
                 >
                   <CalendarClock size={13} aria-hidden />
                   {t("extract.appendDate")}

@@ -828,7 +828,7 @@
       "file_type": "code",
       "norm_label": "button()",
       "source_file": "src/components/ui/button.tsx",
-      "source_location": "L50"
+      "source_location": "L51"
     },
     {
       "id": "src_lib_format_formatcount",
@@ -11674,7 +11674,7 @@
       "node_kind": "heading",
       "norm_label": "deliberate deviations (with rationale)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L257"
+      "source_location": "L261"
     },
     {
       "id": "docs_ui_guidelines_design_direction",
@@ -11698,7 +11698,7 @@
       "node_kind": "heading",
       "norm_label": "interaction / states",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L246"
+      "source_location": "L250"
     },
     {
       "id": "docs_ui_guidelines_layout",
@@ -11710,7 +11710,7 @@
       "node_kind": "heading",
       "norm_label": "layout",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L230"
+      "source_location": "L234"
     },
     {
       "id": "docs_ui_guidelines_quarkzip_ui_guidelines",
@@ -29573,7 +29573,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/ui/button.tsx",
-      "source_location": "L63",
+      "source_location": "L64",
       "weight": 1.0
     },
     {
@@ -52417,18 +52417,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L230",
-      "weight": 1.0
-    },
-    {
-      "source": "docs_ui_guidelines_quarkzip_ui_guidelines",
-      "target": "docs_ui_guidelines_interaction_states",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "docs/ui-guidelines.md",
-      "source_location": "L246",
+      "source_location": "L234",
       "weight": 1.0
     },
     {
@@ -52444,13 +52433,24 @@
     },
     {
       "source": "docs_ui_guidelines_quarkzip_ui_guidelines",
+      "target": "docs_ui_guidelines_interaction_states",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/ui-guidelines.md",
+      "source_location": "L250",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_ui_guidelines_quarkzip_ui_guidelines",
       "target": "docs_ui_guidelines_deliberate_deviations_with_rationale",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L257",
+      "source_location": "L261",
       "weight": 1.0
     },
     {
@@ -56762,7 +56762,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/ui/button.tsx",
-      "source_location": "L50",
+      "source_location": "L51",
       "weight": 1.0
     },
     {
@@ -65890,5 +65890,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "dc80585c923078e53b168c4a874106f0c19c790c"
+  "built_at_commit": "d14fd0028039005311a81fd2208a064b27de4630"
 }

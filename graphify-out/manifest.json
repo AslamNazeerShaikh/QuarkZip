@@ -504,9 +504,9 @@
     "semantic_hash": ""
   },
   "src/components/ui/button.tsx": {
-    "mtime": 1791398608.4188468,
-    "seen": 1791399005.595787,
-    "ast_hash": "440142661483e59e5d391b17861705b5",
+    "mtime": 1791399748.6938124,
+    "seen": 1791399785.375167,
+    "ast_hash": "2d99e4dc9cab6778f0c0e26627163e96",
     "semantic_hash": ""
   },
   "src/components/ui/card.tsx": {
@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791398938.147397,
-    "seen": 1791399005.595872,
-    "ast_hash": "fcd1f22d12ea74b63e0b0bfc8082be3b",
+    "mtime": 1791399752.0839803,
+    "seen": 1791399785.375256,
+    "ast_hash": "9ce61a4780630be7e25aee5e875489a6",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -882,9 +882,9 @@
     "semantic_hash": ""
   },
   "src/components/ArchiveOverview.tsx": {
-    "mtime": 1791398692.5734532,
-    "seen": 1791399005.595778,
-    "ast_hash": "200ef80fc5e5542d74b7ff92ce7cb81f",
+    "mtime": 1791399748.6906993,
+    "seen": 1791399785.375156,
+    "ast_hash": "9cc4af587bb225ce2203d20644bf6251",
     "semantic_hash": ""
   },
   "src/components/ArchiveTable.test.tsx": {
@@ -918,9 +918,9 @@
     "semantic_hash": ""
   },
   "src/components/ExtractDialog.tsx": {
-    "mtime": 1791398733.93792,
-    "seen": 1791399005.5957801,
-    "ast_hash": "7c667af4b2f10c60203a70b061e58c40",
+    "mtime": 1791399748.6907227,
+    "seen": 1791399785.375159,
+    "ast_hash": "c77e0c6ccb7c582ca7a8f1f369935fdd",
     "semantic_hash": ""
   },
   "src/components/ExtractDoneDialog.test.tsx": {
@@ -996,9 +996,9 @@
     "semantic_hash": ""
   },
   "src/components/TitleBar.tsx": {
-    "mtime": 1791398986.488063,
-    "seen": 1791399005.595786,
-    "ast_hash": "d14753126df9c27c9afd6792519dc12a",
+    "mtime": 1791399741.306071,
+    "seen": 1791399785.375166,
+    "ast_hash": "f81393b124b13f3e32316b836a1bdc18",
     "semantic_hash": ""
   },
   "src/hooks/useTheme.ts": {

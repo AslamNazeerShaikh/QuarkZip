@@ -40,8 +40,9 @@ const VARIANTS: Record<Variant, string> = {
 const SIZES: Record<Size, string> = {
   default: "h-10 px-4 text-sm",
   sm: "h-8 px-3 text-[13px]",
-  // Footer action bar: 36px tall to match the Pagination/ThemeSwitch shells
-  // sitting in the same row.
+  // Chrome control height (36px): footer actions, card-row buttons,
+  // titlebar actions — matches the Pagination/ThemeSwitch/Language shells
+  // sitting in the same rows.
   bar: "h-9 px-3 text-[13px]",
   icon: "h-8 w-8",
 };

@@ -105,29 +105,29 @@ export default function ArchiveOverview({
   }
   const actionButtons = (
     <div className="flex flex-wrap justify-end gap-2">
-      <Button variant="secondary" size="sm" onClick={onTest} className="w-32">
+      <Button variant="secondary" size="bar" onClick={onTest} className="w-32">
         <ShieldCheck size={14} aria-hidden />
         {t("overview.test")}
       </Button>
       <Button
         variant="secondary"
-        size="sm"
+        size="bar"
         onClick={onChecksum}
         className="w-32"
       >
         <Hash size={14} aria-hidden />
         {t("overview.checksum")}
       </Button>
-      {/* Same secondary/sm shell as the row (h-8, 9px radius, 1px
+      {/* Same secondary/bar shell as the row (h-9, 9px radius, 1px
         border); square icon-only, glyph flips with the state. */}
       <Button
         variant="secondary"
-        size="sm"
+        size="bar"
         onClick={toggleCollapsed}
         aria-expanded={!collapsed}
         aria-label={toggleLabel}
         title={toggleLabel}
-        className="w-8 px-0"
+        className="w-9 px-0"
       >
         <span aria-hidden className="text-[15px] leading-none">
           {collapsed ? "▼" : "▲"}
@@ -341,7 +341,7 @@ export default function ArchiveOverview({
               <div>
                 <Button
                   variant="secondary"
-                  size="sm"
+                  size="bar"
                   onClick={() => setShowExtra((s) => !s)}
                   aria-expanded={showExtra}
                   aria-label={extraLabel}
