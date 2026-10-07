@@ -1,16 +1,16 @@
 # Graph Report - QuarkZip  (2026-10-07)
 
 ## Corpus Check
-- 267 files · ~398,822 words
+- 267 files · ~398,886 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2297 nodes · 3357 edges · 216 communities (195 shown, 9 thin omitted)
+- 2297 nodes · 3358 edges · 216 communities (195 shown, 9 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `31507a08`
+- Built from commit: `57813da2`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -1030,8 +1030,8 @@ Cohesion: 0.17
 Nodes (15): ARCHIVE_FILTERS, count(), ExtractDialog(), ExtractDoneDialog(), ExtractResult, ALL_OPTIONS, ALL_PAGE_CAP, formatSize() (+7 more)
 
 ## Knowledge Gaps
-- **1273 isolated node(s):** `REPO_ROOT`, `IMAGE_GLYPHS`, `SECTIONS`, `KEPT_PLATFORMS`, `DROPPED_PLATFORMS` (+1268 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1432 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **1272 isolated node(s):** `REPO_ROOT`, `IMAGE_GLYPHS`, `SECTIONS`, `KEPT_PLATFORMS`, `DROPPED_PLATFORMS` (+1267 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1431 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
@@ -1042,7 +1042,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `App()` connect `App` to `App.tsx`, `vitest`, `LanguageContext.tsx`, `AboutDialog.tsx`?**
   _High betweenness centrality (0.023) - this node is a cross-community bridge._
 - **What connects `REPO_ROOT`, `IMAGE_GLYPHS`, `SECTIONS` to the rest of the system?**
-  _1273 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1272 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `scripts` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._
 - **Should `package.json` be split into smaller, more focused modules?**

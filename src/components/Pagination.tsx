@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import {
   Check,
   ChevronDown,
@@ -114,49 +115,54 @@ function PageJump({
         onBlur={revert}
         className="h-7 w-14 rounded-[7px] bg-transparent px-1 text-center text-[var(--qz-muted)] tabular-nums outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
       />
-      {pending && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="page-jump-title"
-        >
+      {pending &&
+        // Portaled to <body>: every material ancestor (`backdrop-filter`)
+        // traps `fixed` positioning, which would squeeze this window-modal
+        // into the footer shell instead of centering it like About.
+        createPortal(
           <div
-            className="animate-qz-fade absolute inset-0 bg-black/25"
-            aria-hidden
-          />
-          <div className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
-            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-warning-soft)]">
-              <TriangleAlert
-                size={24}
-                aria-hidden
-                className="text-[var(--qz-warning)]"
-              />
-            </span>
-            <h2
-              id="page-jump-title"
-              className="mt-3 text-[16px] leading-6 font-semibold"
-            >
-              {t("pagination.jumpTitle")}
-            </h2>
-            <p className="mt-1 text-[13px] text-[var(--qz-muted)]">
-              {t("pagination.jumpMessage", {
-                raw: pending.raw,
-                target: String(pending.target),
-                max: String(pageCount),
-              })}
-            </p>
-            <div className="mt-5 flex items-center justify-center gap-2">
-              <Button variant="warning" onClick={cancelJump}>
-                {t("common.cancel")}
-              </Button>
-              <Button variant="accent" onClick={confirmJump} autoFocus>
-                {t("pagination.jump")}
-              </Button>
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="page-jump-title"
+          >
+            <div
+              className="animate-qz-fade absolute inset-0 bg-black/25"
+              aria-hidden
+            />
+            <div className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+              <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-warning-soft)]">
+                <TriangleAlert
+                  size={24}
+                  aria-hidden
+                  className="text-[var(--qz-warning)]"
+                />
+              </span>
+              <h2
+                id="page-jump-title"
+                className="mt-3 text-[16px] leading-6 font-semibold"
+              >
+                {t("pagination.jumpTitle")}
+              </h2>
+              <p className="mt-1 text-[13px] text-[var(--qz-muted)]">
+                {t("pagination.jumpMessage", {
+                  raw: pending.raw,
+                  target: String(pending.target),
+                  max: String(pageCount),
+                })}
+              </p>
+              <div className="mt-5 flex items-center justify-center gap-2">
+                <Button variant="warning" onClick={cancelJump}>
+                  {t("common.cancel")}
+                </Button>
+                <Button variant="accent" onClick={confirmJump} autoFocus>
+                  {t("pagination.jump")}
+                </Button>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </>
   );
 }

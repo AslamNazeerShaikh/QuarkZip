@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791389424.57167,
-    "seen": 1791389445.035265,
-    "ast_hash": "cbc27329f12705d2b440a4a8cdbc3cc0",
+    "mtime": 1791389631.323854,
+    "seen": 1791389654.6131022,
+    "ast_hash": "3833009f710462a0d55a089bfcf5ecc5",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -954,9 +954,9 @@
     "semantic_hash": ""
   },
   "src/components/Pagination.tsx": {
-    "mtime": 1791389435.8898635,
-    "seen": 1791389445.035174,
-    "ast_hash": "caeaba875d4574a13d16630d5bd3ebae",
+    "mtime": 1791389614.9657853,
+    "seen": 1791389654.6130078,
+    "ast_hash": "c7445c74c80b1588427177cffd7bbe60",
     "semantic_hash": ""
   },
   "src/components/PasswordDialog.test.tsx": {

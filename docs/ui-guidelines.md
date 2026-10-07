@@ -126,7 +126,10 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   Esc cancel, reduced-motion safe) — big centered icon, the
   destination, `K of N selected` (or `All N`) file count, orange Cancel +
   blue Proceed (`Button` warning/accent variants, AA pairs in color-system).
-  The backdrop never dismisses — buttons or Esc only.
+  The backdrop never dismisses — buttons or Esc only. Any dialog rendered
+  inside a material (`backdrop-filter`) ancestor must portal to
+  `document.body`, or `fixed inset-0` centers on the ancestor instead of
+  the window (this bit the page-jump confirm once).
 - `ExtractDoneDialog`: same modal language for the result — green center
   icon with file count + destination on success, red icon with the error on
   failure, single OK action either way. The footer carries no status text.
