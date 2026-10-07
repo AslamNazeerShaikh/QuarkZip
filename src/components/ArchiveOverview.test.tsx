@@ -170,6 +170,25 @@ describe("ArchiveOverview", () => {
     expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
   });
 
+  it("should_hide_more_when_no_extras_and_shift_controls_left", () => {
+    render(
+      <ArchiveOverview
+        archive="/tmp/qz-sample.zip"
+        info={{ ...INFO, extra: {} }}
+        loading={false}
+        onOpen={() => {}}
+        middleControls={<button>Pager</button>}
+        utilityControls={<button>Theme</button>}
+      />,
+    );
+    // No dead toggle — and the controls take the row's left end.
+    expect(
+      screen.queryByRole("button", { name: "More" }),
+    ).not.toBeInTheDocument();
+    const row = screen.getByTestId("card-controls");
+    expect(row.parentElement?.firstElementChild).toBe(row);
+  });
+
   it("should_ride_controls_in_the_action_row_when_open", () => {
     render(
       <ArchiveOverview

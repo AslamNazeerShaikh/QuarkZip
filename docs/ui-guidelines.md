@@ -206,10 +206,12 @@ all N instead?` with an `Extract All` confirm). Big centered icon, the
   (7z-only Headers/Method/Solid/Blocks, entry-derived Host OS and
   Algorithms): no layout shift, no card scrollbar, ever. The ratio cell
   is textual only ("73.9% of original", `—` when unmeasurable) — no bar.
-  A `More`/`Less` toggle (secondary `sm`, left of the action row, same
+  A `More`/`Less` toggle (secondary `bar`, left of the action row, same
   shell as Test/Checksum) grows the card with the engine's full header
-  metadata for advanced users while the table shrinks; collapsing hides
-  the toggle, and re-expanding shows it without reshowing the extras.
+  metadata for advanced users while the table shrinks; it renders only
+  when extras exist (no dead button — the cluster shifts left without it),
+  collapsing hides the toggle, and re-expanding shows it without reshowing
+  the extras.
   Below the details (always, once an archive is open —
   even when the summary is unavailable) sits the integrity action row:
   `More`/`Less` left, the `Pagination` + `ThemeSwitch` + `LanguageSwitch` +

@@ -146,3 +146,16 @@ test("collapsing the card shifts controls left, expanding restores", async ({
   await app.getByRole("button", { name: "Expand details" }).click();
   await expect(app.getByRole("button", { name: "More" })).toBeVisible();
 });
+
+test("more hides with no extras, controls take the left end", async ({
+  app,
+}) => {
+  await addArchive(app, PATH, { count: 3 });
+  await openViaButton(app, PATH);
+  // Default stub info carries no extras — no dead toggle.
+  await expect(app.getByRole("button", { name: "More" })).toHaveCount(0);
+  const row = app.getByTestId("card-controls");
+  expect(
+    await row.evaluate((el) => el.parentElement?.firstElementChild === el),
+  ).toBe(true);
+});

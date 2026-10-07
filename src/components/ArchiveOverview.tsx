@@ -99,6 +99,10 @@ export default function ArchiveOverview({
   }, [archive]);
   const toggleLabel = collapsed ? t("overview.expand") : t("overview.collapse");
   const extraLabel = showExtra ? t("overview.less") : t("overview.more");
+  // No engine extras → no toggle: a disabled dead button helps nobody.
+  // The cell unmounts (like the collapsed state), so the middle cluster
+  // shifts to the extreme left.
+  const hasExtras = info !== null && Object.keys(info.extra).length > 0;
   function toggleCollapsed() {
     if (collapsed) setShowExtra(false);
     setCollapsed((c) => !c);
@@ -337,7 +341,7 @@ export default function ArchiveOverview({
           unmounts entirely (not an empty spacer) so the middle cluster
           shifts to the extreme left; expanding puts it back. */}
           <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-2 px-5 pt-4 pb-5">
-            {!collapsed && (
+            {!collapsed && hasExtras && (
               <div>
                 <Button
                   variant="secondary"
@@ -346,7 +350,6 @@ export default function ArchiveOverview({
                   aria-expanded={showExtra}
                   aria-label={extraLabel}
                   title={extraLabel}
-                  disabled={!info}
                   className="w-32"
                 >
                   <MoreHorizontal size={14} aria-hidden />
