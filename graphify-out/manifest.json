@@ -48,9 +48,9 @@
     "semantic_hash": ""
   },
   "src-tauri/src/lib.rs": {
-    "mtime": 1791367448.1010091,
-    "seen": 1791367560.000088,
-    "ast_hash": "0a9970e1ed2f814c714bb53b82536db1",
+    "mtime": 1791367913.1444745,
+    "seen": 1791367979.86128,
+    "ast_hash": "e634a09ebb613798671523dda5d513a0",
     "semantic_hash": ""
   },
   "src-tauri/src/main.rs": {
@@ -1938,9 +1938,9 @@
     "semantic_hash": ""
   },
   "docs/macos-native.md": {
-    "mtime": 1791367689.2325776,
-    "seen": 1791367705.248378,
-    "ast_hash": "5a3dcd009c32f3aff86b16e0f50c21d0",
+    "mtime": 1791367913.1445227,
+    "seen": 1791367979.861376,
+    "ast_hash": "0f4c44e0df0b2f44eee923735b4e168c",
     "semantic_hash": ""
   }
 }

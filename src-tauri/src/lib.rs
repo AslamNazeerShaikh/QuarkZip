@@ -455,7 +455,11 @@ fn apply_window_glass(window: &tauri::WebviewWindow) {
     let _ = window_vibrancy::clear_liquid_glass(window);
     let glass =
         window_vibrancy::LiquidGlassOptions::new(window_vibrancy::NSGlassEffectViewStyle::Sidebar)
-            .radius(26.0)
+            // Radius 0 on purpose: the native decorated window owns the
+            // corner shape and clips content to it. A non-zero radius draws
+            // the glass's own highlight ring inside the window rounding —
+            // a visible double-corner seam at all four corners.
+            .radius(0.0)
             .opaque(false)
             .interactive(true);
     if let Err(e) = window_vibrancy::apply_liquid_glass(window, glass) {

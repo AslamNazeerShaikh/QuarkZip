@@ -120,7 +120,9 @@ Figma-based design handoff begins.
 ## 8. Liquid-glass window background (native, macOS only)
 
 The main window sits on real Liquid Glass: `window-vibrancy@0.8.1`
-`apply_liquid_glass` with the **Sidebar** style, radius 26, non-opaque,
+`apply_liquid_glass` with the **Sidebar** style, square corners (radius 0 —
+the native window owns the corner shape; a glass radius draws a
+competing highlight seam), non-opaque,
 interactive (`lib.rs` `apply_window_glass`, macOS only), and the
 `--qz-frame-bg` thin neutral wash (12% light / 20% dark, frame only —
 never the root: stacked coats multiply into a milky veil) lays over it. Replaces the earlier
