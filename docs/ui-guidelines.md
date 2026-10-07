@@ -44,8 +44,10 @@ scales (all from the reference):
   nav/segment 8 → pill/avatar 999/50%. Never one radius everywhere.
 - Shadows: cards `0 1px 2px rgba(0,0,0,.03)` only; floating controls reuse
   the card shadow; overlays use soft large elevation. No `shadow-lg`.
-- Motion: 180ms ease-out everywhere (theme cross-fade, indicator slide,
-  scrollbar fade).
+- Motion: 180ms ease-out for overlays/indicators (modal pop, switch
+  slide, scrollbar fade). Theme switches apply instantly — no global
+  color transition (a universal one caused a WebContent crash under a
+  system appearance flip; see macos-native.md §9).
 
 ## Typography (Inter, OFL)
 

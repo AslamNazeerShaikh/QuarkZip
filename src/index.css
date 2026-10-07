@@ -372,13 +372,8 @@ body {
   background-clip: padding-box;
 }
 
-html,
-body,
-header,
-main,
-div {
-  transition:
-    background-color 0.18s ease-out,
-    border-color 0.18s ease-out,
-    color 0.18s ease-out;
-}
+/* No global color transitions: a universal `transition` on every div
+   fans out into hundreds of concurrent CoreAnimation transactions on
+   large listings, and was implicated in a WebContent SIGSEGV during a
+   system appearance flip (see docs/macos-native.md §9). Theme switches
+   apply instantly; buttons keep their own `transition-colors`. */

@@ -66,9 +66,9 @@
     "semantic_hash": ""
   },
   "src/App.tsx": {
-    "mtime": 1791367684.587357,
-    "seen": 1791367705.248279,
-    "ast_hash": "4d5f72bba1d8ce25a023bad36be5d6dc",
+    "mtime": 1791375608.561188,
+    "seen": 1791375612.578368,
+    "ast_hash": "e9c0076d50f711f9d652caa95f560ffa",
     "semantic_hash": ""
   },
   "src/main.tsx": {
@@ -492,9 +492,9 @@
     "semantic_hash": ""
   },
   "src/App.test.tsx": {
-    "mtime": 1791303624.2396612,
-    "seen": 1791303670.455647,
-    "ast_hash": "c867dfa0cf11e024c9b35af46d9dcad9",
+    "mtime": 1791375579.8003392,
+    "seen": 1791375612.578367,
+    "ast_hash": "2215dbbfbe8817e2d433be6b93a2c007",
     "semantic_hash": ""
   },
   "src/components/ui/badge.tsx": {
@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791368549.0917017,
-    "seen": 1791368569.743568,
-    "ast_hash": "381c183b47eace1f97745e080797bacb",
+    "mtime": 1791375523.0891283,
+    "seen": 1791375612.5784802,
+    "ast_hash": "798fb2fcff00541b5a3b209b040b6fa8",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -1938,9 +1938,9 @@
     "semantic_hash": ""
   },
   "docs/macos-native.md": {
-    "mtime": 1791367913.1445227,
-    "seen": 1791367979.861376,
-    "ast_hash": "0f4c44e0df0b2f44eee923735b4e168c",
+    "mtime": 1791375554.676769,
+    "seen": 1791375612.578479,
+    "ast_hash": "a4d4849082dc493574e7475283e62913",
     "semantic_hash": ""
   }
 }

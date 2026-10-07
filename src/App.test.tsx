@@ -64,9 +64,80 @@ vi.mock("@tauri-apps/api/core", () => ({
           { path: "locked.txt", size: 5, modified: null, is_folder: false },
         ]);
       }
+      if (path === "/tmp/stress.zip") {
+        // Stress-shaped listing: 10k entries with hostile names (200-char
+        // runs, unicode, `=`, spaces, no-extension, nulls, folders).
+        const entries = [];
+        entries.push({
+          path: `${"L".repeat(200)}.txt`,
+          size: 0,
+          modified: "2026-10-03 19:15:23.6692707",
+          is_folder: false,
+        });
+        entries.push({
+          path: "a-very-long-filename-that-keeps-going-and-going-and-going-and-going-and-going-and-going-and-going.txt",
+          size: 0,
+          modified: "2026-10-03 19:15:23.6692707",
+          is_folder: false,
+        });
+        entries.push({
+          path: "name with spaces and = equals and café ünïcode Dateiächstones.txt",
+          size: 0,
+          modified: "2026-10-03 19:15:23.6692707",
+          is_folder: false,
+        });
+        entries.push({
+          path: "noextension",
+          size: null,
+          modified: null,
+          is_folder: false,
+        });
+        entries.push({
+          path: "empty-dir/",
+          size: 0,
+          modified: null,
+          is_folder: true,
+        });
+        for (let i = 1; i <= 10016; i++) {
+          entries.push({
+            path: `file-${String(i).padStart(5, "0")}.txt`,
+            size: 0,
+            modified: "2026-10-03 19:15:00",
+            is_folder: false,
+          });
+        }
+        return Promise.resolve(entries);
+      }
       return Promise.resolve([
         { path: "dropped.txt", size: 10, modified: null, is_folder: false },
       ]);
+    }
+    if (cmd === "info_archive") {
+      const { path } = (args ?? {}) as { path: string };
+      if (path === "/tmp/stress.zip") {
+        return Promise.resolve({
+          container_format: "zip",
+          physical_size: 1403808,
+          headers_size: null,
+          method: "Store",
+          solid: null,
+          blocks: null,
+          file_count: 10021,
+          folder_count: 1,
+          total_unpacked: 0,
+          total_packed: 0,
+          compression_ratio: 0,
+          max_depth: 2,
+          methods: ["Store"],
+          encrypted_files: 0,
+          encryption_scheme: "None",
+          host_os: ["Unix"],
+          container_size: 1403808,
+          container_modified: 1791563723,
+          extra: {},
+        });
+      }
+      return Promise.reject(`unexpected command ${cmd}`);
     }
     if (cmd === "test_archive") {
       const { path, password } = (args ?? {}) as {
@@ -142,6 +213,14 @@ describe("App blank canvas", () => {
     ).toBeInTheDocument();
     expect(container.querySelectorAll("[role='row']")).toHaveLength(0);
   });
+
+  it("should_leave_no_button_focused_on_cold_start", () => {
+    // No pre-selected CTA with a selection ring at launch.
+    render(<App />);
+    expect(document.activeElement?.tagName).not.toBe("BUTTON");
+    window.dispatchEvent(new Event("focus"));
+    expect(document.activeElement?.tagName).not.toBe("BUTTON");
+  });
 });
 
 describe("drag and drop", () => {
@@ -151,6 +230,29 @@ describe("drag and drop", () => {
       payload: { type: "over", paths: [] },
     });
     expect(await screen.findByText("Drop to open archive")).toBeInTheDocument();
+  });
+
+  it("should_trace_the_window_edge_with_matching_corners", async () => {
+    // Flush mac window (native ~12px corners) vs. floating Linux card
+    // (20px card in a 20px margin) — one radius for both misreads a corner.
+    osCtl.platform = "macos";
+    const { unmount } = render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "over", paths: [] },
+    });
+    const macFrame = await screen.findByText("Drop to open archive");
+    expect(macFrame.parentElement).toHaveClass("rounded-[12px]");
+    expect(macFrame.parentElement).toHaveClass("inset-3");
+    unmount();
+    osCtl.platform = "linux";
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "over", paths: [] },
+    });
+    const cardFrame = await screen.findAllByText("Drop to open archive");
+    const frame = cardFrame[cardFrame.length - 1].parentElement;
+    expect(frame).toHaveClass("rounded-[20px]");
+    expect(frame).toHaveClass("inset-5");
   });
 
   it("should_list_dropped_archive_when_file_dropped", async () => {
@@ -164,6 +266,25 @@ describe("drag and drop", () => {
     expect(
       screen.queryByRole("button", { name: /open archive/i }),
     ).not.toBeInTheDocument();
+  });
+
+  it("should_survive_stress_shaped_listing_without_blanking", async () => {
+    // Regression: hostile names (200-char runs, unicode, `=`, spaces,
+    // null sizes/dates, folders) must render, not unmount the tree.
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/stress.zip"] },
+    });
+    expect(await screen.findByText("file-00001.txt")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "name with spaces and = equals and café ünïcode Dateiächstones.txt",
+      ),
+    ).toBeInTheDocument();
+    // Tree intact: footer actions + overview populated, no blank canvas.
+    expect(screen.getByRole("button", { name: "Extract" })).toBeVisible();
+    expect(screen.getAllByText("Store")).toHaveLength(2);
+    expect(screen.getAllByText("10,021")).toHaveLength(2);
   });
 
   it("should_keep_previous_listing_when_open_is_cancelled", async () => {

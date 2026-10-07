@@ -107,6 +107,24 @@ export default function App() {
     })();
     return () => unlisten?.();
   }, []);
+  // Cold start shows no selection ring: WebKit can land initial focus
+  // on the first button (notably with Full Keyboard Access), so release
+  // any pre-interaction focus — on mount and on window focus. Once the
+  // user clicks or tabs, focus is theirs and never stolen.
+  useEffect(() => {
+    let interacted = false;
+    const mark = () => {
+      interacted = true;
+    };
+    window.addEventListener("pointerdown", mark, { once: true });
+    window.addEventListener("keydown", mark, { once: true });
+    const release = () => {
+      if (!interacted) (document.activeElement as HTMLElement | null)?.blur?.();
+    };
+    release();
+    window.addEventListener("focus", release);
+    return () => window.removeEventListener("focus", release);
+  }, []);
   const [archive, setArchive] = useState<string | null>(null);
   const [entries, setEntries] = useState<ArchiveEntry[]>([]);
   const [info, setInfo] = useState<ArchiveInfo | null>(null);
@@ -353,11 +371,18 @@ export default function App() {
       >
         <TitleBar archive={archive} hidden={isMac} maximized={maximized} />
         {/* 28px rhythm on the content sides/bottom; no top pad. The drop
-          frame is window-fixed (not main-absolute), so its top edge floats
-          in the title strip instead of crossing the card. */}
+          frame traces the window edge: the flush mac/maximized window
+          (native ~12px corners) vs. the floating Linux card (20px card
+          in a 20px margin) — one radius for both misreads a corner. */}
         <main className="relative flex min-h-0 flex-1 flex-col px-7 pb-7">
           {dragging && (
-            <div className="pointer-events-none fixed inset-3.5 z-10 flex items-center justify-center rounded-[20px] border-[1.5px] border-dotted border-[var(--qz-primary)] bg-[var(--qz-primary)]/10">
+            <div
+              className={`pointer-events-none fixed z-10 flex items-center justify-center border-[1.5px] border-dotted border-[var(--qz-primary)] bg-[var(--qz-primary)]/10 ${
+                maximized || isMac
+                  ? "inset-3 rounded-[12px]"
+                  : "inset-5 rounded-[20px]"
+              }`}
+            >
               <p className="font-medium text-[var(--qz-text)]">
                 {t("app.dropHint")}
               </p>

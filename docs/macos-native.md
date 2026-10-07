@@ -154,7 +154,30 @@ over CSS imitation"):
   no-op off macOS. Currently unwired in the UI — backs the future
   appearance control in settings.
 - macOS only, same as before: other platforms have no system glass, so
-  `App.tsx` keeps them on opaque `--qz-bg`. Content (dialogs, cards,
-  table, menus) stays solid everywhere, so every measured pair in
-  `color-system.md` still holds; Reduce Transparency is answered by the
-  native view itself.
+  `App.tsx` keeps them on opaque `--qz-bg`. Text tokens are measured on
+  opaque fills (`color-system.md` gate); live-glass backdrops vary with
+  the wallpaper, which is why glass-chrome text (`--qz-glass-*`) stays
+  dark in both themes. Reduce Transparency is answered by the native
+  view itself.
+
+## 9. WebContent crash hardening (2026-10-07)
+
+Field evidence: opening `stress-10k.zip` (10,021 entries) blanked the app
+to a transparent window. Forensics showed the backend alive and the
+renderer dead — `com.apple.WebKit.WebContent SIGSEGV (EXC_BAD_ACCESS,
+KERN_INVALID_ADDRESS at 0x10)` on the main thread inside
+`WebProcess::dispatchSimulatedNotificationsForPreferenceChange` →
+AppKit appearance broadcast → `CATransaction setCompletionBlock`. A
+system appearance flip landing mid-render, not our data path (a 10k
+hostile-name listing renders cleanly in tests).
+
+Hardening shipped:
+
+- Removed the universal `transition` on `html/body/header/main/div`
+  (`src/index.css`): it fanned out into hundreds of concurrent
+  CoreAnimation transactions on every appearance flip. Theme switches
+  now apply instantly; buttons keep their own transitions.
+- Renderer death still blanks the window (JS is gone; nothing left to
+  paint). No auto-reload exists at the wry layer — if it recurs, the
+  `.ips` report in `~/Library/Logs/DiagnosticReports/` names the
+  crashing subsystem; check it before assuming app code.
