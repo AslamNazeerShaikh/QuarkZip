@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791400203.464743,
-    "seen": 1791400262.785797,
-    "ast_hash": "7e0325881470eb7e17ce46574610c637",
+    "mtime": 1791401063.8833082,
+    "seen": 1791401104.037427,
+    "ast_hash": "78476b9348827eebb4ffaa5944a787e1",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -876,15 +876,15 @@
     "semantic_hash": ""
   },
   "src/components/ArchiveOverview.test.tsx": {
-    "mtime": 1791400414.1250749,
-    "seen": 1791400587.62603,
-    "ast_hash": "e374555a11d37adb79c799d9cfff555c",
+    "mtime": 1791401008.2651763,
+    "seen": 1791401104.0373278,
+    "ast_hash": "af529369f9446e5f3f2aacd4b1692fe6",
     "semantic_hash": ""
   },
   "src/components/ArchiveOverview.tsx": {
-    "mtime": 1791400177.774335,
-    "seen": 1791400262.78569,
-    "ast_hash": "d31a2aa81d1cd843cd84e46c3fa5d9c9",
+    "mtime": 1791401058.711487,
+    "seen": 1791401104.037329,
+    "ast_hash": "c718300dbe94de2353b4702367c86cde",
     "semantic_hash": ""
   },
   "src/components/ArchiveTable.test.tsx": {
@@ -1959,6 +1959,12 @@
     "mtime": 1791400407.0888705,
     "seen": 1791400587.626045,
     "ast_hash": "2b9e42744520433eb0664a850edd7626",
+    "semantic_hash": ""
+  },
+  "e2e/specs/action-row.spec.ts": {
+    "mtime": 1791401096.6109855,
+    "seen": 1791401104.037311,
+    "ast_hash": "fd7a4496c75ee04b3535c76068920a78",
     "semantic_hash": ""
   }
 }

@@ -336,11 +336,19 @@ export default function ArchiveOverview({
           loading, or when details are unavailable. The More toggle sits
           left in the same row (same shell as Test/Checksum); it hides
           with the collapsed card and never auto-reopens the extras.
-          Pagination + utilities ride the middle (between More and Test),
-          wrapping under on narrow windows. Collapsed, the More cell
-          unmounts entirely (not an empty spacer) so the middle cluster
-          shifts to the extreme left; expanding puts it back. */}
-          <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-2 px-5 pt-4 pb-5">
+          Pagination + utilities ride next (after More), Test/Checksum +
+          collapse after them. The row is left-packed (`justify-start`):
+          `justify-between` spreads a wrapped line apart, stranding a dead
+          gap between More and the middle cluster while the actions drop
+          to line two (seen on the 10M zip) — packing keeps every line
+          gap-free at any window width without resizing anything.
+          Collapsed (or no extras), the More cell unmounts entirely (not
+          an empty spacer) so the middle cluster shifts to the extreme
+          left; expanding puts it back. */}
+          <div
+            data-testid="action-row"
+            className="flex flex-wrap items-center justify-start gap-x-2 gap-y-2 px-5 pt-4 pb-5"
+          >
             {!collapsed && hasExtras && (
               <div>
                 <Button

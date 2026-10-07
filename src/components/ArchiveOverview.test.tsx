@@ -211,6 +211,22 @@ describe("ArchiveOverview", () => {
     expect(row.parentElement?.firstElementChild).not.toBe(row);
   });
 
+  it("should_pack_the_action_row_without_dead_gaps", () => {
+    // Regression: `justify-between` spread the wrapped line apart,
+    // stranding ~160px between More and the controls on narrow windows.
+    render(
+      <ArchiveOverview
+        archive="/tmp/qz-sample.7z"
+        info={INFO}
+        loading={false}
+        onOpen={() => {}}
+        middleControls={<button>Pager</button>}
+        utilityControls={<button>Theme</button>}
+      />,
+    );
+    expect(screen.getByTestId("action-row")).toHaveClass("justify-start");
+  });
+
   it("should_ride_controls_in_the_action_row_when_open", () => {
     render(
       <ArchiveOverview

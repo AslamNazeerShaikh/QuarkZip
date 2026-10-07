@@ -215,10 +215,11 @@ all N instead?` with an `Extract All` confirm). Big centered icon, the
   Below the details (always, once an archive is open —
   even when the summary is unavailable) sits the integrity action row:
   `More`/`Less` left, the `Pagination` + `ThemeSwitch` + `LanguageSwitch` +
-  `About` cluster middle (same h-9 shells, wrapping under on narrow
-  windows), and equal-width (`w-32`) secondary `sm` `Test`
+  `About` cluster next, then equal-width (`w-32`) secondary `bar` `Test`
   (`test_archive`) and `Checksum` (`checksum_file`) buttons plus the
-  collapse chevron right, opening their dialogs. Collapsing unmounts the
+  collapse chevron, opening their dialogs. The row is left-packed
+  (`justify-start`, wrapping to packed lines — `between` stranded a dead
+  gap on wrapped lines); nothing in it ever resizes for width. Collapsing unmounts the
   More cell (no empty spacer), so the cluster shifts to the extreme left;
   expanding puts it back. With no archive the card
   shows the centered empty state with the Theme/Language/About utilities
