@@ -82,19 +82,6 @@
       "source_location": "L6"
     },
     {
-      "id": "src_components_titlebar_titlebarprops",
-      "label": "TitleBarProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 59,
-      "community_name": "LanguageContext.tsx",
-      "file_type": "code",
-      "norm_label": "titlebarprops",
-      "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L7"
-    },
-    {
       "id": "src_i18n_languagecontext_languagevalue",
       "label": "LanguageValue",
       "_callable": true,
@@ -249,6 +236,19 @@
       "norm_label": "themechoice",
       "source_file": "src/lib/theme.ts",
       "source_location": "L4"
+    },
+    {
+      "id": "src_components_titlebar_titlebarprops",
+      "label": "TitleBarProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 75,
+      "community_name": "TitleBar.tsx",
+      "file_type": "code",
+      "norm_label": "titlebarprops",
+      "source_file": "src/components/TitleBar.tsx",
+      "source_location": "L7"
     },
     {
       "id": "src_tauri_ffi_bridge_qzlist",
@@ -431,6 +431,42 @@
       "norm_label": "appinfo",
       "source_file": "src/lib/appInfo.ts",
       "source_location": "L10"
+    },
+    {
+      "id": "src_components_pagination_pagejump",
+      "label": "PageJump()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "PageJump",
+      "file_type": "code",
+      "norm_label": "pagejump()",
+      "source_file": "src/components/Pagination.tsx",
+      "source_location": "L23"
+    },
+    {
+      "id": "src_components_pagination_pagejump_commit",
+      "label": "commit()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "PageJump",
+      "file_type": "code",
+      "norm_label": "commit()",
+      "source_file": "src/components/Pagination.tsx",
+      "source_location": "L41"
+    },
+    {
+      "id": "src_components_pagination_pagejump_revert",
+      "label": "revert()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "PageJump",
+      "file_type": "code",
+      "norm_label": "revert()",
+      "source_file": "src/components/Pagination.tsx",
+      "source_location": "L38"
     },
     {
       "id": "src_components_archiveoverview_meta",
@@ -646,7 +682,7 @@
       "file_type": "code",
       "norm_label": "pagesizemenu()",
       "source_file": "src/components/Pagination.tsx",
-      "source_location": "L25"
+      "source_location": "L80"
     },
     {
       "id": "src_components_pagination_pagesizemenu_choose",
@@ -658,7 +694,7 @@
       "file_type": "code",
       "norm_label": "choose()",
       "source_file": "src/components/Pagination.tsx",
-      "source_location": "L61"
+      "source_location": "L116"
     },
     {
       "id": "src_components_pagination_pagesizemenu_onbuttonkey",
@@ -670,7 +706,7 @@
       "file_type": "code",
       "norm_label": "onbuttonkey()",
       "source_file": "src/components/Pagination.tsx",
-      "source_location": "L67"
+      "source_location": "L122"
     },
     {
       "id": "src_components_pagination_pagesizemenu_onlistkey",
@@ -682,7 +718,7 @@
       "file_type": "code",
       "norm_label": "onlistkey()",
       "source_file": "src/components/Pagination.tsx",
-      "source_location": "L75"
+      "source_location": "L130"
     },
     {
       "id": "src_components_pagination_pagination",
@@ -694,7 +730,31 @@
       "file_type": "code",
       "norm_label": "pagination()",
       "source_file": "src/components/Pagination.tsx",
-      "source_location": "L146"
+      "source_location": "L201"
+    },
+    {
+      "id": "src_components_themeswitch_themeswitch",
+      "label": "ThemeSwitch()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 216,
+      "community_name": "App.tsx",
+      "file_type": "code",
+      "norm_label": "themeswitch()",
+      "source_file": "src/components/ThemeSwitch.tsx",
+      "source_location": "L15"
+    },
+    {
+      "id": "src_components_themeswitch_themeswitch_select",
+      "label": "select()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 216,
+      "community_name": "App.tsx",
+      "file_type": "code",
+      "norm_label": "select()",
+      "source_file": "src/components/ThemeSwitch.tsx",
+      "source_location": "L60"
     },
     {
       "id": "src_lib_format_formatcount",
@@ -887,30 +947,6 @@
       "norm_label": "choose()",
       "source_file": "src/components/LanguageSwitch.tsx",
       "source_location": "L37"
-    },
-    {
-      "id": "src_components_themeswitch_themeswitch",
-      "label": "ThemeSwitch()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 59,
-      "community_name": "LanguageContext.tsx",
-      "file_type": "code",
-      "norm_label": "themeswitch()",
-      "source_file": "src/components/ThemeSwitch.tsx",
-      "source_location": "L15"
-    },
-    {
-      "id": "src_components_themeswitch_themeswitch_select",
-      "label": "select()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 59,
-      "community_name": "LanguageContext.tsx",
-      "file_type": "code",
-      "norm_label": "select()",
-      "source_file": "src/components/ThemeSwitch.tsx",
-      "source_location": "L60"
     },
     {
       "id": "src_i18n_i18n_test_switcher",
@@ -1494,7 +1530,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 75,
-      "community_name": "TitleBar",
+      "community_name": "TitleBar.tsx",
       "file_type": "code",
       "norm_label": "titlebar()",
       "source_file": "src/components/TitleBar.tsx",
@@ -1506,7 +1542,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 75,
-      "community_name": "TitleBar",
+      "community_name": "TitleBar.tsx",
       "file_type": "code",
       "norm_label": "close()",
       "source_file": "src/components/TitleBar.tsx",
@@ -1518,7 +1554,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 75,
-      "community_name": "TitleBar",
+      "community_name": "TitleBar.tsx",
       "file_type": "code",
       "norm_label": "minimize()",
       "source_file": "src/components/TitleBar.tsx",
@@ -1530,7 +1566,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 75,
-      "community_name": "TitleBar",
+      "community_name": "TitleBar.tsx",
       "file_type": "code",
       "norm_label": "stopdrag()",
       "source_file": "src/components/TitleBar.tsx",
@@ -1542,7 +1578,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 75,
-      "community_name": "TitleBar",
+      "community_name": "TitleBar.tsx",
       "file_type": "code",
       "norm_label": "togglemaximize()",
       "source_file": "src/components/TitleBar.tsx",
@@ -2645,6 +2681,18 @@
       "norm_label": "setup()",
       "source_file": "src/components/Pagination.test.tsx",
       "source_location": "L6"
+    },
+    {
+      "id": "src_components_pagination_test_setupjump",
+      "label": "setupJump()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "vitest",
+      "file_type": "code",
+      "norm_label": "setupjump()",
+      "source_file": "src/components/Pagination.test.tsx",
+      "source_location": "L126"
     },
     {
       "id": "src_components_passworddialog_test_setup",
@@ -10451,6 +10499,17 @@
       "source_location": ""
     },
     {
+      "id": "src_tauri_src_lib_run",
+      "label": "run()",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "lib.rs",
+      "file_type": "code",
+      "norm_label": "run()",
+      "source_file": "src-tauri/src/lib.rs",
+      "source_location": "L576"
+    },
+    {
       "id": "src_tauri_src_lib_run_listing",
       "label": "run_listing()",
       "_origin": "ast",
@@ -11434,7 +11493,7 @@
       "node_kind": "heading",
       "norm_label": "deliberate deviations (with rationale)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L215"
+      "source_location": "L217"
     },
     {
       "id": "docs_ui_guidelines_design_direction",
@@ -11458,7 +11517,7 @@
       "node_kind": "heading",
       "norm_label": "interaction / states",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L204"
+      "source_location": "L206"
     },
     {
       "id": "docs_ui_guidelines_layout",
@@ -11470,7 +11529,7 @@
       "node_kind": "heading",
       "norm_label": "layout",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L188"
+      "source_location": "L190"
     },
     {
       "id": "docs_ui_guidelines_quarkzip_ui_guidelines",
@@ -15759,6 +15818,39 @@
       "source_location": "L6"
     },
     {
+      "id": "src_components_themeswitch",
+      "label": "ThemeSwitch.tsx",
+      "_origin": "ast",
+      "community": 216,
+      "community_name": "App.tsx",
+      "file_type": "code",
+      "norm_label": "themeswitch.tsx",
+      "source_file": "src/components/ThemeSwitch.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_themeswitch_choice_icon",
+      "label": "CHOICE_ICON",
+      "_origin": "ast",
+      "community": 216,
+      "community_name": "App.tsx",
+      "file_type": "code",
+      "norm_label": "choice_icon",
+      "source_file": "src/components/ThemeSwitch.tsx",
+      "source_location": "L6"
+    },
+    {
+      "id": "ref_react",
+      "label": "react",
+      "_origin": "ast",
+      "community": 216,
+      "community_name": "App.tsx",
+      "file_type": "concept",
+      "norm_label": "react",
+      "source_file": "package.json",
+      "source_location": "L35"
+    },
+    {
       "id": "contributing",
       "label": "CONTRIBUTING.md",
       "_origin": "ast",
@@ -19041,39 +19133,6 @@
       "source_location": "L1"
     },
     {
-      "id": "src_components_themeswitch",
-      "label": "ThemeSwitch.tsx",
-      "_origin": "ast",
-      "community": 59,
-      "community_name": "LanguageContext.tsx",
-      "file_type": "code",
-      "norm_label": "themeswitch.tsx",
-      "source_file": "src/components/ThemeSwitch.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_themeswitch_choice_icon",
-      "label": "CHOICE_ICON",
-      "_origin": "ast",
-      "community": 59,
-      "community_name": "LanguageContext.tsx",
-      "file_type": "code",
-      "norm_label": "choice_icon",
-      "source_file": "src/components/ThemeSwitch.tsx",
-      "source_location": "L6"
-    },
-    {
-      "id": "src_components_titlebar",
-      "label": "TitleBar.tsx",
-      "_origin": "ast",
-      "community": 59,
-      "community_name": "LanguageContext.tsx",
-      "file_type": "code",
-      "norm_label": "titlebar.tsx",
-      "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L1"
-    },
-    {
       "id": "src_i18n_i18n_test",
       "label": "i18n.test.tsx",
       "_origin": "ast",
@@ -19160,17 +19219,6 @@
       "norm_label": "main.tsx",
       "source_file": "src/main.tsx",
       "source_location": "L1"
-    },
-    {
-      "id": "ref_react",
-      "label": "react",
-      "_origin": "ast",
-      "community": 59,
-      "community_name": "LanguageContext.tsx",
-      "file_type": "concept",
-      "norm_label": "react",
-      "source_file": "package.json",
-      "source_location": "L35"
     },
     {
       "id": "e2e_mocks_backend",
@@ -19741,17 +19789,6 @@
       "norm_label": "theme_options",
       "source_file": "src/lib/theme.ts",
       "source_location": "L39"
-    },
-    {
-      "id": "src_tauri_src_lib_run",
-      "label": "run()",
-      "_origin": "ast",
-      "community": 65,
-      "community_name": "App",
-      "file_type": "code",
-      "norm_label": "run()",
-      "source_file": "src-tauri/src/lib.rs",
-      "source_location": "L576"
     },
     {
       "id": "src_tauri_tauri_conf",
@@ -22243,6 +22280,17 @@
       "norm_label": "src-tauri/**/*.rs",
       "source_file": "package.json",
       "source_location": "L25"
+    },
+    {
+      "id": "src_components_titlebar",
+      "label": "TitleBar.tsx",
+      "_origin": "ast",
+      "community": 75,
+      "community_name": "TitleBar.tsx",
+      "file_type": "code",
+      "norm_label": "titlebar.tsx",
+      "source_file": "src/components/TitleBar.tsx",
+      "source_location": "L1"
     },
     {
       "id": "bstr",
@@ -28866,6 +28914,30 @@
       "weight": 1.0
     },
     {
+      "source": "src_components_pagination_pagejump",
+      "target": "src_i18n_languagecontext_uselanguage",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/components/Pagination.tsx",
+      "source_location": "L32",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_pagination_pagejump_commit",
+      "target": "src_components_pagination_pagejump_revert",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/components/Pagination.tsx",
+      "source_location": "L47",
+      "weight": 1.0
+    },
+    {
       "source": "src_components_pagination_pagesizemenu",
       "target": "src_components_pagination_formatsize",
       "relation": "calls",
@@ -28874,7 +28946,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/Pagination.tsx",
-      "source_location": "L103",
+      "source_location": "L158",
       "weight": 1.0
     },
     {
@@ -28886,7 +28958,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/Pagination.tsx",
-      "source_location": "L38",
+      "source_location": "L93",
       "weight": 1.0
     },
     {
@@ -28898,7 +28970,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/Pagination.tsx",
-      "source_location": "L84",
+      "source_location": "L139",
       "weight": 1.0
     },
     {
@@ -28910,7 +28982,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/Pagination.tsx",
-      "source_location": "L161",
+      "source_location": "L216",
       "weight": 1.0
     },
     {
@@ -28922,7 +28994,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/Pagination.tsx",
-      "source_location": "L188",
+      "source_location": "L243",
       "weight": 1.0
     },
     {
@@ -30522,6 +30594,30 @@
       "weight": 1.0
     },
     {
+      "source": "src_components_pagination_pagejump",
+      "target": "src_components_pagination_pagejump_revert",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/components/Pagination.tsx",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_pagination_pagejump",
+      "target": "src_components_pagination_pagejump_commit",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/components/Pagination.tsx",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
       "source": "src_components_pagination_pagesizemenu",
       "target": "src_components_pagination_pagesizemenu_choose",
       "relation": "contains",
@@ -30530,7 +30626,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/Pagination.tsx",
-      "source_location": "L61",
+      "source_location": "L116",
       "weight": 1.0
     },
     {
@@ -51598,7 +51694,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L188",
+      "source_location": "L190",
       "weight": 1.0
     },
     {
@@ -51609,7 +51705,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L204",
+      "source_location": "L206",
       "weight": 1.0
     },
     {
@@ -51620,7 +51716,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L215",
+      "source_location": "L217",
       "weight": 1.0
     },
     {
@@ -55475,17 +55571,6 @@
     },
     {
       "source": "src_components_pagination",
-      "target": "src_components_pagination_pagination",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/components/Pagination.tsx",
-      "source_location": "L146",
-      "weight": 1.0
-    },
-    {
-      "source": "src_components_pagination",
       "target": "src_components_pagination_formatsize",
       "relation": "contains",
       "_origin": "ast",
@@ -55497,13 +55582,24 @@
     },
     {
       "source": "src_components_pagination",
-      "target": "src_components_pagination_pagesizemenu",
+      "target": "src_components_pagination_pagination",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/Pagination.tsx",
-      "source_location": "L25",
+      "source_location": "L201",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_pagination",
+      "target": "src_components_pagination_pagejump",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/Pagination.tsx",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -55530,6 +55626,17 @@
     },
     {
       "source": "src_components_pagination",
+      "target": "src_components_pagination_pagesizemenu",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/Pagination.tsx",
+      "source_location": "L80",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_pagination",
       "target": "src_components_pagination_all_options",
       "relation": "contains",
       "_origin": "ast",
@@ -55547,7 +55654,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/Pagination.tsx",
-      "source_location": "L67",
+      "source_location": "L122",
       "weight": 1.0
     },
     {
@@ -55558,7 +55665,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/Pagination.tsx",
-      "source_location": "L75",
+      "source_location": "L130",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_pagination_test",
+      "target": "src_components_pagination_test_setupjump",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/Pagination.test.tsx",
+      "source_location": "L126",
       "weight": 1.0
     },
     {
@@ -64829,5 +64947,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "a25f95b0144d7a7125433cee92af51d5d7bb680b"
+  "built_at_commit": "1842e5d24df61ddd5ce304b9b0e198bc28de088b"
 }

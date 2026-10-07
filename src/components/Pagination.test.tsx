@@ -121,3 +121,77 @@ describe("Pagination show-all cap", () => {
     expect(onPageSize).toHaveBeenCalledWith(10000);
   });
 });
+
+describe("Pagination page jump", () => {
+  function setupJump(page = 0) {
+    const onPage = vi.fn();
+    render(
+      <Pagination
+        page={page}
+        pageCount={3}
+        pageSize={100}
+        total={250}
+        onPage={onPage}
+        onPageSize={() => {}}
+      />,
+    );
+    return { onPage };
+  }
+
+  it("should_show_current_page_and_jump_on_enter", async () => {
+    const user = userEvent.setup();
+    const { onPage } = setupJump();
+    const field = screen.getByRole("spinbutton", { name: "Go to page" });
+    expect(field).toHaveValue("1");
+    await user.clear(field);
+    await user.type(field, "3");
+    await user.keyboard("{Enter}");
+    expect(onPage).toHaveBeenCalledWith(2);
+  });
+
+  it("should_clamp_out_of_range_pages", async () => {
+    const user = userEvent.setup();
+    const { onPage } = setupJump();
+    const field = screen.getByRole("spinbutton", { name: "Go to page" });
+    await user.clear(field);
+    await user.type(field, "99");
+    await user.keyboard("{Enter}");
+    expect(onPage).toHaveBeenCalledWith(2);
+  });
+
+  it("should_ignore_non_numeric_input", async () => {
+    const user = userEvent.setup();
+    const { onPage } = setupJump();
+    const field = screen.getByRole("spinbutton", { name: "Go to page" });
+    await user.clear(field);
+    await user.type(field, "abc");
+    await user.keyboard("{Enter}");
+    expect(onPage).not.toHaveBeenCalled();
+  });
+
+  it("should_revert_on_escape", async () => {
+    const user = userEvent.setup();
+    setupJump();
+    const field = screen.getByRole("spinbutton", { name: "Go to page" });
+    await user.clear(field);
+    await user.type(field, "2");
+    await user.keyboard("{Escape}");
+    expect(field).toHaveValue("1");
+  });
+
+  it("should_hide_the_jump_on_single_pages", () => {
+    render(
+      <Pagination
+        page={0}
+        pageCount={1}
+        pageSize="all"
+        total={250}
+        onPage={() => {}}
+        onPageSize={() => {}}
+      />,
+    );
+    expect(
+      screen.queryByRole("spinbutton", { name: "Go to page" }),
+    ).not.toBeInTheDocument();
+  });
+});

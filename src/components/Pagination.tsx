@@ -17,6 +17,61 @@ function formatSize(size: PageSize, allLabel: string): string {
   return size === "all" ? allLabel : formatCount(size);
 }
 
+/// Jump-to-page field: type a number, Enter jumps (clamped 1..pageCount),
+/// Escape/blur reverts without navigating. Hidden on single pages. Same
+/// h-7 inner shell as the size trigger so the row stays one height.
+function PageJump({
+  page,
+  pageCount,
+  onPage,
+}: {
+  page: number;
+  pageCount: number;
+  onPage: (p: number) => void;
+}) {
+  const { t } = useLanguage();
+  const [text, setText] = useState(String(page + 1));
+  useEffect(() => {
+    setText(String(page + 1));
+  }, [page]);
+  if (pageCount <= 1) return null;
+  function revert() {
+    setText(String(page + 1));
+  }
+  function commit() {
+    const n = Number.parseInt(text, 10);
+    if (Number.isInteger(n)) {
+      const clamped = Math.min(Math.max(n, 1), pageCount);
+      if (clamped - 1 !== page) onPage(clamped - 1);
+    }
+    revert();
+  }
+  return (
+    <input
+      type="text"
+      inputMode="numeric"
+      role="spinbutton"
+      aria-label={t("pagination.goToPage")}
+      aria-valuemin={1}
+      aria-valuemax={pageCount}
+      aria-valuenow={page + 1}
+      value={text}
+      onChange={(e) => setText(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          commit();
+        } else if (e.key === "Escape") {
+          revert();
+          e.currentTarget.blur();
+        }
+      }}
+      onBlur={revert}
+      className="h-7 w-14 rounded-[7px] bg-transparent px-1 text-center text-[var(--qz-muted)] tabular-nums outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+    />
+  );
+}
+
 /// Floating pagination controls: per-page selector, prev/next, page readout.
 /// Material shell matching the other footer controls.
 ///
@@ -196,6 +251,7 @@ export default function Pagination({
       >
         <ChevronRight size={16} aria-hidden />
       </button>
+      <PageJump page={page} pageCount={pageCount} onPage={onPage} />
       <span className="hidden pr-2 text-[var(--qz-muted)] tabular-nums min-[1100px]:inline">
         {formatCount(total)}
       </span>

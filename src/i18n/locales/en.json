@@ -71,6 +71,7 @@
   "pagination.rowsPerPage": "Rows per page",
   "pagination.prevPage": "Previous page",
   "pagination.nextPage": "Next page",
+  "pagination.goToPage": "Go to page",
   "pagination.all": "All",
 
   "theme.group": "Color theme",

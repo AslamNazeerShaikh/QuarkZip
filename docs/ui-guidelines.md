@@ -97,11 +97,13 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   skips the header block before the `----------` separator, so only real
   files/folders appear.
   reference empty state (16px icon + 14px gray text + 12px hint).
-- `Pagination` / `ThemeSwitch`: solid surface, 10px radius, card shadow,
+- `Pagination` / `ThemeSwitch`: material shells, 10px radius, card shadow,
   8px inner radii. Segmented behavior (sliding indicator) preserved.
   The page-size menu hugs its trigger (`left-0`, `w-max min-w-full`, 8px
   gap) with option text insets matching the trigger (`px-2`), so list
-  edges and text align with the control below. Edge-anchored menus open
+  edges and text align with the control below. A jump-to-page field
+  (`spinbutton`, same h-7 inner shell) sits past Next: Enter jumps
+  (clamped 1..N), Escape/blur reverts, hidden on single pages. Edge-anchored menus open
   inward instead (`LanguageSwitch` uses `right-0` at the window's right
   edge) so floating lists never touch the sidewalls. The footer `About` and
   `LanguageSwitch` controls reuse the same shell as icon-only buttons

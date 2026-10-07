@@ -1,5 +1,6 @@
 {
   "0": "scripts",
+  "1": "PageJump",
   "2": "opencode.json",
   "3": "package.json",
   "4": "archive.rs",
@@ -72,7 +73,7 @@
   "71": "agents",
   "72": "vite.config.ts",
   "74": "lint-staged",
-  "75": "TitleBar",
+  "75": "TitleBar.tsx",
   "76": "bridge.cpp",
   "77": "sevenzip.rs",
   "78": "pull-hig.mjs",
