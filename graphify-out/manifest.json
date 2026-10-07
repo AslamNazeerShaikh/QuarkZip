@@ -30,15 +30,15 @@
     "semantic_hash": ""
   },
   "src-tauri/Cargo.toml": {
-    "mtime": 1791215388.0926647,
-    "seen": 1791216841.093835,
-    "ast_hash": "1e041a5e41bc04a548a4a9697ddee4bf",
+    "mtime": 1791311423.8794744,
+    "seen": 1791314548.1204438,
+    "ast_hash": "6407f12204c35a10cec3d22a3fcc19d9",
     "semantic_hash": ""
   },
   "src-tauri/build.rs": {
-    "mtime": 1791055299.318212,
-    "seen": 1791140710.614897,
-    "ast_hash": "5157fd52b9e64c0557e8b9f8c0c1b9a5",
+    "mtime": 1791314494.9101346,
+    "seen": 1791314548.1204438,
+    "ast_hash": "0612b1ded55937379bb0459281446c69",
     "semantic_hash": ""
   },
   "src-tauri/capabilities/default.json": {
@@ -48,9 +48,9 @@
     "semantic_hash": ""
   },
   "src-tauri/src/lib.rs": {
-    "mtime": 1791303434.3331244,
-    "seen": 1791303670.4556448,
-    "ast_hash": "85b5cd9bfd9509570f145c9f42a14e90",
+    "mtime": 1791314494.915607,
+    "seen": 1791314548.120447,
+    "ast_hash": "b5b4e185d83fe69f0649223ff4f1bacd",
     "semantic_hash": ""
   },
   "src-tauri/src/main.rs": {
@@ -66,9 +66,9 @@
     "semantic_hash": ""
   },
   "src/App.tsx": {
-    "mtime": 1791303644.1560595,
-    "seen": 1791303670.455647,
-    "ast_hash": "43c7105412ca6b1589553c101286d14b",
+    "mtime": 1791314104.457714,
+    "seen": 1791314548.12045,
+    "ast_hash": "f7e2bf97ebeef9aca40e8521d85dab7a",
     "semantic_hash": ""
   },
   "src/main.tsx": {
@@ -480,9 +480,9 @@
     "semantic_hash": ""
   },
   "src-tauri/src/archive.rs": {
-    "mtime": 1791303330.5328588,
-    "seen": 1791303670.455644,
-    "ast_hash": "6b7766f5808a2f49b44d962515446717",
+    "mtime": 1791314494.9137414,
+    "seen": 1791314548.120446,
+    "ast_hash": "0ad1e7232f2d78696dc529f2802b02da",
     "semantic_hash": ""
   },
   "src-tauri/tests/list_archive_e2e.rs": {
@@ -1074,9 +1074,9 @@
     "semantic_hash": ""
   },
   "src/components/LoadDialog.tsx": {
-    "mtime": 1791303644.219487,
-    "seen": 1791303670.455656,
-    "ast_hash": "c645a651c1a5d6862f23327740770952",
+    "mtime": 1791314112.6805253,
+    "seen": 1791314548.120457,
+    "ast_hash": "15a84d1facab72e0f7af2a0e9f3d0aab",
     "semantic_hash": ""
   },
   "docs/macpacker-reference.md": {
@@ -1089,6 +1089,42 @@
     "mtime": 1791310128.629585,
     "seen": 1791310131.140513,
     "ast_hash": "0f5c62415de2b3c674daa1df1ba61b34",
+    "semantic_hash": ""
+  },
+  "scripts/fetch-7z-src.sh": {
+    "mtime": 1791310948.7205253,
+    "seen": 1791314548.1204422,
+    "ast_hash": "5637bbfb11a6fa13ebfd7ba8a0ff98bc",
+    "semantic_hash": ""
+  },
+  "src-tauri/ffi/bridge.cpp": {
+    "mtime": 1791314445.434015,
+    "seen": 1791314548.120445,
+    "ast_hash": "23d4fcbd08a26e9f3e3f82cfafb4f914",
+    "semantic_hash": ""
+  },
+  "src-tauri/ffi/bridge.h": {
+    "mtime": 1791313724.0961208,
+    "seen": 1791314548.120446,
+    "ast_hash": "e402856159a0fc4ae5971eebe03079f4",
+    "semantic_hash": ""
+  },
+  "src-tauri/ffi/guids.cpp": {
+    "mtime": 1791312302.689998,
+    "seen": 1791314548.120446,
+    "ast_hash": "a4f442a9f2676ec49d0ccab46abedc6e",
+    "semantic_hash": ""
+  },
+  "src-tauri/src/sevenzip.rs": {
+    "mtime": 1791314494.9161785,
+    "seen": 1791314548.120448,
+    "ast_hash": "e6f9bde91c53c4654b7d710710ecb29b",
+    "semantic_hash": ""
+  },
+  "src-tauri/tests/zz_ffi_list.rs": {
+    "mtime": 1791314494.9177241,
+    "seen": 1791314548.120449,
+    "ast_hash": "996bea9d5e2a3220da1a2e388ebb9b6d",
     "semantic_hash": ""
   }
 }

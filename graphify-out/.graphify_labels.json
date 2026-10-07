@@ -35,7 +35,7 @@
   "33": "graphify.js",
   "34": "graphify reference: GitHub clone and cross-repo merge",
   "35": "graphify reference: transcribe video and audio",
-  "36": "build.rs",
+  "36": "collect_sources",
   "37": "path.ts",
   "38": "extraction-spec.md",
   "39": "install-dev-desktop-entry.sh",
@@ -74,5 +74,16 @@
   "72": "vite.config.ts",
   "73": "useTheme.ts",
   "74": "lint-staged",
-  "75": "TitleBar"
+  "75": "TitleBar",
+  "76": "bridge.cpp",
+  "77": "sevenzip.rs",
+  "78": "ArchiveOverview.tsx",
+  "79": "ArchiveTable.tsx",
+  "80": "vitest",
+  "81": "useLanguage",
+  "82": "ChecksumDialog.tsx",
+  "83": "Pagination.tsx",
+  "84": "appInfo.ts",
+  "85": "fetch-7z-src.sh",
+  "86": "guids.cpp"
 }
