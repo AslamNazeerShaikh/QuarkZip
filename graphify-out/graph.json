@@ -1548,7 +1548,7 @@
       "file_type": "code",
       "norm_label": "togglecollapsed()",
       "source_file": "src/components/ArchiveOverview.tsx",
-      "source_location": "L106"
+      "source_location": "L105"
     },
     {
       "id": "src_components_archiveoverview_formatepoch",
@@ -11686,7 +11686,7 @@
       "node_kind": "heading",
       "norm_label": "deliberate deviations (with rationale)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L266"
+      "source_location": "L265"
     },
     {
       "id": "docs_ui_guidelines_design_direction",
@@ -11710,7 +11710,7 @@
       "node_kind": "heading",
       "norm_label": "interaction / states",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L255"
+      "source_location": "L254"
     },
     {
       "id": "docs_ui_guidelines_layout",
@@ -11722,7 +11722,7 @@
       "node_kind": "heading",
       "norm_label": "layout",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L239"
+      "source_location": "L238"
     },
     {
       "id": "docs_ui_guidelines_quarkzip_ui_guidelines",
@@ -29006,7 +29006,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/ArchiveOverview.tsx",
-      "source_location": "L226",
+      "source_location": "L241",
       "weight": 1.0
     },
     {
@@ -29018,7 +29018,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/ArchiveOverview.tsx",
-      "source_location": "L248",
+      "source_location": "L263",
       "weight": 1.0
     },
     {
@@ -29030,7 +29030,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/ArchiveOverview.tsx",
-      "source_location": "L264",
+      "source_location": "L279",
       "weight": 1.0
     },
     {
@@ -52582,7 +52582,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L239",
+      "source_location": "L238",
       "weight": 1.0
     },
     {
@@ -52604,7 +52604,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L255",
+      "source_location": "L254",
       "weight": 1.0
     },
     {
@@ -52615,7 +52615,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L266",
+      "source_location": "L265",
       "weight": 1.0
     },
     {
@@ -56091,7 +56091,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/ArchiveOverview.tsx",
-      "source_location": "L106",
+      "source_location": "L105",
       "weight": 1.0
     },
     {
@@ -66077,5 +66077,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "2c3d2803189d8bbef298abd69a74aabd62d0f799"
+  "built_at_commit": "acfd97b72f034c5cd364a17f91ad1ad148bb72d4"
 }

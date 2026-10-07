@@ -1,7 +1,7 @@
 # Graph Report - QuarkZip  (2026-10-08)
 
 ## Corpus Check
-- 271 files · ~405,152 words
+- 271 files · ~405,254 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2c3d2803`
+- Built from commit: `acfd97b7`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

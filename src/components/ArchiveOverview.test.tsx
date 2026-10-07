@@ -67,6 +67,7 @@ describe("ArchiveOverview", () => {
         info={INFO}
         loading={false}
         onOpen={() => {}}
+        utilityControls={<button>Theme</button>}
       />,
     );
     const toggle = screen.getByRole("button", { name: "Collapse details" });
@@ -189,7 +190,7 @@ describe("ArchiveOverview", () => {
     expect(row.parentElement?.firstElementChild).toBe(row);
   });
 
-  it("should_shift_controls_left_on_collapse_and_back_on_expand", async () => {
+  it("should_keep_row_centered_on_collapse_and_expand", async () => {
     const user = userEvent.setup();
     render(
       <ArchiveOverview
@@ -224,7 +225,35 @@ describe("ArchiveOverview", () => {
         utilityControls={<button>Theme</button>}
       />,
     );
-    expect(screen.getByTestId("action-row")).toHaveClass("justify-start");
+    expect(screen.getByTestId("action-row")).toHaveClass("justify-center");
+  });
+
+  it("should_order_icon_checks_between_pager_and_theme_with_about_last", () => {
+    render(
+      <ArchiveOverview
+        archive="/tmp/qz-sample.7z"
+        info={INFO}
+        loading={false}
+        onOpen={() => {}}
+        middleControls={<button>Pager</button>}
+        utilityControls={
+          <>
+            <button>Theme</button>
+            <button>About</button>
+          </>
+        }
+      />,
+    );
+    // Icon-only squares carrying the accessible names.
+    expect(screen.getByRole("button", { name: "Test" })).toHaveClass("w-9");
+    expect(screen.getByRole("button", { name: "Checksum" })).toHaveClass("w-9");
+    // Cluster order: Pager, Test, Checksum, Theme, About.
+    const html = screen.getByTestId("card-controls").innerHTML;
+    const order = ["Pager", '"Test"', '"Checksum"', "Theme", "About"].map((s) =>
+      html.indexOf(s),
+    );
+    expect(order.every((i) => i >= 0)).toBe(true);
+    expect([...order].sort((a, b) => a - b)).toEqual(order);
   });
 
   it("should_ride_controls_in_the_action_row_when_open", () => {

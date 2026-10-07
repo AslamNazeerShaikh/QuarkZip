@@ -100,30 +100,45 @@ export default function ArchiveOverview({
   const toggleLabel = collapsed ? t("overview.expand") : t("overview.collapse");
   const extraLabel = showExtra ? t("overview.less") : t("overview.more");
   // No engine extras → no toggle: a disabled dead button helps nobody.
-  // The cell unmounts (like the collapsed state), so the middle cluster
-  // shifts to the extreme left.
+  // The cell unmounts (like the collapsed state).
   const hasExtras = info !== null && Object.keys(info.extra).length > 0;
   function toggleCollapsed() {
     if (collapsed) setShowExtra(false);
     setCollapsed((c) => !c);
   }
-  const actionButtons = (
-    <div className="flex flex-wrap justify-end gap-2">
-      <Button variant="secondary" size="bar" onClick={onTest} className="w-32">
+  const testLabel = t("overview.test");
+  const checksumLabel = t("overview.checksum");
+  // Integrity checks ride inside the controls cluster (icon-only squares,
+  // like the collapse chevron) — Test between Pagination and Theme,
+  // Checksum between Test and Theme — with About last. Only the collapse
+  // chevron keeps the row's end.
+  const clusterChecks = (
+    <>
+      <Button
+        variant="secondary"
+        size="bar"
+        onClick={onTest}
+        aria-label={testLabel}
+        title={testLabel}
+        className="w-9 px-0"
+      >
         <ShieldCheck size={14} aria-hidden />
-        {t("overview.test")}
       </Button>
       <Button
         variant="secondary"
         size="bar"
         onClick={onChecksum}
-        className="w-32"
+        aria-label={checksumLabel}
+        title={checksumLabel}
+        className="w-9 px-0"
       >
         <Hash size={14} aria-hidden />
-        {t("overview.checksum")}
       </Button>
-      {/* Same secondary/bar shell as the row (h-9, 9px radius, 1px
-        border); square icon-only, glyph flips with the state. */}
+    </>
+  );
+  const collapseControl = (
+    <div className="flex flex-wrap justify-end gap-2">
+      {/* Square icon-only, glyph flips with the state. */}
       <Button
         variant="secondary"
         size="bar"
@@ -333,21 +348,17 @@ export default function ArchiveOverview({
           )}
           {/* Integrity actions need only the open archive, not the parsed
           summary — pinned to the card bottom, available collapsed,
-          loading, or when details are unavailable. The More toggle sits
-          left in the same row (same shell as Test/Checksum); it hides
-          with the collapsed card and never auto-reopens the extras.
-          Pagination + utilities ride next (after More), Test/Checksum +
-          collapse after them. The row is left-packed (`justify-start`):
-          `justify-between` spreads a wrapped line apart, stranding a dead
-          gap between More and the middle cluster while the actions drop
-          to line two (seen on the 10M zip) — packing keeps every line
-          gap-free at any window width without resizing anything.
-          Collapsed (or no extras), the More cell unmounts entirely (not
-          an empty spacer) so the middle cluster shifts to the extreme
-          left; expanding puts it back. */}
+          loading, or when details are unavailable. One centered row:
+          More, then the controls cluster (Pagination, icon-only Test,
+          icon-only Checksum, Theme, Language, About last), then the
+          collapse chevron. The More cell unmounts when collapsed or when
+          no extras exist (never a dead button, never an empty spacer).
+          The row is centered (`justify-center`): `justify-between` spread
+          a wrapped line apart, stranding a dead gap between More and the
+          cluster while the actions dropped below (seen on the 10M zip). */}
           <div
             data-testid="action-row"
-            className="flex flex-wrap items-center justify-start gap-x-2 gap-y-2 px-5 pt-4 pb-5"
+            className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 px-5 pt-4 pb-5"
           >
             {!collapsed && hasExtras && (
               <div>
@@ -368,13 +379,14 @@ export default function ArchiveOverview({
             {(middleControls || utilityControls) && (
               <div
                 data-testid="card-controls"
-                className="flex min-w-0 flex-wrap items-center gap-2"
+                className="flex min-w-0 flex-wrap items-center justify-center gap-2"
               >
                 {middleControls}
+                {clusterChecks}
                 {utilityControls}
               </div>
             )}
-            {actionButtons}
+            {collapseControl}
           </div>
         </div>
       )}

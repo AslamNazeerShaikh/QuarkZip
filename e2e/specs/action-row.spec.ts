@@ -1,6 +1,6 @@
-/// Narrow-window action row (800px): with extras behind More the row must
-/// wrap into packed lines — never strand a dead gap between More and the
-/// pagination cluster while the actions drop below.
+/// Narrow-window action row (800px): one centered line — More, the
+/// controls cluster (Pagination, icon-only Test/Checksum, Theme,
+/// Language, About last) and the collapse chevron pack with no dead gaps.
 import { addArchive, expect, openViaButton, test } from "../fixtures";
 
 test.use({ viewport: { width: 800, height: 675 } });
@@ -11,7 +11,7 @@ async function openWithExtras(
   app: Parameters<typeof openViaButton>[0],
 ): Promise<void> {
   // Multi-page (jump field out, wide readout): the row genuinely
-  // overflows at 800px, like the 10M archive in the report.
+  // overflowed at 800px, like the 10M archive in the report.
   await addArchive(app, PATH, {
     count: 250,
     info: {
@@ -40,20 +40,30 @@ async function openWithExtras(
   await expect(app.getByText("1 / 3")).toBeVisible();
 }
 
-test("more sits adjacent to the controls, actions pack below", async ({
-  app,
-}) => {
+test("centered single line with no dead gaps", async ({ app }) => {
   await openWithExtras(app);
-  await expect(app.getByRole("button", { name: "More" })).toBeVisible();
+  const row = app.getByTestId("action-row");
+  await expect(row).toHaveClass(/justify-center/);
   const more = await app.getByRole("button", { name: "More" }).boundingBox();
   const controls = await app.getByTestId("card-controls").boundingBox();
+  const rowBox = await row.boundingBox();
+  const collapse = await app
+    .getByRole("button", { name: "Collapse details" })
+    .boundingBox();
   expect(more).not.toBeNull();
   expect(controls).not.toBeNull();
-  // Same line, one gap apart (gap-x-2 = 8px + measurement slack) — the
-  // old `justify-between` left ~160px of dead air here.
+  expect(rowBox).not.toBeNull();
+  expect(collapse).not.toBeNull();
+  // More sits one gap from the cluster (the old `justify-between` left
+  // ~160px of dead air here).
   expect(controls!.x - (more!.x + more!.width)).toBeLessThan(24);
-  expect(Math.abs(controls!.y - more!.y)).toBeLessThan(4);
-  // The integrity actions wrap to a packed second line, left-aligned.
-  const testBtn = await app.getByRole("button", { name: "Test" }).boundingBox();
-  expect(testBtn!.y).toBeGreaterThan(more!.y + more!.height);
+  // Everything shares one line now that Test/Checksum are icon-only.
+  for (const box of [controls!, collapse!]) {
+    expect(Math.abs(box.y - more!.y)).toBeLessThan(4);
+  }
+  // The packed group is centered: symmetric inner padding (±32px slack).
+  const leftPad = more!.x - rowBox!.x - 20;
+  const rightPad =
+    rowBox!.x + rowBox!.width - 20 - (collapse!.x + collapse!.width);
+  expect(Math.abs(leftPad - rightPad)).toBeLessThan(32);
 });

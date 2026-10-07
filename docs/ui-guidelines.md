@@ -213,13 +213,12 @@ all N instead?` with an `Extract All` confirm). Big centered icon, the
   collapsing hides the toggle, and re-expanding shows it without reshowing
   the extras.
   Below the details (always, once an archive is open —
-  even when the summary is unavailable) sits the integrity action row:
-  `More`/`Less` left, the `Pagination` + `ThemeSwitch` + `LanguageSwitch` +
-  `About` cluster next, then equal-width (`w-32`) secondary `bar` `Test`
-  (`test_archive`) and `Checksum` (`checksum_file`) buttons plus the
-  collapse chevron, opening their dialogs. The row is left-packed
-  (`justify-start`, wrapping to packed lines — `between` stranded a dead
-  gap on wrapped lines); nothing in it ever resizes for width. Collapsing unmounts the
+  even when the summary is unavailable) sits one centered integrity
+  action row: `More`/`Less`, then the controls cluster (`Pagination`,
+  icon-only `Test`, icon-only `Checksum`, `ThemeSwitch`, `LanguageSwitch`,
+  `About` last), then the collapse chevron. `More` renders only when
+  extras exist and unmounts collapsed (never a dead button or spacer);
+  the row is `justify-center`, wrapping to packed centered lines. Collapsing unmounts the
   More cell (no empty spacer), so the cluster shifts to the extreme left;
   expanding puts it back. With no archive the card
   shows the centered empty state with the Theme/Language/About utilities

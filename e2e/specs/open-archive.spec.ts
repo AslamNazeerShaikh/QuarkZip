@@ -125,20 +125,21 @@ test("open new switches archives", async ({ app }) => {
   await expect(app.locator("header")).toContainText('"Path: /tmp/b.zip"');
 });
 
-test("collapsing the card shifts controls left, expanding restores", async ({
+test("collapsing the card keeps the row centered, expanding restores", async ({
   app,
 }) => {
   await addArchive(app, PATH, { count: 3 });
   await openViaButton(app, PATH);
   const row = app.getByTestId("card-controls");
   await expect(row).toBeVisible();
+  await expect(app.getByTestId("action-row")).toHaveClass(/justify-center/);
   // Expanded: More owns the row's left end.
   expect(
     await row.evaluate((el) => el.parentElement?.firstElementChild !== el),
   ).toBe(true);
   await app.getByRole("button", { name: "Collapse details" }).click();
   await expect(app.getByRole("button", { name: "More" })).not.toBeVisible();
-  // Collapsed: the More cell unmounts, controls take the left end.
+  // Collapsed: the More cell unmounts, the row stays centered.
   expect(
     await row.evaluate((el) => el.parentElement?.firstElementChild === el),
   ).toBe(true);
@@ -147,9 +148,7 @@ test("collapsing the card shifts controls left, expanding restores", async ({
   await expect(app.getByRole("button", { name: "More" })).toBeVisible();
 });
 
-test("more hides with no extras, controls take the left end", async ({
-  app,
-}) => {
+test("more hides with no extras, row stays centered", async ({ app }) => {
   await addArchive(app, PATH, { count: 3 });
   await openViaButton(app, PATH);
   // Default stub info carries no extras — no dead toggle.
