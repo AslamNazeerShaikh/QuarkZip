@@ -15,11 +15,13 @@ spacious. System neutrals, accent-driven interaction (blue default,
 typography, rounded controls, single thin outline icon set (Lucide,
 16–20px, quiet gray). Full brief: `docs/macos-native.md`.
 
-Explicit non-goals: liquid glass / glassmorphism anywhere (rule 6 in
-color-system.md), Material/Bootstrap/admin-dashboard look, gradients,
-neon, heavy shadows, 2px dark borders, vertical table gridlines,
-bold-everything type, dark-mode-by-default (dark exists via the theme
-switch but System is home).
+Explicit non-goals: liquid glass anywhere, CSS-imitated glass anywhere
+(rule 6 in color-system.md), Material/Bootstrap/admin-dashboard look,
+gradients, neon, heavy shadows, 2px dark borders, vertical table
+gridlines, bold-everything type, dark-mode-by-default (dark exists via
+the theme switch but System is home). The frosted window background is
+a native standard material (`NSVisualEffectView`), not glassmorphism —
+see `docs/macos-native.md` §8.
 
 ## Tokens
 

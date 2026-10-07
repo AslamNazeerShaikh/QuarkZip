@@ -341,11 +341,11 @@ export default function App() {
   return (
     <div
       data-testid="app-root"
-      className={`h-screen w-screen ${isMac ? "bg-[var(--qz-bg)]" : "bg-transparent"} ${maximized || isMac ? "" : "p-5"}`}
+      className={`h-screen w-screen ${isMac ? "bg-[var(--qz-frame-bg)]" : "bg-transparent"} ${maximized || isMac ? "" : "p-5"}`}
     >
       <div
         data-testid="app-frame"
-        className={`flex h-full flex-col overflow-hidden bg-[var(--qz-bg)] text-[var(--qz-text)] ${
+        className={`flex h-full flex-col overflow-hidden ${isMac ? "bg-[var(--qz-frame-bg)]" : "bg-[var(--qz-bg)]"} text-[var(--qz-text)] ${
           maximized || isMac
             ? "rounded-none border-0 shadow-none"
             : "rounded-[20px] border border-[var(--qz-window-border)] shadow-[var(--qz-shadow-window)]"

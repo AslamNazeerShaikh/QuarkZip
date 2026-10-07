@@ -30,9 +30,9 @@
     "semantic_hash": ""
   },
   "src-tauri/Cargo.toml": {
-    "mtime": 1791311423.8794744,
-    "seen": 1791314548.1204438,
-    "ast_hash": "6407f12204c35a10cec3d22a3fcc19d9",
+    "mtime": 1791366786.0784373,
+    "seen": 1791367140.631592,
+    "ast_hash": "ff08a35fb0a5aa900de70a98d642832c",
     "semantic_hash": ""
   },
   "src-tauri/build.rs": {
@@ -48,9 +48,9 @@
     "semantic_hash": ""
   },
   "src-tauri/src/lib.rs": {
-    "mtime": 1791314494.915607,
-    "seen": 1791314548.120447,
-    "ast_hash": "b5b4e185d83fe69f0649223ff4f1bacd",
+    "mtime": 1791366786.0785673,
+    "seen": 1791367140.631596,
+    "ast_hash": "64db0cddfc0f33c595a75be4a05cca08",
     "semantic_hash": ""
   },
   "src-tauri/src/main.rs": {
@@ -60,15 +60,15 @@
     "semantic_hash": ""
   },
   "src-tauri/tauri.conf.json": {
-    "mtime": 1791366319.2515883,
-    "seen": 1791366419.859702,
+    "mtime": 1791366699.1769547,
+    "seen": 1791367140.631597,
     "ast_hash": "d572cfd2fb2b0454442e914767c7cd0b",
     "semantic_hash": ""
   },
   "src/App.tsx": {
-    "mtime": 1791363005.0088816,
-    "seen": 1791363209.011153,
-    "ast_hash": "f6c5a210bfb487ace47a708e551e1afe",
+    "mtime": 1791366786.0786958,
+    "seen": 1791367140.6315992,
+    "ast_hash": "416956462f4deb8baca9b0bfed0db7b9",
     "semantic_hash": ""
   },
   "src/main.tsx": {
@@ -552,15 +552,15 @@
     "semantic_hash": ""
   },
   "docs/color-system.md": {
-    "mtime": 1791366397.3076165,
-    "seen": 1791366419.859797,
-    "ast_hash": "c64ac9f730504a4f2877438f7d0691cf",
+    "mtime": 1791366805.1640236,
+    "seen": 1791367140.631687,
+    "ast_hash": "997b889befacef20b31eb0b34cf0294c",
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791366401.9998188,
-    "seen": 1791366419.859798,
-    "ast_hash": "e6a8b6ebe8446d11ae9afe0988f3ba1b",
+    "mtime": 1791366786.0780714,
+    "seen": 1791367140.6316879,
+    "ast_hash": "a140d2c6e11119d7fcb3aa77840fc3b6",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -1938,9 +1938,9 @@
     "semantic_hash": ""
   },
   "docs/macos-native.md": {
-    "mtime": 1791363186.8274858,
-    "seen": 1791363209.011251,
-    "ast_hash": "38d2866904917172e2b20c432342b9ab",
+    "mtime": 1791366786.0779452,
+    "seen": 1791367140.6316879,
+    "ast_hash": "eb69537298d2b7350b980252d7a764b3",
     "semantic_hash": ""
   }
 }

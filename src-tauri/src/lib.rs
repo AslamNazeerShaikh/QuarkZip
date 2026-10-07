@@ -467,6 +467,20 @@ pub fn run() {
             if let Some(window) = app.get_webview_window("main") {
                 #[cfg(target_os = "macos")]
                 {
+                    // Frosted window background: native standard material
+                    // (`NSVisualEffectView` WindowBackground) behind the
+                    // webview; the CSS `--qz-frame-bg` tint (50%) lays over
+                    // it. Standard material only — never Liquid Glass
+                    // (see docs/macos-native.md). Best-effort: the CSS tint
+                    // still renders without the blur if this fails.
+                    if let Err(e) = window_vibrancy::apply_vibrancy(
+                        &window,
+                        window_vibrancy::NSVisualEffectMaterial::WindowBackground,
+                        None,
+                        None,
+                    ) {
+                        eprintln!("[quarkzip] vibrancy unavailable: {e:?}");
+                    }
                     let _ = window.set_decorations(true);
                     let deferred = window.clone();
                     std::thread::spawn(move || {
