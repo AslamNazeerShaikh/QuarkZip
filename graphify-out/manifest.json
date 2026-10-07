@@ -432,15 +432,15 @@
     "semantic_hash": ""
   },
   "e2e/specs/open-archive.spec.ts": {
-    "mtime": 1791293985.8352787,
-    "seen": 1791294105.802342,
-    "ast_hash": "3507c7580c677baf5a73cc6b789b4749",
+    "mtime": 1791389214.6951194,
+    "seen": 1791389445.035153,
+    "ast_hash": "4cd420f9f7c868cf0e79f5a5a4cb1a9c",
     "semantic_hash": ""
   },
   "e2e/specs/pagination.spec.ts": {
-    "mtime": 1791388338.3359218,
-    "seen": 1791388392.021194,
-    "ast_hash": "836de178daccdf860f3d1ee269d91afa",
+    "mtime": 1791389435.4445548,
+    "seen": 1791389445.0351539,
+    "ast_hash": "33615f65f64b796b8edbe6e459140546",
     "semantic_hash": ""
   },
   "e2e/specs/responsive.spec.ts": {
@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791388367.9843094,
-    "seen": 1791388392.0213199,
-    "ast_hash": "be8bba5cde103183d21c71f53cb88f29",
+    "mtime": 1791389424.57167,
+    "seen": 1791389445.035265,
+    "ast_hash": "cbc27329f12705d2b440a4a8cdbc3cc0",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -810,15 +810,15 @@
     "semantic_hash": ""
   },
   "src/i18n/locales/en.json": {
-    "mtime": 1791388313.3328724,
-    "seen": 1791388392.021224,
-    "ast_hash": "68d90fba64f22c3b41f8e081f4ce6f6d",
+    "mtime": 1791389264.80396,
+    "seen": 1791389445.035181,
+    "ast_hash": "a7721b2145f0a75e75b025d4419bca4d",
     "semantic_hash": ""
   },
   "src/i18n/locales/hi.json": {
-    "mtime": 1791388313.3328726,
-    "seen": 1791388392.021225,
-    "ast_hash": "1d7556911fffe0176a0604e29e10912c",
+    "mtime": 1791389264.804667,
+    "seen": 1791389445.035182,
+    "ast_hash": "a4f35c9c8cc9e4000856557115a6df12",
     "semantic_hash": ""
   },
   "docs/akizip-reference.md": {
@@ -876,15 +876,15 @@
     "semantic_hash": ""
   },
   "src/components/ArchiveOverview.test.tsx": {
-    "mtime": 1791384922.9742692,
-    "seen": 1791385051.37996,
-    "ast_hash": "94163512142b745e7fa81767f926c53c",
+    "mtime": 1791389435.8253503,
+    "seen": 1791389445.035168,
+    "ast_hash": "6f6015b3cfdd80357427fc3e31a81132",
     "semantic_hash": ""
   },
   "src/components/ArchiveOverview.tsx": {
-    "mtime": 1791385047.5708344,
-    "seen": 1791385051.379961,
-    "ast_hash": "814083818dccce73a41f203ba7df0aa1",
+    "mtime": 1791389204.2298312,
+    "seen": 1791389445.0351691,
+    "ast_hash": "6b169e1f7f525a5b50047fbf4fd1d407",
     "semantic_hash": ""
   },
   "src/components/ArchiveTable.test.tsx": {
@@ -948,15 +948,15 @@
     "semantic_hash": ""
   },
   "src/components/Pagination.test.tsx": {
-    "mtime": 1791388321.6336567,
-    "seen": 1791388392.021215,
-    "ast_hash": "72eb01cf0d0d2ed23e0c9d3660b6510f",
+    "mtime": 1791389365.8831105,
+    "seen": 1791389445.035174,
+    "ast_hash": "9a8d3196daea0ce116de4d84ed3c4926",
     "semantic_hash": ""
   },
   "src/components/Pagination.tsx": {
-    "mtime": 1791388301.8399858,
-    "seen": 1791388392.021216,
-    "ast_hash": "19844b3ab7edcd20f457af0c0eb6bf14",
+    "mtime": 1791389435.8898635,
+    "seen": 1791389445.035174,
+    "ast_hash": "caeaba875d4574a13d16630d5bd3ebae",
     "semantic_hash": ""
   },
   "src/components/PasswordDialog.test.tsx": {

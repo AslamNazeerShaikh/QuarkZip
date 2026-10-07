@@ -267,25 +267,6 @@ export default function ArchiveOverview({
                                 })
                               : "—"}
                           </div>
-                          {/* Track always reserves its row so the grid never
-                            shifts height between archives with and without
-                            a measurable ratio. */}
-                          <div
-                            className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[var(--qz-surface-2)]"
-                            role="progressbar"
-                            aria-valuenow={Math.round(
-                              info.compression_ratio * 100,
-                            )}
-                            aria-valuemin={0}
-                            aria-valuemax={100}
-                          >
-                            <div
-                              className="h-full rounded-full bg-[var(--qz-primary)]"
-                              style={{
-                                width: `${info.total_unpacked > 0 ? Math.min(100, info.compression_ratio * 100) : 0}%`,
-                              }}
-                            />
-                          </div>
                         </div>
                         <Meta
                           label={t("overview.meta.algorithms")}

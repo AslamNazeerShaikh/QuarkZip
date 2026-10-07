@@ -1,7 +1,14 @@
-import { Check, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  TriangleAlert,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { formatCount } from "../lib/format";
 import { useLanguage } from "../i18n/LanguageContext";
+import { Button } from "./ui/button";
 
 export const PAGE_SIZES = [100, 1000, 5000, 10000] as const;
 export type PageSize = (typeof PAGE_SIZES)[number] | "all";
@@ -20,6 +27,11 @@ function formatSize(size: PageSize, allLabel: string): string {
 /// Jump-to-page field: type a number, Enter jumps (clamped 1..pageCount),
 /// Escape/blur reverts without navigating. Hidden on single pages. Same
 /// h-7 inner shell as the size trigger so the row stays one height.
+///
+/// Out-of-range or non-numeric input does NOT jump directly: a confirm
+/// popup names the valid range and offers Jump (same clamp logic) or
+/// Cancel (revert to the current page) — direct jumps stay silent only
+/// for clean in-range numbers.
 function PageJump({
   page,
   pageCount,
@@ -31,44 +43,121 @@ function PageJump({
 }) {
   const { t } = useLanguage();
   const [text, setText] = useState(String(page + 1));
+  // Wrong input awaiting confirmation: raw text plus its clamped target.
+  const [pending, setPending] = useState<{
+    raw: string;
+    target: number;
+  } | null>(null);
   useEffect(() => {
     setText(String(page + 1));
   }, [page]);
+  useEffect(() => {
+    if (!pending) return;
+    const onKey = (e: KeyboardEvent) => {
+      // Escape cancels the whole attempt: popup closes, field reverts.
+      if (e.key === "Escape") cancelJump();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [pending]);
   if (pageCount <= 1) return null;
   function revert() {
     setText(String(page + 1));
   }
+  function jumpTo(n: number) {
+    if (n - 1 !== page) onPage(n - 1);
+    revert();
+  }
   function commit() {
-    const n = Number.parseInt(text, 10);
-    if (Number.isInteger(n)) {
-      const clamped = Math.min(Math.max(n, 1), pageCount);
-      if (clamped - 1 !== page) onPage(clamped - 1);
+    const trimmed = text.trim();
+    const n = /^\d+$/.test(trimmed) ? Number.parseInt(trimmed, 10) : NaN;
+    if (Number.isInteger(n) && n >= 1 && n <= pageCount) {
+      jumpTo(n);
+      return;
     }
+    // Weird input: confirm, showing where Jump would land (same clamp).
+    const target = Number.isInteger(n)
+      ? Math.min(Math.max(n, 1), pageCount)
+      : 1;
+    setPending({ raw: text, target });
+  }
+  function confirmJump() {
+    if (!pending) return;
+    setPending(null);
+    jumpTo(pending.target);
+  }
+  function cancelJump() {
+    setPending(null);
     revert();
   }
   return (
-    <input
-      type="text"
-      inputMode="numeric"
-      role="spinbutton"
-      aria-label={t("pagination.goToPage")}
-      aria-valuemin={1}
-      aria-valuemax={pageCount}
-      aria-valuenow={page + 1}
-      value={text}
-      onChange={(e) => setText(e.target.value)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          commit();
-        } else if (e.key === "Escape") {
-          revert();
-          e.currentTarget.blur();
-        }
-      }}
-      onBlur={revert}
-      className="h-7 w-14 rounded-[7px] bg-transparent px-1 text-center text-[var(--qz-muted)] tabular-nums outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
-    />
+    <>
+      <input
+        type="text"
+        inputMode="numeric"
+        role="spinbutton"
+        aria-label={t("pagination.goToPage")}
+        aria-valuemin={1}
+        aria-valuemax={pageCount}
+        aria-valuenow={page + 1}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            commit();
+          } else if (e.key === "Escape") {
+            revert();
+            e.currentTarget.blur();
+          }
+        }}
+        onBlur={revert}
+        className="h-7 w-14 rounded-[7px] bg-transparent px-1 text-center text-[var(--qz-muted)] tabular-nums outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+      />
+      {pending && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="page-jump-title"
+        >
+          <div
+            className="animate-qz-fade absolute inset-0 bg-black/25"
+            aria-hidden
+          />
+          <div className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-warning-soft)]">
+              <TriangleAlert
+                size={24}
+                aria-hidden
+                className="text-[var(--qz-warning)]"
+              />
+            </span>
+            <h2
+              id="page-jump-title"
+              className="mt-3 text-[16px] leading-6 font-semibold"
+            >
+              {t("pagination.jumpTitle")}
+            </h2>
+            <p className="mt-1 text-[13px] text-[var(--qz-muted)]">
+              {t("pagination.jumpMessage", {
+                raw: pending.raw,
+                target: String(pending.target),
+                max: String(pageCount),
+              })}
+            </p>
+            <div className="mt-5 flex items-center justify-center gap-2">
+              <Button variant="warning" onClick={cancelJump}>
+                {t("common.cancel")}
+              </Button>
+              <Button variant="accent" onClick={confirmJump} autoFocus>
+                {t("pagination.jump")}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

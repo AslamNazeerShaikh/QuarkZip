@@ -102,8 +102,11 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   The page-size menu hugs its trigger (`left-0`, `w-max min-w-full`, 8px
   gap) with option text insets matching the trigger (`px-2`), so list
   edges and text align with the control below. A jump-to-page field
-  (`spinbutton`, same h-7 inner shell) sits past Next: Enter jumps
-  (clamped 1..N), Escape/blur reverts, hidden on single pages. Edge-anchored menus open
+  (`spinbutton`, same h-7 inner shell) sits past Next: clean in-range
+  numbers jump silently on Enter; out-of-range or non-numeric input opens
+  an Invalid-page confirm (warning icon, valid range shown, Jump runs the
+  same clamp / Cancel reverts to the open page). Escape/blur reverts,
+  hidden on single pages. Edge-anchored menus open
   inward instead (`LanguageSwitch` uses `right-0` at the window's right
   edge) so floating lists never touch the sidewalls. The footer `About` and
   `LanguageSwitch` controls reuse the same shell as icon-only buttons
@@ -165,7 +168,7 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   title) that is identical for every archive type — `—` fills N/A
   (7z-only Headers/Method/Solid/Blocks, entry-derived Host OS and
   Algorithms): no layout shift, no card scrollbar, ever. The ratio cell
-  always reserves its progressbar track (empty fill when unmeasurable).
+  is textual only ("73.9% of original", `—` when unmeasurable) — no bar.
   A `More`/`Less` toggle (secondary `sm`, left of the action row, same
   shell as Test/Checksum) grows the card with the engine's full header
   metadata for advanced users while the table shrinks; collapsing hides

@@ -95,7 +95,9 @@ test("overview shows container and content metadata", async ({ app }) => {
   await expect(container.getByText("Deflate", { exact: true })).toBeVisible();
   const content = app.getByRole("region", { name: "Content" });
   await expect(content.getByText("3", { exact: true }).first()).toBeVisible();
-  await expect(app.getByRole("progressbar")).toBeVisible();
+  // Ratio is textual only — no progressbar in the info card.
+  await expect(content.getByText(/50\.0% of original/)).toBeVisible();
+  await expect(content.getByRole("progressbar")).toHaveCount(0);
 });
 
 test("open new switches archives", async ({ app }) => {

@@ -72,6 +72,9 @@
   "pagination.prevPage": "Previous page",
   "pagination.nextPage": "Next page",
   "pagination.goToPage": "Go to page",
+  "pagination.jumpTitle": "Invalid page",
+  "pagination.jumpMessage": "Page “{{raw}}” doesn’t exist — pages run 1–{{max}}. Jump to page {{target}} instead?",
+  "pagination.jump": "Jump",
   "pagination.all": "All",
 
   "theme.group": "Color theme",

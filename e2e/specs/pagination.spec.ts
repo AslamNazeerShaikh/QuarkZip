@@ -115,7 +115,9 @@ test("current size is marked selected in the menu", async ({ app }) => {
   ).toHaveAttribute("aria-selected", "true");
 });
 
-test("jump field navigates directly and clamps", async ({ app }) => {
+test("jump field navigates directly and confirms weird input", async ({
+  app,
+}) => {
   await openBig(app);
   const jump = app.getByRole("spinbutton", { name: "Go to page" });
   await expect(jump).toHaveValue("1");
@@ -123,13 +125,20 @@ test("jump field navigates directly and clamps", async ({ app }) => {
   await jump.press("Enter");
   await expect(app.getByText("3 / 3")).toBeVisible();
   await expect(app.getByText("file-201.txt", { exact: true })).toBeVisible();
-  // Out of range clamps to the last page instead of erroring.
+  // Out of range no longer jumps silently: confirm popup first.
   await jump.fill("99");
   await jump.press("Enter");
+  await expect(app.getByRole("dialog", { name: "Invalid page" })).toBeVisible();
+  await app.getByRole("button", { name: "Jump" }).click();
   await expect(app.getByText("3 / 3")).toBeVisible();
-  // Escape reverts without navigating.
+  // Cancel reverts to the open page without navigating.
   await jump.fill("1");
   await jump.press("Escape");
+  await expect(jump).toHaveValue("3");
+  await jump.fill("abc");
+  await jump.press("Enter");
+  await expect(app.getByRole("dialog", { name: "Invalid page" })).toBeVisible();
+  await app.getByRole("button", { name: "Cancel" }).click();
   await expect(jump).toHaveValue("3");
   await expect(app.getByText("3 / 3")).toBeVisible();
 });

@@ -1,16 +1,16 @@
 # Graph Report - QuarkZip  (2026-10-07)
 
 ## Corpus Check
-- 267 files · ~398,358 words
+- 267 files · ~398,822 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2294 nodes · 3349 edges · 216 communities (195 shown, 9 thin omitted)
+- 2297 nodes · 3357 edges · 216 communities (195 shown, 9 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1842e5d2`
+- Built from commit: `31507a08`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -78,7 +78,7 @@
 - agents
 - vite.config.ts
 - lint-staged
-- TitleBar.tsx
+- TitleBar
 - bridge.cpp
 - sevenzip.rs
 - pull-hig.mjs
@@ -254,8 +254,8 @@ Cohesion: 0.12
 Nodes (16): scripts, build, dev, format, format:check, format:rust, format:rust:check, i18n:check (+8 more)
 
 ### Community 1 - "PageJump"
-Cohesion: 1.00
-Nodes (3): PageJump(), commit(), revert()
+Cohesion: 0.60
+Nodes (6): PageJump(), cancelJump(), commit(), confirmJump(), jumpTo(), revert()
 
 ### Community 2 - "opencode.json"
 Cohesion: 0.17
@@ -311,7 +311,7 @@ Nodes (25): 0. File hierarchy (accurate, `main` root, ~361 entries), 10. Edge ca
 
 ### Community 15 - "lib.rs"
 Cohesion: 0.13
-Nodes (37): AppHandle, ArchiveInfo, Mutex, Send, apply_window_glass(), CHECKSUM_CANCEL, checksum_file(), ERROR_TAIL_CHARS (+29 more)
+Nodes (36): AppHandle, ArchiveInfo, Mutex, Send, apply_window_glass(), CHECKSUM_CANCEL, checksum_file(), ERROR_TAIL_CHARS (+28 more)
 
 ### Community 16 - "QuarkZip UI guidelines"
 Cohesion: 0.22
@@ -418,8 +418,8 @@ Cohesion: 0.20
 Nodes (10): dependencies, @fontsource/inter, lucide-react, react, react-dom, @tauri-apps/api, @tauri-apps/plugin-dialog, @tauri-apps/plugin-opener (+2 more)
 
 ### Community 59 - "LanguageContext.tsx"
-Cohesion: 0.18
-Nodes (18): LanguageSwitch(), EN_KEYS, Switcher(), TProbe(), applySideEffects(), detectInitial(), interpolate(), LanguageContext (+10 more)
+Cohesion: 0.14
+Nodes (22): react, LanguageSwitch(), CHOICE_ICON, ThemeSwitch(), TitleBarProps, EN_KEYS, Switcher(), TProbe() (+14 more)
 
 ### Community 60 - "check-locales.mjs"
 Cohesion: 0.22
@@ -443,7 +443,7 @@ Nodes (8): 0. Download page (7-zip.org/download.html, 26.04), 1. Repo tree + bui
 
 ### Community 65 - "App"
 Cohesion: 0.05
-Nodes (50): set_decorations / set_title_bar_style async race, defer Overlay past the async style-mask rewrite, macOS needs flush opaque layout because the floating margin would show the desktop, transparent is creation-only so the rescued native bar stayed transparent, Rules for parallel macOS/Linux development, Steady state per-OS window settings, Steady state (what each OS gets today), What broke (2026-10-04, commit `644f03b`) (+42 more)
+Nodes (51): set_decorations / set_title_bar_style async race, defer Overlay past the async style-mask rewrite, macOS needs flush opaque layout because the floating margin would show the desktop, transparent is creation-only so the rescued native bar stayed transparent, Rules for parallel macOS/Linux development, Steady state per-OS window settings, Steady state (what each OS gets today), What broke (2026-10-04, commit `644f03b`) (+43 more)
 
 ### Community 66 - "github"
 Cohesion: 0.29
@@ -473,9 +473,9 @@ Nodes (3): agents, default, list
 Cohesion: 0.40
 Nodes (3): @tailwindcss/vite, @vitejs/plugin-react, e2eMocks
 
-### Community 75 - "TitleBar.tsx"
-Cohesion: 0.43
-Nodes (5): TitleBar(), close(), minimize(), toggleMaximize(), TitleBarProps
+### Community 75 - "TitleBar"
+Cohesion: 0.70
+Nodes (4): TitleBar(), close(), minimize(), toggleMaximize()
 
 ### Community 76 - "bridge.cpp"
 Cohesion: 0.08
@@ -494,12 +494,12 @@ Cohesion: 0.14
 Nodes (11): lucide-react, ArchiveEntry, ArchiveTable(), baseColumns(), Column, ROW_HEIGHT, SortDir, SortKey (+3 more)
 
 ### Community 80 - "vitest"
-Cohesion: 0.10
-Nodes (15): @testing-library/react, @testing-library/user-event, vitest, DragEvent, dragHandlers, extractCtl, listCtl, osCtl (+7 more)
+Cohesion: 0.09
+Nodes (17): @testing-library/react, @testing-library/user-event, vitest, DragEvent, dragHandlers, extractCtl, listCtl, osCtl (+9 more)
 
 ### Community 81 - "PasswordDialog.tsx"
-Cohesion: 0.19
-Nodes (11): clampPct(), PasswordDialog(), check(), Phase, clampPct(), Phase, { ChannelStub }, invokeCtl (+3 more)
+Cohesion: 0.24
+Nodes (9): clampPct(), PasswordDialog(), check(), Phase, clampPct(), Phase, TestDialog(), isPasswordError() (+1 more)
 
 ### Community 82 - "ChecksumDialog.tsx"
 Cohesion: 0.24
@@ -1026,8 +1026,8 @@ Cohesion: 0.50
 Nodes (3): macOS design (QuarkZip), Non-negotiables, Reviews
 
 ### Community 216 - "App.tsx"
-Cohesion: 0.14
-Nodes (18): react, ARCHIVE_FILTERS, count(), ExtractDialog(), ExtractDoneDialog(), ExtractResult, ALL_OPTIONS, ALL_PAGE_CAP (+10 more)
+Cohesion: 0.17
+Nodes (15): ARCHIVE_FILTERS, count(), ExtractDialog(), ExtractDoneDialog(), ExtractResult, ALL_OPTIONS, ALL_PAGE_CAP, formatSize() (+7 more)
 
 ## Knowledge Gaps
 - **1273 isolated node(s):** `REPO_ROOT`, `IMAGE_GLYPHS`, `SECTIONS`, `KEPT_PLATFORMS`, `DROPPED_PLATFORMS` (+1268 more)
@@ -1041,8 +1041,6 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.024) - this node is a cross-community bridge._
 - **Why does `App()` connect `App` to `App.tsx`, `vitest`, `LanguageContext.tsx`, `AboutDialog.tsx`?**
   _High betweenness centrality (0.023) - this node is a cross-community bridge._
-- **Why does `Steady state per-OS window settings` connect `App` to `lib.rs`?**
-  _High betweenness centrality (0.021) - this node is a cross-community bridge._
 - **What connects `REPO_ROOT`, `IMAGE_GLYPHS`, `SECTIONS` to the rest of the system?**
   _1273 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `scripts` be split into smaller, more focused modules?**
@@ -1051,3 +1049,5 @@ _Questions this graph is uniquely positioned to answer:_
   _Cohesion score 0.08695652173913043 - nodes in this community are weakly interconnected._
 - **Should `archive.rs` be split into smaller, more focused modules?**
   _Cohesion score 0.0639386189258312 - nodes in this community are weakly interconnected._
+- **Should `backend.ts` be split into smaller, more focused modules?**
+  _Cohesion score 0.0896551724137931 - nodes in this community are weakly interconnected._

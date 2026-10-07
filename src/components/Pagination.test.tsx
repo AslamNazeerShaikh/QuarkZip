@@ -156,7 +156,7 @@ describe("Pagination page jump", () => {
     await user.clear(field);
     await user.type(field, "99");
     await user.keyboard("{Enter}");
-    expect(onPage).toHaveBeenCalledWith(2);
+    expect(onPage).not.toHaveBeenCalled();
   });
 
   it("should_ignore_non_numeric_input", async () => {
@@ -193,5 +193,41 @@ describe("Pagination page jump", () => {
     expect(
       screen.queryByRole("spinbutton", { name: "Go to page" }),
     ).not.toBeInTheDocument();
+  });
+
+  it("should_confirm_weird_input_with_jump_or_cancel", async () => {
+    const user = userEvent.setup();
+    const { onPage } = setupJump();
+    const field = screen.getByRole("spinbutton", { name: "Go to page" });
+    await user.clear(field);
+    await user.type(field, "99");
+    await user.keyboard("{Enter}");
+    // Popup names the range; nothing jumped yet.
+    expect(onPage).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Invalid page" })).toBeVisible();
+    // i18next interpolation splits the sentence across nodes.
+    expect(screen.getByText(/doesn’t exist/)).toBeInTheDocument();
+    // Jump executes the same clamp (99 → page 3).
+    await user.click(screen.getByRole("button", { name: "Jump" }));
+    expect(onPage).toHaveBeenCalledWith(2);
+    expect(
+      screen.queryByRole("dialog", { name: "Invalid page" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("should_cancel_the_popup_and_restore_the_current_page", async () => {
+    const user = userEvent.setup();
+    const { onPage } = setupJump();
+    const field = screen.getByRole("spinbutton", { name: "Go to page" });
+    await user.clear(field);
+    await user.type(field, "abc");
+    await user.keyboard("{Enter}");
+    expect(screen.getByRole("dialog", { name: "Invalid page" })).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Cancel" }));
+    expect(onPage).not.toHaveBeenCalled();
+    expect(
+      screen.queryByRole("dialog", { name: "Invalid page" }),
+    ).not.toBeInTheDocument();
+    expect(field).toHaveValue("1");
   });
 });

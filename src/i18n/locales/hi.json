@@ -72,6 +72,9 @@
   "pagination.prevPage": "पिछला पृष्ठ",
   "pagination.nextPage": "अगला पृष्ठ",
   "pagination.goToPage": "पृष्ठ पर जाएँ",
+  "pagination.jumpTitle": "अमान्य पृष्ठ",
+  "pagination.jumpMessage": "पृष्ठ “{{raw}}” मौजूद नहीं है — पृष्ठ 1–{{max}} तक हैं। इसके बजाय पृष्ठ {{target}} पर जाएँ?",
+  "pagination.jump": "जंप",
   "pagination.all": "सभी",
 
   "theme.group": "रंग थीम",

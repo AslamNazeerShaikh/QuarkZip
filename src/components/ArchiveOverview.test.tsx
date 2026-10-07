@@ -156,9 +156,8 @@ describe("ArchiveOverview", () => {
     expect(screen.queryByText("Zip64")).not.toBeInTheDocument();
   });
 
-  it("should_reserve_the_ratio_row_without_measurable_ratio", () => {
-    // Zero-unpacked archives keep the track (empty fill) so the grid
-    // never shifts height between archives.
+  it("should_keep_ratio_textual_without_a_bar", () => {
+    // Ratio cell is text only, with or without a measurable ratio.
     render(
       <ArchiveOverview
         archive="/tmp/empty.zip"
@@ -167,7 +166,7 @@ describe("ArchiveOverview", () => {
         onOpen={() => {}}
       />,
     );
-    const bar = screen.getByRole("progressbar");
-    expect(bar).toHaveAttribute("aria-valuenow", "0");
+    expect(screen.getByText("—")).toBeInTheDocument();
+    expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
   });
 });
