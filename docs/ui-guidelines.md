@@ -103,7 +103,8 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   (1-based across the sorted dataset, stable under paging), header row fixed
   to the 36px row height with 12px uppercase labels synced with their cells
   (Name left; Type/Size/Modified centered
-  both axes), Size fixed at `w-32` (fits the longest `formatSize` output —
+  both axes), `#` fixed at `w-24` (fits 8-digit serials for 10M+ rows;
+  the flex-1 Name column absorbs the width), Size fixed at `w-32` (fits the longest `formatSize` output —
   7 chars — with slack, no ellipsis), Modified fixed at `w-64` showing the full local stamp
   (`formatModified`: system time zone, AM/PM, raw stamp on hover),
   horizontal separators only, checkbox multi-select with soft primary-tint
