@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791452863.3720958,
-    "seen": 1791452983.680473,
-    "ast_hash": "0a82039f2f892ceaaf91188c42bd0467",
+    "mtime": 1791455962.9154074,
+    "seen": 1791456020.169764,
+    "ast_hash": "693a2a019787928a181c3e43fea7002a",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -876,15 +876,15 @@
     "semantic_hash": ""
   },
   "src/components/ArchiveOverview.test.tsx": {
-    "mtime": 1791402762.1814692,
-    "seen": 1791403177.080163,
-    "ast_hash": "64a332b5498438ce7011233ec682758c",
+    "mtime": 1791455954.4093626,
+    "seen": 1791456020.169663,
+    "ast_hash": "093790f9b4309cd0edd13b73c52fb461",
     "semantic_hash": ""
   },
   "src/components/ArchiveOverview.tsx": {
-    "mtime": 1791448053.4894314,
-    "seen": 1791448221.832463,
-    "ast_hash": "65cb676749cc12d2278a655553ec37a3",
+    "mtime": 1791455947.8510876,
+    "seen": 1791456020.169664,
+    "ast_hash": "396236c6142d0486b93f4b5f31aa5bb1",
     "semantic_hash": ""
   },
   "src/components/ArchiveTable.test.tsx": {

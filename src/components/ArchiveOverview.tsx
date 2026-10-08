@@ -1,9 +1,9 @@
 import {
   Archive,
-  Hash,
+  BadgeCheck,
+  Binary,
   MoreHorizontal,
   PackageOpen,
-  ShieldCheck,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { formatCount, formatDateTimeLocal, formatSize } from "../lib/format";
@@ -131,7 +131,11 @@ export default function ArchiveOverview({
   // like the collapse chevron) — Test between Pagination and Theme,
   // Checksum between Test and Theme — with About last. Only the collapse
   // chevron keeps the row's end. Glyphs run 18px like the Theme/Language/
-  // About icons (14px read lost next to them).
+  // About icons. Test uses BadgeCheck (verified) and Checksum uses Binary
+  // (hash bits): both fill the 24-grid like their neighbours —
+  // ShieldCheck/Hash/FileCheck/Fingerprint read tiny at the same pixel
+  // size (thin strokes, small or wispy footprints), which no size bump
+  // fixed (verified against 3x screenshots).
   const clusterChecks = (
     <>
       <Button
@@ -143,7 +147,7 @@ export default function ArchiveOverview({
         title={testLabel}
         className="w-9 px-0"
       >
-        <ShieldCheck size={18} aria-hidden />
+        <BadgeCheck size={18} aria-hidden />
       </Button>
       <Button
         id="qz-action-checksum-btn"
@@ -154,7 +158,7 @@ export default function ArchiveOverview({
         title={checksumLabel}
         className="w-9 px-0"
       >
-        <Hash size={18} aria-hidden />
+        <Binary size={18} aria-hidden />
       </Button>
     </>
   );

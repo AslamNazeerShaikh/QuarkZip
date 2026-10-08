@@ -230,7 +230,8 @@ all N instead?` with an `Extract All` confirm). Big centered icon, the
   Below the details (always, once an archive is open —
   even when the summary is unavailable) sits one centered integrity
   action row: `More`/`Less`, then the controls cluster (`Pagination`,
-  icon-only `Test`, icon-only `Checksum`, `ThemeSwitch`, `LanguageSwitch`,
+  icon-only `Test` (`BadgeCheck`), icon-only `Checksum` (`Binary`),
+  `ThemeSwitch`, `LanguageSwitch`,
   `About` last), then the collapse chevron. `More` renders only when
   extras exist and unmounts collapsed (never a dead button or spacer);
   the row is `justify-center`, wrapping to packed centered lines. Collapsing unmounts the

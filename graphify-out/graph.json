@@ -11891,7 +11891,7 @@
       "node_kind": "heading",
       "norm_label": "deliberate deviations (with rationale)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L300"
+      "source_location": "L301"
     },
     {
       "id": "docs_ui_guidelines_design_direction",
@@ -11915,7 +11915,7 @@
       "node_kind": "heading",
       "norm_label": "element ids (dom debugging)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L274"
+      "source_location": "L275"
     },
     {
       "id": "docs_ui_guidelines_interaction_states",
@@ -11927,7 +11927,7 @@
       "node_kind": "heading",
       "norm_label": "interaction / states",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L289"
+      "source_location": "L290"
     },
     {
       "id": "docs_ui_guidelines_layout",
@@ -11939,7 +11939,7 @@
       "node_kind": "heading",
       "norm_label": "layout",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L256"
+      "source_location": "L257"
     },
     {
       "id": "docs_ui_guidelines_quarkzip_ui_guidelines",
@@ -29205,7 +29205,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/ArchiveOverview.tsx",
-      "source_location": "L291",
+      "source_location": "L295",
       "weight": 1.0
     },
     {
@@ -29217,7 +29217,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/ArchiveOverview.tsx",
-      "source_location": "L316",
+      "source_location": "L320",
       "weight": 1.0
     },
     {
@@ -29229,7 +29229,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/ArchiveOverview.tsx",
-      "source_location": "L340",
+      "source_location": "L344",
       "weight": 1.0
     },
     {
@@ -53296,7 +53296,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L256",
+      "source_location": "L257",
       "weight": 1.0
     },
     {
@@ -53307,7 +53307,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L274",
+      "source_location": "L275",
       "weight": 1.0
     },
     {
@@ -53318,7 +53318,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L289",
+      "source_location": "L290",
       "weight": 1.0
     },
     {
@@ -53329,7 +53329,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L300",
+      "source_location": "L301",
       "weight": 1.0
     },
     {
@@ -66888,5 +66888,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "f6add1d9d40b25cb8428de93010fceb7508e9253"
+  "built_at_commit": "5c8e11957af79b2e180b738b493e7b0582bf281e"
 }
