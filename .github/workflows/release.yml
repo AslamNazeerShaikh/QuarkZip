@@ -1,0 +1,86 @@
+name: release
+# macOS arm64 only: every push to main (usually a merged PR) builds the
+# native arm64 dmg and publishes it as the rolling `main-latest`
+# prerelease. PRs run the gates without publishing.
+#
+# Signing: ad-hoc (`bundle.macos.signingIdentity: "-"`) — no Apple
+# Developer account needed and none is used here. Gatekeeper still asks
+# first-run approval on other Macs (right-click > Open); only a paid
+# Developer ID + notarization removes that (see docs/distribution.md).
+# No APPLE_* secrets are required by this workflow.
+#
+# Size: release profile already follows tauri.app/concept/size
+# (codegen-units=1, lto, opt-level=3 for 10M-row speed, panic=abort,
+# strip). 7-Zip SOURCES need no fetching — vendor/7zip is committed;
+# only the 7zz sidecar consoles are fetched (pinned 26.03).
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: release-main
+  cancel-in-progress: true
+
+permissions:
+  contents: write # rolling prerelease create/update (no-op for PR builds)
+
+jobs:
+  dmg-arm64:
+    # Apple Silicon runner: native arm64 toolchain end to end (no Rosetta,
+    # no cross-compilation) for the arm64-optimized dmg.
+    runs-on: macos-14
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Set up stable Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Fetch pinned 7zz sidecars
+        run: ./scripts/fetch-7zz.sh
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Typecheck
+        run: npx tsc
+
+      - name: Unit tests
+        run: npx vitest run
+
+      - name: Rust tests
+        run: npm run test:rust
+
+      - name: Build arm64 dmg
+        if: github.event_name != 'pull_request'
+        run: npm run tauri build -- --bundles dmg --target aarch64-apple-darwin
+
+      - name: Publish rolling prerelease
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DMG=$(ls src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg | head -1)
+          test -n "$DMG" && echo "dmg: $DMG"
+          SHORT_SHA="${GITHUB_SHA::8}"
+          NOTES="Automated arm64 build of main @ ${GITHUB_SHA}."
+          NOTES="${NOTES} Ad-hoc signed: on first launch macOS Gatekeeper asks for approval (right-click the app > Open, or allow it in Privacy & Security)."
+          # Rolling tag: delete + recreate avoids release spam and any
+          # force-push (one living prerelease always tracks main).
+          gh release delete main-latest --yes --cleanup-tag || true
+          gh release create main-latest --prerelease \
+            --title "main ${SHORT_SHA} (macOS arm64)" \
+            --notes "$NOTES" "$DMG"

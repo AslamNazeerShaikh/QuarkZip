@@ -231,7 +231,10 @@ export default function App() {
   function openAbout() {
     setAboutOpen(true);
     // Best-effort: the dialog shows placeholders until this resolves.
-    void loadAppInfo().then(setAboutInfo);
+    // Denied/unavailable backend stays silent (placeholders persist).
+    void loadAppInfo()
+      .then(setAboutInfo)
+      .catch(() => {});
   }
 
   const pageCount = pageSize === "all" ? 1 : Math.ceil(totalEntries / pageSize);
@@ -446,16 +449,30 @@ export default function App() {
   }
 
   async function openArchive() {
-    const selected = await open({
-      multiple: false,
-      filters: [{ name: "Archives", extensions: ARCHIVE_FILTERS }],
-    });
+    let selected: string | string[] | null;
+    try {
+      selected = await open({
+        multiple: false,
+        filters: [{ name: "Archives", extensions: ARCHIVE_FILTERS }],
+      });
+    } catch (e) {
+      // Picker denied/unavailable: quiet danger text, like every backend
+      // failure — never an unhandled rejection.
+      setError(typeof e === "string" ? e : String(e));
+      return;
+    }
     if (typeof selected !== "string") return;
     await listPath(selected);
   }
 
   async function chooseDest() {
-    const dir = await open({ directory: true, multiple: false });
+    let dir: string | string[] | null;
+    try {
+      dir = await open({ directory: true, multiple: false });
+    } catch (e) {
+      setError(typeof e === "string" ? e : String(e));
+      return;
+    }
     if (typeof dir !== "string") return;
     setDest(dir);
     setDoneInfo(null);

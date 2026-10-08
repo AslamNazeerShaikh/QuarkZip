@@ -10,6 +10,14 @@ type DragEvent =
 
 const dragHandlers: Array<(e: DragEvent) => void> = [];
 
+const pickerCtl = vi.hoisted(() => ({
+  open: vi.fn(async () => null),
+}));
+
+vi.mock("@tauri-apps/plugin-dialog", () => ({
+  open: pickerCtl.open,
+}));
+
 vi.mock("@tauri-apps/api/webview", () => ({
   getCurrentWebview: () => ({
     onDragDropEvent: (cb: (e: DragEvent) => void) => {
@@ -210,6 +218,8 @@ beforeEach(() => {
   listCtl.deferList = false;
   listCtl.releaseList = null;
   listCtl.calls = [];
+  pickerCtl.open.mockReset();
+  pickerCtl.open.mockResolvedValue(null);
   localStorage.clear();
   document.documentElement.classList.remove("dark");
 });
@@ -237,6 +247,16 @@ describe("App blank canvas", () => {
       screen.getByRole("button", { name: "Open archive" }),
     ).toBeInTheDocument();
     expect(container.querySelectorAll("[role='row']")).toHaveLength(0);
+  });
+
+  it("should_show_quiet_error_when_archive_picker_denied", async () => {
+    // Capability denied (or headless): the picker rejects — quiet danger
+    // text, never an unhandled rejection, previous listing untouched.
+    pickerCtl.open.mockRejectedValueOnce("dialog denied");
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole("button", { name: "Open archive" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("dialog denied");
   });
 
   it("should_hide_open_new_until_an_archive_is_open", async () => {

@@ -164,7 +164,8 @@ export default function TitleBar({
       <div
         data-tauri-drag-region
         onMouseDown={(e) => {
-          if (e.button === 0) void invoke("drag_window");
+          // Drag denied/unavailable: silently no-op, never reject.
+          if (e.button === 0) void invoke("drag_window").catch(() => {});
         }}
         data-testid="mac-titlebar"
         id="qz-titlebar-mac"
@@ -247,7 +248,8 @@ export default function TitleBar({
       id="qz-titlebar-linux"
       data-tauri-drag-region
       onMouseDown={(e) => {
-        if (e.button === 0) void invoke("drag_window");
+        // Drag denied/unavailable: silently no-op, never reject.
+        if (e.button === 0) void invoke("drag_window").catch(() => {});
       }}
       onDoubleClick={() => void toggleMaximize()}
       // Horizontal insets match the content column (`px-7`): Open's left
