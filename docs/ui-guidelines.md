@@ -169,12 +169,14 @@ all N instead?` with an `Extract All` confirm). Big centered icon, the
   (`photo.zip` → `photo`, `data.tar.gz` → `data`), editable, validated
   for APFS (UTF-8 only incl. lone-surrogate rejection, ≤255 bytes, no
   `/ :` or controls, not `.`/`..`) with inline errors plus a debounced
-  backend uniqueness probe (`path_exists` on `dest/<name>` — Proceed
-  stays disabled while checking, taken, or invalid). A live
-  `N / 255 bytes (UTF-8)` budget and an `Append date-time` button
-  (`name_2026-10-08_14-30-05`, head-trimmed char-safe past the cap)
-  sit under the field; the live final path above is the preview. Confirm
-  runs `extract_archive` (`7zz x -o<dest> [files...] -y`)
+  backend uniqueness probe (on the preview name — Proceed stays disabled
+  while checking, taken, or invalid). A live `N / limit bytes (UTF-8)`
+  budget and an `Append date-time` checkbox sit under the field: toggling
+  it mints one stamp (never typed into the field, never stacked) and
+  shrinks the name budget by the 20 stamp bytes; a labeled preview shows
+  the final folder name and where it will be created. The live final path
+  above shows the result. Confirm runs `extract_archive` (in-process,
+  overwrite always)
   (a page-by-page select-everything collapses to the empty list too, so
   10M paths never cross IPC).
   The backdrop never dismisses — buttons or Esc only. Backdrops share
@@ -306,6 +308,14 @@ Pre-existing ids (`archive-password`, `extract-folder-name`, …) and all
 - Empty: centered icon + gray text in the same card language.
 - Keyboard: every control is a real button/input/select with visible
   `focus-visible` primary ring; Esc/outside-click closes the theme switch.
+- Single press per operation: async actions disable their controls while
+  in flight (footer buttons on `extracting`/`loading`, pager on `paging`
+  like the sort headers), and a document-level guard swallows the one
+  same-spot click that follows a dialog-button press (the second half of
+  a fast double-click would otherwise activate whatever the closed dialog
+  uncovered at that spot). Clicks elsewhere and every dialog control
+  always pass, so legitimate follow-ups (Proceed → OK, Cancel → next
+  action) never stall.
 - Selection without dropdowns when N≤3 (theme Light/System/Dark segmented);
   dropdowns only for long lists (page sizes).
 

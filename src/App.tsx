@@ -42,6 +42,7 @@ import { Button } from "./components/ui/button";
 import { useTheme } from "./hooks/useTheme";
 import { useLanguage } from "./i18n/LanguageContext";
 import { isPasswordError } from "./lib/password";
+import { installSingleClickGuard } from "./lib/singleClick";
 import { PRIVACY_SETTINGS_URL, isPermissionError } from "./lib/permissions";
 
 export interface ArchiveEntry {
@@ -83,6 +84,10 @@ async function setWindowTitle(archive: string | null): Promise<void> {
 export default function App() {
   const { choice, setChoice } = useTheme();
   const { t } = useLanguage();
+  // Single-press guard: dialog-button presses arm a short window that
+  // swallows outside clicks (the second half of a fast double-click
+  // would otherwise activate whatever the closed dialog uncovered).
+  useEffect(() => installSingleClickGuard(), []);
   // While the theme segment is out, pagination shrinks to its icon so the
   // card row never overflows at 800px; minimizing restores full width.
   const [themeOpen, setThemeOpen] = useState(false);
@@ -633,6 +638,7 @@ export default function App() {
                     compact={themeOpen}
                     onExpand={() => setThemeOpen(false)}
                     below={collapsed}
+                    busy={paging}
                   />
                 ) : undefined
               }

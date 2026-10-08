@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  DATE_STAMP_SUFFIX_BYTES,
   appendDateStamp,
   dateStamp,
   defaultFolderName,
   joinDest,
+  previewFolderName,
   validateFolderName,
 } from "./extractFolder";
 
@@ -53,5 +55,20 @@ describe("extractFolder", () => {
     const out = appendDateStamp("a".repeat(250), d);
     expect(new TextEncoder().encode(out).length).toBeLessThanOrEqual(255);
     expect(out.endsWith("_2026-10-08_14-05-09")).toBe(true);
+  });
+
+  it("should_preview_stamped_names_without_mutating_input", () => {
+    // The suffix budget matches a real stamp, so the dialog budget math
+    // (255 − suffix) always covers the rendered preview.
+    expect(DATE_STAMP_SUFFIX_BYTES).toBe(
+      new TextEncoder().encode("_" + dateStamp(new Date(0))).length,
+    );
+    expect(previewFolderName("photo", "2026-10-08_14-05-09")).toBe(
+      "photo_2026-10-08_14-05-09",
+    );
+    expect(previewFolderName("photo", null)).toBe("photo");
+    expect(previewFolderName("", "2026-10-08_14-05-09")).toBe(
+      "extracted_2026-10-08_14-05-09",
+    );
   });
 });

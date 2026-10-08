@@ -1,18 +1,14 @@
 import { invoke } from "@tauri-apps/api/core";
-import {
-  CalendarClock,
-  Check,
-  Download,
-  ListChecks,
-  TriangleAlert,
-} from "lucide-react";
+import { Check, Download, ListChecks, TriangleAlert } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { formatCount } from "../lib/format";
 import { useLanguage } from "../i18n/LanguageContext";
 import {
-  appendDateStamp,
+  DATE_STAMP_SUFFIX_BYTES,
+  dateStamp,
   defaultFolderName,
   joinDest,
+  previewFolderName,
   utf8Length,
   validateFolderName,
   type FolderNameError,
@@ -31,8 +27,11 @@ export type ExtractMode = "selected" | "all" | "empty";
 /// optional subfolder section: unchecked by default, checked reveals a
 /// name field prefilled with the archive basename (editable), validated
 /// for APFS (UTF-8, ≤255 bytes, no `/ :` or controls, not `.`/`..`) with
-/// a backend uniqueness check (`path_exists` on `dest/<name>`) so the run
-/// never merges into a colliding folder. Proceed stays disabled until the
+/// a backend uniqueness check (`path_exists` on the preview name) so the
+/// run never merges into a colliding folder. The date-time toggle mints
+/// one stamp (never typed into the field, never stacked) and shrinks the
+/// name budget by the stamp bytes; the stamped result shows as preview
+/// text with where it will be created. Proceed stays disabled until the
 /// name is clean. Esc cancels. The backdrop never dismisses.
 export default function ExtractDialog({
   open,
@@ -58,16 +57,22 @@ export default function ExtractDialog({
   const [folderName, setFolderName] = useState(() =>
     defaultFolderName(archivePath),
   );
+  // Date-time suffix, minted once when its checkbox turns on (never typed
+  // into the field, never stacked): the input stays clean and the stamped
+  // result shows as preview text only.
+  const [stamp, setStamp] = useState<string | null>(null);
   // `null` = free/unknown-yet; boolean only after a completed check.
   const [exists, setExists] = useState<boolean | null>(null);
   const [checking, setChecking] = useState(false);
   const checkId = useRef(0);
 
-  // Fresh open (or archive): folder off, name back to the basename.
+  // Fresh open (or archive): folder off, name back to the basename,
+  // no stamp (toggling it on mints a fresh one).
   useEffect(() => {
     if (!open) return;
     setCreateFolder(false);
     setFolderName(defaultFolderName(archivePath));
+    setStamp(null);
     setExists(null);
     setChecking(false);
   }, [open, archivePath]);
@@ -85,12 +90,26 @@ export default function ExtractDialog({
     ? validateFolderName(folderName)
     : null;
   const normalized = folderName.normalize("NFC");
+  // Stamped names reserve the suffix inside the 255-byte cap, so the
+  // typed name is limited to 255 minus the stamp bytes.
+  const nameLimit = stamp === null ? 255 : 255 - DATE_STAMP_SUFFIX_BYTES;
+  const budgetError =
+    createFolder &&
+    syntaxError === null &&
+    stamp !== null &&
+    utf8Length(folderName) > nameLimit;
+  // Uniqueness probes the preview name (what will actually be created),
+  // not the bare typed name.
+  const previewName =
+    createFolder && syntaxError === null && !budgetError
+      ? previewFolderName(normalized, stamp)
+      : null;
 
   // Uniqueness probe, debounced: one `metadata` call per settled name.
   // Stale responses lose to the latest request id; invoke failures (plain
   // browser runs) leave uniqueness unknown instead of blocking.
   useEffect(() => {
-    if (!open || !createFolder || syntaxError) {
+    if (!open || !previewName) {
       setChecking(false);
       setExists(null);
       return;
@@ -99,7 +118,7 @@ export default function ExtractDialog({
     setChecking(true);
     const timer = window.setTimeout(() => {
       void invoke<boolean>("path_exists", {
-        path: joinDest(dest, normalized),
+        path: joinDest(dest, previewName),
       })
         .then((taken) => {
           if (checkId.current === id) {
@@ -115,17 +134,20 @@ export default function ExtractDialog({
         });
     }, 300);
     return () => window.clearTimeout(timer);
-  }, [open, createFolder, syntaxError, dest, normalized]);
+  }, [open, previewName, dest]);
 
   if (!open) return null;
 
-  const errorKey: FolderNameError | "exists" | null = createFolder
-    ? (syntaxError ?? (exists ? "exists" : null))
-    : null;
+  const errorKey: FolderNameError | "exists" | "stamp_too_long" | null =
+    createFolder
+      ? (syntaxError ??
+        (budgetError ? "stamp_too_long" : null) ??
+        (exists ? "exists" : null))
+      : null;
   const blocked =
-    createFolder && (syntaxError !== null || exists === true || checking);
-  const finalDest =
-    createFolder && !syntaxError ? joinDest(dest, normalized) : dest;
+    createFolder &&
+    (syntaxError !== null || budgetError || exists === true || checking);
+  const finalDest = previewName ? joinDest(dest, previewName) : dest;
 
   const title =
     mode === "all"
@@ -207,9 +229,11 @@ export default function ExtractDialog({
         </p>
         <p className="mt-2 text-[13px] font-medium break-all">{finalDest}</p>
         {/* Subfolder section, centered like everything else in the card:
-            checkbox row, name field, live byte budget, one-tap date-time
-            suffix (`name_2026-10-08_14-30-05`); the final-path preview
-            above shows the result. */}
+            checkbox row, name field, live byte budget against the
+            effective limit (255 minus the stamp when date-time is on),
+            date-time toggle (mints one stamp, never touches the field),
+            and a labeled preview of the final folder name + where it
+            will be created. The final-path preview above shows the result. */}
         <div
           id="qz-extract-subfolder"
           className="mt-4 border-t border-[var(--qz-border)] pt-4 text-center"
@@ -267,26 +291,58 @@ export default function ExtractDialog({
               >
                 <span className="text-xs text-[var(--qz-faint)] tabular-nums">
                   {t("extract.folderLimit", {
-                    used: String(utf8Length(folderName)),
+                    used: String(
+                      utf8Length(folderName) +
+                        (stamp === null ? 0 : DATE_STAMP_SUFFIX_BYTES),
+                    ),
+                    limit: String(nameLimit),
                   })}
                 </span>
-                <Button
+                <button
                   id="qz-extract-append-date"
-                  variant="secondary"
-                  size="bar"
+                  type="button"
+                  role="checkbox"
+                  aria-checked={stamp !== null}
+                  aria-label={t("extract.appendDate")}
                   onClick={() =>
-                    setFolderName((cur) =>
-                      appendDateStamp(
-                        cur === "" ? defaultFolderName(archivePath) : cur,
-                      ),
-                    )
+                    setStamp((cur) => (cur === null ? dateStamp() : null))
                   }
-                  className="px-2 text-xs"
+                  className="flex cursor-pointer items-center justify-center gap-2 outline-none"
                 >
-                  <CalendarClock size={13} aria-hidden />
-                  {t("extract.appendDate")}
-                </Button>
+                  <span
+                    aria-hidden
+                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-[6px] border transition-colors ${
+                      stamp !== null
+                        ? "border-transparent bg-[var(--qz-primary)]"
+                        : "border-[var(--qz-border)] bg-transparent"
+                    }`}
+                  >
+                    {stamp !== null && (
+                      <Check
+                        size={13}
+                        strokeWidth={3}
+                        className="text-[var(--qz-on-primary)]"
+                      />
+                    )}
+                  </span>
+                  <span className="text-[13px] font-medium text-[var(--qz-text)]">
+                    {t("extract.appendDate")}
+                  </span>
+                </button>
               </div>
+              {previewName && (
+                <div
+                  id="qz-extract-folder-preview"
+                  className="mx-auto mt-2.5 max-w-full rounded-[9px] border border-[var(--qz-border)] bg-[var(--qz-surface)] px-3 py-2"
+                >
+                  <p className="text-[11px] font-semibold tracking-[0.06em] text-[var(--qz-faint)] uppercase">
+                    {t("extract.finalFolder", { dest })}
+                  </p>
+                  <p className="mt-0.5 text-[13px] font-medium break-all text-[var(--qz-text)]">
+                    {previewName}
+                  </p>
+                </div>
+              )}
               {checking ? (
                 <p className="mt-1.5 text-xs text-[var(--qz-faint)]">
                   {t("extract.folderChecking")}
@@ -299,6 +355,10 @@ export default function ExtractDialog({
                 >
                   {errorKey === "empty" && t("extract.folderErrorEmpty")}
                   {errorKey === "too_long" && t("extract.folderErrorTooLong")}
+                  {errorKey === "stamp_too_long" &&
+                    t("extract.folderErrorTooLongStamp", {
+                      limit: String(nameLimit),
+                    })}
                   {errorKey === "reserved" && t("extract.folderErrorReserved")}
                   {errorKey === "invalid_chars" &&
                     t("extract.folderErrorInvalidChars")}

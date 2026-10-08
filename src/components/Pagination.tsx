@@ -42,10 +42,14 @@ function PageJump({
   page,
   pageCount,
   onPage,
+  busy = false,
 }: {
   page: number;
   pageCount: number;
   onPage: (p: number) => void;
+  /// A page fetch is in flight: Enter is ignored and the field holds
+  /// still (same rule as the sort headers) — no piled-up jumps.
+  busy?: boolean;
 }) {
   const { t } = useLanguage();
   const [text, setText] = useState(String(page + 1));
@@ -77,6 +81,7 @@ function PageJump({
     revert();
   }
   function commit() {
+    if (busy) return;
     // Only a clean in-range number jumps silently. Everything else —
     // out-of-range, trailing garbage ("66abc"), pure garbage, empty —
     // confirms first; Jump lands on the read-off page (leading digits,
@@ -132,7 +137,8 @@ function PageJump({
           }}
           onBlur={revert}
           style={{ width: inputWidth }}
-          className="h-7 rounded-[7px] bg-transparent px-1 text-center text-[var(--qz-muted)] tabular-nums outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+          disabled={busy}
+          className="h-7 rounded-[7px] bg-transparent px-1 text-center text-[var(--qz-muted)] tabular-nums outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40 disabled:opacity-50"
         />
         <span id="qz-pager-jump-total" className="pr-1 whitespace-nowrap">
           / {formatCount(pageCount)}
@@ -219,11 +225,15 @@ function PageSizeMenu({
   options,
   onPageSize,
   below = false,
+  busy = false,
 }: {
   pageSize: PageSize;
   options: PageSize[];
   onPageSize: (s: PageSize) => void;
   below?: boolean;
+  /// A page fetch is in flight: the trigger holds still (same rule as
+  /// the sort headers) — no piled-up size changes mid-flight.
+  busy?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(() => options.indexOf(pageSize));
@@ -296,12 +306,13 @@ function PageSizeMenu({
         aria-label={t("pagination.rowsPerPage")}
         aria-haspopup="listbox"
         aria-expanded={open}
+        disabled={busy}
         onClick={() => {
           setActive(options.indexOf(pageSize));
           setOpen((o) => !o);
         }}
         onKeyDown={onButtonKey}
-        className="flex h-7 cursor-pointer items-center gap-1 rounded-[7px] px-2 text-[var(--qz-muted)] tabular-nums outline-none hover:text-[var(--qz-text)]"
+        className="flex h-7 cursor-pointer items-center gap-1 rounded-[7px] px-2 text-[var(--qz-muted)] tabular-nums outline-none hover:text-[var(--qz-text)] disabled:pointer-events-none disabled:opacity-50"
       >
         {formatSize(pageSize, allLabel)}
         <ChevronDown
@@ -360,13 +371,17 @@ function PageJumpOrReadout({
   page,
   pageCount,
   onPage,
+  busy = false,
 }: {
   page: number;
   pageCount: number;
   onPage: (p: number) => void;
+  busy?: boolean;
 }) {
   if (pageCount > 1)
-    return <PageJump page={page} pageCount={pageCount} onPage={onPage} />;
+    return (
+      <PageJump page={page} pageCount={pageCount} onPage={onPage} busy={busy} />
+    );
   return (
     <span
       id="qz-pager-readout"
@@ -398,6 +413,7 @@ export default function Pagination({
   compact = false,
   onExpand,
   below = false,
+  busy = false,
 }: {
   page: number;
   pageCount: number;
@@ -408,6 +424,10 @@ export default function Pagination({
   compact?: boolean;
   onExpand?: () => void;
   below?: boolean;
+  /// A page fetch is in flight: nav, size and jump hold still (same rule
+  /// as the sort headers) — no piled-up requests mid-flight. The compact
+  /// icon stays live so the full shell is always recoverable.
+  busy?: boolean;
 }) {
   const { t } = useLanguage();
   if (compact) {
@@ -450,23 +470,29 @@ export default function Pagination({
         options={options}
         onPageSize={onPageSize}
         below={below}
+        busy={busy}
       />
       <button
         id="qz-pager-prev"
         type="button"
         aria-label={t("pagination.prevPage")}
-        disabled={page === 0}
+        disabled={page === 0 || busy}
         onClick={() => onPage(page - 1)}
         className="rounded-[7px] p-1.5 text-[var(--qz-muted)] transition-colors hover:text-[var(--qz-text)] disabled:opacity-30"
       >
         <ChevronLeft size={16} aria-hidden />
       </button>
-      <PageJumpOrReadout page={page} pageCount={pageCount} onPage={onPage} />
+      <PageJumpOrReadout
+        page={page}
+        pageCount={pageCount}
+        onPage={onPage}
+        busy={busy}
+      />
       <button
         id="qz-pager-next"
         type="button"
         aria-label={t("pagination.nextPage")}
-        disabled={pageCount === 0 || page >= pageCount - 1}
+        disabled={pageCount === 0 || page >= pageCount - 1 || busy}
         onClick={() => onPage(page + 1)}
         className="rounded-[7px] p-1.5 text-[var(--qz-muted)] transition-colors hover:text-[var(--qz-text)] disabled:opacity-30"
       >

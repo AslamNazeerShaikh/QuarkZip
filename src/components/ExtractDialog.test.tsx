@@ -137,7 +137,7 @@ describe("ExtractDialog", () => {
     expect(onConfirm).not.toHaveBeenCalled();
   });
 
-  it("should_show_the_byte_budget_and_append_a_datetime_stamp", async () => {
+  it("should_show_the_byte_budget_and_preview_a_single_stamp", async () => {
     const user = userEvent.setup();
     setup("all", 0, 6);
     await user.click(
@@ -145,15 +145,49 @@ describe("ExtractDialog", () => {
     );
     // Live budget for the prefilled basename (photo = 5 bytes).
     expect(screen.getByText("5 / 255 bytes (UTF-8)")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Append date-time" }));
+    // The toggle mints one stamp: the field stays clean…
+    await user.click(
+      screen.getByRole("checkbox", { name: "Append date-time" }),
+    );
     const field = screen.getByLabelText("Subfolder name");
-    expect((field as HTMLInputElement).value).toMatch(
+    expect((field as HTMLInputElement).value).toBe("photo");
+    // …the preview shows the stamped name once (never stacked)…
+    const preview = screen.getByText(
       /^photo_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$/,
     );
-    // Final-path preview tracks the name.
+    expect(preview).toBeInTheDocument();
+    // …the budget counts the stamp against the reduced limit…
+    expect(screen.getByText("25 / 235 bytes (UTF-8)")).toBeInTheDocument();
+    // …and toggling twice never stacks: off removes it, on mints fresh.
+    await user.click(
+      screen.getByRole("checkbox", { name: "Append date-time" }),
+    );
+    expect(screen.queryByText(/^photo_\d{4}/)).not.toBeInTheDocument();
+    expect(screen.getByText("5 / 255 bytes (UTF-8)")).toBeInTheDocument();
+    // Final-path preview tracks the stamped name.
+    await user.click(
+      screen.getByRole("checkbox", { name: "Append date-time" }),
+    );
     expect(
       screen.getByText(/\/tmp\/out\/photo_\d{4}-\d{2}-\d{2}_/),
     ).toBeInTheDocument();
+  });
+
+  it("should_block_names_that_overflow_the_stamped_budget", async () => {
+    const user = userEvent.setup();
+    setup("all", 0, 6);
+    await user.click(
+      screen.getByRole("checkbox", { name: "Extract into a new subfolder" }),
+    );
+    await user.click(
+      screen.getByRole("checkbox", { name: "Append date-time" }),
+    );
+    const field = screen.getByLabelText("Subfolder name");
+    await user.clear(field);
+    await user.type(field, "a".repeat(236));
+    // 236 > 255 − 20: stamp-specific error, Proceed blocked.
+    expect(screen.getByText(/turn off date-time/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Proceed" })).toBeDisabled();
   });
 
   it("should_render_nothing_when_closed", () => {

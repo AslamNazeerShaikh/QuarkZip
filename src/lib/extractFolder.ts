@@ -78,6 +78,19 @@ export function utf8Length(name: string): number {
   return new TextEncoder().encode(name).length;
 }
 
+/// Date-time suffix bytes (`_YYYY-MM-DD_HH-MM-SS`, always ASCII): the
+/// budget a stamped name must reserve inside the 255-byte cap, so the
+/// typed name is limited to `255 - DATE_STAMP_SUFFIX_BYTES` instead.
+export const DATE_STAMP_SUFFIX_BYTES = 20;
+
+/// Final subfolder name: the typed name (or the fallback) plus the
+/// pre-minted stamp. Never mutates the input and never stacks — the stamp
+/// is minted once per toggle and the result shows as preview text.
+export function previewFolderName(name: string, stamp: string | null): string {
+  const base = name === "" ? "extracted" : name;
+  return stamp ? `${base}_${stamp}` : base;
+}
+
 /// Filesystem-safe local stamp (`2026-10-08_14-30-05`): date and time joined
 /// by an underscore, no colons/spaces — legal on APFS and sortable.
 export function dateStamp(d: Date = new Date()): string {

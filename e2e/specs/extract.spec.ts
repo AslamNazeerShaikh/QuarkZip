@@ -154,7 +154,7 @@ test("colliding subfolder blocks proceed", async ({ app }) => {
   await expect(app.getByRole("button", { name: "Proceed" })).toBeDisabled();
 });
 
-test("append date-time suffixes the subfolder with a preview", async ({
+test("date-time toggle previews one stamp without touching the field", async ({
   app,
 }) => {
   await openPack(app);
@@ -162,14 +162,39 @@ test("append date-time suffixes the subfolder with a preview", async ({
   await app
     .getByRole("checkbox", { name: "Extract into a new subfolder" })
     .click();
-  await app.getByRole("button", { name: "Append date-time" }).click();
-  await expect(app.getByLabel("Subfolder name")).toHaveValue(
+  // Toggling mints one stamp: the field stays clean…
+  await app.getByRole("checkbox", { name: "Append date-time" }).click();
+  await expect(app.getByLabel("Subfolder name")).toHaveValue("pack");
+  // …the preview shows the stamped name once (never stacked)…
+  await expect(app.locator("#qz-extract-folder-preview")).toContainText(
     /pack_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/,
   );
+  // …toggling off removes it, on mints fresh (still one)…
+  await app.getByRole("checkbox", { name: "Append date-time" }).click();
+  await expect(app.locator("#qz-extract-folder-preview")).toContainText("pack");
+  await expect(app.locator("#qz-extract-folder-preview")).not.toContainText(
+    /_\d{4}-/,
+  );
+  // …and confirming extracts into the stamped folder.
+  await app.getByRole("checkbox", { name: "Append date-time" }).click();
   await expect(app.getByRole("button", { name: "Proceed" })).toBeEnabled();
   await app.getByRole("button", { name: "Proceed" }).click();
   const seen = await calls(app);
   expect(seen.extracts[0].dest).toMatch(/\/tmp\/pack_\d{4}-\d{2}-\d{2}_/);
+});
+
+test("double-clicking proceed extracts exactly once", async ({ app }) => {
+  await openPack(app);
+  await app.getByRole("button", { name: "Extract All" }).click();
+  // The second half of a fast double-click must not fall through the
+  // closing dialog and re-confirm underneath it.
+  await app.getByRole("button", { name: "Proceed" }).dblclick();
+  await expect(
+    app.getByRole("dialog", { name: "Extraction complete" }),
+  ).toBeVisible();
+  expect((await calls(app)).extracts).toHaveLength(1);
+  await app.getByRole("button", { name: "OK" }).click();
+  await expect(app.getByRole("dialog")).toHaveCount(0);
 });
 
 test("failed extract shows the failure dialog", async ({ app }) => {

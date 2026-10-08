@@ -118,6 +118,37 @@ describe("Pagination", () => {
     ).toBeDisabled();
   });
 
+  it("should_hold_nav_size_and_jump_still_while_busy", async () => {
+    const user = userEvent.setup();
+    const onPage = vi.fn();
+    render(
+      <Pagination
+        page={1}
+        pageCount={3}
+        pageSize={100}
+        total={250}
+        onPage={onPage}
+        onPageSize={() => {}}
+        busy
+      />,
+    );
+    // One press per operation: nothing piles up mid-flight (same rule as
+    // the sort headers). The compact icon stays live so the full shell
+    // is always recoverable — covered separately.
+    expect(screen.getByRole("button", { name: "Next page" })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "Previous page" }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: "Rows per page" }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole("spinbutton", { name: "Go to page" }),
+    ).toBeDisabled();
+    await user.keyboard("{Enter}");
+    expect(onPage).not.toHaveBeenCalled();
+  });
+
   it("should_navigate_pages", async () => {
     const user = userEvent.setup();
     const { onPage } = setup(1);
