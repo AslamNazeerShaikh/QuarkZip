@@ -5,6 +5,8 @@
 # bump VER_DOT/TAG/EXPECTED_SHA256, run it, review the diff, commit.
 #
 # Pinned version: 7-Zip 26.04 (2026-10-05), see docs/7zip-reference.md.
+# Upstream tag 26.04 == commit 9128b80e3a471108678e2b3ec3c985861c8d7b0f
+# (verified identical to main HEAD on 2026-10-08; tree is 1:1 with the tag).
 # Network + ~2 MB download. Re-run to re-fetch (deletes + re-extracts).
 #
 # Usage:
