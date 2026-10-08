@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 import { APP_NAME, type AppInfo } from "../lib/appInfo";
 import { useLanguage } from "../i18n/LanguageContext";
 
-/// About popup, mirroring the extract dialogs: dimmed backdrop, surface card
+/// About popup, mirroring the extract dialogs: frosted-glass backdrop, surface card
 /// with a big centered icon, an info grid, the 7-Zip attribution paragraph,
 /// and a single OK action. Esc and backdrop click also dismiss.
 export default function AboutDialog({
@@ -50,7 +50,7 @@ export default function AboutDialog({
           never by clicking outside. */}
       <div
         id="qz-about-backdrop"
-        className="animate-qz-fade absolute inset-0 bg-black/25"
+        className="qz-dialog-backdrop animate-qz-fade absolute inset-0"
         aria-hidden
       />
       <div

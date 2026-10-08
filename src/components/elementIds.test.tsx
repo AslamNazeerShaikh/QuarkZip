@@ -277,4 +277,26 @@ describe("elementIds", () => {
     );
     expect(container.querySelector("#qz-overview-details")).toBeNull();
   });
+
+  it("should_veil_dialogs_in_frosted_glass_never_a_dark_dim", () => {
+    const { container } = render(
+      <ExtractDialog
+        open
+        mode="all"
+        selected={0}
+        total={3}
+        dest="/tmp/out"
+        archivePath="/tmp/demo.zip"
+        onCancel={() => {}}
+        onConfirm={() => {}}
+      />,
+    );
+    const veil = container.querySelector("#qz-extract-backdrop");
+    expect(veil).not.toBeNull();
+    // Bright frosted wash (theme-aware in CSS); a dark dim would show
+    // through the translucent card and gray it out.
+    expect(veil).toHaveClass("qz-dialog-backdrop");
+    expect(veil).not.toHaveClass("bg-black/25");
+    expect(container.querySelector(".bg-black\\/25")).toBeNull();
+  });
 });

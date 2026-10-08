@@ -241,6 +241,20 @@
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   backdrop-filter: blur(20px) saturate(180%);
 }
+/* Frosted dialog veil: a bright translucent wash + blur over the app
+   instead of a dark dim. Dialog cards are translucent material, so a
+   dark dim shows through them and grays them out; the bright wash keeps
+   their white look. Theme-aware: white wash in light, black wash in
+   dark. All eight dialog backdrops share this class — never `bg-black`
+   dims here. */
+.qz-dialog-backdrop {
+  background: rgb(255 255 255 / 0.45);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+}
+.dark .qz-dialog-backdrop {
+  background: rgb(0 0 0 / 0.45);
+}
 /* Tinted chrome shells: the exact Pagination/ThemeSwitch look with the
    hue carried as a translucent tint. Labels stay body text (a hue fails
    AA on its own tint — verified in color-system.md); icons at usage
@@ -277,6 +291,11 @@
 @media (prefers-reduced-transparency: reduce) {
   .qz-material-bar {
     background: var(--qz-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .qz-dialog-backdrop {
+    background: var(--qz-bg);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }

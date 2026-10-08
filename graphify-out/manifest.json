@@ -426,9 +426,9 @@
     "semantic_hash": ""
   },
   "e2e/specs/extract.spec.ts": {
-    "mtime": 1791398798.8578267,
-    "seen": 1791399005.595762,
-    "ast_hash": "894ffd1236b31ed6b9b77052b250a5dd",
+    "mtime": 1791452869.1033707,
+    "seen": 1791452983.680361,
+    "ast_hash": "b5f1bf0f04678d65aa2056f0d986a7e9",
     "semantic_hash": ""
   },
   "e2e/specs/open-archive.spec.ts": {
@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791449215.4468105,
-    "seen": 1791449279.996007,
-    "ast_hash": "e9756fe472ae538c7312a82b5cf6883b",
+    "mtime": 1791452863.3720958,
+    "seen": 1791452983.680473,
+    "ast_hash": "0a82039f2f892ceaaf91188c42bd0467",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -870,9 +870,9 @@
     "semantic_hash": ""
   },
   "src/components/AboutDialog.tsx": {
-    "mtime": 1791445214.1300862,
-    "seen": 1791445260.7045681,
-    "ast_hash": "d27e946da3b6d220d4be5f03c3ad8d05",
+    "mtime": 1791452858.5464208,
+    "seen": 1791452983.680376,
+    "ast_hash": "1edc831f05600bfa64c361bf8095f6cc",
     "semantic_hash": ""
   },
   "src/components/ArchiveOverview.test.tsx": {
@@ -906,9 +906,9 @@
     "semantic_hash": ""
   },
   "src/components/ChecksumDialog.tsx": {
-    "mtime": 1791445214.1665478,
-    "seen": 1791445260.7045708,
-    "ast_hash": "1af8efefe3378d934d0b0c0fae5961b1",
+    "mtime": 1791452855.807484,
+    "seen": 1791452983.680379,
+    "ast_hash": "2f20433ef60c1b2a124f9d8fb48e6a1f",
     "semantic_hash": ""
   },
   "src/components/ExtractDialog.test.tsx": {
@@ -918,9 +918,9 @@
     "semantic_hash": ""
   },
   "src/components/ExtractDialog.tsx": {
-    "mtime": 1791445214.1831229,
-    "seen": 1791445260.704572,
-    "ast_hash": "e97a9b7ab814199ee818522bf451cc08",
+    "mtime": 1791452855.7922142,
+    "seen": 1791452983.6803799,
+    "ast_hash": "ac848b4ae2ec950342216f4e3dbebe14",
     "semantic_hash": ""
   },
   "src/components/ExtractDoneDialog.test.tsx": {
@@ -930,9 +930,9 @@
     "semantic_hash": ""
   },
   "src/components/ExtractDoneDialog.tsx": {
-    "mtime": 1791445214.186777,
-    "seen": 1791445260.704573,
-    "ast_hash": "e06fa2a656753ef88304c333b096e8df",
+    "mtime": 1791452858.5464072,
+    "seen": 1791452983.6803799,
+    "ast_hash": "794e51a653819935ea6f884a58c09aa9",
     "semantic_hash": ""
   },
   "src/components/LanguageSwitch.test.tsx": {
@@ -954,9 +954,9 @@
     "semantic_hash": ""
   },
   "src/components/Pagination.tsx": {
-    "mtime": 1791448043.671865,
-    "seen": 1791448221.832474,
-    "ast_hash": "1ea547dcb725961f62332dfbb8375881",
+    "mtime": 1791452855.8076065,
+    "seen": 1791452983.680383,
+    "ast_hash": "e787c8407420ff9e4dd0a2cb64c5a6c0",
     "semantic_hash": ""
   },
   "src/components/PasswordDialog.test.tsx": {
@@ -966,9 +966,9 @@
     "semantic_hash": ""
   },
   "src/components/PasswordDialog.tsx": {
-    "mtime": 1791445214.223786,
-    "seen": 1791445260.704576,
-    "ast_hash": "a400fa46d50e8fd8d83f180110e532d2",
+    "mtime": 1791452855.7956214,
+    "seen": 1791452983.680384,
+    "ast_hash": "1e483d57a7fc70394d9915f53eb05ac9",
     "semantic_hash": ""
   },
   "src/components/TestDialog.test.tsx": {
@@ -978,9 +978,9 @@
     "semantic_hash": ""
   },
   "src/components/TestDialog.tsx": {
-    "mtime": 1791445214.2310653,
-    "seen": 1791445260.704577,
-    "ast_hash": "6955ea35e445b51ee82a73d060d17dbb",
+    "mtime": 1791452855.7956543,
+    "seen": 1791452983.680385,
+    "ast_hash": "d9e965fc5569e7cd2b6725995cc9a7ed",
     "semantic_hash": ""
   },
   "src/components/ThemeSwitch.tsx": {
@@ -1074,9 +1074,9 @@
     "semantic_hash": ""
   },
   "src/components/LoadDialog.tsx": {
-    "mtime": 1791445214.1969936,
-    "seen": 1791445260.7045739,
-    "ast_hash": "6970b79e85413c1e623ad92132519638",
+    "mtime": 1791452855.8074732,
+    "seen": 1791452983.680382,
+    "ast_hash": "7b9296334ae748df5f26a2d72e0bac8f",
     "semantic_hash": ""
   },
   "docs/macpacker-reference.md": {
@@ -1974,9 +1974,9 @@
     "semantic_hash": ""
   },
   "src/components/elementIds.test.tsx": {
-    "mtime": 1791448107.6763666,
-    "seen": 1791448221.832491,
-    "ast_hash": "0f714cb701359ee2a97aed29d9055e84",
+    "mtime": 1791452880.6585398,
+    "seen": 1791452983.680386,
+    "ast_hash": "cc60b50193b9584c8e08b398f6c02a60",
     "semantic_hash": ""
   },
   "e2e/specs/alignment.spec.ts": {

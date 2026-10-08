@@ -215,3 +215,22 @@ test("extract buttons are disabled for an empty archive", async ({ app }) => {
   ).toBeDisabled();
   await expect(app.getByRole("button", { name: "Extract All" })).toBeDisabled();
 });
+
+test("dialog veil is frosted glass, never a dark dim", async ({ app }) => {
+  await openPack(app);
+  await app.getByRole("button", { name: "Extract All" }).click();
+  const dialog = app.getByRole("dialog", { name: "Extract all files?" });
+  await expect(dialog).toBeVisible();
+  const veil = app.locator("#qz-extract-backdrop");
+  await expect(veil).toHaveClass(/qz-dialog-backdrop/);
+  // No black dim anywhere behind the dialog…
+  expect(await app.locator(".bg-black\\/25").count()).toBe(0);
+  // …and the blur actually applies (bright wash, frosted app beneath).
+  const filter = await veil.evaluate(
+    (el) => getComputedStyle(el).backdropFilter,
+  );
+  expect(filter).not.toBe("none");
+  expect(filter).toContain("blur");
+  await app.getByRole("button", { name: "Cancel" }).click();
+  await expect(dialog).toHaveCount(0);
+});

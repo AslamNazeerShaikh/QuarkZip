@@ -152,7 +152,7 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   Linux custom bar left (title stays centered via the 1fr-auto-1fr grid on
   both; the button opts out of the native drag with `stopDrag`, disabled
   while a listing is in flight).
-- `ExtractDialog`: centered modal (dim backdrop, 16px radius, 180ms pop,
+- `ExtractDialog`: centered modal (frosted-glass backdrop, 16px radius, 180ms pop,
   Esc cancel, reduced-motion safe) in three modes — `selected`
   (`ListChecks` tile, `K of N selected files`), `all` (`Download` tile,
   `All N files`), `empty` (warning tile, `No files are selected — extract
@@ -173,7 +173,9 @@ all N instead?` with an `Extract All` confirm). Big centered icon, the
   runs `extract_archive` (`7zz x -o<dest> [files...] -y`)
   (a page-by-page select-everything collapses to the empty list too, so
   10M paths never cross IPC).
-  The backdrop never dismisses — buttons or Esc only. Any dialog rendered
+  The backdrop never dismisses — buttons or Esc only. Backdrops share
+  `.qz-dialog-backdrop` (bright frosted wash + blur, never a dark dim —
+  the translucent cards would gray out showing it through). Any dialog rendered
   inside a material (`backdrop-filter`) ancestor must portal to
   `document.body`, or `fixed inset-0` centers on the ancestor instead of
   the window (this bit the page-jump confirm once).

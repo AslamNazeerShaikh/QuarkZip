@@ -8,7 +8,7 @@ export type ExtractResult =
   | { ok: true; fileCount: number; dest: string }
   | { ok: false; message: string; dest: string };
 
-/// Extraction result popup, mirroring the confirm dialog: dimmed backdrop,
+/// Extraction result popup, mirroring the confirm dialog: frosted-glass backdrop,
 /// white card with a big centered icon, and a single OK action. Success
 /// shows the extracted file count and destination; failure shows the error.
 /// Esc also dismisses. The backdrop never dismisses — use OK.
@@ -44,7 +44,7 @@ export default function ExtractDoneDialog({
     >
       <div
         id="qz-extract-done-backdrop"
-        className="animate-qz-fade absolute inset-0 bg-black/25"
+        className="qz-dialog-backdrop animate-qz-fade absolute inset-0"
         aria-hidden
       />
       <div

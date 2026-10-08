@@ -11891,7 +11891,7 @@
       "node_kind": "heading",
       "norm_label": "deliberate deviations (with rationale)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L298"
+      "source_location": "L300"
     },
     {
       "id": "docs_ui_guidelines_design_direction",
@@ -11915,7 +11915,7 @@
       "node_kind": "heading",
       "norm_label": "element ids (dom debugging)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L272"
+      "source_location": "L274"
     },
     {
       "id": "docs_ui_guidelines_interaction_states",
@@ -11927,7 +11927,7 @@
       "node_kind": "heading",
       "norm_label": "interaction / states",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L287"
+      "source_location": "L289"
     },
     {
       "id": "docs_ui_guidelines_layout",
@@ -11939,7 +11939,7 @@
       "node_kind": "heading",
       "norm_label": "layout",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L254"
+      "source_location": "L256"
     },
     {
       "id": "docs_ui_guidelines_quarkzip_ui_guidelines",
@@ -53296,7 +53296,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L254",
+      "source_location": "L256",
       "weight": 1.0
     },
     {
@@ -53307,7 +53307,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L272",
+      "source_location": "L274",
       "weight": 1.0
     },
     {
@@ -53318,7 +53318,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L287",
+      "source_location": "L289",
       "weight": 1.0
     },
     {
@@ -53329,7 +53329,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L298",
+      "source_location": "L300",
       "weight": 1.0
     },
     {
@@ -66888,5 +66888,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "c03aaaa5929b9f5949ad69cd9158204fbe872f5f"
+  "built_at_commit": "f6add1d9d40b25cb8428de93010fceb7508e9253"
 }

@@ -66,7 +66,7 @@ export default function LoadDialog({
     >
       <div
         id="qz-load-backdrop"
-        className="animate-qz-fade absolute inset-0 bg-black/25"
+        className="qz-dialog-backdrop animate-qz-fade absolute inset-0"
         aria-hidden
       />
       <div
