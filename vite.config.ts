@@ -29,6 +29,7 @@ const e2eMocks = [
   "@tauri-apps/api/webview",
   "@tauri-apps/api/path",
   "@tauri-apps/plugin-dialog",
+  "@tauri-apps/plugin-opener",
   "@tauri-apps/plugin-os",
 ].map((id) => ({
   find: id,

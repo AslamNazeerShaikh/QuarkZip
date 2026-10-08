@@ -3,6 +3,8 @@ import {
   calls,
   expect,
   failNextExtract,
+  failNextTest,
+  openedUrls,
   openViaButton,
   stubPicker,
   test,
@@ -232,5 +234,42 @@ test("dialog veil is frosted glass, never a dark dim", async ({ app }) => {
   expect(filter).not.toBe("none");
   expect(filter).toContain("blur");
   await app.getByRole("button", { name: "Cancel" }).click();
+  await expect(dialog).toHaveCount(0);
+});
+
+test("permission denial offers privacy settings instead of failing", async ({
+  app,
+}) => {
+  await openPack(app);
+  await failNextExtract(app, "Permission denied: /tmp/pack");
+  await app.getByRole("button", { name: "Extract All" }).click();
+  await app.getByRole("button", { name: "Proceed" }).click();
+  // Permission dialog, not the generic failure popup…
+  const dialog = app.getByRole("dialog", { name: "Permission needed" });
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText("/tmp");
+  // …the Settings grant is requested through the opener…
+  await dialog.getByRole("button", { name: "Open Privacy Settings" }).click();
+  expect(await openedUrls(app)).toEqual([
+    "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles",
+  ]);
+  // …and Cancel dismisses cleanly.
+  await dialog.getByRole("button", { name: "Cancel" }).click();
+  await expect(dialog).toHaveCount(0);
+});
+
+test("test permission denial swaps the result for the grant dialog", async ({
+  app,
+}) => {
+  await openPack(app);
+  await failNextTest(app, "Operation not permitted");
+  await app.getByRole("button", { name: "Test" }).click();
+  const dialog = app.getByRole("dialog", { name: "Permission needed" });
+  await expect(dialog).toBeVisible();
+  // No folder picker for tests — just the grant and Cancel.
+  await expect(
+    dialog.getByRole("button", { name: "Choose Different Folder" }),
+  ).toHaveCount(0);
+  await dialog.getByRole("button", { name: "Cancel" }).click();
   await expect(dialog).toHaveCount(0);
 });

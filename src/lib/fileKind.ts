@@ -108,7 +108,7 @@ const EXTENSIONS: Record<string, { label?: string; icon: LucideIcon }> = {
 };
 
 /// Classify an archive entry for display: folder vs file, matching icon,
-/// and short type label. Folder-ness comes from 7zz `Attributes`
+/// and short type label. Folder-ness comes from the engine `Attributes`
 /// (surfaced as `is_folder`) — never from size, since empty files
 /// legitimately report `Size = 0`. The `labels` override carries translated
 /// "Folder"/"File" words; extension labels (`PNG`, `7Z`) never translate.

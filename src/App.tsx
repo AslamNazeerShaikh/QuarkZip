@@ -1,5 +1,6 @@
 import { Channel, invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import { dirname } from "@tauri-apps/api/path";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -19,6 +20,7 @@ import ArchiveTable, {
 import TitleBar from "./components/TitleBar";
 import AboutDialog from "./components/AboutDialog";
 import PasswordDialog from "./components/PasswordDialog";
+import PermissionDialog from "./components/PermissionDialog";
 import TestDialog from "./components/TestDialog";
 import ChecksumDialog from "./components/ChecksumDialog";
 import { loadAppInfo, type AppInfo } from "./lib/appInfo";
@@ -40,6 +42,7 @@ import { Button } from "./components/ui/button";
 import { useTheme } from "./hooks/useTheme";
 import { useLanguage } from "./i18n/LanguageContext";
 import { isPasswordError } from "./lib/password";
+import { PRIVACY_SETTINGS_URL, isPermissionError } from "./lib/permissions";
 
 export interface ArchiveEntry {
   path: string;
@@ -202,6 +205,13 @@ export default function App() {
     new Set(),
   );
   const [doneInfo, setDoneInfo] = useState<ExtractResult | null>(null);
+  // Filesystem permission denial during extract/test: the dedicated
+  // dialog (grant in Settings, or pick another folder) instead of the
+  // generic result popup.
+  const [permission, setPermission] = useState<{
+    mode: "extract" | "test";
+    path: string;
+  } | null>(null);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [aboutInfo, setAboutInfo] = useState<AppInfo | null>(null);
   const [testOpen, setTestOpen] = useState(false);
@@ -336,11 +346,9 @@ export default function App() {
       // summary parse fails (or the backend predates `info_archive`).
       try {
         setLoadPhase("details");
-        const summary = await invoke<ArchiveInfo>("info_archive", {
-          path,
-          password,
-          onProgress: channel,
-        });
+        // Details summarize the stored listing (no engine re-run, no
+        // password/progress needed — the open listing owns both).
+        const summary = await invoke<ArchiveInfo>("info_archive", { path });
         if (cancelLoadRef.current) return;
         setInfo(summary);
       } catch {
@@ -376,7 +384,7 @@ export default function App() {
     }
   }
 
-  /// Aborts an in-flight open: the backend kills 7zz, the popup closes,
+  /// Aborts an in-flight open: the backend aborts the in-process listing, the popup closes,
   /// and the previous listing stays untouched (late invokes stay silent).
   function cancelLoading() {
     cancelLoadRef.current = true;
@@ -507,13 +515,25 @@ export default function App() {
       const message = typeof e === "string" ? e : String(e);
       if (isPasswordError(message) && passwordOverride === null) {
         // First failure and no fresh password: ask, then retry on verify
-        // instead of dumping raw per-file 7zz errors. Cancel keeps state.
+        // instead of dumping raw engine errors. Cancel keeps state.
         if (archive) askPassword(archive, "extract");
+      } else if (isPermissionError(message)) {
+        setPermission({ mode: "extract", path: finalDest });
       } else {
         setDoneInfo({ ok: false, message, dest: finalDest });
       }
     } finally {
       setExtracting(false);
+    }
+  }
+
+  /// Opens the Privacy Settings grant (best-effort: Linux ignores the
+  /// macOS-only URL, and a denial stays silent — the dialog stays open).
+  async function openPrivacySettings() {
+    try {
+      await openUrl(PRIVACY_SETTINGS_URL);
+    } catch {
+      /* best-effort only */
     }
   }
 
@@ -775,10 +795,14 @@ export default function App() {
               password={archivePassword}
               onOk={() => setTestOpen(false)}
               onPasswordError={() => {
-                // Never unlocked for this operation: swap the raw 7zz error
-                // for the password gate; verifying reopens the test.
+                // Never unlocked for this operation: swap the raw engine
+                // error for the password gate; verifying reopens the test.
                 setTestOpen(false);
                 askPassword(archive, "test");
+              }}
+              onPermissionError={() => {
+                setTestOpen(false);
+                setPermission({ mode: "test", path: archive });
               }}
             />
             <ChecksumDialog
@@ -801,6 +825,23 @@ export default function App() {
             }
             onAccept={acceptPassword}
             onCancel={closePasswordGate}
+          />
+        )}
+        {permission && (
+          <PermissionDialog
+            open
+            mode={permission.mode}
+            path={permission.path}
+            onOpenSettings={() => void openPrivacySettings()}
+            onChooseFolder={
+              permission.mode === "extract"
+                ? () => {
+                    setPermission(null);
+                    void chooseDest();
+                  }
+                : undefined
+            }
+            onCancel={() => setPermission(null)}
           />
         )}
       </div>

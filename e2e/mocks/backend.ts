@@ -47,6 +47,8 @@ export interface E2EState {
   openDirResult: string | null | undefined;
   /** Non-null makes the next extract_archive reject with this message. */
   extractError: string | null;
+  /** Non-null makes the next test_archive reject with this message. */
+  testError: string | null;
   /** Paths that `path_exists` reports as taken (subfolder collision e2e). */
   existingPaths: string[];
   maximized: boolean;
@@ -59,6 +61,7 @@ export interface E2EState {
     close: number;
     dragWindow: number;
     extracts: Array<{ path: string; dest: string; files: string[] }>;
+    openedUrls: string[];
   };
   dropHandlers: Array<(e: DropEvent) => void>;
 }
@@ -74,6 +77,7 @@ function freshState(): E2EState {
     openFileResult: undefined,
     openDirResult: undefined,
     extractError: null,
+    testError: null,
     existingPaths: [],
     maximized: false,
     osPlatform: "linux",
@@ -85,6 +89,7 @@ function freshState(): E2EState {
       close: 0,
       dragWindow: 0,
       extracts: [],
+      openedUrls: [],
     },
     dropHandlers: [],
   };
@@ -230,6 +235,7 @@ export async function handleInvoke(
       return state.existingPaths.includes(a.path as string);
     }
     case "test_archive": {
+      if (state.testError) throw state.testError;
       const channel = (a as Record<string, { emit?: (n: number) => void }>)
         .onProgress;
       channel?.emit?.(100);

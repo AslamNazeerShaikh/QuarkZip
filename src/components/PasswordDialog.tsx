@@ -20,7 +20,7 @@ function clampPct(value: number): number {
 /// Password gate for encrypted archives: opening (or drag-dropping) a
 /// password-protected archive lands here instead of failing — and so do
 /// Test/Extract runs that hit a password error, which the gate retries
-/// after verifying. Check verifies the password with `7zz t` (live
+/// after verifying. Check verifies the password with an in-process test (live
 /// progress); a match animates a success check and reveals the accept
 /// button (Open / Extract / Test per caller), a miss shakes the input and
 /// keeps Check/Cancel. Cancel dismisses with the app state untouched.

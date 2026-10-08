@@ -67,7 +67,7 @@ export function validateFolderName(name: string): FolderNameError | null {
 }
 
 /// Destination with the optional subfolder appended (NFC-normalized, no
-/// trailing slash on the base). Pure string join — 7zz creates the folder.
+/// trailing slash on the base). Pure string join — the engine creates the folder.
 export function joinDest(dest: string, subfolder: string | null): string {
   if (!subfolder) return dest;
   return `${dest.replace(/\/+$/, "")}/${subfolder.normalize("NFC")}`;

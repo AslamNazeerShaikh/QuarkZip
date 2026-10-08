@@ -7,13 +7,11 @@
   "app.openNew": "नया खोलें…",
   "app.chooseDest": "एक्सट्रैक्ट करने की जगह चुनें",
   "app.chooseFolder": "फ़ोल्डर चुनें…",
-
   "titlebar.minimize": "मिनिमाइज़",
   "titlebar.maximize": "मैक्सिमाइज़",
   "titlebar.restore": "रिस्टोर",
   "titlebar.close": "बंद करें",
   "titlebar.readonlyHint": "केवल पढ़ने हेतु — फ़ाइलें निकाली जा सकती हैं, बदली नहीं जा सकतीं",
-
   "overview.emptyTitle": "कोई आर्काइव खुला नहीं है",
   "overview.emptyDesc": "7z, zip, tar या 30+ अन्य फ़ॉर्मैट खोलें — या कहीं भी फ़ाइल छोड़ें।",
   "overview.openCta": "आर्काइव खोलें",
@@ -48,7 +46,6 @@
   "overview.checksum": "चेकसम",
   "overview.collapse": "विवरण छिपाएँ",
   "overview.expand": "विवरण दिखाएँ",
-
   "loading.title": "आर्काइव खोला जा रहा है",
   "loading.listing": "फ़ाइल सूची पढ़ी जा रही है…",
   "loading.details": "आर्काइव विवरण पढ़ा जा रहा है…",
@@ -57,7 +54,6 @@
   "loading.elapsed": "बीता समय",
   "loading.rate": "गति",
   "loading.progress": "खोलने की प्रगति",
-
   "table.selectAll": "सभी चुनें",
   "table.selectItem": "{name} चुनें",
   "table.colName": "नाम",
@@ -66,10 +62,8 @@
   "table.colModified": "संशोधित",
   "table.empty": "कोई प्रविष्टि नहीं",
   "table.emptyHint": "सामग्री देखने के लिए आर्काइव खोलें",
-
   "filekind.folder": "फ़ोल्डर",
   "filekind.file": "फ़ाइल",
-
   "pagination.rowsPerPage": "प्रति पृष्ठ पंक्तियाँ",
   "pagination.prevPage": "पिछला पृष्ठ",
   "pagination.nextPage": "अगला पृष्ठ",
@@ -79,17 +73,14 @@
   "pagination.jump": "जंप",
   "pagination.expand": "पेजिनेशन दिखाएँ",
   "pagination.all": "सभी",
-
   "theme.group": "रंग थीम",
   "theme.change": "थीम बदलें",
   "theme.light": "हल्का",
   "theme.system": "सिस्टम",
   "theme.dark": "गहरा",
-
   "common.cancel": "रद्द करें",
   "common.proceed": "आगे बढ़ें",
   "common.ok": "ठीक है",
-
   "extract.title": "फ़ाइलें एक्सट्रैक्ट करें?",
   "extract.titleSelected": "चयनित फ़ाइलें एक्सट्रैक्ट करें?",
   "extract.titleAll": "सभी फ़ाइलें एक्सट्रैक्ट करें?",
@@ -109,11 +100,9 @@
   "extract.folderChecking": "नाम जाँचा जा रहा है…",
   "extract.folderLimit": "{used} / 255 बाइट्स (UTF-8)",
   "extract.appendDate": "दिनांक-समय जोड़ें",
-
   "done.successTitle": "एक्सट्रैक्शन पूर्ण",
   "done.successFiles": "{count} फ़ाइलें यहाँ एक्सट्रैक्ट की गईं",
   "done.failTitle": "एक्सट्रैक्शन विफल",
-
   "about.title": "{app} के बारे में",
   "about.appName": "ऐप का नाम",
   "about.version": "वर्तमान संस्करण",
@@ -126,10 +115,8 @@
   "about.licenseB": ")। पिन किया गया 7-Zip 26.03 साइडकार अपस्ट्रीम रिलीज़ से ज्यों-का-त्यों शामिल है और व्यावसायिक सहित किसी भी उपयोग के लिए निःशुल्क है।",
   "about.madeWith": "❤️ के साथ 🇮🇳 में निर्मित",
   "about.madeWithLabel": "भारत में प्रेम सहित निर्मित",
-
   "lang.language": "भाषा",
   "lang.changeLanguage": "भाषा बदलें",
-
   "password.title": "पासवर्ड आवश्यक",
   "password.label": "पासवर्ड",
   "password.placeholder": "आर्काइव पासवर्ड दर्ज करें",
@@ -141,12 +128,10 @@
   "password.verified": "पासवर्ड सही है।",
   "password.checking": "सत्यापित हो रहा है…",
   "password.progress": "पासवर्ड सत्यापन",
-
   "test.title": "आर्काइव परीक्षण",
   "test.testing": "{name} का परीक्षण हो रहा है…",
   "test.pass": "अखंडता जाँच सफल — सब कुछ ठीक है।",
   "test.progress": "परीक्षण प्रगति",
-
   "checksum.title": "चेकसम निकालें",
   "checksum.algorithm": "एल्गोरिदम",
   "checksum.algorithmList": "चेकसम एल्गोरिदम",
@@ -159,5 +144,10 @@
   "checksum.match": "हैश मेल खाते हैं",
   "checksum.mismatch": "हैश मेल नहीं खाते",
   "checksum.cancelled": "गणना रद्द की गई — कोई परिणाम नहीं।",
-  "checksum.progress": "चेकसम प्रगति"
+  "checksum.progress": "चेकसम प्रगति",
+  "permission.title": "अनुमति आवश्यक",
+  "permission.message": "{path} के लिए पहुँच अस्वीकृत।",
+  "permission.hint": "सिस्टम सेटिंग्स में पहुँच दें, या कोई अन्य स्थान चुनें।",
+  "permission.openSettings": "गोपनीयता सेटिंग्स खोलें",
+  "permission.chooseFolder": "अलग फ़ोल्डर चुनें"
 }

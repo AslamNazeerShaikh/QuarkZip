@@ -29,6 +29,7 @@ vi.mock("@tauri-apps/api/webview", () => ({
 
 const extractCtl = vi.hoisted(() => ({
   fail: true,
+  failMessage: null as string | null,
   calls: [] as Array<{ dest: string; files: string[] }>,
 }));
 
@@ -188,10 +189,13 @@ vi.mock("@tauri-apps/api/core", () => ({
         password: string | null;
       };
       extractCtl.calls.push({ dest, files });
-      // locked.zip without a password fails the 7zz way (per-file errors);
+      // locked.zip without a password fails the engine way (per-file errors);
       // the app must gate instead of showing them.
       if (path === "/tmp/locked.zip" && !password) {
         return Promise.reject("ERROR: Wrong password : locked.txt");
+      }
+      if (extractCtl.failMessage) {
+        return Promise.reject(extractCtl.failMessage);
       }
       return extractCtl.fail
         ? Promise.reject(`unexpected command ${cmd}`)
@@ -214,6 +218,7 @@ vi.mock("@tauri-apps/plugin-os", () => ({
 beforeEach(() => {
   osCtl.platform = "linux";
   extractCtl.fail = true;
+  extractCtl.failMessage = null;
   extractCtl.calls = [];
   listCtl.deferList = false;
   listCtl.releaseList = null;
@@ -445,6 +450,27 @@ describe("drag and drop", () => {
       screen.getByText("unexpected command extract_archive"),
     ).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "OK" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("should_offer_privacy_settings_when_extract_hits_permissions", async () => {
+    extractCtl.failMessage = "Permission denied: /tmp/out";
+    const user = userEvent.setup();
+    render(<App />);
+    dragHandlers[dragHandlers.length - 1]?.({
+      payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
+    });
+    await user.click(
+      await screen.findByRole("button", { name: "Extract All" }),
+    );
+    await user.click(await screen.findByRole("button", { name: "Proceed" }));
+    // Permission dialog instead of the generic failure popup…
+    const dialog = await screen.findByRole("dialog", {
+      name: "Permission needed",
+    });
+    expect(dialog).toHaveTextContent("/tmp");
+    // …Cancel dismisses it with no extraction recorded as failed.
+    await user.click(screen.getByRole("button", { name: "Cancel" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 

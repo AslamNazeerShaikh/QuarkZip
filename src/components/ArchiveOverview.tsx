@@ -64,7 +64,7 @@ function Meta({
 }
 
 /// Top-half overview card: empty state holds the centered Open action;
-/// once an archive is open the same card shows `7zz l -slt` container +
+/// once an archive is open the same card shows engine container +
 /// content + security metadata. Expanded it shares the space equally with
 /// the table (`flex-1` each); collapsed it shrink-wraps the integrity
 /// action row (`flex-none`) so the table absorbs the freed space. Details

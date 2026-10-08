@@ -187,10 +187,11 @@ all N instead?` with an `Extract All` confirm). Big centered icon, the
   icon with file count + destination on success, red icon with the error on
   failure, single OK action either way. The footer carries no status text.
   The backdrop never dismisses — OK or Esc only.
-- `TestDialog`: integrity result popup (`7zz t` with `-bsp1` progress
-  streamed over a Tauri `Channel`) — auto-starts on open, determinate
+- `TestDialog`: integrity result popup (in-process decode with file-count
+  progress streamed over a Tauri `Channel`) — auto-starts on open, determinate
   progress bar while running, pass/fail result, OK enabled only when done.
-  Same modal language; backdrop never dismisses.
+  Same modal language; backdrop never dismisses. Permission denials swap in
+  `PermissionDialog` instead of a result.
 - `ChecksumDialog`: MD5 / SHA-1 / SHA-256 / SHA-512 calculator — algorithm
   listbox, optional expected-hash input, live progress bar, Cancel (aborts
   the run, keeps the popup open), Close (cancels if running, then closes),
@@ -206,14 +207,20 @@ all N instead?` with an `Extract All` confirm). Big centered icon, the
   tooltip shows the active language. Switching persists to `localStorage`
   and re-renders instantly, no restart.
 - `PasswordDialog`: password gate for encrypted archives — lock icon,
-  password input with show/hide peek, live verify progress (`7zz t`);
-  wrong passwords shake the input red and keep Check/Cancel, a match
+  password input with show/hide peek, live verify progress (in-process
+  test); wrong passwords shake the input red and keep Check/Cancel, a match
   animates a success check and reveals the accept button. Opens for
   listing failures and for Test/Extract password errors (which it retries
   after verifying); the accept button reads Open / Extract / Test per
   caller. Cancel/Esc dismiss with the current listing untouched. Same
   modal language; backdrop never dismisses. Full behavior matrix:
   `docs/passwords.md`.
+- `PermissionDialog`: filesystem permission denials (EACCES/EPERM) during
+  Extract/Test — warning tile naming the blocked path, an `Open Privacy
+Settings` grant (Full Disk Access pane, best-effort), plus `Choose
+Different Folder` for extracts. Replaces the generic result popup for
+  permission failures only; Cancel/Esc dismiss. Same modal language;
+  backdrop never dismisses.
 - `ArchiveTable` reports checkbox selection via `onSelectionChange`
   (cleared on each new listing); `App` feeds it to the dialog + extract.
 - `ArchiveOverview`: three-state overview card — startup (no archive) shares

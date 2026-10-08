@@ -57,7 +57,7 @@ export function formatDateTimeLocal(date: Date): string {
 const MODIFIED_RE =
   /^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2})(?:\.\d+)?)?)?$/;
 
-/// Format a 7zz `Modified` stamp (`2026-10-03 21:39:45.966`) in the system's
+/// Format an engine `Modified` stamp (`2026-10-03 21:39:45.966`) in the system's
 /// local time zone with AM/PM (`Oct 3, 2026, 9:39:45 PM`). 7zz stamps carry
 /// no offset, so the fields are read as local wall time. Returns `—` for
 /// null/blank and the raw string when it does not parse.

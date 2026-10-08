@@ -116,3 +116,11 @@ export async function failNextExtract(
 ): Promise<void> {
   await page.evaluate((m) => (window.__e2e.state.extractError = m), message);
 }
+
+export async function failNextTest(page: Page, message: string): Promise<void> {
+  await page.evaluate((m) => (window.__e2e.state.testError = m), message);
+}
+
+export async function openedUrls(page: Page): Promise<string[]> {
+  return (await e2e(page, "window.__e2e.state.calls.openedUrls")) as string[];
+}

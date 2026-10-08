@@ -29,7 +29,7 @@ function Stat({
   );
 }
 
-/// Opening-archive progress popup. `7zz l` reports no percent, so the bar
+/// Opening-archive progress popup. The engine reports no percent, so the bar
 /// is indeterminate and the rows show live counters instead: completed
 /// entries, stdout bytes collected, elapsed time, throughput. Totals are
 /// unknowable upfront, so no ETA is shown. Cancel kills the sidecar; the

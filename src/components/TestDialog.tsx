@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { useLanguage } from "../i18n/LanguageContext";
 import { isPasswordError } from "../lib/password";
+import { isPermissionError } from "../lib/permissions";
 
 type Phase =
   | { running: true; pct: number }
@@ -14,7 +15,7 @@ function clampPct(value: number): number {
   return Math.min(100, Math.max(0, Math.round(value)));
 }
 
-/// Archive integrity test popup (`7zz t`, like AkiZip's Test button).
+/// Archive integrity test popup (in-process decode, like AkiZip's Test button).
 /// Starts automatically on open: live determinate progress bar while 7zz
 /// runs, then a pass/fail result with a single OK action. Backdrop clicks
 /// never dismiss it — only OK (enabled once the test finishes).
@@ -24,6 +25,7 @@ export default function TestDialog({
   password = null,
   onOk,
   onPasswordError,
+  onPermissionError,
 }: {
   open: boolean;
   archive: string;
@@ -32,6 +34,9 @@ export default function TestDialog({
   /// Called instead of showing a result when the run fails for lack of a
   /// password (and none was supplied) — the caller swaps in the gate.
   onPasswordError?: () => void;
+  /// Called instead of showing a result on a filesystem permission
+  /// denial — the caller swaps in the permission dialog.
+  onPermissionError?: () => void;
 }) {
   const { t } = useLanguage();
   const [phase, setPhase] = useState<Phase>({ running: true, pct: 0 });
@@ -57,6 +62,10 @@ export default function TestDialog({
         const message = typeof e === "string" ? e : String(e);
         if (password === null && isPasswordError(message) && onPasswordError) {
           onPasswordError();
+          return;
+        }
+        if (isPermissionError(message) && onPermissionError) {
+          onPermissionError();
           return;
         }
         setPhase({ running: false, ok: false, message });
