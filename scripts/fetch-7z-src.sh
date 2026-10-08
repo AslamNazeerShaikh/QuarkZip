@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# Fetch pinned 7-Zip SOURCES for the in-process bridge (P1) and unpack them
-# into vendor/7zip (gitignored, fetch-at-build like the sidecar binaries).
+# (Re-)vendor pinned 7-Zip SOURCES for the in-process bridge (P1) by unpacking
+# them into vendor/7zip. That tree is COMMITTED (ABI/API pin — builds never
+# depend on the upstream repo surviving); this script is the upgrade path:
+# bump VER_DOT/TAG/EXPECTED_SHA256, run it, review the diff, commit.
 #
 # Pinned version: 7-Zip 26.04 (2026-10-05), see docs/7zip-reference.md.
 # Network + ~2 MB download. Re-run to re-fetch (deletes + re-extracts).

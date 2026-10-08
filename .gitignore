@@ -13,7 +13,8 @@ dist-ssr
 *.local
 vendor/7zz-cache
 vendor/7z-src-cache
-vendor/7zip
+# NOTE: vendor/7zip (pinned 7-Zip sources) is COMMITTED, not ignored —
+# ABI/API pin so builds never depend on the upstream repo surviving.
 
 # Playwright e2e artifacts
 test-results/
