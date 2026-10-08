@@ -128,7 +128,32 @@ test("open new switches archives", async ({ app }) => {
 test("collapsing the card keeps the row centered, expanding restores", async ({
   app,
 }) => {
-  await addArchive(app, PATH, { count: 3 });
+  // Extras present so More owns the row's left end when expanded
+  // (default stub has no extras → More hidden, covered below).
+  await addArchive(app, PATH, {
+    count: 3,
+    info: {
+      container_format: "zip",
+      physical_size: 1024,
+      headers_size: 128,
+      method: "Deflate",
+      solid: "—",
+      blocks: "1",
+      file_count: 3,
+      folder_count: 0,
+      total_unpacked: 2048,
+      total_packed: 1024,
+      compression_ratio: 0.5,
+      max_depth: 1,
+      methods: ["Deflate"],
+      encrypted_files: 0,
+      encryption_scheme: "—",
+      host_os: ["Unix"],
+      container_size: 1024,
+      container_modified: 1_759_623_585,
+      extra: { Tail: "yes" },
+    },
+  });
   await openViaButton(app, PATH);
   const row = app.getByTestId("card-controls");
   await expect(row).toBeVisible();

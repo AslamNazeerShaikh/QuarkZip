@@ -18,9 +18,9 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1791294201.7250645,
-    "seen": 1791294220.2999308,
-    "ast_hash": "9b2237efa4bda322bdba4d11403d1c4a",
+    "mtime": 1791443918.1771605,
+    "seen": 1791444352.690314,
+    "ast_hash": "e830be8fa93c61465e93e4c92a269474",
     "semantic_hash": ""
   },
   "scripts/fetch-7zz.sh": {
@@ -30,9 +30,9 @@
     "semantic_hash": ""
   },
   "src-tauri/Cargo.toml": {
-    "mtime": 1791366786.0784373,
-    "seen": 1791367140.631592,
-    "ast_hash": "ff08a35fb0a5aa900de70a98d642832c",
+    "mtime": 1791443924.3183568,
+    "seen": 1791444352.690318,
+    "ast_hash": "35656d53ce28b324a6841ac9a4da38e7",
     "semantic_hash": ""
   },
   "src-tauri/build.rs": {
@@ -420,9 +420,9 @@
     "semantic_hash": ""
   },
   "e2e/specs/edge-cases.spec.ts": {
-    "mtime": 1791384928.4564826,
-    "seen": 1791385051.3799438,
-    "ast_hash": "4c43ff672e302f630413f3990e91796f",
+    "mtime": 1791444267.9842181,
+    "seen": 1791444352.69031,
+    "ast_hash": "3625ddbb9c1a0b4f050a401ae9d77547",
     "semantic_hash": ""
   },
   "e2e/specs/extract.spec.ts": {
@@ -432,9 +432,9 @@
     "semantic_hash": ""
   },
   "e2e/specs/open-archive.spec.ts": {
-    "mtime": 1791403162.6303873,
-    "seen": 1791403177.080149,
-    "ast_hash": "e0df09b6c642d75c3f9d79981c3d5107",
+    "mtime": 1791444273.0494509,
+    "seen": 1791444352.690311,
+    "ast_hash": "82cf88abbafa72a47439e87b15dd2e9e",
     "semantic_hash": ""
   },
   "e2e/specs/pagination.spec.ts": {

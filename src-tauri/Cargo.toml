@@ -27,10 +27,10 @@ tauri-plugin-shell = "2"
 tauri-plugin-dialog = "2"
 tauri-plugin-os = "2"
 tokio = { version = "1", features = ["time", "fs", "io-util"] }
-digest = "0.10"
-md-5 = "0.10"
-sha1 = "0.10"
-sha2 = "0.10"
+digest = "0.11"
+md-5 = "0.11"
+sha1 = "0.11"
+sha2 = "0.11"
 window-vibrancy = "0.8.1"
 
 

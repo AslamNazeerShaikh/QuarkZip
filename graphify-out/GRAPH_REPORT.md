@@ -1,16 +1,16 @@
 # Graph Report - QuarkZip  (2026-10-08)
 
 ## Corpus Check
-- 272 files · ~406,122 words
+- 272 files · ~406,190 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2328 nodes · 3440 edges · 215 communities (195 shown, 8 thin omitted)
+- 2328 nodes · 3441 edges · 215 communities (195 shown, 8 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b0f997fb`
+- Built from commit: `befd8c1a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

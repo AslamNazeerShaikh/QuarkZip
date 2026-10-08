@@ -1,4 +1,10 @@
-import { addArchive, expect, openViaButton, test } from "../fixtures";
+import {
+  addArchive,
+  expect,
+  expectPage,
+  openViaButton,
+  test,
+} from "../fixtures";
 
 test("folders, unknown types, and extensionless files label correctly", async ({
   app,
@@ -59,7 +65,7 @@ test("large listing paginates and All collapses to one page", async ({
 }) => {
   await addArchive(app, "/tmp/huge.zip", { count: 2500 });
   await openViaButton(app, "/tmp/huge.zip");
-  await expect(app.getByText("1 / 25")).toBeVisible();
+  await expectPage(app, 1, 25);
   // Virtualized: only the visible window mounts, not all 2500 rows.
   const mounted = await app.locator('div[style*="translateY"]').count();
   expect(mounted).toBeLessThan(200);
