@@ -3150,7 +3150,7 @@
       "file_type": "code",
       "norm_label": "close()",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L205"
+      "source_location": "L208"
     },
     {
       "id": "src_components_titlebar_titlebar_minimize",
@@ -3162,7 +3162,7 @@
       "file_type": "code",
       "norm_label": "minimize()",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L197"
+      "source_location": "L200"
     },
     {
       "id": "src_components_titlebar_titlebar_stopdrag",
@@ -3174,7 +3174,7 @@
       "file_type": "code",
       "norm_label": "stopdrag()",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L214"
+      "source_location": "L217"
     },
     {
       "id": "src_components_titlebar_titlebar_togglemaximize",
@@ -3186,7 +3186,7 @@
       "file_type": "code",
       "norm_label": "togglemaximize()",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L187"
+      "source_location": "L190"
     },
     {
       "id": "src_i18n_i18n_test_switcher",
@@ -11891,7 +11891,7 @@
       "node_kind": "heading",
       "norm_label": "deliberate deviations (with rationale)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L296"
+      "source_location": "L297"
     },
     {
       "id": "docs_ui_guidelines_design_direction",
@@ -11915,7 +11915,7 @@
       "node_kind": "heading",
       "norm_label": "element ids (dom debugging)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L270"
+      "source_location": "L271"
     },
     {
       "id": "docs_ui_guidelines_interaction_states",
@@ -11927,7 +11927,7 @@
       "node_kind": "heading",
       "norm_label": "interaction / states",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L285"
+      "source_location": "L286"
     },
     {
       "id": "docs_ui_guidelines_layout",
@@ -29865,7 +29865,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L207",
+      "source_location": "L210",
       "weight": 1.0
     },
     {
@@ -29877,7 +29877,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L199",
+      "source_location": "L202",
       "weight": 1.0
     },
     {
@@ -29889,7 +29889,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L189",
+      "source_location": "L192",
       "weight": 1.0
     },
     {
@@ -31473,7 +31473,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L187",
+      "source_location": "L190",
       "weight": 1.0
     },
     {
@@ -31485,7 +31485,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L197",
+      "source_location": "L200",
       "weight": 1.0
     },
     {
@@ -31497,7 +31497,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L205",
+      "source_location": "L208",
       "weight": 1.0
     },
     {
@@ -53307,7 +53307,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L270",
+      "source_location": "L271",
       "weight": 1.0
     },
     {
@@ -53318,7 +53318,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L285",
+      "source_location": "L286",
       "weight": 1.0
     },
     {
@@ -53329,7 +53329,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L296",
+      "source_location": "L297",
       "weight": 1.0
     },
     {
@@ -57608,7 +57608,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L214",
+      "source_location": "L217",
       "weight": 1.0
     },
     {
@@ -66888,5 +66888,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "7223da2bb0c07aedc1f7cae2eb8ae626d6dbee3b"
+  "built_at_commit": "b635644850d93a0427b99f7865ff408f34b0e204"
 }

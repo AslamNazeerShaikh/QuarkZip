@@ -254,7 +254,8 @@ all N instead?` with an `Extract All` confirm). Big centered icon, the
 ## Layout
 
 Single window (800×675 default/minimum, Tauri `tauri.conf.json`), no sidebar: slim
-drag strip (`h-14`), then the content column: startup shares it equally
+drag strip (`h-15`, 60px — the `h-9` titlebar buttons get 12px air above
+and below, matching the 12px gap down to the card), then the content column: startup shares it equally
 (`ArchiveOverview` and table both `flex-1`); once open, the card
 shrink-wraps its fixed grid and the table (`flex-1`) absorbs all
 leftover space (growing the card via More shrinks the table) — then the

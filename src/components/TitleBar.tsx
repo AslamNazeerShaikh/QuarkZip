@@ -138,7 +138,10 @@ export default function TitleBar({
     // the 76px light inset; empty it falls back to the symmetric inset
     // so bare "QuarkZip" stays exactly centered. The right inset matches
     // the content column (`px-7`) so Open's right edge lands on the same
-    // vertical line as the overview card's right edge.
+    // vertical line as the overview card's right edge. The strip runs
+    // h-15 (60px): the h-9 Open button gets 12px air above and below —
+    // the same equal-air treatment the footer buttons get from `pt-7`
+    // / `pb-7` — and 12px down to the card (no top pad on `main`).
     return (
       <div
         data-tauri-drag-region
@@ -147,7 +150,7 @@ export default function TitleBar({
         }}
         data-testid="mac-titlebar"
         id="qz-titlebar-mac"
-        className={`grid h-12 shrink-0 cursor-default grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] items-center select-none ${
+        className={`grid h-15 shrink-0 cursor-default grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] items-center select-none ${
           archive ? "pr-7 pl-[76px]" : "px-[76px]"
         }`}
       >
@@ -228,7 +231,9 @@ export default function TitleBar({
       onDoubleClick={() => void toggleMaximize()}
       // Horizontal insets match the content column (`px-7`): Open's left
       // edge lands on the card's left edge, controls on its right edge.
-      className="grid h-12 shrink-0 cursor-default grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] items-center px-7 select-none"
+      // h-15 like the mac strip: 12px air above and below the h-9
+      // controls, and 12px down to the card.
+      className="grid h-15 shrink-0 cursor-default grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] items-center px-7 select-none"
     >
       {/* Left: Open sits here on Linux (window controls own the right);
           the app mark rides along so the centered title stays balanced. */}

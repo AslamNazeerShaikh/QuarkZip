@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791448183.7740717,
-    "seen": 1791448221.8325949,
-    "ast_hash": "3103ceac55e8b507e88142224806ace1",
+    "mtime": 1791448613.6822002,
+    "seen": 1791448673.955921,
+    "ast_hash": "7862d01092bb676550d667a0db5a0a4e",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
@@ -990,15 +990,15 @@
     "semantic_hash": ""
   },
   "src/components/TitleBar.test.tsx": {
-    "mtime": 1791398986.4836416,
-    "seen": 1791399005.595785,
-    "ast_hash": "fd7fdcdb2b0fb8411aa624256680a60d",
+    "mtime": 1791448616.9371526,
+    "seen": 1791448673.955819,
+    "ast_hash": "194d887d73dc563539a42dd3765770d5",
     "semantic_hash": ""
   },
   "src/components/TitleBar.tsx": {
-    "mtime": 1791448021.0911217,
-    "seen": 1791448221.832489,
-    "ast_hash": "3741e30b594a530e21c08798b8d46657",
+    "mtime": 1791448610.819414,
+    "seen": 1791448673.95582,
+    "ast_hash": "e6825669b98c9ad3b810ad1da88b6cc5",
     "semantic_hash": ""
   },
   "src/hooks/useTheme.ts": {
