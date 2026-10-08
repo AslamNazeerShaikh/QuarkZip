@@ -79,8 +79,10 @@ regression is diagnosable from stdout.
 3. **macOS overlay checklist** for any titlebar-adjacent change:
    keep `decorations:true` + `Overlay` + `hiddenTitle:true`;
    keep the symmetric 76px inset in the Mac strip in sync with
-   `trafficLightPosition` (left clears the lights, right mirrors it so
-   the title stays truly centered); keep `data-tauri-drag-region` on the
+   `trafficLightPosition` (left 76px clears the lights; right is `px-7`
+   matching the content gutters — the title stays centered via the
+   1fr-auto-1fr grid, not symmetric insets); keep the lights' `y` centered in the
+   strip (`y: 40` for the 92px bar: 40 + 12 + 40); keep `data-tauri-drag-region` on the
    strip (Overlay windows need an explicit drag region and cannot
    drag while unfocused — upstream Tauri caveat).
 4. **No doubled chrome.** The failure signature is always a doubled

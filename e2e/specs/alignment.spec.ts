@@ -28,6 +28,13 @@ test("linux titlebar insets match the card edges", async ({ app }) => {
   expect(
     Math.abs(open!.y - bar!.y - (card!.y - (open!.y + open!.height))),
   ).toBeLessThan(1.5);
+  // Same 28px air as the footer buttons: titlebar top-air == footer top-gap
+  // (both derive from one 28px nominal, so root-font scaling cancels out).
+  const footer = await app.locator("#qz-app-footer").boundingBox();
+  const extract = await app.locator("#qz-app-extract-selected").boundingBox();
+  expect(Math.abs(open!.y - bar!.y - (extract!.y - footer!.y))).toBeLessThan(
+    1.5,
+  );
 });
 
 test("macOS open aligns to the card's right edge", async ({ page }) => {

@@ -60,9 +60,9 @@
     "semantic_hash": ""
   },
   "src-tauri/tauri.conf.json": {
-    "mtime": 1791366699.1769547,
-    "seen": 1791367140.631597,
-    "ast_hash": "d572cfd2fb2b0454442e914767c7cd0b",
+    "mtime": 1791449215.4455655,
+    "seen": 1791449279.9959092,
+    "ast_hash": "cd6f08cb4dffd514d3608b8147e15a80",
     "semantic_hash": ""
   },
   "src/App.tsx": {
@@ -558,15 +558,15 @@
     "semantic_hash": ""
   },
   "docs/ui-guidelines.md": {
-    "mtime": 1791448613.6822002,
-    "seen": 1791448673.955921,
-    "ast_hash": "7862d01092bb676550d667a0db5a0a4e",
+    "mtime": 1791449215.4468105,
+    "seen": 1791449279.996007,
+    "ast_hash": "e9756fe472ae538c7312a82b5cf6883b",
     "semantic_hash": ""
   },
   "docs/window-chrome.md": {
-    "mtime": 1791294956.993344,
-    "seen": 1791294970.95153,
-    "ast_hash": "8667793c4c1a404f66c085629b8ad1c9",
+    "mtime": 1791449222.3721538,
+    "seen": 1791449279.996008,
+    "ast_hash": "0d3f25e578275e4047991b4dc55e42b0",
     "semantic_hash": ""
   },
   "assets/icon-source.png": {
@@ -990,15 +990,15 @@
     "semantic_hash": ""
   },
   "src/components/TitleBar.test.tsx": {
-    "mtime": 1791448616.9371526,
-    "seen": 1791448673.955819,
-    "ast_hash": "194d887d73dc563539a42dd3765770d5",
+    "mtime": 1791449227.0295992,
+    "seen": 1791449279.995921,
+    "ast_hash": "a11910fec4539e5ce34836b1b287a3aa",
     "semantic_hash": ""
   },
   "src/components/TitleBar.tsx": {
-    "mtime": 1791448610.819414,
-    "seen": 1791448673.95582,
-    "ast_hash": "e6825669b98c9ad3b810ad1da88b6cc5",
+    "mtime": 1791449209.301564,
+    "seen": 1791449279.995921,
+    "ast_hash": "45d3c9efad0c8b9fe1b0dc77f7f71086",
     "semantic_hash": ""
   },
   "src/hooks/useTheme.ts": {
@@ -1980,9 +1980,9 @@
     "semantic_hash": ""
   },
   "e2e/specs/alignment.spec.ts": {
-    "mtime": 1791448183.815325,
-    "seen": 1791448221.832443,
-    "ast_hash": "33b6bd117dfa9ec00f8a4175757fc2c4",
+    "mtime": 1791449272.6909022,
+    "seen": 1791449279.9958951,
+    "ast_hash": "abd986e3ca9d2b9fa95ca2dfef7a588f",
     "semantic_hash": ""
   }
 }

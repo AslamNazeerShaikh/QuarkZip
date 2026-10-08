@@ -122,16 +122,16 @@ describe("TitleBar", () => {
   });
 
   it("should_size_both_bars_for_equal_button_air", () => {
-    // h-15 (60px) around h-9 (36px) controls: 12px air above and below,
-    // and 12px down to the card — the footer's equal-air treatment.
+    // h-23 (92px) with pt-7/pb-7 around h-9 (36px) controls: 28px air
+    // above and below — the footer's equal-air treatment.
     const { container, rerender } = render(
       <TitleBar archive="/tmp/a.zip" maximized={false} onOpen={noop} />,
     );
-    expect(container.querySelector("header")).toHaveClass("h-15");
+    expect(container.querySelector("header")).toHaveClass("h-23");
     rerender(
       <TitleBar archive="/tmp/a.zip" hidden maximized={false} onOpen={noop} />,
     );
-    expect(container.querySelector("#qz-titlebar-mac")).toHaveClass("h-15");
+    expect(container.querySelector("#qz-titlebar-mac")).toHaveClass("h-23");
   });
 
   it("should_offer_open_on_the_right_when_macos_overlay", async () => {
