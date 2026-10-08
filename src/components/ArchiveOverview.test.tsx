@@ -244,13 +244,15 @@ describe("ArchiveOverview", () => {
         }
       />,
     );
-    // Icon-only squares carrying the accessible names, 18px glyphs like
-    // the Theme/Language/About icons. BadgeCheck/Binary fill the grid
-    // like their neighbours (ShieldCheck/Hash read tiny at any size).
-    expect(screen.getByRole("button", { name: "Test" })).toHaveClass("w-9");
-    expect(screen.getByRole("button", { name: "Checksum" })).toHaveClass("w-9");
+    // Icon-only squares carrying the accessible names: same shell +
+    // `h-7 w-7` inner button as Theme/Language/About (a `w-9` Button
+    // leaves ~9px inner padding around the same 18px glyph and reads
+    // tiny next to them). BadgeCheck/Binary fill the grid like their
+    // neighbours (ShieldCheck/Hash read tiny at any size).
     for (const name of ["Test", "Checksum"] as const) {
-      const svg = screen.getByRole("button", { name }).querySelector("svg");
+      const button = screen.getByRole("button", { name });
+      expect(button).toHaveClass("h-7", "w-7");
+      const svg = button.querySelector("svg");
       expect(svg?.getAttribute("width")).toBe("18");
     }
     expect(

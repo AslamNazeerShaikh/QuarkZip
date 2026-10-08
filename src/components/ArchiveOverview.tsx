@@ -130,36 +130,39 @@ export default function ArchiveOverview({
   // Integrity checks ride inside the controls cluster (icon-only squares,
   // like the collapse chevron) — Test between Pagination and Theme,
   // Checksum between Test and Theme — with About last. Only the collapse
-  // chevron keeps the row's end. Glyphs run 18px like the Theme/Language/
-  // About icons. Test uses BadgeCheck (verified) and Checksum uses Binary
-  // (hash bits): both fill the 24-grid like their neighbours —
-  // ShieldCheck/Hash/FileCheck/Fingerprint read tiny at the same pixel
-  // size (thin strokes, small or wispy footprints), which no size bump
-  // fixed (verified against 3x screenshots).
+  // chevron keeps the row's end. Each check is the same shell + `h-7 w-7`
+  // inner button as Theme/Language/About (18px glyph, ~5px inner padding):
+  // a `w-9` Button around the same glyph leaves ~9px padding and reads
+  // tiny next to them. Test uses BadgeCheck (verified) and Checksum uses
+  // Binary (hash bits): both fill the 24-grid like their neighbours —
+  // ShieldCheck/Hash/FileCheck/Fingerprint read small at any pixel size
+  // (verified against 3x screenshots).
   const clusterChecks = (
     <>
-      <Button
-        id="qz-action-test-btn"
-        variant="secondary"
-        size="bar"
-        onClick={onTest}
-        aria-label={testLabel}
-        title={testLabel}
-        className="w-9 px-0"
-      >
-        <BadgeCheck size={18} aria-hidden />
-      </Button>
-      <Button
-        id="qz-action-checksum-btn"
-        variant="secondary"
-        size="bar"
-        onClick={onChecksum}
-        aria-label={checksumLabel}
-        title={checksumLabel}
-        className="w-9 px-0"
-      >
-        <Binary size={18} aria-hidden />
-      </Button>
+      <div className="qz-material-bar flex h-9 shrink-0 items-center rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]">
+        <button
+          id="qz-action-test-btn"
+          type="button"
+          onClick={onTest}
+          aria-label={testLabel}
+          title={testLabel}
+          className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-colors outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+        >
+          <BadgeCheck size={18} aria-hidden />
+        </button>
+      </div>
+      <div className="qz-material-bar flex h-9 shrink-0 items-center rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]">
+        <button
+          id="qz-action-checksum-btn"
+          type="button"
+          onClick={onChecksum}
+          aria-label={checksumLabel}
+          title={checksumLabel}
+          className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-colors outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+        >
+          <Binary size={18} aria-hidden />
+        </button>
+      </div>
     </>
   );
   const collapseControl = (
