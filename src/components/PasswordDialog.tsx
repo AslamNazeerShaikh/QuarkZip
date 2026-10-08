@@ -108,17 +108,23 @@ export default function PasswordDialog({
 
   return (
     <div
+      id="qz-password-dialog"
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="password-dialog-title"
     >
       <div
+        id="qz-password-backdrop"
         className="animate-qz-fade absolute inset-0 bg-black/25"
         aria-hidden
       />
-      <div className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+      <div
+        id="qz-password-card"
+        className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+      >
         <span
+          id="qz-password-icon"
           key={phase.name}
           className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full ${
             verified
@@ -160,6 +166,7 @@ export default function PasswordDialog({
 
         {!verified && (
           <form
+            id="qz-password-form"
             className="mt-4 text-left"
             onSubmit={(e) => {
               e.preventDefault();
@@ -173,6 +180,7 @@ export default function PasswordDialog({
               {t("password.label")}
             </label>
             <div
+              id="qz-password-field"
               key={attempts}
               className={`qz-material-bar mt-1 flex h-9 items-center rounded-[10px] border outline-none transition-colors focus-within:ring-2 focus-within:ring-[var(--qz-primary)]/40 ${
                 phase.name === "wrong"
@@ -192,6 +200,7 @@ export default function PasswordDialog({
                 className="min-w-0 flex-1 bg-transparent px-3 text-[13px] outline-none placeholder:text-[var(--qz-faint)] disabled:opacity-50"
               />
               <button
+                id="qz-password-show"
                 type="button"
                 aria-label={show ? t("password.hide") : t("password.show")}
                 title={show ? t("password.hide") : t("password.show")}
@@ -223,8 +232,9 @@ export default function PasswordDialog({
               </p>
             )}
             {checking && (
-              <div className="mt-3">
+              <div id="qz-password-progress" className="mt-3">
                 <div
+                  id="qz-password-progressbar"
                   className="h-2 overflow-hidden rounded-full bg-[var(--qz-surface-2)]"
                   role="progressbar"
                   aria-label={t("password.progress")}
@@ -233,6 +243,7 @@ export default function PasswordDialog({
                   aria-valuemax={100}
                 >
                   <div
+                    id="qz-password-progress-fill"
                     className="h-full rounded-full bg-[var(--qz-primary)] transition-[width] duration-200"
                     style={{ width: `${phase.pct}%` }}
                   />
@@ -245,13 +256,21 @@ export default function PasswordDialog({
           </form>
         )}
 
-        <div className="mt-5 flex items-center justify-center gap-2">
+        <div
+          id="qz-password-actions"
+          className="mt-5 flex items-center justify-center gap-2"
+        >
           {verified ? (
-            <Button onClick={() => onAccept(archive, password)} autoFocus>
+            <Button
+              id="qz-password-accept"
+              onClick={() => onAccept(archive, password)}
+              autoFocus
+            >
               {acceptLabel}
             </Button>
           ) : (
             <Button
+              id="qz-password-check"
               onClick={check}
               disabled={password === "" || locked}
               autoFocus={!checking}
@@ -259,7 +278,12 @@ export default function PasswordDialog({
               {t("password.check")}
             </Button>
           )}
-          <Button variant="secondary" onClick={onCancel} disabled={checking}>
+          <Button
+            id="qz-password-cancel"
+            variant="secondary"
+            onClick={onCancel}
+            disabled={checking}
+          >
             {t("common.cancel")}
           </Button>
         </div>

@@ -201,3 +201,59 @@ test("collapsed card menus stay hittable (portaled, never clipped)", async ({
   await langMenu.getByRole("option", { name: "हिन्दी" }).click();
   await expect(app.getByRole("button", { name: "भाषा बदलें" })).toBeVisible();
 });
+
+test("debug ids are present and unique across the live DOM", async ({
+  app,
+}) => {
+  // Multi-page + extras: the jump input and the More button both mount.
+  await addArchive(app, "/tmp/ids.zip", {
+    count: 250,
+    info: {
+      container_format: "zip",
+      physical_size: 1024,
+      headers_size: 128,
+      method: "Deflate",
+      solid: "—",
+      blocks: "1",
+      file_count: 250,
+      folder_count: 0,
+      total_unpacked: 2048,
+      total_packed: 1024,
+      compression_ratio: 0.5,
+      max_depth: 1,
+      methods: ["Deflate"],
+      encrypted_files: 0,
+      encryption_scheme: "—",
+      host_os: ["Unix"],
+      container_size: 1024,
+      container_modified: 1_759_623_585,
+      extra: { Tail: "yes" },
+    },
+  });
+  await openViaButton(app, "/tmp/ids.zip");
+  // Spot-check the landmarks a debugging session reaches for first.
+  for (const id of [
+    "#qz-app-root",
+    "#qz-titlebar-linux",
+    "#qz-overview-card",
+    "#qz-overview-meta-container",
+    "#qz-action-row",
+    "#qz-pager-jump-input",
+    "#qz-action-more-btn",
+    "#qz-table-row-1-path",
+    "#qz-app-extract-selected",
+  ]) {
+    await expect(app.locator(id)).toBeVisible();
+  }
+  // No id may repeat: a duplicated debug id points Inspect Element at the
+  // wrong call site.
+  const dupes = await app.evaluate(() => {
+    const counts = new Map<string, number>();
+    for (const el of document.querySelectorAll("[id]")) {
+      const id = (el as HTMLElement).id;
+      if (id) counts.set(id, (counts.get(id) ?? 0) + 1);
+    }
+    return [...counts.entries()].filter(([, n]) => n > 1).map(([id]) => id);
+  });
+  expect(dupes).toEqual([]);
+});

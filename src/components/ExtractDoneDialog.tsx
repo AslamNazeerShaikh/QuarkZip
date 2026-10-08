@@ -36,19 +36,27 @@ export default function ExtractDoneDialog({
 
   return (
     <div
+      id="qz-extract-done-dialog"
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="extract-done-title"
     >
       <div
+        id="qz-extract-done-backdrop"
         className="animate-qz-fade absolute inset-0 bg-black/25"
         aria-hidden
       />
-      <div className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+      <div
+        id="qz-extract-done-card"
+        className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+      >
         {result.ok ? (
           <>
-            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-success-soft)]">
+            <span
+              id="qz-extract-done-icon"
+              className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-success-soft)]"
+            >
               <CheckCircle2
                 size={24}
                 aria-hidden
@@ -70,7 +78,10 @@ export default function ExtractDoneDialog({
           </>
         ) : (
           <>
-            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-danger-soft)]">
+            <span
+              id="qz-extract-done-icon"
+              className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-danger-soft)]"
+            >
               <XCircle
                 size={24}
                 aria-hidden
@@ -91,8 +102,11 @@ export default function ExtractDoneDialog({
             </p>
           </>
         )}
-        <div className="mt-5 flex items-center justify-center">
-          <Button onClick={onOk} autoFocus>
+        <div
+          id="qz-extract-done-actions"
+          className="mt-5 flex items-center justify-center"
+        >
+          <Button id="qz-extract-done-ok" onClick={onOk} autoFocus>
             {t("common.ok")}
           </Button>
         </div>

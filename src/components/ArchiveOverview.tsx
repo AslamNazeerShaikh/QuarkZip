@@ -41,9 +41,17 @@ function formatEpoch(secs: number | null): string {
   return formatDateTimeLocal(d);
 }
 
-function Meta({ label, value }: { label: string; value: ReactNode }) {
+function Meta({
+  label,
+  value,
+  id,
+}: {
+  label: string;
+  value: ReactNode;
+  id?: string;
+}) {
   return (
-    <div className="min-w-0">
+    <div id={id} className="min-w-0">
       {/* Reference micro label: 11px uppercase, letter-spaced, tertiary. */}
       <p className="text-[11px] font-semibold tracking-[0.06em] text-[var(--qz-faint)] uppercase">
         {label}
@@ -116,6 +124,7 @@ export default function ArchiveOverview({
   const clusterChecks = (
     <>
       <Button
+        id="qz-action-test-btn"
         variant="secondary"
         size="bar"
         onClick={onTest}
@@ -126,6 +135,7 @@ export default function ArchiveOverview({
         <ShieldCheck size={18} aria-hidden />
       </Button>
       <Button
+        id="qz-action-checksum-btn"
         variant="secondary"
         size="bar"
         onClick={onChecksum}
@@ -138,9 +148,13 @@ export default function ArchiveOverview({
     </>
   );
   const collapseControl = (
-    <div className="flex flex-wrap justify-end gap-2">
+    <div
+      id="qz-action-collapse-cell"
+      className="flex flex-wrap justify-end gap-2"
+    >
       {/* Square icon-only, glyph flips with the state. */}
       <Button
+        id="qz-action-collapse-btn"
         variant="secondary"
         size="bar"
         onClick={toggleCollapsed}
@@ -163,6 +177,7 @@ export default function ArchiveOverview({
     // The table absorbs all leftover space (it is the only scroller
     // besides menus and dropdowns).
     <Card
+      id="qz-overview-card"
       className={
         archive
           ? "flex min-h-0 flex-none flex-col overflow-hidden"
@@ -170,8 +185,11 @@ export default function ArchiveOverview({
       }
     >
       {!archive ? (
-        <div className="flex min-h-0 flex-1 flex-col">
-          <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3 px-6 py-8 text-center">
+        <div id="qz-overview-empty" className="flex min-h-0 flex-1 flex-col">
+          <div
+            id="qz-overview-empty-hero"
+            className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3 px-6 py-8 text-center"
+          >
             <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--qz-primary-soft)]">
               <Archive
                 size={20}
@@ -179,13 +197,14 @@ export default function ArchiveOverview({
                 className="text-[var(--qz-primary)]"
               />
             </span>
-            <div>
+            <div id="qz-overview-empty-text">
               <CardTitle>{t("overview.emptyTitle")}</CardTitle>
               <CardDescription className="mt-1">
                 {t("overview.emptyDesc")}
               </CardDescription>
             </div>
             <Button
+              id="qz-overview-open-cta"
               onClick={onOpen}
               disabled={loading}
               className="mt-1 min-w-40"
@@ -200,42 +219,61 @@ export default function ArchiveOverview({
           {/* Utilities live here until an archive opens: extreme left,
             same card padding as the open action row. */}
           {utilityControls && (
-            <div className="flex flex-wrap items-center justify-start gap-2 px-5 pb-5">
+            <div
+              id="qz-overview-empty-utils"
+              className="flex flex-wrap items-center justify-start gap-2 px-5 pb-5"
+            >
               {utilityControls}
             </div>
           )}
         </div>
       ) : (
-        <div className="flex min-h-0 flex-1 flex-col">
+        <div id="qz-overview-open" className="flex min-h-0 flex-1 flex-col">
           {/* No card header: path lives in the centered window title, and the
               status pills live with the details below. */}
           {!collapsed && (
             /* Details hug the top (horizontal centering only, modest top
               inset) — no centering slack above/below. The action row
               below is pinned to the card bottom instead of scrolling. */
-            <div className="flex flex-col px-5 pt-5">
-              <div className="mx-auto w-full max-w-5xl">
+            <div id="qz-overview-details" className="flex flex-col px-5 pt-5">
+              <div
+                id="qz-overview-details-inner"
+                className="mx-auto w-full max-w-5xl"
+              >
                 {loading && !info ? (
-                  <p className="py-6 text-center text-sm text-[var(--qz-muted)]">
+                  <p
+                    id="qz-overview-loading"
+                    className="py-6 text-center text-sm text-[var(--qz-muted)]"
+                  >
                     {t("overview.readingDetails")}
                   </p>
                 ) : info ? (
-                  <div className="flex flex-col gap-5">
-                    <section aria-label={t("overview.sectionContainer")}>
-                      <div className="grid grid-cols-2 gap-x-6 gap-y-4 md:grid-cols-4">
+                  <div id="qz-overview-content" className="flex flex-col gap-5">
+                    <section
+                      id="qz-overview-section-container"
+                      aria-label={t("overview.sectionContainer")}
+                    >
+                      <div
+                        id="qz-overview-grid-container"
+                        className="grid grid-cols-2 gap-x-6 gap-y-4 md:grid-cols-4"
+                      >
                         <Meta
+                          id="qz-overview-meta-container"
                           label={t("overview.meta.container")}
                           value={info.container_format ?? "—"}
                         />
                         <Meta
+                          id="qz-overview-meta-method"
                           label={t("overview.meta.method")}
                           value={info.method ?? "—"}
                         />
                         <Meta
+                          id="qz-overview-meta-solid-blocks"
                           label={t("overview.meta.solidBlocks")}
                           value={`${info.solid ?? "—"} · ${info.blocks ?? "—"}`}
                         />
                         <Meta
+                          id="qz-overview-meta-headers"
                           label={t("overview.meta.headers")}
                           value={
                             info.headers_size != null
@@ -244,6 +282,7 @@ export default function ArchiveOverview({
                           }
                         />
                         <Meta
+                          id="qz-overview-meta-physical-size"
                           label={t("overview.meta.physicalSize")}
                           value={
                             info.physical_size != null
@@ -252,6 +291,7 @@ export default function ArchiveOverview({
                           }
                         />
                         <Meta
+                          id="qz-overview-meta-on-disk"
                           label={t("overview.meta.onDisk")}
                           value={
                             info.container_size != null
@@ -260,10 +300,12 @@ export default function ArchiveOverview({
                           }
                         />
                         <Meta
+                          id="qz-overview-meta-modified"
                           label={t("overview.meta.modified")}
                           value={formatEpoch(info.container_modified)}
                         />
                         <Meta
+                          id="qz-overview-meta-host-os"
                           label={t("overview.meta.hostOs")}
                           value={
                             info.host_os.length > 0
@@ -273,33 +315,47 @@ export default function ArchiveOverview({
                         />
                       </div>
                     </section>
-                    <section aria-label={t("overview.sectionContent")}>
-                      <div className="grid grid-cols-2 gap-x-6 gap-y-4 md:grid-cols-4">
+                    <section
+                      id="qz-overview-section-content"
+                      aria-label={t("overview.sectionContent")}
+                    >
+                      <div
+                        id="qz-overview-grid-content"
+                        className="grid grid-cols-2 gap-x-6 gap-y-4 md:grid-cols-4"
+                      >
                         <Meta
+                          id="qz-overview-meta-files"
                           label={t("overview.meta.files")}
                           value={formatCount(info.file_count)}
                         />
                         <Meta
+                          id="qz-overview-meta-folders"
                           label={t("overview.meta.folders")}
                           value={formatCount(info.folder_count)}
                         />
                         <Meta
+                          id="qz-overview-meta-nesting"
                           label={t("overview.meta.nesting")}
                           value={info.max_depth > 0 ? `${info.max_depth}` : "—"}
                         />
                         <Meta
+                          id="qz-overview-meta-unpacked"
                           label={t("overview.meta.unpacked")}
                           value={formatSize(info.total_unpacked)}
                         />
                         <Meta
+                          id="qz-overview-meta-packed"
                           label={t("overview.meta.packed")}
                           value={formatSize(info.total_packed)}
                         />
-                        <div className="min-w-0">
+                        <div id="qz-overview-meta-ratio" className="min-w-0">
                           <p className="text-[11px] font-semibold tracking-[0.06em] text-[var(--qz-faint)] uppercase">
                             {t("overview.meta.ratio")}
                           </p>
-                          <div className="mt-1 text-sm font-medium text-[var(--qz-text)]">
+                          <div
+                            id="qz-overview-meta-ratio-value"
+                            className="mt-1 text-sm font-medium text-[var(--qz-text)]"
+                          >
                             {info.total_unpacked > 0
                               ? t("overview.meta.ratioOf", {
                                   pct: (info.compression_ratio * 100).toFixed(
@@ -310,6 +366,7 @@ export default function ArchiveOverview({
                           </div>
                         </div>
                         <Meta
+                          id="qz-overview-meta-algorithms"
                           label={t("overview.meta.algorithms")}
                           value={
                             info.methods.length > 0
@@ -318,6 +375,7 @@ export default function ArchiveOverview({
                           }
                         />
                         <Meta
+                          id="qz-overview-meta-password-scheme"
                           label={t("overview.meta.passwordScheme")}
                           value={info.encryption_scheme}
                         />
@@ -328,19 +386,31 @@ export default function ArchiveOverview({
                       // a pathological key count can never squeeze the table
                       // out — typical archives (1–2 rows) never scroll.
                       <section
+                        id="qz-overview-section-extra"
                         aria-label={t("overview.sectionExtra")}
                         className="max-h-40 min-h-0 overflow-y-auto"
                       >
-                        <div className="grid grid-cols-2 gap-x-6 gap-y-4 md:grid-cols-4">
-                          {Object.entries(info.extra).map(([k, v]) => (
-                            <Meta key={k} label={k} value={v || "—"} />
+                        <div
+                          id="qz-overview-grid-extra"
+                          className="grid grid-cols-2 gap-x-6 gap-y-4 md:grid-cols-4"
+                        >
+                          {Object.entries(info.extra).map(([k, v], index) => (
+                            <Meta
+                              key={k}
+                              id={`qz-overview-extra-${index}`}
+                              label={k}
+                              value={v || "—"}
+                            />
                           ))}
                         </div>
                       </section>
                     )}
                   </div>
                 ) : (
-                  <p className="py-6 text-center text-sm text-[var(--qz-muted)]">
+                  <p
+                    id="qz-overview-unavailable"
+                    className="py-6 text-center text-sm text-[var(--qz-muted)]"
+                  >
                     {t("overview.unavailable")}
                   </p>
                 )}
@@ -358,12 +428,14 @@ export default function ArchiveOverview({
           a wrapped line apart, stranding a dead gap between More and the
           cluster while the actions dropped below (seen on the 10M zip). */}
           <div
+            id="qz-action-row"
             data-testid="action-row"
             className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 px-5 pt-4 pb-5"
           >
             {!collapsed && hasExtras && (
-              <div>
+              <div id="qz-action-more-cell">
                 <Button
+                  id="qz-action-more-btn"
                   variant="secondary"
                   size="bar"
                   onClick={() => setShowExtra((s) => !s)}
@@ -379,6 +451,7 @@ export default function ArchiveOverview({
             )}
             {(middleControls || utilityControls) && (
               <div
+                id="qz-card-controls"
                 data-testid="card-controls"
                 className="flex min-w-0 flex-wrap items-center justify-center gap-2"
               >

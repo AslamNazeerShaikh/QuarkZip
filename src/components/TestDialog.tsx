@@ -82,17 +82,23 @@ export default function TestDialog({
 
   return (
     <div
+      id="qz-test-dialog"
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="test-dialog-title"
     >
       <div
+        id="qz-test-backdrop"
         className="animate-qz-fade absolute inset-0 bg-black/25"
         aria-hidden
       />
-      <div className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+      <div
+        id="qz-test-card"
+        className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+      >
         <span
+          id="qz-test-icon"
           className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full ${
             phase.running
               ? "bg-[var(--qz-primary-soft)]"
@@ -131,8 +137,9 @@ export default function TestDialog({
           {phase.running ? t("test.testing", { name: archive }) : phase.message}
         </p>
         {phase.running && (
-          <div className="mt-4">
+          <div id="qz-test-progress" className="mt-4">
             <div
+              id="qz-test-progressbar"
               className="h-2 overflow-hidden rounded-full bg-[var(--qz-surface-2)]"
               role="progressbar"
               aria-label={t("test.progress")}
@@ -141,6 +148,7 @@ export default function TestDialog({
               aria-valuemax={100}
             >
               <div
+                id="qz-test-progress-fill"
                 className="h-full rounded-full bg-[var(--qz-primary)] transition-[width] duration-200"
                 style={{ width: `${phase.pct}%` }}
               />
@@ -150,8 +158,12 @@ export default function TestDialog({
             </p>
           </div>
         )}
-        <div className="mt-5 flex items-center justify-center">
+        <div
+          id="qz-test-actions"
+          className="mt-5 flex items-center justify-center"
+        >
           <Button
+            id="qz-test-ok"
             onClick={onOk}
             disabled={phase.running}
             autoFocus={!phase.running}

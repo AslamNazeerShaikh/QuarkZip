@@ -148,17 +148,25 @@ export default function ChecksumDialog({
 
   return (
     <div
+      id="qz-checksum-dialog"
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="checksum-dialog-title"
     >
       <div
+        id="qz-checksum-backdrop"
         className="animate-qz-fade absolute inset-0 bg-black/25"
         aria-hidden
       />
-      <div className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
-        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-primary-soft)]">
+      <div
+        id="qz-checksum-card"
+        className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+      >
+        <span
+          id="qz-checksum-icon"
+          className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-primary-soft)]"
+        >
           <Hash size={24} aria-hidden className="text-[var(--qz-primary)]" />
         </span>
         <h2
@@ -171,13 +179,18 @@ export default function ChecksumDialog({
           {archive}
         </p>
 
-        <div className="mt-4 space-y-3 text-left">
-          <div>
+        <div id="qz-checksum-form" className="mt-4 space-y-3 text-left">
+          <div id="qz-checksum-algo">
             <p className="text-[11px] font-semibold tracking-[0.06em] text-[var(--qz-faint)] uppercase">
               {t("checksum.algorithm")}
             </p>
-            <div ref={menuRootRef} className="relative mt-1">
+            <div
+              id="qz-checksum-algo-menu-root"
+              ref={menuRootRef}
+              className="relative mt-1"
+            >
               <button
+                id="qz-checksum-algo-btn"
                 type="button"
                 aria-label={t("checksum.algorithmList")}
                 aria-haspopup="listbox"
@@ -195,6 +208,7 @@ export default function ChecksumDialog({
               </button>
               {menuOpen && (
                 <div
+                  id="qz-checksum-algo-menu"
                   role="listbox"
                   aria-label={t("checksum.algorithmList")}
                   className="qz-material-bar animate-qz-pop absolute top-full right-0 left-0 z-10 mt-1 rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]"
@@ -203,6 +217,7 @@ export default function ChecksumDialog({
                     const selected = option.id === algo;
                     return (
                       <button
+                        id={`qz-checksum-algo-opt-${option.id}`}
                         key={option.id}
                         type="button"
                         role="option"
@@ -227,7 +242,7 @@ export default function ChecksumDialog({
             </div>
           </div>
 
-          <div>
+          <div id="qz-checksum-expected-block">
             <label
               htmlFor="checksum-expected"
               className="text-[11px] font-semibold tracking-[0.06em] text-[var(--qz-faint)] uppercase"
@@ -249,8 +264,9 @@ export default function ChecksumDialog({
         </div>
 
         {phase.name === "running" && (
-          <div className="mt-4">
+          <div id="qz-checksum-progress" className="mt-4">
             <div
+              id="qz-checksum-progressbar"
               className="h-2 overflow-hidden rounded-full bg-[var(--qz-surface-2)]"
               role="progressbar"
               aria-label={t("checksum.progress")}
@@ -259,6 +275,7 @@ export default function ChecksumDialog({
               aria-valuemax={100}
             >
               <div
+                id="qz-checksum-progress-fill"
                 className="h-full rounded-full bg-[var(--qz-primary)] transition-[width] duration-200"
                 style={{ width: `${phase.pct}%` }}
               />
@@ -270,7 +287,10 @@ export default function ChecksumDialog({
         )}
 
         {phase.name === "done" && (
-          <div className="mt-4 rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface-2)] p-3 text-left">
+          <div
+            id="qz-checksum-result"
+            className="mt-4 rounded-[10px] border border-[var(--qz-border)] bg-[var(--qz-surface-2)] p-3 text-left"
+          >
             <p className="text-[11px] font-semibold tracking-[0.06em] text-[var(--qz-faint)] uppercase">
               {t("checksum.computed", { algo: algoLabel })}
             </p>
@@ -320,17 +340,28 @@ export default function ChecksumDialog({
 
         {/* Variants never change with phase: Calculate stays primary,
             Cancel/Close stay secondary — no color flips after a run. */}
-        <div className="mt-5 flex items-center justify-center gap-2">
+        <div
+          id="qz-checksum-actions"
+          className="mt-5 flex items-center justify-center gap-2"
+        >
           {running ? (
-            <Button variant="secondary" onClick={cancel}>
+            <Button
+              id="qz-checksum-cancel"
+              variant="secondary"
+              onClick={cancel}
+            >
               {t("common.cancel")}
             </Button>
           ) : (
-            <Button onClick={start} autoFocus={phase.name === "idle"}>
+            <Button
+              id="qz-checksum-calculate"
+              onClick={start}
+              autoFocus={phase.name === "idle"}
+            >
               {t("checksum.calculate")}
             </Button>
           )}
-          <Button variant="secondary" onClick={close}>
+          <Button id="qz-checksum-close" variant="secondary" onClick={close}>
             {t("checksum.close")}
           </Button>
         </div>

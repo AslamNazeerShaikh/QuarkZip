@@ -77,6 +77,7 @@ export default function ThemeSwitch({
 
   return (
     <div
+      id="qz-theme"
       ref={rootRef}
       role="group"
       aria-label={t("theme.group")}
@@ -88,12 +89,14 @@ export default function ThemeSwitch({
       {open ? (
         <>
           <span
+            id="qz-theme-indicator"
             aria-hidden
             className="absolute top-1 bottom-1 rounded-[8px] bg-[var(--qz-primary)] transition-all duration-180 ease-out"
             style={{ left: indicator.left, width: indicator.width }}
           />
           {THEME_OPTIONS.map((opt, i) => (
             <button
+              id={`qz-theme-opt-${opt.value}`}
               key={opt.value}
               ref={(el) => {
                 buttonRefs.current[i] = el;
@@ -117,6 +120,7 @@ export default function ThemeSwitch({
         </>
       ) : (
         <button
+          id="qz-theme-btn"
           type="button"
           aria-label={t("theme.change")}
           aria-expanded={open}

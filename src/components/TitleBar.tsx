@@ -29,7 +29,11 @@ function ArchiveTitle({ archive }: { archive: string }) {
   const dir = m ? m[1] : archive;
   const file = m ? m[2] : "";
   return (
-    <span className="flex min-w-0 items-center justify-center" title={archive}>
+    <span
+      id="qz-titlebar-archive-title"
+      className="flex min-w-0 items-center justify-center"
+      title={archive}
+    >
       <span className="shrink-0 font-semibold">QuarkZip</span>
       <span className="shrink-0 text-[var(--qz-glass-muted)]">
         {" "}
@@ -37,13 +41,24 @@ function ArchiveTitle({ archive }: { archive: string }) {
       </span>
       {file ? (
         <>
-          <span className="truncate text-[var(--qz-glass-muted)]">{dir}</span>
-          <span className="shrink-0 text-[var(--qz-glass-muted)]">
+          <span
+            id="qz-titlebar-archive-dir"
+            className="truncate text-[var(--qz-glass-muted)]"
+          >
+            {dir}
+          </span>
+          <span
+            id="qz-titlebar-archive-file"
+            className="shrink-0 text-[var(--qz-glass-muted)]"
+          >
             {file}&quot;
           </span>
         </>
       ) : (
-        <span className="truncate text-[var(--qz-glass-muted)]">
+        <span
+          id="qz-titlebar-archive-dir"
+          className="truncate text-[var(--qz-glass-muted)]"
+        >
           {dir}&quot;
         </span>
       )}
@@ -60,16 +75,35 @@ function ArchiveTitleThemed({ archive }: { archive: string }) {
   const dir = m ? m[1] : archive;
   const file = m ? m[2] : "";
   return (
-    <span className="flex min-w-0 items-center justify-center" title={archive}>
+    <span
+      id="qz-titlebar-archive-title-themed"
+      className="flex min-w-0 items-center justify-center"
+      title={archive}
+    >
       <span className="shrink-0 font-semibold">QuarkZip</span>
       <span className="shrink-0 text-[var(--qz-muted)]"> | &quot;{prefix}</span>
       {file ? (
         <>
-          <span className="truncate text-[var(--qz-muted)]">{dir}</span>
-          <span className="shrink-0 text-[var(--qz-muted)]">{file}&quot;</span>
+          <span
+            id="qz-titlebar-archive-dir-themed"
+            className="truncate text-[var(--qz-muted)]"
+          >
+            {dir}
+          </span>
+          <span
+            id="qz-titlebar-archive-file-themed"
+            className="shrink-0 text-[var(--qz-muted)]"
+          >
+            {file}&quot;
+          </span>
         </>
       ) : (
-        <span className="truncate text-[var(--qz-muted)]">{dir}&quot;</span>
+        <span
+          id="qz-titlebar-archive-dir-themed"
+          className="truncate text-[var(--qz-muted)]"
+        >
+          {dir}&quot;
+        </span>
       )}
     </span>
   );
@@ -110,21 +144,29 @@ export default function TitleBar({
           if (e.button === 0) void invoke("drag_window");
         }}
         data-testid="mac-titlebar"
+        id="qz-titlebar-mac"
         className={`grid h-12 shrink-0 cursor-default grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] items-center select-none ${
           archive ? "pr-4 pl-[76px]" : "px-[76px]"
         }`}
       >
-        <div aria-hidden />
-        <span className="max-w-full min-w-0 px-2 text-center text-[13px] text-[var(--qz-glass-text)]">
+        <div id="qz-titlebar-mac-spacer" aria-hidden />
+        <span
+          id="qz-titlebar-mac-title"
+          className="max-w-full min-w-0 px-2 text-center text-[13px] text-[var(--qz-glass-text)]"
+        >
           {archive ? (
             <ArchiveTitle archive={archive} />
           ) : (
             <span className="font-semibold">QuarkZip</span>
           )}
         </span>
-        <div className="flex min-w-0 items-center justify-end">
+        <div
+          id="qz-titlebar-mac-actions"
+          className="flex min-w-0 items-center justify-end"
+        >
           {archive && (
             <button
+              id="qz-titlebar-open"
               type="button"
               onMouseDown={stopDrag}
               onClick={onOpen}
@@ -176,6 +218,7 @@ export default function TitleBar({
 
   return (
     <header
+      id="qz-titlebar-linux"
       data-tauri-drag-region
       onMouseDown={(e) => {
         if (e.button === 0) void invoke("drag_window");
@@ -185,9 +228,10 @@ export default function TitleBar({
     >
       {/* Left: Open sits here on Linux (window controls own the right);
           the app mark rides along so the centered title stays balanced. */}
-      <div className="flex min-w-0 items-center gap-2">
+      <div id="qz-titlebar-left" className="flex min-w-0 items-center gap-2">
         {archive && (
           <button
+            id="qz-titlebar-open"
             type="button"
             onMouseDown={stopDrag}
             onClick={onOpen}
@@ -199,13 +243,17 @@ export default function TitleBar({
           </button>
         )}
         <span
+          id="qz-titlebar-mark"
           aria-hidden
           className="h-2.5 w-2.5 shrink-0 rounded-full bg-[var(--qz-primary)]"
         />
       </div>
 
       {/* Centered window title, middle-ellipsis on overflow. */}
-      <span className="max-w-full min-w-0 px-2 text-center text-[13px]">
+      <span
+        id="qz-titlebar-title"
+        className="max-w-full min-w-0 px-2 text-center text-[13px]"
+      >
         {archive ? (
           <ArchiveTitleThemed archive={archive} />
         ) : (
@@ -214,8 +262,12 @@ export default function TitleBar({
       </span>
 
       {/* Right: custom window controls (KDE right-side convention). */}
-      <div className="flex items-center justify-end gap-1">
+      <div
+        id="qz-titlebar-controls"
+        className="flex items-center justify-end gap-1"
+      >
         <button
+          id="qz-titlebar-minimize"
           type="button"
           aria-label={t("titlebar.minimize")}
           title={t("titlebar.minimize")}
@@ -226,6 +278,7 @@ export default function TitleBar({
           <Minus size={15} aria-hidden />
         </button>
         <button
+          id="qz-titlebar-maximize"
           type="button"
           aria-label={
             maximized ? t("titlebar.restore") : t("titlebar.maximize")
@@ -242,6 +295,7 @@ export default function TitleBar({
           )}
         </button>
         <button
+          id="qz-titlebar-close"
           type="button"
           aria-label={t("titlebar.close")}
           title={t("titlebar.close")}

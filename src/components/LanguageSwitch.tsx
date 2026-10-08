@@ -56,12 +56,14 @@ export default function LanguageSwitch() {
 
   return (
     <div
+      id="qz-lang"
       ref={rootRef}
       role="group"
       aria-label={t("lang.language")}
       className="qz-material-bar relative flex h-9 shrink-0 items-center rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]"
     >
       <button
+        id="qz-lang-btn"
         ref={buttonRef}
         type="button"
         aria-label={t("lang.changeLanguage")}
@@ -83,6 +85,7 @@ export default function LanguageSwitch() {
         rect &&
         createPortal(
           <div
+            id="qz-lang-menu"
             ref={menuRef}
             role="listbox"
             aria-label={t("lang.language")}
@@ -95,6 +98,7 @@ export default function LanguageSwitch() {
               const selected = locale.code === lang;
               return (
                 <button
+                  id={`qz-lang-opt-${locale.code}`}
                   key={locale.code}
                   type="button"
                   role="option"

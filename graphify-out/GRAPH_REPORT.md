@@ -1,16 +1,16 @@
 # Graph Report - QuarkZip  (2026-10-08)
 
 ## Corpus Check
-- 272 files · ~406,190 words
+- 273 files · ~407,262 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2328 nodes · 3441 edges · 215 communities (195 shown, 8 thin omitted)
+- 2333 nodes · 3460 edges · 216 communities (196 shown, 8 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 4 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `befd8c1a`
+- Built from commit: `4f49d9bd`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -78,16 +78,17 @@
 - agents
 - vite.config.ts
 - ExtractDialog.tsx
-- ThemeSwitch.tsx
-- ArchiveTable.tsx
+- elementIds.test.tsx
+- App.tsx
 - bridge.cpp
 - sevenzip.rs
 - pull-hig.mjs
+- PageJump
 - vitest
 - PasswordDialog.tsx
 - ChecksumDialog.tsx
 - useLanguage
-- App.tsx
+- AboutDialog.tsx
 - fetch-7z-src.sh
 - Typography
 - Live Activities
@@ -221,14 +222,14 @@
 
 ## God Nodes (most connected - your core abstractions)
 1. `useLanguage()` - 36 edges
-2. `vitest` - 22 edges
+2. `vitest` - 23 edges
 3. `react` - 21 edges
 4. `QzList` - 21 edges
 5. `App()` - 21 edges
 6. `addArchive()` - 17 edges
 7. `lucide-react` - 17 edges
-8. `scripts` - 16 edges
-9. `@testing-library/react` - 16 edges
+8. `@testing-library/react` - 17 edges
+9. `scripts` - 16 edges
 10. `compilerOptions` - 16 edges
 
 ## Surprising Connections (you probably didn't know these)
@@ -246,7 +247,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (215 total, 8 thin omitted)
+## Communities (216 total, 8 thin omitted)
 
 ### Community 0 - "scripts"
 Cohesion: 0.12
@@ -313,8 +314,8 @@ Cohesion: 0.12
 Nodes (38): AppHandle, ArchiveInfo, Mutex, Send, apply_window_glass(), CHECKSUM_CANCEL, checksum_file(), ERROR_TAIL_CHARS (+30 more)
 
 ### Community 16 - "QuarkZip UI guidelines"
-Cohesion: 0.22
-Nodes (8): Components (`src/components/ui/` + feature components), Deliberate deviations (with rationale), Design direction, Interaction / states, Layout, QuarkZip UI guidelines, Tokens, Typography (Inter, OFL)
+Cohesion: 0.20
+Nodes (9): Components (`src/components/ui/` + feature components), Deliberate deviations (with rationale), Design direction, Element IDs (DOM debugging), Interaction / states, Layout, QuarkZip UI guidelines, Tokens (+1 more)
 
 ### Community 17 - "graphify reference: extra exports and benchmark"
 Cohesion: 0.22
@@ -441,8 +442,8 @@ Cohesion: 0.22
 Nodes (8): 0. Download page (7-zip.org/download.html, 26.04), 1. Repo tree + build (`ip7z/7zip@main`, 1351 entries, Make-only), 2. Embedding API (no stable public C API for the full engine), 3. Formats, limits, technical claims, 4. History, reception, security, variants, 5. Licensing (repo `DOC/`, Wikipedia concurs), 6. Binding 7-Zip into our Rust backend (MacPacker-style) — feasible, phased, 7-Zip reference (upstream)
 
 ### Community 65 - "App"
-Cohesion: 0.06
-Nodes (42): set_decorations / set_title_bar_style async race, defer Overlay past the async style-mask rewrite, macOS needs flush opaque layout because the floating margin would show the desktop, transparent is creation-only so the rescued native bar stayed transparent, Rules for parallel macOS/Linux development, Steady state per-OS window settings, Steady state (what each OS gets today), What broke (2026-10-04, commit `644f03b`) (+34 more)
+Cohesion: 0.05
+Nodes (50): set_decorations / set_title_bar_style async race, defer Overlay past the async style-mask rewrite, macOS needs flush opaque layout because the floating margin would show the desktop, transparent is creation-only so the rescued native bar stayed transparent, Rules for parallel macOS/Linux development, Steady state per-OS window settings, Steady state (what each OS gets today), What broke (2026-10-04, commit `644f03b`) (+42 more)
 
 ### Community 66 - "github"
 Cohesion: 0.29
@@ -476,13 +477,13 @@ Nodes (3): @tailwindcss/vite, @vitejs/plugin-react, e2eMocks
 Cohesion: 0.27
 Nodes (12): count(), ExtractDialog(), ExtractMode, invokeMock, appendDateStamp(), ARCHIVE_EXTENSIONS, dateStamp(), defaultFolderName() (+4 more)
 
-### Community 74 - "ThemeSwitch.tsx"
-Cohesion: 0.27
-Nodes (12): CHOICE_ICON, ThemeSwitch(), select(), setOpen(), useTheme(), applyTheme(), loadChoice(), ResolvedTheme (+4 more)
+### Community 74 - "elementIds.test.tsx"
+Cohesion: 0.28
+Nodes (5): INFO, CHOICE_ICON, ThemeSwitch(), select(), setOpen()
 
-### Community 75 - "ArchiveTable.tsx"
+### Community 75 - "App.tsx"
 Cohesion: 0.10
-Nodes (19): lucide-react, ArchiveOverview(), formatEpoch(), ArchiveTable(), baseColumns(), Column, ROW_HEIGHT, SortDir (+11 more)
+Nodes (22): lucide-react, ARCHIVE_FILTERS, ArchiveEntry, ArchiveOverview(), formatEpoch(), ArchiveTable(), baseColumns(), Column (+14 more)
 
 ### Community 76 - "bridge.cpp"
 Cohesion: 0.08
@@ -496,9 +497,13 @@ Nodes (32): ArchiveEntry, c_char, c_int, CANCELLED, enumerate_detail(), ListingD
 Cohesion: 0.07
 Nodes (65): abstractOf(), ALL_PLATFORMS, anchorEntries(), anchorMapFor(), cellText(), collapseBlankLines(), collectReferences(), coveredPlatformsLine() (+57 more)
 
+### Community 79 - "PageJump"
+Cohesion: 0.60
+Nodes (6): PageJump(), cancelJump(), commit(), confirmJump(), jumpTo(), revert()
+
 ### Community 80 - "vitest"
-Cohesion: 0.08
-Nodes (22): @testing-library/react, @testing-library/user-event, vitest, ArchiveEntry, DragEvent, dragHandlers, extractCtl, listCtl (+14 more)
+Cohesion: 0.09
+Nodes (20): @testing-library/react, @testing-library/user-event, vitest, DragEvent, dragHandlers, extractCtl, listCtl, osCtl (+12 more)
 
 ### Community 81 - "PasswordDialog.tsx"
 Cohesion: 0.24
@@ -509,12 +514,12 @@ Cohesion: 0.24
 Nodes (7): AlgoId, ALGOS, ChecksumDialog(), start(), clampPct(), normalizeHash(), Phase
 
 ### Community 83 - "useLanguage"
-Cohesion: 0.18
-Nodes (16): PageJump(), cancelJump(), commit(), confirmJump(), jumpTo(), revert(), ArchiveTitle(), ArchiveTitleThemed() (+8 more)
+Cohesion: 0.26
+Nodes (10): ArchiveTitle(), ArchiveTitleThemed(), TitleBar(), close(), minimize(), toggleMaximize(), TitleBarProps, Switcher() (+2 more)
 
-### Community 84 - "App.tsx"
+### Community 84 - "AboutDialog.tsx"
 Cohesion: 0.23
-Nodes (12): @tauri-apps/plugin-os, openAbout(), ARCHIVE_FILTERS, AboutDialog(), info, APP_FALLBACK_VERSION, APP_NAME, AppInfo (+4 more)
+Nodes (11): @tauri-apps/plugin-os, openAbout(), AboutDialog(), info, APP_FALLBACK_VERSION, APP_NAME, AppInfo, buildValue() (+3 more)
 
 ### Community 87 - "Typography"
 Cohesion: 0.06
@@ -1029,21 +1034,21 @@ Cohesion: 0.50
 Nodes (3): macOS design (QuarkZip), Non-negotiables, Reviews
 
 ## Knowledge Gaps
-- **1275 isolated node(s):** `REPO_ROOT`, `IMAGE_GLYPHS`, `SECTIONS`, `KEPT_PLATFORMS`, `DROPPED_PLATFORMS` (+1270 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1438 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **1277 isolated node(s):** `REPO_ROOT`, `IMAGE_GLYPHS`, `SECTIONS`, `KEPT_PLATFORMS`, `DROPPED_PLATFORMS` (+1272 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1442 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **8 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `App()` connect `App` to `ThemeSwitch.tsx`, `vitest`, `useLanguage`, `App.tsx`, `LanguageContext.tsx`?**
+- **Why does `App()` connect `App` to `App.tsx`, `vitest`, `useLanguage`, `AboutDialog.tsx`, `LanguageContext.tsx`?**
   _High betweenness centrality (0.027) - this node is a cross-community bridge._
 - **Why does `Steady state per-OS window settings` connect `App` to `lib.rs`?**
   _High betweenness centrality (0.023) - this node is a cross-community bridge._
 - **Why does `run()` connect `lib.rs` to `App`?**
   _High betweenness centrality (0.021) - this node is a cross-community bridge._
 - **What connects `REPO_ROOT`, `IMAGE_GLYPHS`, `SECTIONS` to the rest of the system?**
-  _1275 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1277 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `scripts` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._
 - **Should `package.json` be split into smaller, more focused modules?**

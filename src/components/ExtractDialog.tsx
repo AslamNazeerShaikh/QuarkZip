@@ -138,6 +138,7 @@ export default function ExtractDialog({
 
   return (
     <div
+      id="qz-extract-dialog"
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       role="dialog"
       aria-modal="true"
@@ -146,12 +147,19 @@ export default function ExtractDialog({
       {/* Backdrop is inert: popups close only via their buttons (or Esc),
           never by clicking outside. */}
       <div
+        id="qz-extract-backdrop"
         className="animate-qz-fade absolute inset-0 bg-black/25"
         aria-hidden
       />
-      <div className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+      <div
+        id="qz-extract-card"
+        className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+      >
         {mode === "selected" ? (
-          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-primary-soft)]">
+          <span
+            id="qz-extract-icon"
+            className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-primary-soft)]"
+          >
             <ListChecks
               size={24}
               aria-hidden
@@ -159,11 +167,17 @@ export default function ExtractDialog({
             />
           </span>
         ) : mode === "all" ? (
-          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-info-soft)]">
+          <span
+            id="qz-extract-icon"
+            className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-info-soft)]"
+          >
             <Download size={24} aria-hidden className="text-[var(--qz-info)]" />
           </span>
         ) : (
-          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-warning-soft)]">
+          <span
+            id="qz-extract-icon"
+            className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-warning-soft)]"
+          >
             <TriangleAlert
               size={24}
               aria-hidden
@@ -196,8 +210,12 @@ export default function ExtractDialog({
             checkbox row, name field, live byte budget, one-tap date-time
             suffix (`name_2026-10-08_14-30-05`); the final-path preview
             above shows the result. */}
-        <div className="mt-4 border-t border-[var(--qz-border)] pt-4 text-center">
+        <div
+          id="qz-extract-subfolder"
+          className="mt-4 border-t border-[var(--qz-border)] pt-4 text-center"
+        >
           <button
+            id="qz-extract-folder-toggle"
             type="button"
             role="checkbox"
             aria-checked={createFolder}
@@ -226,7 +244,7 @@ export default function ExtractDialog({
             </span>
           </button>
           {createFolder && (
-            <div className="mt-2.5">
+            <div id="qz-extract-folder-field" className="mt-2.5">
               <label
                 htmlFor="extract-folder-name"
                 className="text-[11px] font-semibold tracking-[0.06em] text-[var(--qz-faint)] uppercase"
@@ -243,13 +261,17 @@ export default function ExtractDialog({
                 aria-describedby={errorKey ? "extract-folder-error" : undefined}
                 className="mt-1 h-9 w-full rounded-[9px] border border-[var(--qz-border)] bg-[var(--qz-surface)] px-3 text-center text-[13px] text-[var(--qz-text)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
               />
-              <div className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
+              <div
+                id="qz-extract-folder-meta"
+                className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-2"
+              >
                 <span className="text-xs text-[var(--qz-faint)] tabular-nums">
                   {t("extract.folderLimit", {
                     used: String(utf8Length(folderName)),
                   })}
                 </span>
                 <Button
+                  id="qz-extract-append-date"
                   variant="secondary"
                   size="bar"
                   onClick={() =>
@@ -288,11 +310,15 @@ export default function ExtractDialog({
             </div>
           )}
         </div>
-        <div className="mt-5 flex items-center justify-center gap-2">
-          <Button variant="warning" onClick={onCancel}>
+        <div
+          id="qz-extract-actions"
+          className="mt-5 flex items-center justify-center gap-2"
+        >
+          <Button id="qz-extract-cancel" variant="warning" onClick={onCancel}>
             {t("common.cancel")}
           </Button>
           <Button
+            id="qz-extract-confirm"
             variant="accent"
             onClick={() => onConfirm(finalDest)}
             disabled={blocked}

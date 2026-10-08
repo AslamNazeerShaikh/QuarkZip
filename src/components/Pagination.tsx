@@ -106,8 +106,12 @@ function PageJump({
   }
   return (
     <>
-      <span className="flex items-center text-[var(--qz-muted)] tabular-nums">
+      <span
+        id="qz-pager-jump"
+        className="flex items-center text-[var(--qz-muted)] tabular-nums"
+      >
         <input
+          id="qz-pager-jump-input"
           type="text"
           inputMode="numeric"
           role="spinbutton"
@@ -130,7 +134,7 @@ function PageJump({
           style={{ width: inputWidth }}
           className="h-7 rounded-[7px] bg-transparent px-1 text-center text-[var(--qz-muted)] tabular-nums outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
         />
-        <span className="pr-1 whitespace-nowrap">
+        <span id="qz-pager-jump-total" className="pr-1 whitespace-nowrap">
           / {formatCount(pageCount)}
         </span>
       </span>
@@ -140,16 +144,21 @@ function PageJump({
         // into the footer shell instead of centering it like About.
         createPortal(
           <div
+            id="qz-pager-jump-dialog"
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             role="dialog"
             aria-modal="true"
             aria-labelledby="page-jump-title"
           >
             <div
+              id="qz-pager-jump-backdrop"
               className="animate-qz-fade absolute inset-0 bg-black/25"
               aria-hidden
             />
-            <div className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+            <div
+              id="qz-pager-jump-card"
+              className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+            >
               <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-warning-soft)]">
                 <TriangleAlert
                   size={24}
@@ -170,11 +179,23 @@ function PageJump({
                   max: String(pageCount),
                 })}
               </p>
-              <div className="mt-5 flex items-center justify-center gap-2">
-                <Button variant="warning" onClick={cancelJump}>
+              <div
+                id="qz-pager-jump-actions"
+                className="mt-5 flex items-center justify-center gap-2"
+              >
+                <Button
+                  id="qz-pager-jump-cancel"
+                  variant="warning"
+                  onClick={cancelJump}
+                >
                   {t("common.cancel")}
                 </Button>
-                <Button variant="accent" onClick={confirmJump} autoFocus>
+                <Button
+                  id="qz-pager-jump-confirm"
+                  variant="accent"
+                  onClick={confirmJump}
+                  autoFocus
+                >
                   {t("pagination.jump")}
                 </Button>
               </div>
@@ -263,8 +284,9 @@ function PageSizeMenu({
   }
 
   return (
-    <div ref={rootRef} className="relative">
+    <div id="qz-pager-size" ref={rootRef} className="relative">
       <button
+        id="qz-pager-size-btn"
         ref={buttonRef}
         type="button"
         aria-label={t("pagination.rowsPerPage")}
@@ -288,6 +310,7 @@ function PageSizeMenu({
         rect &&
         createPortal(
           <div
+            id="qz-pager-size-menu"
             ref={menuRef}
             role="listbox"
             aria-label={t("pagination.rowsPerPage")}
@@ -301,6 +324,7 @@ function PageSizeMenu({
               const selected = size === pageSize;
               return (
                 <button
+                  id={`qz-pager-size-opt-${size}`}
                   key={size}
                   type="button"
                   role="option"
@@ -340,7 +364,10 @@ function PageJumpOrReadout({
   if (pageCount > 1)
     return <PageJump page={page} pageCount={pageCount} onPage={onPage} />;
   return (
-    <span className="min-w-16 text-center text-[var(--qz-muted)] tabular-nums">
+    <span
+      id="qz-pager-readout"
+      className="min-w-16 text-center text-[var(--qz-muted)] tabular-nums"
+    >
       {pageCount === 0 ? `0 / 0` : `1 / 1`}
     </span>
   );
@@ -379,8 +406,12 @@ export default function Pagination({
         ? t("pagination.expand")
         : `${t("pagination.expand")} — ${formatCount(page + 1)} / ${formatCount(pageCount)}`;
     return (
-      <div className="qz-material-bar flex h-9 shrink-0 items-center rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]">
+      <div
+        id="qz-pager-compact"
+        className="qz-material-bar flex h-9 shrink-0 items-center rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]"
+      >
         <button
+          id="qz-pager-compact-btn"
           type="button"
           aria-label={label}
           title={label}
@@ -400,13 +431,17 @@ export default function Pagination({
     if (!allowAll && pageSize === "all") onPageSize(10000);
   }, [allowAll, pageSize, onPageSize]);
   return (
-    <div className="qz-material-bar flex h-9 items-center gap-1 rounded-[10px] border border-[var(--qz-border)] px-1 shadow-[var(--qz-shadow-card)]">
+    <div
+      id="qz-pager"
+      className="qz-material-bar flex h-9 items-center gap-1 rounded-[10px] border border-[var(--qz-border)] px-1 shadow-[var(--qz-shadow-card)]"
+    >
       <PageSizeMenu
         pageSize={pageSize === "all" && !allowAll ? 10000 : pageSize}
         options={options}
         onPageSize={onPageSize}
       />
       <button
+        id="qz-pager-prev"
         type="button"
         aria-label={t("pagination.prevPage")}
         disabled={page === 0}
@@ -417,6 +452,7 @@ export default function Pagination({
       </button>
       <PageJumpOrReadout page={page} pageCount={pageCount} onPage={onPage} />
       <button
+        id="qz-pager-next"
         type="button"
         aria-label={t("pagination.nextPage")}
         disabled={pageCount === 0 || page >= pageCount - 1}
@@ -425,7 +461,10 @@ export default function Pagination({
       >
         <ChevronRight size={16} aria-hidden />
       </button>
-      <span className="hidden pr-2 text-[var(--qz-muted)] tabular-nums min-[1100px]:inline">
+      <span
+        id="qz-pager-total"
+        className="hidden pr-2 text-[var(--qz-muted)] tabular-nums min-[1100px]:inline"
+      >
         {formatCount(total)}
       </span>
     </div>

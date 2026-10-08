@@ -500,10 +500,12 @@ export default function App() {
 
   return (
     <div
+      id="qz-app-root"
       data-testid="app-root"
       className={`h-screen w-screen bg-transparent ${maximized || isMac ? "" : "p-5"}`}
     >
       <div
+        id="qz-app-frame"
         data-testid="app-frame"
         className={`flex h-full flex-col overflow-hidden ${isMac ? "bg-[var(--qz-frame-bg)]" : "bg-[var(--qz-bg)]"} text-[var(--qz-text)] ${
           maximized || isMac
@@ -522,9 +524,13 @@ export default function App() {
           frame traces the window edge: the flush mac/maximized window
           (native ~12px corners) vs. the floating Linux card (20px card
           in a 20px margin) — one radius for both misreads a corner. */}
-        <main className="relative flex min-h-0 flex-1 flex-col px-7 pb-7">
+        <main
+          id="qz-app-main"
+          className="relative flex min-h-0 flex-1 flex-col px-7 pb-7"
+        >
           {dragging && (
             <div
+              id="qz-app-drop-frame"
               className={`pointer-events-none fixed z-10 flex items-center justify-center border-[1.5px] border-dotted border-[var(--qz-primary)] bg-[var(--qz-primary)]/10 ${
                 maximized || isMac
                   ? "inset-3 rounded-[12px]"
@@ -537,13 +543,20 @@ export default function App() {
             </div>
           )}
           {error && (
-            <p role="alert" className="pb-2 text-[var(--qz-danger)]">
+            <p
+              id="qz-app-error"
+              role="alert"
+              className="pb-2 text-[var(--qz-danger)]"
+            >
               {error}
             </p>
           )}
           {/* Overview card above (half the space expanded, action row
             only when collapsed), table below absorbs the rest. */}
-          <div className="flex min-h-0 flex-1 flex-col gap-7">
+          <div
+            id="qz-app-content"
+            className="flex min-h-0 flex-1 flex-col gap-7"
+          >
             <ArchiveOverview
               archive={archive}
               info={info}
@@ -576,8 +589,12 @@ export default function App() {
                   <LanguageSwitch />
                   {/* Icon-only shell like ThemeSwitch: h-9, 10px radius, 1px
                     border, card shadow. Hover/tip names it (aria-label + title). */}
-                  <div className="qz-material-bar flex h-9 shrink-0 items-center rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]">
+                  <div
+                    id="qz-app-about-shell"
+                    className="qz-material-bar flex h-9 shrink-0 items-center rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]"
+                  >
                     <button
+                      id="qz-app-about-btn"
                       type="button"
                       onClick={openAbout}
                       aria-label="About QuarkZip"
@@ -590,7 +607,10 @@ export default function App() {
                 </>
               }
             />
-            <div className="flex min-h-0 flex-1 flex-col">
+            <div
+              id="qz-app-table-wrap"
+              className="flex min-h-0 flex-1 flex-col"
+            >
               <ArchiveTable
                 data={rows}
                 page={page}
@@ -607,10 +627,14 @@ export default function App() {
           {/* Extract action bar in normal flow — nothing overlaps. Full
             horizontal width: the destination chooser absorbs every spare
             pixel and truncates, resizing live with the window. */}
-          <footer className="flex shrink-0 items-center gap-2 pt-7">
+          <footer
+            id="qz-app-footer"
+            className="flex shrink-0 items-center gap-2 pt-7"
+          >
             {archive && (
               <>
                 <Button
+                  id="qz-app-extract-selected"
                   size="bar"
                   onClick={() =>
                     setConfirming(
@@ -628,6 +652,7 @@ export default function App() {
                   {extracting ? t("app.extracting") : t("app.extractSelected")}
                 </Button>
                 <Button
+                  id="qz-app-extract-all"
                   variant="success"
                   size="bar"
                   onClick={() => setConfirming("all")}
@@ -642,6 +667,7 @@ export default function App() {
                   {t("app.extractAll")}
                 </Button>
                 <Button
+                  id="qz-app-choose-dest"
                   variant="secondary"
                   size="bar"
                   onClick={() => void chooseDest()}
@@ -651,7 +677,10 @@ export default function App() {
                 >
                   <span className="flex w-full min-w-0 items-center justify-center gap-2">
                     <FolderOpen size={14} aria-hidden className="shrink-0" />
-                    <span className="min-w-0 flex-1 truncate text-center">
+                    <span
+                      id="qz-app-dest-label"
+                      className="min-w-0 flex-1 truncate text-center"
+                    >
                       {dest || t("app.chooseFolder")}
                     </span>
                     <ChevronDown

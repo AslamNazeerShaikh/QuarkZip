@@ -255,6 +255,21 @@ pagination.
 Window chrome differs per OS (Linux floating card vs macOS overlay
 lights + flush layout): see `docs/window-chrome.md`.
 
+## Element IDs (DOM debugging)
+
+Every structural `div` and every interactive element (buttons, inputs,
+menus, options) carries a stable `id="qz-<scope>-<element>"` so Inspect
+Element maps straight back to the source: searching the id finds the one
+call site. Rules: ids are kebab-case, never translated text, and unique
+within the mounted DOM. Repeated items suffix a stable key — table rows
+and their cells use the 1-based serial (`qz-table-row-42-path`), page-size
+/ theme / language / checksum options use their value
+(`qz-pager-size-opt-all`), extras/about rows use their index. Shared
+primitives (`Button`, `Card`, `Meta`, `TableCheckbox`, `Stat`) never hardcode
+an id — they accept an optional `id` prop and callers pass unique values.
+Pre-existing ids (`archive-password`, `extract-folder-name`, …) and all
+`data-testid` hooks are kept as-is.
+
 ## Interaction / states
 
 - Drag-drop anywhere opens archives; hover shows a dotted primary overlay

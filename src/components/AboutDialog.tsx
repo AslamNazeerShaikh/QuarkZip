@@ -40,6 +40,7 @@ export default function AboutDialog({
 
   return (
     <div
+      id="qz-about-dialog"
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       role="dialog"
       aria-modal="true"
@@ -48,11 +49,18 @@ export default function AboutDialog({
       {/* Backdrop is inert: the popup closes only via OK (or Esc),
           never by clicking outside. */}
       <div
+        id="qz-about-backdrop"
         className="animate-qz-fade absolute inset-0 bg-black/25"
         aria-hidden
       />
-      <div className="qz-material-bar animate-qz-pop relative max-h-[85vh] w-full max-w-md overflow-y-auto rounded-[16px] border border-[var(--qz-border)] p-5 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
-        <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[var(--qz-primary-soft)]">
+      <div
+        id="qz-about-card"
+        className="qz-material-bar animate-qz-pop relative max-h-[85vh] w-full max-w-md overflow-y-auto rounded-[16px] border border-[var(--qz-border)] p-5 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+      >
+        <span
+          id="qz-about-icon"
+          className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[var(--qz-primary-soft)]"
+        >
           <Info size={20} aria-hidden className="text-[var(--qz-primary)]" />
         </span>
         <h2
@@ -61,9 +69,10 @@ export default function AboutDialog({
         >
           {t("about.title", { app: APP_NAME })}
         </h2>
-        <dl className="mt-3 space-y-1.5 text-left">
-          {rows.map(([label, value]) => (
+        <dl id="qz-about-list" className="mt-3 space-y-1.5 text-left">
+          {rows.map(([label, value], index) => (
             <div
+              id={`qz-about-row-${index}`}
               key={label}
               className="flex items-baseline justify-between gap-4 border-b border-[var(--qz-border)] pb-1.5 last:border-0 last:pb-0"
             >
@@ -91,8 +100,11 @@ export default function AboutDialog({
         <p className="mt-3 text-[13px]" aria-label={t("about.madeWithLabel")}>
           {t("about.madeWith")}
         </p>
-        <div className="mt-4 flex items-center justify-center">
-          <Button onClick={onOk} autoFocus>
+        <div
+          id="qz-about-actions"
+          className="mt-4 flex items-center justify-center"
+        >
+          <Button id="qz-about-ok" onClick={onOk} autoFocus>
             {t("common.ok")}
           </Button>
         </div>

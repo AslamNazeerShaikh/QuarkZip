@@ -8,9 +8,17 @@ export interface LoadStats {
   entries: number;
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function Stat({
+  label,
+  value,
+  id,
+}: {
+  label: string;
+  value: string;
+  id?: string;
+}) {
   return (
-    <div className="flex min-w-0 items-baseline justify-between gap-4">
+    <div id={id} className="flex min-w-0 items-baseline justify-between gap-4">
       <p className="text-[11px] font-semibold tracking-[0.06em] text-[var(--qz-faint)] uppercase">
         {label}
       </p>
@@ -50,17 +58,25 @@ export default function LoadDialog({
       : "—";
   return (
     <div
+      id="qz-load-dialog"
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="load-dialog-title"
     >
       <div
+        id="qz-load-backdrop"
         className="animate-qz-fade absolute inset-0 bg-black/25"
         aria-hidden
       />
-      <div className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0.5)]">
-        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-primary-soft)]">
+      <div
+        id="qz-load-card"
+        className="qz-material-bar animate-qz-pop relative w-full max-w-md rounded-[16px] border border-[var(--qz-border)] p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_60px_rgba(0,0,0.5)]"
+      >
+        <span
+          id="qz-load-icon"
+          className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--qz-primary-soft)]"
+        >
           <FolderOpen
             size={24}
             aria-hidden
@@ -79,29 +95,45 @@ export default function LoadDialog({
         <p className="mt-1 truncate text-[12px] text-[var(--qz-faint)]">
           {archive}
         </p>
-        <div className="mt-4">
+        <div id="qz-load-progress" className="mt-4">
           <div
+            id="qz-load-progressbar"
             className="h-2 overflow-hidden rounded-full bg-[var(--qz-surface-2)]"
             role="progressbar"
             aria-label={t("loading.progress")}
           >
-            <div className="animate-qz-slide h-full w-1/4 rounded-full bg-[var(--qz-primary)]" />
+            <div
+              id="qz-load-progress-fill"
+              className="animate-qz-slide h-full w-1/4 rounded-full bg-[var(--qz-primary)]"
+            />
           </div>
         </div>
-        <div className="mt-4 flex flex-col gap-1.5 text-left">
+        <div
+          id="qz-load-stats"
+          className="mt-4 flex flex-col gap-1.5 text-left"
+        >
           <Stat
+            id="qz-load-stat-entries"
             label={t("loading.entries")}
             value={stats ? formatCount(stats.entries) : "—"}
           />
           <Stat
+            id="qz-load-stat-data"
             label={t("loading.dataRead")}
             value={stats?.bytes != null ? formatSize(stats.bytes) : "—"}
           />
-          <Stat label={t("loading.elapsed")} value={`${Math.floor(secs)} s`} />
-          <Stat label={t("loading.rate")} value={rate} />
+          <Stat
+            id="qz-load-stat-elapsed"
+            label={t("loading.elapsed")}
+            value={`${Math.floor(secs)} s`}
+          />
+          <Stat id="qz-load-stat-rate" label={t("loading.rate")} value={rate} />
         </div>
-        <div className="mt-5 flex items-center justify-center">
-          <Button variant="secondary" onClick={onCancel}>
+        <div
+          id="qz-load-actions"
+          className="mt-5 flex items-center justify-center"
+        >
+          <Button id="qz-load-cancel" variant="secondary" onClick={onCancel}>
             <X size={14} aria-hidden />
             {t("common.cancel")}
           </Button>

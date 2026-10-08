@@ -68,14 +68,17 @@ function TableCheckbox({
   label,
   checked,
   onToggle,
+  id,
 }: {
   label: string;
   checked: boolean | "mixed";
   onToggle: () => void;
+  id?: string;
 }) {
   const on = checked !== false;
   return (
     <button
+      id={id}
       type="button"
       role="checkbox"
       aria-checked={checked}
@@ -222,24 +225,34 @@ export default function ArchiveTable({
 
   return (
     <div
+      id="qz-table-root"
       aria-busy={busy}
       className={`relative min-h-0 w-full min-w-0 flex-1 transition-opacity ${busy ? "opacity-60" : ""}`}
     >
-      <div className="qz-material-bar flex h-full min-h-0 w-full flex-col overflow-hidden rounded-[13px] border border-[var(--qz-border)] text-[13px]">
+      <div
+        id="qz-table-card"
+        className="qz-material-bar flex h-full min-h-0 w-full flex-col overflow-hidden rounded-[13px] border border-[var(--qz-border)] text-[13px]"
+      >
         {/* Header matches ROW_HEIGHT so it never reads slim next to rows.
             Translucent: rows scroll underneath like a native list header. */}
         <div
+          id="qz-table-header"
           className="qz-material-bar flex shrink-0 items-center"
           style={{ height: ROW_HEIGHT }}
         >
-          <div className="flex w-10 shrink-0 items-center justify-center">
+          <div
+            id="qz-table-header-select"
+            className="flex w-10 shrink-0 items-center justify-center"
+          >
             <TableCheckbox
+              id="qz-table-select-all"
               label={t("table.selectAll")}
               checked={allSelected ? true : selected.size > 0 ? "mixed" : false}
               onToggle={toggleAll}
             />
           </div>
           <div
+            id="qz-table-header-index"
             aria-hidden
             className="flex h-full w-12 shrink-0 items-center justify-center px-2 text-xs font-semibold tracking-wide text-[var(--qz-faint)] uppercase select-none"
           >
@@ -247,6 +260,7 @@ export default function ArchiveTable({
           </div>
           {columns.map((column) => (
             <button
+              id={`qz-table-sort-${column.key}`}
               key={column.key}
               type="button"
               onClick={() => toggleSort(column.key)}
@@ -263,12 +277,16 @@ export default function ArchiveTable({
           ))}
         </div>
         <div
+          id="qz-table-scroll"
           ref={scrollRef}
           onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)}
           className="scroll-slim min-h-0 flex-1 overflow-y-auto"
         >
           {pageRows.length === 0 ? (
-            <div className="flex min-h-full flex-col items-center justify-center gap-1 px-4 py-10 text-center">
+            <div
+              id="qz-table-empty"
+              className="flex min-h-full flex-col items-center justify-center gap-1 px-4 py-10 text-center"
+            >
               <PackageOpen
                 size={16}
                 aria-hidden
@@ -282,9 +300,14 @@ export default function ArchiveTable({
               </p>
             </div>
           ) : (
-            <div style={{ height: `${totalH}px` }} className="relative w-full">
+            <div
+              id="qz-table-spacer"
+              style={{ height: `${totalH}px` }}
+              className="relative w-full"
+            >
               {visible.map((entry, offset) => {
                 const index = startIndex + offset;
+                const serial = rowBase + index + 1;
                 const kind = fileKind(entry.path, entry.is_folder, {
                   folder: folderLabel,
                   file: fileLabel,
@@ -293,6 +316,7 @@ export default function ArchiveTable({
                 const isSelected = selected.has(entry.path);
                 return (
                   <div
+                    id={`qz-table-row-${serial}`}
                     key={entry.path}
                     style={{
                       position: "absolute",
@@ -306,17 +330,27 @@ export default function ArchiveTable({
                       isSelected ? "bg-[var(--qz-primary)]/10" : ""
                     }`}
                   >
-                    <div className="flex w-10 shrink-0 items-center justify-center">
+                    <div
+                      id={`qz-table-row-${serial}-select`}
+                      className="flex w-10 shrink-0 items-center justify-center"
+                    >
                       <TableCheckbox
+                        id={`qz-table-select-row-${serial}`}
                         label={t("table.selectItem", { name: entry.path })}
                         checked={isSelected}
                         onToggle={() => toggleOne(entry.path)}
                       />
                     </div>
-                    <div className="flex w-12 shrink-0 items-center justify-center px-2 text-[var(--qz-faint)] tabular-nums">
+                    <div
+                      id={`qz-table-row-${serial}-index`}
+                      className="flex w-12 shrink-0 items-center justify-center px-2 text-[var(--qz-faint)] tabular-nums"
+                    >
                       {rowBase + index + 1}
                     </div>
-                    <div className="flex h-full min-w-0 flex-1 items-center px-4">
+                    <div
+                      id={`qz-table-row-${serial}-path`}
+                      className="flex h-full min-w-0 flex-1 items-center px-4"
+                    >
                       <span className="flex min-w-0 items-center gap-3">
                         <Icon
                           size={16}
@@ -326,15 +360,22 @@ export default function ArchiveTable({
                         <span className="truncate leading-5">{entry.path}</span>
                       </span>
                     </div>
-                    <div className="flex h-full w-24 shrink-0 items-center justify-center px-4 text-[var(--qz-muted)]">
+                    <div
+                      id={`qz-table-row-${serial}-type`}
+                      className="flex h-full w-24 shrink-0 items-center justify-center px-4 text-[var(--qz-muted)]"
+                    >
                       {kind.label}
                     </div>
-                    <div className="flex h-full w-32 shrink-0 items-center justify-center overflow-hidden px-4 tabular-nums">
+                    <div
+                      id={`qz-table-row-${serial}-size`}
+                      className="flex h-full w-32 shrink-0 items-center justify-center overflow-hidden px-4 tabular-nums"
+                    >
                       <span className="whitespace-nowrap">
                         {entry.size === null ? "—" : formatSize(entry.size)}
                       </span>
                     </div>
                     <div
+                      id={`qz-table-row-${serial}-modified`}
                       className="flex h-full w-64 shrink-0 items-center justify-center overflow-hidden px-4 text-[var(--qz-muted)]"
                       title={entry.modified ?? undefined}
                     >
