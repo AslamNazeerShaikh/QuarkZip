@@ -45,7 +45,7 @@ test("opening an archive lists rows, titles the window, seeds dest", async ({
 
   await expect(app.getByText("file-1.txt", { exact: true })).toBeVisible();
   await expect(app.getByText("file-3.txt", { exact: true })).toBeVisible();
-  await expect(app.locator("header")).toContainText(`"Path: ${PATH}"`);
+  await expect(app.locator("header")).toContainText(`QuarkZip | ${PATH}`);
   const seen = await calls(app);
   expect(seen.setTitle.at(-1)).toBe(`QuarkZip | "Path: ${PATH}"`);
 
@@ -122,7 +122,7 @@ test("open new switches archives", async ({ app }) => {
 
   await expect(app.getByText("bbb.txt")).toBeVisible();
   await expect(app.getByText("aaa.txt")).not.toBeVisible();
-  await expect(app.locator("header")).toContainText('"Path: /tmp/b.zip"');
+  await expect(app.locator("header")).toContainText("QuarkZip | /tmp/b.zip");
 });
 
 test("collapsing the card keeps the row centered, expanding restores", async ({

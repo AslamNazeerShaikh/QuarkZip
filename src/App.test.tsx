@@ -400,9 +400,7 @@ describe("drag and drop", () => {
       payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
     });
     await screen.findByText("dropped.txt");
-    expect(header?.textContent).toContain(
-      'QuarkZip | "Path: /tmp/dropped.zip"',
-    );
+    expect(header?.textContent).toContain("QuarkZip |\u00a0/tmp/dropped.zip");
   });
 
   it("should_confirm_then_report_extract_failure_in_status", async () => {

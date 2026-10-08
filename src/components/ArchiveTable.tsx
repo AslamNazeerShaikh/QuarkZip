@@ -254,7 +254,9 @@ export default function ArchiveTable({
           <div
             id="qz-table-header-index"
             aria-hidden
-            className="flex h-full w-12 shrink-0 items-center justify-center px-2 text-xs font-semibold tracking-wide text-[var(--qz-faint)] uppercase select-none"
+            // 8-digit serials (10M+ rows): ~7px per tabular digit + padding.
+            // The flex-1 name column absorbs the width (no name change needed).
+            className="flex h-full w-24 shrink-0 items-center justify-center px-2 text-xs font-semibold tracking-wide text-[var(--qz-faint)] uppercase select-none"
           >
             #
           </div>
@@ -343,7 +345,7 @@ export default function ArchiveTable({
                     </div>
                     <div
                       id={`qz-table-row-${serial}-index`}
-                      className="flex w-12 shrink-0 items-center justify-center px-2 text-[var(--qz-faint)] tabular-nums"
+                      className="flex w-24 shrink-0 items-center justify-center px-2 text-[var(--qz-faint)] tabular-nums"
                     >
                       {rowBase + index + 1}
                     </div>

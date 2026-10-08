@@ -12,7 +12,7 @@
   "titlebar.maximize": "Maximize",
   "titlebar.restore": "Restore",
   "titlebar.close": "Close",
-  "titlebar.pathPrefix": "Path: ",
+  "titlebar.readonlyHint": "Read-only — extract files, cannot modify",
 
   "overview.emptyTitle": "No archive open",
   "overview.emptyDesc": "Open a 7z, zip, tar or 30+ other formats — or drop a file anywhere.",

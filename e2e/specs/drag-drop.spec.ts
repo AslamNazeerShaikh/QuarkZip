@@ -13,7 +13,7 @@ test("dropping a file opens the archive", async ({ app }) => {
   await addArchive(app, PATH, { count: 2 });
   await app.evaluate((p) => window.__e2e.drop([p]), PATH);
   await expect(app.getByText("file-1.txt")).toBeVisible();
-  await expect(app.locator("header")).toContainText(`"Path: ${PATH}"`);
+  await expect(app.locator("header")).toContainText(`QuarkZip | ${PATH}`);
 });
 
 test("dropping an unknown archive shows an error", async ({ app }) => {

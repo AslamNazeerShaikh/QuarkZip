@@ -2934,7 +2934,7 @@
       "file_type": "code",
       "norm_label": "openswitcher()",
       "source_file": "src/App.test.tsx",
-      "source_location": "L696"
+      "source_location": "L694"
     },
     {
       "id": "src_components_elementids_test_expectuniqueids",
@@ -3114,7 +3114,7 @@
       "file_type": "code",
       "norm_label": "archivetitle()",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L25"
+      "source_location": "L27"
     },
     {
       "id": "src_components_titlebar_archivetitlethemed",
@@ -3126,7 +3126,7 @@
       "file_type": "code",
       "norm_label": "archivetitlethemed()",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L71"
+      "source_location": "L75"
     },
     {
       "id": "src_components_titlebar_titlebar",
@@ -3138,7 +3138,7 @@
       "file_type": "code",
       "norm_label": "titlebar()",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L123"
+      "source_location": "L132"
     },
     {
       "id": "src_components_titlebar_titlebar_close",
@@ -3150,7 +3150,7 @@
       "file_type": "code",
       "norm_label": "close()",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L210"
+      "source_location": "L229"
     },
     {
       "id": "src_components_titlebar_titlebar_minimize",
@@ -3162,7 +3162,7 @@
       "file_type": "code",
       "norm_label": "minimize()",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L202"
+      "source_location": "L221"
     },
     {
       "id": "src_components_titlebar_titlebar_stopdrag",
@@ -3174,7 +3174,7 @@
       "file_type": "code",
       "norm_label": "stopdrag()",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L219"
+      "source_location": "L238"
     },
     {
       "id": "src_components_titlebar_titlebar_togglemaximize",
@@ -3186,7 +3186,7 @@
       "file_type": "code",
       "norm_label": "togglemaximize()",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L192"
+      "source_location": "L211"
     },
     {
       "id": "src_i18n_i18n_test_switcher",
@@ -11879,7 +11879,7 @@
       "node_kind": "heading",
       "norm_label": "components (`src/components/ui/` + feature components)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L79"
+      "source_location": "L83"
     },
     {
       "id": "docs_ui_guidelines_deliberate_deviations_with_rationale",
@@ -11891,7 +11891,7 @@
       "node_kind": "heading",
       "norm_label": "deliberate deviations (with rationale)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L301"
+      "source_location": "L305"
     },
     {
       "id": "docs_ui_guidelines_design_direction",
@@ -11915,7 +11915,7 @@
       "node_kind": "heading",
       "norm_label": "element ids (dom debugging)",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L275"
+      "source_location": "L279"
     },
     {
       "id": "docs_ui_guidelines_interaction_states",
@@ -11927,7 +11927,7 @@
       "node_kind": "heading",
       "norm_label": "interaction / states",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L290"
+      "source_location": "L294"
     },
     {
       "id": "docs_ui_guidelines_layout",
@@ -11939,7 +11939,7 @@
       "node_kind": "heading",
       "norm_label": "layout",
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L257"
+      "source_location": "L261"
     },
     {
       "id": "docs_ui_guidelines_quarkzip_ui_guidelines",
@@ -29277,7 +29277,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/ArchiveTable.tsx",
-      "source_location": "L311",
+      "source_location": "L313",
       "weight": 1.0
     },
     {
@@ -29289,7 +29289,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/ArchiveTable.tsx",
-      "source_location": "L374",
+      "source_location": "L376",
       "weight": 1.0
     },
     {
@@ -29301,7 +29301,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/ArchiveTable.tsx",
-      "source_location": "L383",
+      "source_location": "L385",
       "weight": 1.0
     },
     {
@@ -29829,7 +29829,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L26",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -29841,7 +29841,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L72",
+      "source_location": "L76",
       "weight": 1.0
     },
     {
@@ -29853,7 +29853,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L130",
+      "source_location": "L139",
       "weight": 1.0
     },
     {
@@ -29865,7 +29865,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L212",
+      "source_location": "L231",
       "weight": 1.0
     },
     {
@@ -29877,7 +29877,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L204",
+      "source_location": "L223",
       "weight": 1.0
     },
     {
@@ -29889,7 +29889,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L194",
+      "source_location": "L213",
       "weight": 1.0
     },
     {
@@ -31473,7 +31473,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L192",
+      "source_location": "L211",
       "weight": 1.0
     },
     {
@@ -31485,7 +31485,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L202",
+      "source_location": "L221",
       "weight": 1.0
     },
     {
@@ -31497,7 +31497,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L210",
+      "source_location": "L229",
       "weight": 1.0
     },
     {
@@ -53296,7 +53296,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L257",
+      "source_location": "L261",
       "weight": 1.0
     },
     {
@@ -53307,7 +53307,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L275",
+      "source_location": "L279",
       "weight": 1.0
     },
     {
@@ -53318,7 +53318,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L290",
+      "source_location": "L294",
       "weight": 1.0
     },
     {
@@ -53329,7 +53329,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L301",
+      "source_location": "L305",
       "weight": 1.0
     },
     {
@@ -53351,7 +53351,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ui-guidelines.md",
-      "source_location": "L79",
+      "source_location": "L83",
       "weight": 1.0
     },
     {
@@ -56750,7 +56750,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/App.test.tsx",
-      "source_location": "L696",
+      "source_location": "L694",
       "weight": 1.0
     },
     {
@@ -57553,7 +57553,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L123",
+      "source_location": "L132",
       "weight": 1.0
     },
     {
@@ -57564,7 +57564,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L25",
+      "source_location": "L27",
       "weight": 1.0
     },
     {
@@ -57586,7 +57586,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L71",
+      "source_location": "L75",
       "weight": 1.0
     },
     {
@@ -57608,7 +57608,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TitleBar.tsx",
-      "source_location": "L219",
+      "source_location": "L238",
       "weight": 1.0
     },
     {
@@ -66888,5 +66888,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "60905671d5ff66ee4eb93b37b72dea4e7c81d725"
+  "built_at_commit": "c1ad280141774c76a328d289c062b8e74aeeec4a"
 }

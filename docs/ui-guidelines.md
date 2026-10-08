@@ -68,11 +68,15 @@ Numbers: comma thousands via `toLocaleString("en-US")`, sizes via
 `formatSize` (IEC `KiB…`), stamps via `formatModified`/`formatDateTimeLocal`
 (system time zone, AM/PM, `en-US` shape), `·` joins meta, never `|` or `/`.
 Window title follows the open archive: `QuarkZip | "Path: <full path>"`
-(plain `QuarkZip` otherwise; `setWindowTitle`, best-effort). Both bars
-share a `minmax` 1fr-auto-1fr grid so the title claims every free pixel
-(centered when short, filling when long, reflowing live on resize); long
-paths truncate the directory middle only — app name, prefix and file name
-never shrink (full path on hover). `Open new…` (yellow `highlight` solid,
+(plain `QuarkZip` otherwise; `setWindowTitle`, best-effort). The rendered
+bars show `QuarkZip | <full path>` plus an italic read-only warning below
+(listing + extraction only, never modification). mac centers the title
+with a full-width overlay (asymmetric siblings/padding defeat grid
+centering) capped at the free space (76px lights + ~170px button zone);
+Linux keeps the symmetric `minmax` 1fr-auto-1fr grid. Both claim every
+free pixel (centered when short, filling when long, reflowing live on
+resize); long paths truncate the directory middle only — app name and
+file name never shrink (full path on hover). `Open new…` (yellow `highlight` solid,
 opaque on glass) renders only with an archive open: mac overlay right,
 Linux custom bar left; the empty state's card CTA owns opening.
 

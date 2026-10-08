@@ -35,6 +35,10 @@ test("linux titlebar insets match the card edges", async ({ app }) => {
   expect(Math.abs(open!.y - bar!.y - (extract!.y - footer!.y))).toBeLessThan(
     1.5,
   );
+  // Read-only warning rides below the Linux title too.
+  await expect(
+    app.getByText("Read-only — extract files, cannot modify"),
+  ).toBeVisible();
 });
 
 test("macOS open aligns to the card's right edge", async ({ page }) => {
@@ -56,6 +60,16 @@ test("macOS open aligns to the card's right edge", async ({ page }) => {
   expect(
     Math.abs(open!.y - bar!.y - (card!.y - (open!.y + open!.height))),
   ).toBeLessThan(1.5);
+  // True center despite asymmetric siblings/padding: the title midpoint
+  // lands on the window midpoint (in-flow centering sat ~24px right).
+  const title = await page.locator("#qz-titlebar-mac-title").boundingBox();
+  expect(Math.abs(title!.x + title!.width / 2 - 400)).toBeLessThan(3);
+  // Read-only warning rides below the title, italic.
+  const hint = page.getByText("Read-only — extract files, cannot modify");
+  await expect(hint).toBeVisible();
+  expect(await hint.evaluate((el) => getComputedStyle(el).fontStyle)).toBe(
+    "italic",
+  );
 });
 
 test("footer, table, and window share one inset rhythm", async ({ app }) => {

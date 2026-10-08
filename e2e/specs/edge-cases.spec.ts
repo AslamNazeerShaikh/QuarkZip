@@ -88,7 +88,7 @@ test("archive path with spaces and quotes titles correctly", async ({
   const path = `/tmp/my "quoted" dir/a.zip`;
   await addArchive(app, path, { count: 1 });
   await openViaButton(app, path);
-  await expect(app.locator("header")).toContainText(`"Path: ${path}"`);
+  await expect(app.locator("header")).toContainText(`QuarkZip | ${path}`);
   await expect(app.getByText("file-1.txt")).toBeVisible();
 });
 

@@ -12,7 +12,7 @@
   "titlebar.maximize": "मैक्सिमाइज़",
   "titlebar.restore": "रिस्टोर",
   "titlebar.close": "बंद करें",
-  "titlebar.pathPrefix": "पथ: ",
+  "titlebar.readonlyHint": "केवल पढ़ने हेतु — फ़ाइलें निकाली जा सकती हैं, बदली नहीं जा सकतीं",
 
   "overview.emptyTitle": "कोई आर्काइव खुला नहीं है",
   "overview.emptyDesc": "7z, zip, tar या 30+ अन्य फ़ॉर्मैट खोलें — या कहीं भी फ़ाइल छोड़ें।",

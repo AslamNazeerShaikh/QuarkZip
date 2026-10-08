@@ -17,51 +17,55 @@ interface TitleBarProps {
   openDisabled?: boolean;
 }
 
-/// Window title with middle-truncated archive path: the app name + prefix
-/// never shrink, the directory portion takes the ellipsis, and the file
-/// name always survives (`…/photo.zip`, never `…/pho`). Short titles sit
-/// centered; long ones expand into every free pixel (pure flex, so window
-/// resizes reflow it live). Full path on hover.
+/// Window title: `QuarkZip | <full path` with the file name always
+/// surviving — the directory portion takes the middle ellipsis
+/// (`…/photo.zip`, never `…/pho`). Short titles sit centered; long ones
+/// fill every free pixel (pure flex + truncate, so window resizes reflow
+/// it live). Full path on hover. A small italic read-only warning rides
+/// below the title: archives open for listing + extraction only, never
+/// modification.
 function ArchiveTitle({ archive }: { archive: string }) {
   const { t } = useLanguage();
-  const prefix = t("titlebar.pathPrefix");
   const m = archive.match(/^(.*[/\\])([^/\\]+)$/);
   const dir = m ? m[1] : archive;
   const file = m ? m[2] : "";
   return (
     <span
       id="qz-titlebar-archive-title"
-      className="flex min-w-0 items-center justify-center"
+      className="flex max-w-full min-w-0 flex-col items-center"
       title={archive}
     >
-      <span className="shrink-0 font-semibold">QuarkZip</span>
-      <span className="shrink-0 text-[var(--qz-glass-muted)]">
-        {" "}
-        | &quot;{prefix}
-      </span>
-      {file ? (
-        <>
+      {/* leading-[1.2]: the two-line block must fit the 36px bar content
+          box (px text vs rem box — at the 13px root the box is 29.25px). */}
+      <span className="flex min-w-0 items-center justify-center leading-[1.2]">
+        <span className="shrink-0 font-semibold">QuarkZip |&nbsp;</span>
+        {file ? (
+          <>
+            <span
+              id="qz-titlebar-archive-dir"
+              className="truncate text-[var(--qz-glass-muted)]"
+            >
+              {dir}
+            </span>
+            <span
+              id="qz-titlebar-archive-file"
+              className="shrink-0 text-[var(--qz-glass-muted)]"
+            >
+              {file}
+            </span>
+          </>
+        ) : (
           <span
             id="qz-titlebar-archive-dir"
             className="truncate text-[var(--qz-glass-muted)]"
           >
             {dir}
           </span>
-          <span
-            id="qz-titlebar-archive-file"
-            className="shrink-0 text-[var(--qz-glass-muted)]"
-          >
-            {file}&quot;
-          </span>
-        </>
-      ) : (
-        <span
-          id="qz-titlebar-archive-dir"
-          className="truncate text-[var(--qz-glass-muted)]"
-        >
-          {dir}&quot;
-        </span>
-      )}
+        )}
+      </span>
+      <span className="mt-0.5 max-w-full truncate text-[10px] leading-none italic text-[var(--qz-glass-muted)]">
+        {t("titlebar.readonlyHint")}
+      </span>
     </span>
   );
 }
@@ -70,41 +74,44 @@ function ArchiveTitle({ archive }: { archive: string }) {
 /// mac-strip only — everywhere else the title sits on theme surfaces).
 function ArchiveTitleThemed({ archive }: { archive: string }) {
   const { t } = useLanguage();
-  const prefix = t("titlebar.pathPrefix");
   const m = archive.match(/^(.*[/\\])([^/\\]+)$/);
   const dir = m ? m[1] : archive;
   const file = m ? m[2] : "";
   return (
     <span
       id="qz-titlebar-archive-title-themed"
-      className="flex min-w-0 items-center justify-center"
+      className="flex max-w-full min-w-0 flex-col items-center"
       title={archive}
     >
-      <span className="shrink-0 font-semibold">QuarkZip</span>
-      <span className="shrink-0 text-[var(--qz-muted)]"> | &quot;{prefix}</span>
-      {file ? (
-        <>
+      <span className="flex min-w-0 items-center justify-center leading-[1.2]">
+        <span className="shrink-0 font-semibold">QuarkZip |&nbsp;</span>
+        {file ? (
+          <>
+            <span
+              id="qz-titlebar-archive-dir-themed"
+              className="truncate text-[var(--qz-muted)]"
+            >
+              {dir}
+            </span>
+            <span
+              id="qz-titlebar-archive-file-themed"
+              className="shrink-0 text-[var(--qz-muted)]"
+            >
+              {file}
+            </span>
+          </>
+        ) : (
           <span
             id="qz-titlebar-archive-dir-themed"
             className="truncate text-[var(--qz-muted)]"
           >
             {dir}
           </span>
-          <span
-            id="qz-titlebar-archive-file-themed"
-            className="shrink-0 text-[var(--qz-muted)]"
-          >
-            {file}&quot;
-          </span>
-        </>
-      ) : (
-        <span
-          id="qz-titlebar-archive-dir-themed"
-          className="truncate text-[var(--qz-muted)]"
-        >
-          {dir}&quot;
-        </span>
-      )}
+        )}
+      </span>
+      <span className="mt-0.5 max-w-full truncate text-[10px] leading-none italic text-[var(--qz-muted)]">
+        {t("titlebar.readonlyHint")}
+      </span>
     </span>
   );
 }
@@ -117,9 +124,11 @@ function ArchiveTitleThemed({ archive }: { archive: string }) {
 /// float over the webview, so this renders a slim drag strip with a left
 /// inset clearing the lights — no window buttons, no native title.
 ///
-/// Both bars share one grid (`minmax` sides, `auto` center): the center
-/// never blows the bar out — it shrinks first and the path truncates in
-/// the middle — and Open appears only with an archive open.
+/// The mac title is absolutely centered (siblings are asymmetric — Open on
+/// the right, void on the left — and the asymmetric container padding would
+/// otherwise push it ~24px right of true center). Linux keeps the symmetric
+/// 1fr-auto-1fr grid, which centers on its own. Open appears only with an
+/// archive open, on both bars.
 export default function TitleBar({
   archive,
   hidden,
@@ -144,6 +153,13 @@ export default function TitleBar({
     // h-23 (92px): `pt-7`/`pb-7` air around the h-9 Open button (28px
     // above to the window edge, 28px below to the card — the footer's
     // equal-air treatment), which also drops the details below.
+    // The title block is absolutely centered: the side cells are
+    // asymmetric (button right, void left) and the container padding is
+    // asymmetric too (76px vs 28px), so any in-flow centering lands ~24px
+    // right of true center. The overlay spans the full bar width and
+    // centers its child; the child caps at the free space (76px lights
+    // + ~170px button zone) and middle-truncates, growing and shrinking
+    // live with the window. Short titles hit true window center.
     return (
       <div
         data-tauri-drag-region
@@ -152,39 +168,42 @@ export default function TitleBar({
         }}
         data-testid="mac-titlebar"
         id="qz-titlebar-mac"
-        className={`grid h-23 shrink-0 cursor-default grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] items-center pt-7 pb-7 select-none ${
+        className={`relative flex h-23 shrink-0 cursor-default items-center pt-7 pb-7 select-none ${
           archive ? "pr-7 pl-[76px]" : "px-[76px]"
         }`}
       >
-        <div id="qz-titlebar-mac-spacer" aria-hidden />
-        <span
-          id="qz-titlebar-mac-title"
-          className="max-w-full min-w-0 px-2 text-center text-[13px] text-[var(--qz-glass-text)]"
-        >
-          {archive ? (
-            <ArchiveTitle archive={archive} />
-          ) : (
-            <span className="font-semibold">QuarkZip</span>
-          )}
-        </span>
-        <div
-          id="qz-titlebar-mac-actions"
-          className="flex min-w-0 items-center justify-end"
-        >
-          {archive && (
-            <button
-              id="qz-titlebar-open"
-              type="button"
-              onMouseDown={stopDrag}
-              onClick={onOpen}
-              disabled={openDisabled}
-              className={openClass}
+        {archive ? (
+          <>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div
+                id="qz-titlebar-mac-title"
+                className="min-w-0 max-w-[calc(100%-246px)] truncate px-2 text-center text-[13px] text-[var(--qz-glass-text)]"
+              >
+                <ArchiveTitle archive={archive} />
+              </div>
+            </div>
+            <div
+              id="qz-titlebar-mac-actions"
+              className="ml-auto flex min-w-0 items-center justify-end"
             >
-              <FolderOpen size={14} aria-hidden />
-              {t("app.openNew")}
-            </button>
-          )}
-        </div>
+              <button
+                id="qz-titlebar-open"
+                type="button"
+                onMouseDown={stopDrag}
+                onClick={onOpen}
+                disabled={openDisabled}
+                className={openClass}
+              >
+                <FolderOpen size={14} aria-hidden />
+                {t("app.openNew")}
+              </button>
+            </div>
+          </>
+        ) : (
+          <span className="min-w-0 flex-1 px-2 text-center text-[13px] text-[var(--qz-glass-text)]">
+            <span className="font-semibold">QuarkZip</span>
+          </span>
+        )}
       </div>
     );
   }

@@ -11,6 +11,28 @@ const DATA: ArchiveEntry[] = [
 ];
 
 describe("ArchiveTable", () => {
+  it("should_size_the_index_column_for_8_digit_serials", () => {
+    // 10M+ rows: header and every row index cell fit 8 tabular digits;
+    // the flex-1 name column absorbs the width (no name change needed).
+    const { container } = render(
+      <ArchiveTable
+        data={DATA}
+        page={0}
+        pageSize={100}
+        sortKey={null}
+        sortDir="asc"
+        onSortKey={() => {}}
+        listingId="/tmp/a.zip"
+      />,
+    );
+    expect(container.querySelector("#qz-table-header-index")).toHaveClass(
+      "w-24",
+    );
+    expect(container.querySelector("#qz-table-row-1-index")).toHaveClass(
+      "w-24",
+    );
+  });
+
   it("should_render_all_rows", () => {
     render(
       <ArchiveTable
