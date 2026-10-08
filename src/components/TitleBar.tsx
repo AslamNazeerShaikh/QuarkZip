@@ -129,10 +129,12 @@ export default function TitleBar({
 }: TitleBarProps) {
   const { t } = useLanguage();
   // Yellow-tinted shell like every other action (opaque-safe on glass):
-  // material tint, 10px radius, border, card shadow; glass tokens for the
-  // label (dark in both themes — the backdrop is wallpaper, not a surface).
+  // material tint, 10px radius, border, card shadow. The label uses the
+  // theme text, not the glass tokens: the tint shell is a surface (like
+  // every other button), so dark-mode white text applies — glass-dark
+  // text would stay black on the dark tint.
   const openClass =
-    "qz-tint-yellow flex h-9 items-center gap-1.5 rounded-[10px] border border-[var(--qz-border)] px-3 text-[13px] font-medium whitespace-nowrap text-[var(--qz-glass-text)] shadow-[var(--qz-shadow-card)] transition-opacity outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40 disabled:pointer-events-none disabled:opacity-50";
+    "qz-tint-yellow flex h-9 items-center gap-1.5 rounded-[10px] border border-[var(--qz-border)] px-3 text-[13px] font-medium whitespace-nowrap text-[var(--qz-text)] shadow-[var(--qz-shadow-card)] transition-opacity outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40 disabled:pointer-events-none disabled:opacity-50";
   if (hidden) {
     // Overlay strip: with an archive the title claims every pixel past
     // the 76px light inset; empty it falls back to the symmetric inset

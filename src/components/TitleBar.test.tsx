@@ -121,6 +121,15 @@ describe("TitleBar", () => {
     ).toBeInTheDocument();
   });
 
+  it("should_tint_open_with_theme_text_not_glass_text", () => {
+    // The tint shell is a surface: glass-dark text would stay black on
+    // the dark tint instead of following the theme like every button.
+    render(<TitleBar archive="/tmp/a.zip" maximized={false} onOpen={noop} />);
+    const open = screen.getByRole("button", { name: "Open new…" });
+    expect(open).toHaveClass("text-[var(--qz-text)]");
+    expect(open.className).not.toContain("qz-glass-text");
+  });
+
   it("should_size_both_bars_for_equal_button_air", () => {
     // h-23 (92px) with pt-7/pb-7 around h-9 (36px) controls: 28px air
     // above and below — the footer's equal-air treatment.

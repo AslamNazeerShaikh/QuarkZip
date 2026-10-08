@@ -462,9 +462,9 @@
     "semantic_hash": ""
   },
   "e2e/specs/titlebar.spec.ts": {
-    "mtime": 1791398985.9949005,
-    "seen": 1791399005.5957649,
-    "ast_hash": "fc59b7e7bc6b95c26f1a8eaee6fb1d15",
+    "mtime": 1791456684.980894,
+    "seen": 1791456697.739286,
+    "ast_hash": "7f5b8af22dda10ee00e28a1d7d327144",
     "semantic_hash": ""
   },
   "playwright.config.ts": {
@@ -990,15 +990,15 @@
     "semantic_hash": ""
   },
   "src/components/TitleBar.test.tsx": {
-    "mtime": 1791449227.0295992,
-    "seen": 1791449279.995921,
-    "ast_hash": "a11910fec4539e5ce34836b1b287a3aa",
+    "mtime": 1791456582.1370163,
+    "seen": 1791456697.739307,
+    "ast_hash": "7146e188d1f558009783d83bd676c1a5",
     "semantic_hash": ""
   },
   "src/components/TitleBar.tsx": {
-    "mtime": 1791449209.301564,
-    "seen": 1791449279.995921,
-    "ast_hash": "45d3c9efad0c8b9fe1b0dc77f7f71086",
+    "mtime": 1791456574.8363268,
+    "seen": 1791456697.739313,
+    "ast_hash": "c6baf5f0206603f545116a85c88cbc61",
     "semantic_hash": ""
   },
   "src/hooks/useTheme.ts": {

@@ -79,3 +79,27 @@ test("macOS overlay shows open on the right once open", async ({ page }) => {
   await expect(bar.getByRole("button", { name: "Open new…" })).toBeVisible();
   await expect(bar).toContainText("m.zip");
 });
+
+test("macOS open button text follows the theme", async ({ page }) => {
+  await page.goto("/?platform=macos");
+  await page.evaluate(() => window.__e2e.reset());
+  await page.evaluate(() =>
+    window.__e2e.addArchive("/tmp/m.zip", { count: 1 }),
+  );
+  await page.evaluate(() => window.__e2e.drop(["/tmp/m.zip"]));
+  const open = page.locator("#qz-titlebar-open");
+  await expect(open).toBeVisible();
+  // Relative luminance of the rendered label: dark text in light mode,
+  // light text in dark mode (glass-dark would stay dark in both).
+  const lum = await open.evaluate((el) => {
+    const [r, g, b] = getComputedStyle(el)
+      .color.match(/[\d.]+/g)!
+      .map(Number);
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  });
+  if (test.info().project.name.includes("dark")) {
+    expect(lum).toBeGreaterThan(128);
+  } else {
+    expect(lum).toBeLessThan(128);
+  }
+});
