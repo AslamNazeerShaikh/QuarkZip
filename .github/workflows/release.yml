@@ -11,8 +11,8 @@ name: release
 #
 # Size: release profile already follows tauri.app/concept/size
 # (codegen-units=1, lto, opt-level=3 for 10M-row speed, panic=abort,
-# strip). 7-Zip SOURCES need no fetching — vendor/7zip is committed;
-# only the 7zz sidecar consoles are fetched (pinned 26.03).
+# strip). The 7-Zip engine compiles in from committed vendor/7zip and the
+# single binary ships with no sidecars at all.
 on:
   push:
     branches: [main]
@@ -45,9 +45,6 @@ jobs:
 
       - name: Set up stable Rust
         uses: dtolnay/rust-toolchain@stable
-
-      - name: Fetch pinned 7zz sidecars
-        run: ./scripts/fetch-7zz.sh
 
       - name: Install dependencies
         run: npm ci

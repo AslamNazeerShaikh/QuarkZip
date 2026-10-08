@@ -491,3 +491,433 @@ extern "C" int qz_archive_prop(const QzList *list, uint64_t i, char **key_out,
 extern "C" void qz_list_close(QzList *list) { delete list; }
 
 extern "C" void qz_string_free(char *s) { free(s); }
+
+// ---- Extract + Test (in-process `7zz x` / `7zz t`, no sidecar) ----
+// Modelled on CPP/7zip/UI/Client7z/Client7z.cpp (CArchiveExtractCallback)
+// minus all console output: overwrite always (like -y), no prompts, errors
+// captured into errbuf. Selection, progress and password behaviour mirror
+// the sidecar contract the frontend was built against. The open sequence
+// duplicates qz_list_open on purpose: listing is the busiest path and must
+// not shift under an extract refactor.
+
+#include <errno.h>
+
+#include "7zip/Common/FileStreams.h"
+#include "Windows/FileDir.h"
+#include "Windows/FileFind.h"
+#include "Windows/FileName.h"
+#include "Windows/TimeUtils.h"
+
+struct QzArc {
+  CCodecs codecs;
+  CObjectVector<COpenType> types;
+  CIntVector excluded;
+  CArchiveLink arcLink;
+};
+
+// Open by content sniffing (all formats). "" on success; asked_out reports
+// whether a password was requested during open.
+static std::string qz_open_link(QzArc &arc, const char *path_utf8,
+                                const char *pw_or_null, bool &asked_out) {
+  asked_out = false;
+  if (arc.codecs.Load() != S_OK)
+    return "Cannot load archive codecs";
+  QzOpenCallback cb;
+  if (pw_or_null && pw_or_null[0] != '\0') {
+    MultiByteToUnicodeString2(cb.Password, AString(pw_or_null), CP_UTF8);
+    cb.PasswordIsDefined = true;
+  }
+  COpenOptions options;
+  options.codecs = &arc.codecs;
+  options.types = &arc.types;
+  options.excludedFormats = &arc.excluded;
+  options.stream = NULL;
+  static const CObjectVector<CProperty> kNoProps;
+  options.props = &kNoProps;
+  MultiByteToUnicodeString2(options.filePath, AString(path_utf8), CP_UTF8);
+  HRESULT hr = arc.arcLink.Open_Strict(options, &cb);
+  asked_out = cb.PasswordAsked;
+  if (hr != S_OK) {
+    if (cb.PasswordAsked)
+      return cb.PasswordIsDefined ? "Wrong password" : "Enter password";
+    char msg[128];
+    snprintf(msg, sizeof(msg), "Cannot open archive (0x%08X)", (unsigned)hr);
+    return msg;
+  }
+  return "";
+}
+
+// Zip-slip guard: entry paths must stay under the destination. Byte scan is
+// safe: every pattern below is ASCII and UTF-8 never embeds ASCII bytes.
+static bool qz_path_safe(const std::string &rel) {
+  if (rel.empty())
+    return false;
+  if (rel[0] == '/' || rel[0] == '\\')
+    return false;
+  if (rel.size() >= 2 && rel[1] == ':' &&
+      ((rel[0] >= 'A' && rel[0] <= 'Z') || (rel[0] >= 'a' && rel[0] <= 'z')))
+    return false;
+  if (rel == ".." || rel == ".")
+    return false;
+  if (rel.compare(0, 3, "../") == 0 || rel.compare(0, 3, "..\\") == 0)
+    return false;
+  if (rel.find("/../") != std::string::npos ||
+      rel.find("\\..\\") != std::string::npos)
+    return false;
+  size_t n = rel.size();
+  if ((n >= 3 && rel.compare(n - 3, 3, "/..") == 0) ||
+      (n >= 3 && rel.compare(n - 3, 3, "\\..") == 0))
+    return false;
+  return true;
+}
+
+// errno-mapped filesystem failure for user-facing messages (the frontend
+// permission dialog keys off "Permission denied").
+static std::string qz_fs_error(const FString &fullPath) {
+  int e = errno;
+  std::string p(fullPath.Ptr());
+  if (e == EACCES || e == EPERM)
+    return "Permission denied: " + p;
+  if (e == ENOENT)
+    return "No such file or directory: " + p;
+  return "Cannot write output file " + p;
+}
+
+class QzExtractCb Z7_final : public IArchiveExtractCallback,
+                             public ICryptoGetTextPassword,
+                             public CMyUnknownImp {
+  Z7_IFACES_IMP_UNK_2(IArchiveExtractCallback, ICryptoGetTextPassword)
+  Z7_IFACE_COM7_IMP(IProgress)
+
+ public:
+  CMyComPtr<IInArchive> arc;
+  FString destDir;  // normalized, trailing separator
+  bool testMode = true;
+  bool passwordDefined = false;
+  UString password;
+  bool passwordAsked = false;  // op-phase asks only (own object)
+  uint64_t totalFiles = 0;
+  uint64_t doneFiles = 0;
+  uint64_t filesWritten = 0;
+  uint64_t numErrors = 0;
+  std::string firstError;
+  std::string opError;  // fatal GetStream-level failure
+  QzProgressCb progressFn = NULL;
+  void *progressCtx = NULL;
+  int lastPct = -1;
+  // Per-item state (valid between GetStream and SetOperationResult).
+  UString curRel;
+  std::string curRelUtf8;
+  FString curFull;
+  bool curIsFile = false;
+  bool curMtDef = false;
+  CFiTime curMt;
+  bool curAttribDef = false;
+  UInt32 curAttrib = 0;
+  COutFileStream *outSpec = NULL;
+  CMyComPtr<ISequentialOutStream> outFile;
+
+  void report() {
+    if (!progressFn || totalFiles == 0)
+      return;
+    int pct = (int)((doneFiles * 100) / totalFiles);
+    if (pct != lastPct) {
+      lastPct = pct;
+      progressFn(progressCtx, doneFiles, totalFiles);
+    }
+  }
+};
+
+Z7_COM7F_IMF(QzExtractCb::SetTotal(UInt64 /* size */)) { return S_OK; }
+Z7_COM7F_IMF(QzExtractCb::SetCompleted(const UInt64 * /* completeValue */)) {
+  return S_OK;
+}
+
+Z7_COM7F_IMF(QzExtractCb::GetStream(UInt32 index,
+                                    ISequentialOutStream **outStream,
+                                    Int32 askExtractMode)) {
+  *outStream = NULL;
+  outFile.Release();
+  outSpec = NULL;
+  curIsFile = false;
+  if (askExtractMode != NArchive::NExtract::NAskMode::kExtract)
+    return S_OK;  // test/skip: decode only, no sink
+  if (testMode)
+    return S_OK;
+  try {
+    NWindows::NCOM::CPropVariant prop;
+    if (arc->GetProperty(index, kpidPath, &prop) != S_OK ||
+        prop.vt != VT_BSTR) {
+      opError = "Cannot read entry name";
+      return E_ABORT;
+    }
+    curRel = UString(prop.bstrVal);
+    prop.Clear();
+    {
+      AString a = UnicodeStringToMultiByte(curRel, CP_UTF8);
+      curRelUtf8 = std::string(a.Ptr());
+    }
+    bool isDir = false;
+    if (arc->GetProperty(index, kpidIsDir, &prop) != S_OK) {
+      opError = "Cannot read entry info";
+      return E_ABORT;
+    }
+    if (prop.vt == VT_BOOL)
+      isDir = VARIANT_BOOLToBool(prop.boolVal);
+    prop.Clear();
+    curMtDef = false;
+    if (arc->GetProperty(index, kpidMTime, &prop) != S_OK) {
+      opError = "Cannot read entry info";
+      return E_ABORT;
+    }
+    if (prop.vt == VT_FILETIME) {
+      if (!FILETIME_To_timespec(prop.filetime, curMt)) {
+        opError = "Cannot read entry info";
+        return E_ABORT;
+      }
+      curMtDef = true;
+    }
+    prop.Clear();
+    UInt32 attrib = 0;
+    curAttribDef = false;
+    if (arc->GetProperty(index, kpidAttrib, &prop) == S_OK &&
+        prop.vt == VT_UI4) {
+      attrib = prop.ulVal;
+      curAttribDef = true;
+    }
+    prop.Clear();
+    curFull = destDir + us2fs(curRel);
+    if (isDir) {
+      NWindows::NFile::NDir::CreateComplexDir(curFull);
+      return S_OK;
+    }
+    curIsFile = true;
+    curAttrib = attrib;
+    int slashPos = curRel.ReverseFind_PathSepar();
+    if (slashPos >= 0) {
+      FString parent = destDir + us2fs(curRel.Left((unsigned)slashPos));
+      NWindows::NFile::NDir::CreateComplexDir(parent);
+    }
+    NWindows::NFile::NFind::CFileInfo fi;
+    if (fi.Find(curFull)) {
+      if (!NWindows::NFile::NDir::DeleteFileAlways(curFull)) {  // -y: overwrite without asking
+        opError = qz_fs_error(curFull);
+        return E_ABORT;
+      }
+    }
+    COutFileStream *spec = new COutFileStream;
+    CMyComPtr<ISequentialOutStream> loc(spec);
+    if (!spec->Create_ALWAYS(curFull)) {
+      opError = qz_fs_error(curFull);
+      return E_ABORT;
+    }
+    outSpec = spec;
+    outFile = loc;
+    *outStream = loc.Detach();
+    return S_OK;
+  } catch (...) {
+    opError = "Internal extraction error";
+    return E_ABORT;
+  }
+}
+
+Z7_COM7F_IMF(QzExtractCb::PrepareOperation(Int32 /* askExtractMode */)) {
+  return S_OK;
+}
+
+static const char *qz_op_result_name(Int32 r) {
+  using namespace NArchive::NExtract;
+  switch (r) {
+    case NOperationResult::kUnsupportedMethod:
+      return "Unsupported Method";
+    case NOperationResult::kCRCError:
+      return "CRC Failed";
+    case NOperationResult::kDataError:
+      return "Data Error";
+    case NOperationResult::kUnavailable:
+      return "Unavailable data";
+    case NOperationResult::kUnexpectedEnd:
+      return "Unexpected end of data";
+    case NOperationResult::kDataAfterEnd:
+      return "There are some data after the end of the payload data";
+    case NOperationResult::kIsNotArc:
+      return "Is not archive";
+    case NOperationResult::kHeadersError:
+      return "Headers Error";
+    default:
+      return NULL;
+  }
+}
+
+Z7_COM7F_IMF(QzExtractCb::SetOperationResult(Int32 operationResult)) {
+  doneFiles++;
+  report();
+  if (operationResult == NArchive::NExtract::NOperationResult::kOK) {
+    if (curIsFile)
+      filesWritten++;
+    if (outSpec) {
+      if (curMtDef)
+        outSpec->SetMTime(&curMt);
+      outSpec->Close();
+    }
+    outFile.Release();
+    outSpec = NULL;
+    if (!testMode && curIsFile && curAttribDef)
+      NWindows::NFile::NDir::SetFileAttrib_PosixHighDetect(curFull, curAttrib);
+  } else {
+    numErrors++;
+    if (firstError.empty()) {
+      const char *kind = qz_op_result_name(operationResult);
+      std::string msg = kind ? kind : "Error";
+      if (!curRelUtf8.empty()) {
+        msg += " : ";
+        msg += curRelUtf8;
+      }
+      firstError = msg;
+    }
+  }
+  outFile.Release();
+  outSpec = NULL;
+  curIsFile = false;
+  return S_OK;
+}
+
+Z7_COM7F_IMF(QzExtractCb::CryptoGetTextPassword(BSTR *outPassword)) {
+  passwordAsked = true;
+  if (!passwordDefined)
+    return E_ABORT;
+  return StringToBstr(password.Ptr(), outPassword);
+}
+
+// Shared driver: open, select, run. testMode picks kTest (no sinks).
+static int qz_run_op(const char *archive_utf8, const char *pw_or_null,
+                     const char *dest_utf8_or_null, const char **sel,
+                     size_t nsel, bool testMode, QzProgressCb pfn, void *pctx,
+                     uint64_t *files_out, char *errbuf, size_t errlen) {
+  try {
+    QzArc arc;
+    bool asked = false;
+    std::string err = qz_open_link(arc, archive_utf8, pw_or_null, asked);
+    if (!err.empty()) {
+      set_err(errbuf, errlen, err.c_str());
+      return -1;
+    }
+    // Single-arc archives only (same boundary as listing: compound and
+    // multi-volume layouts need link-level volume handling we don't ship).
+    if (arc.arcLink.Arcs.Size() != 1) {
+      set_err(errbuf, errlen, "multi-part archives are not supported");
+      return -1;
+    }
+    CMyComPtr<IInArchive> archive = arc.arcLink.Arcs.Back().Archive;
+    UInt32 n = 0;
+    if (archive->GetNumberOfItems(&n) != S_OK) {
+      set_err(errbuf, errlen, "Cannot read archive contents");
+      return -1;
+    }
+    // Selection: exact paths, plus "folder/" prefix for chosen folders.
+    // Empty request = everything. Unsafe entries never leave the engine.
+    std::vector<std::string> want;
+    if (sel && nsel > 0)
+      for (size_t k = 0; k < nsel; k++)
+        if (sel[k])
+          want.push_back(sel[k]);
+    std::vector<UInt32> idx;
+    for (UInt32 i = 0; i < n; i++) {
+      NWindows::NCOM::CPropVariant prop;
+      if (archive->GetProperty(i, kpidPath, &prop) != S_OK ||
+          prop.vt != VT_BSTR)
+        continue;
+      AString a =
+          UnicodeStringToMultiByte(UString(prop.bstrVal), CP_UTF8);
+      std::string rel(a.Ptr());
+      if (!qz_path_safe(rel))
+        continue;
+      if (!want.empty()) {
+        bool hit = false;
+        for (size_t k = 0; k < want.size() && !hit; k++)
+          hit = (rel == want[k] ||
+                 (rel.size() > want[k].size() &&
+                  rel.compare(0, want[k].size(), want[k]) == 0 &&
+                  rel[want[k].size()] == '/'));
+        if (!hit)
+          continue;
+      }
+      idx.push_back(i);
+    }
+    // Heap + COM-owned: the engine AddRef/Releases the callback, so a
+    // stack object would be `delete`d out from under us (SIGABRT).
+    QzExtractCb *cbSpec = new QzExtractCb();
+    CMyComPtr<IArchiveExtractCallback> cb(cbSpec);
+    cbSpec->arc = archive;
+    if (!testMode && dest_utf8_or_null) {
+      cbSpec->destDir = us2fs(UString(dest_utf8_or_null));
+      NWindows::NFile::NName::NormalizeDirPathPrefix(cbSpec->destDir);
+      // The root itself may not exist (fresh subfolder runs): the engine
+      // only creates nested parents per file.
+      NWindows::NFile::NDir::CreateComplexDir(cbSpec->destDir);
+    }
+    cbSpec->testMode = testMode;
+    if (pw_or_null && pw_or_null[0] != '\0') {
+      MultiByteToUnicodeString2(cbSpec->password, AString(pw_or_null), CP_UTF8);
+      cbSpec->passwordDefined = true;
+    }
+    cbSpec->totalFiles = (uint64_t)idx.size();
+    cbSpec->progressFn = pfn;
+    cbSpec->progressCtx = pctx;
+    // Never NULL+0: some handlers read that as "everything". An empty
+    // selection extracts nothing (Rust maps 0 files to the noop error).
+    HRESULT hr = S_OK;
+    if (!idx.empty()) {
+      hr = archive->Extract(idx.data(), (UInt32)idx.size(),
+                            testMode ? 1 : 0, cb);
+    }
+    if (!cbSpec->opError.empty()) {
+      set_err(errbuf, errlen, cbSpec->opError.c_str());
+      return -1;
+    }
+    // A password asked mid-run that still failed means wrong password —
+    // ahead of per-file CRC noise, mirroring the sidecar contract.
+    if (cbSpec->passwordAsked && (hr != S_OK || cbSpec->numErrors > 0)) {
+      set_err(errbuf, errlen, "Wrong password");
+      return -1;
+    }
+    if (cbSpec->numErrors > 0) {
+      set_err(errbuf, errlen, cbSpec->firstError.c_str());
+      return -1;
+    }
+    if (hr != S_OK) {
+      char msg[128];
+      snprintf(msg, sizeof(msg), "Operation failed (0x%08X)", (unsigned)hr);
+      set_err(errbuf, errlen, msg);
+      return -1;
+    }
+    if (files_out)
+      *files_out = cbSpec->filesWritten;
+    return 0;
+  } catch (...) {
+    set_err(errbuf, errlen,
+            testMode ? "Internal test error" : "Internal extraction error");
+    return -1;
+  }
+}
+
+extern "C" int qz_extract(const char *archive_utf8,
+                          const char *password_utf8_or_null,
+                          const char *dest_utf8, const char **sel_paths,
+                          size_t sel_count, uint64_t *files_out, char *errbuf,
+                          size_t errlen) {
+  if (!dest_utf8 || !dest_utf8[0]) {
+    set_err(errbuf, errlen, "No destination folder");
+    return -1;
+  }
+  return qz_run_op(archive_utf8, password_utf8_or_null, dest_utf8, sel_paths,
+                   sel_count, false, NULL, NULL, files_out, errbuf, errlen);
+}
+
+extern "C" int qz_test(const char *archive_utf8,
+                       const char *password_utf8_or_null,
+                       QzProgressCb progress_or_null, void *progress_ctx,
+                       char *errbuf, size_t errlen) {
+  return qz_run_op(archive_utf8, password_utf8_or_null, NULL, NULL, 0, true,
+                   progress_or_null, progress_ctx, NULL, errbuf, errlen);
+}

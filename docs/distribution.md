@@ -4,8 +4,15 @@ Releases are built by `.github/workflows/release.yml` on Apple Silicon
 runners (`macos-14`, native arm64 toolchain, `--target
 aarch64-apple-darwin`). Every push to `main` publishes the rolling
 `main-latest` prerelease with the arm64 `.dmg`; PRs run the gates without
-publishing. The FFI engine compiles from committed `vendor/7zip` sources;
-only the `7zz` sidecar consoles are fetched at build time (pinned 26.03).
+publishing. The FFI engine compiles from committed `vendor/7zip` sources
+and the single app binary ships with no sidecars at all (the retired
+`7zz` consoles are only fetched manually, for dev fixture regeneration —
+see `docs/7zz-binaries.md`).
+
+> **Windows note.** Archive operations (list/extract/test) are compiled
+> in on macOS/Linux only (`qz_ffi`); other targets report "engine not
+> built" until the bridge ports there. The legacy sidecar path is fully
+> removed, not kept as a Windows fallback.
 
 ## Signing (no paid Apple Developer account)
 

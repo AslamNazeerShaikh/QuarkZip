@@ -1,6 +1,6 @@
 # QuarkZip — agent instructions
 
-Visual 7-Zip archive manager for macOS (first), then Windows/Linux. Tauri 2 + React + Tailwind v4 frontend (`src/`) + Rust backend (`src-tauri/`), shelling out to a pinned 7-Zip console sidecar (`src-tauri/binaries/7zz-<target-triple>`).
+Visual 7-Zip archive manager for macOS (first), then Windows/Linux. Tauri 2 + React + Tailwind v4 frontend (`src/`) + Rust backend (`src-tauri/`) with the 7-Zip engine compiled in-process from committed `vendor/7zip` sources (no sidecar, no spawned processes).
 
 ## Toolchain
 
@@ -8,7 +8,7 @@ Visual 7-Zip archive manager for macOS (first), then Windows/Linux. Tauri 2 + Re
 - `npm install` → `npm run tauri dev` (dev window); `npm run build` = `tsc && vite build`; `npm run tauri build` = installer.
 - Rust: `cargo check` / `cargo build` run inside `src-tauri/`.
 - Tests: `npm test` (Vitest + Testing Library, `npm run test:coverage` for v8 report), `npm run test:rust` (`cargo test` in `src-tauri/`).
-- 7zz sidecars: `./scripts/fetch-7zz.sh` (pinned 7-Zip 26.03, fetch-at-build, gitignored) — see `docs/7zz-binaries.md`. Never commit binaries without removing the `.gitignore` exception deliberately.
+- 7-Zip sources: committed `vendor/7zip` tree (pinned 26.04, ABI-frozen — builds never fetch upstream); `./scripts/fetch-7z-src.sh` is the documented _upgrade_ path only. The legacy `7zz` sidecar consoles (`./scripts/fetch-7zz.sh`, `src-tauri/binaries/`) are retired: nothing spawns them, nothing bundles them — see `docs/7zz-binaries.md`.
 - Full agent/skill/command inventory lives in `.opencode/README.md`; config in `.opencode/opencode.json`.
 
 ## Conventions
@@ -16,8 +16,8 @@ Visual 7-Zip archive manager for macOS (first), then Windows/Linux. Tauri 2 + Re
 - Frontend: React + Tailwind v4 (`src/main.tsx` entry, `src/App.tsx`, `src/index.css` with `@import "tailwindcss"`); `tsconfig.json` uses `jsx: react-jsx` + `vite/client` types.
 - Backend: Tauri commands in `src-tauri/src/lib.rs` (`#[tauri::command]` + `generate_handler!`); keep `main.rs` as the thin launcher.
 - Rust authority: `rust-developer` is the PRIMARY agent whenever Rust is written or modified — switch to it (`> agent rust-developer`); its rules come from the enforced Rust quality guide in `.opencode/agents/rust-developer.md`.
-- 7zz access only via the sidecar (`externalBin: binaries/7zz`): spawn with explicit args, never shell-string interpolation; stream stdout (`-bsp1`) for progress, support cancel/timeout; extract nested archives to `$TEMP` only.
-- Large archives: stream `7zz l -slt` output line-by-line, virtualize lists (never full DOM render), never block the UI thread.
+- 7-Zip access is in-process only (`src-tauri/ffi/bridge.*` over committed `vendor/7zip`): never spawn processes, never shell-string interpolation; test/list progress streams over Channels; extract nested archives to `$TEMP` only.
+- Large archives: enumerate in-process in batches, virtualize lists (never full DOM render), never block the UI thread.
 - Never install toolchains, packages, or tools automatically — give copy-pasteable commands instead.
 - Commits follow Conventional Commits v1.0.0 (`CONTRIBUTING.md`): `<type>[scope]: <description>`, imperative, lowercase, ≤72 chars; `BREAKING CHANGE:` footer for breaking changes.
 

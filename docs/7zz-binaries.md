@@ -1,5 +1,10 @@
 # 7zz binaries for QuarkZip
 
+> **Retired.** List/extract/test all run in-process from committed
+> `vendor/7zip` sources — nothing spawns these consoles and no bundle
+> ships them. This doc stays as the fetch/parity record (fixture
+> regeneration still uses a dev sidecar).
+
 Pinned: **7-Zip 26.03 (2026-09-03)**, 64-bit only. Source:
 `https://www.7-zip.org/download.html` (files live on
 `https://github.com/ip7z/7zip/releases/download/26.03/`).

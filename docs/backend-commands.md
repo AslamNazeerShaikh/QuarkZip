@@ -1,14 +1,16 @@
 # QuarkZip backend commands (`src-tauri/src/lib.rs`)
 
-Archive work runs through **two engines**: the in-process 7-Zip build
-(preferred on macOS/Linux — vendored 26.04 sources compiled in by
-`src-tauri/build.rs`, `src-tauri/ffi/bridge.*`, `src-tauri/src/sevenzip.rs`;
-see `docs/7zip-reference.md` §6) with fallback to the pinned 7zz sidecar
-(`src-tauri/binaries/7zz-*`, `externalBin: binaries/7zz`). Checksums are
-computed natively in Rust. Pure argv builders, `7zz l -slt` parsing and the
-shared `summarize_archive_info` (single spec for both engines, A/B-tested)
-live in `src-tauri/src/archive.rs`, hashing in `src-tauri/src/checksum.rs` —
-both unit-tested without a binary (`npm run test:rust`).
+Archive work runs through the **in-process 7-Zip engine**: vendored 26.04
+sources compiled in by `src-tauri/build.rs` (`src-tauri/ffi/bridge.*`,
+`src-tauri/src/sevenzip.rs`; see `docs/7zip-reference.md` §6). No sidecar,
+no spawned processes — list, extract and test all run inside the backend
+on blocking threads. Checksums are computed natively in Rust. Shared
+`summarize_archive_info` (single spec over header + facts),
+paging/sorting, folder-name validation and hashing live in
+`src-tauri/src/archive.rs` and `src-tauri/src/checksum.rs` — unit-tested
+without a binary (`npm run test:rust`). FFI list/extract/test behavior is
+pinned by `src-tauri/tests/zz_ffi_list.rs` against committed fixtures
+(`src-tauri/tests/fixtures/`, regenerate with the dev sidecar).
 
 ## Commands
 
@@ -16,10 +18,10 @@ both unit-tested without a binary (`npm run test:rust`).
 | --------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `list_archive`        | `path`, `password?`, `onProgress: Channel<ListProgress>`      | `{ total }` — listing stays backend-held (`ListingState`); rows arrive via `get_page`                                   |
 | `get_page`            | `path`, `page`, `pageSize` (1–100000), `sortKey?`, `sortDir?` | `{ rows: ArchiveEntry[], total }` — server-sorted slice of the stored listing (`path` must match; stale requests error) |
-| `info_archive`        | `path`, `password?`, `onProgress: Channel<ListProgress>`      | `ArchiveInfo` (stored-listing summary, else listing + fs size/mtime)                                                    |
-| `cancel_list_archive` | —                                                             | aborts an in-flight `list/info_archive`; previous listing kept                                                          |
-| `extract_archive`     | `path`, `dest`, `files[]`, `password?`                        | 7zz stdout (`7zz x -o<dest> [files…] [-p<pw>] -y`); empty `files` = everything                                          |
-| `test_archive`        | `path`, `password?`, `onProgress: Channel<u32>`               | `"Everything is Ok"` (`7zz t -bsp1`, percent streamed)                                                                  |
+| `info_archive`        | `path` (stored listing must match)                            | `ArchiveInfo` (stored-listing summary + fs size/mtime)                                                                  |
+| `cancel_list_archive` | —                                                             | aborts an in-flight `list_archive`; previous listing kept                                                               |
+| `extract_archive`     | `path`, `dest`, `files[]`, `password?`                        | `"Extracted N files"` (in-process, overwrite always); empty `files` = everything                                        |
+| `test_archive`        | `path`, `password?`, `onProgress: Channel<u32>`               | `"Everything is Ok"` (in-process decode, percent streamed)                                                              |
 | `checksum_file`       | `path`, `algorithm`, `onProgress: Channel<u32>`               | lowercase hex digest (MD5 / SHA-1 / SHA-256 / SHA-512)                                                                  |
 | `cancel_checksum`     | —                                                             | aborts the in-flight `checksum_file`                                                                                    |
 | `path_exists`         | `path`                                                        | `bool` — one `metadata` call; backs the extract subfolder uniqueness check (`dest/<name>` must be free)                 |
@@ -59,28 +61,26 @@ ON DISK / MODIFIED always resolve from filesystem stat, never the engine.
    whole percents only on change (plus a final 100). No polling, no extra
    commands. The e2e mock (`e2e/mocks/core.ts`) stubs `Channel` with a live
    `emit`.
-3. **Timeouts kill, never hang.** `LIST_TIMEOUT_SECS = 60`,
-   `TEST/EXTRACT_TIMEOUT_SECS = 600` (`tokio::time::timeout` + `child.kill`);
-   expiry reports the Gatekeeper hint, not a spinner.
-4. **Exit code is not the verdict.** `test_archive` additionally requires the
-   `Everything is Ok` marker; selective extracts returning `No files to
-process` surface as errors. Long stderr/stdout is tail-truncated
-   (`ERROR_TAIL_CHARS = 4000`, char-boundary safe) before crossing IPC.
+3. **No timeouts, no hangs.** Engine calls run on blocking threads over
+   local files (no spawned processes left to kill); cooperative
+   `LIST_CANCEL` still aborts listings between progress intervals.
+4. **Engine errors are direct.** `test_archive` fails on the first error
+   (`"Wrong password"`, `"CRC Failed : <path>"`, …); selective extracts
+   matching nothing fail with `No files to process — nothing matched the
+selection.` Filesystem failures map to the permission contract
+   (`"Permission denied: <path>"`, `"No such file or directory: <path>"`).
 5. **Checksum cancel is cooperative.** One global flag (single-window app):
    `checksum_file` resets it on start and checks per 1 MiB chunk;
    `cancel_checksum` sets it. The dialog stays open on cancel — only Close
    dismisses it.
-6. **Argv is backend-built.** Only the archive _path_ (and algorithm id for
-   checksums, validated against `ChecksumAlgo::parse`) crosses IPC; flags
-   are never assembled from frontend strings. `-p` is always appended, even
-   empty: the shell plugin spawns 7zz with stdin piped and never closes it,
-   so without an explicit `-p` a password prompt would block until the
-   timeout. Empty `-p` fails fast with detectable password markers and is
-   ignored for plain archives (verified against 7zz 26.03).
-7. **Passwords ride optional params.** `list/info/extract/test` take
-   `password?` (`-p<pw>` appended server-side). The frontend detects
-   password failures with `isPasswordError` (mirrors Rust's
-   `archive::is_password_output` — keep both marker lists in sync) and
+6. **No argv, no prompts.** Only the archive _path_ (plus algorithm id
+   for checksums, dest + file list for extracts) crosses IPC; passwords
+   ride optional params straight into the engine open (single attempt, no
+   prompts ever — a missing password fails fast with detectable markers).
+7. **Passwords ride optional params.** `list/extract/test` take
+   `password?`. The frontend detects password failures with
+   `isPasswordError` (mirrors the bridge errbuf markers in
+   `src-tauri/ffi/bridge.cpp` — keep both lists in sync) and
    opens the password gate instead of erroring; the verified password is
    remembered per open archive so Test/Extract keep working on encrypted
    content. Content-scope vs header-scope behavior: `docs/passwords.md`.
@@ -89,4 +89,6 @@ process` surface as errors. Long stderr/stdout is tail-truncated
    controls — mirrored in `src/lib/extractFolder.ts`, which additionally
    rejects lone surrogates impossible in Rust `&str`) gates the dialog;
    `path_exists` probes `dest/<name>` uniqueness (debounced, stale wins
-   lose). 7zz creates the final folder itself (`-o<dest>/<name>`).
+   lose). The engine creates the final folder itself (nested parents
+   included); the Rust preflight (`create_dir_all`) maps io failures to
+   the permission contract first.

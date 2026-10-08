@@ -64,4 +64,13 @@ What it buys (our measurements): kills the 3 GB stdout round-trip (25 s emit + 4
 
 Recommended phasing — **P0 now**: keep the sidecar (timeout/message fixes already in). **P1 prototype**: bridge list-only end-to-end for all formats behind a Rust trait mirroring today's `archive.rs` pure functions; sidecar stays as fallback while proving build/FFI/safety on all three targets (note: Windows builds need MSVC or clang story verified early).
 
-**P1 status (Oct 2026, done — app-verified on the 10M zip):** FFI list + FFI info shipped behind `QUARKZIP_LIST_ENGINE` (default FFI on unix, sidecar fallback, cancel never falls back). Whole-archive linking (else format registrars vanish), GUID definition TU, shared `summarize_archive_info` (single spec, A/B-pinned). Measured: **15.6s debug / 15.0s release for 10,001,002 entries** vs 74s+kill sidecar; bit-identical entries + summaries across zip/7z/tar.gz. App opens the 10M zip, paging/pagination work (laggy — virtualized 100-row pages over a full in-memory model). Known cost: the top card renders after the table because `info` summarizes in a **second pass** (string-heavy sets over 10M facts); the planned fix is streaming aggregates computed during enumeration. Memory still full-materialization (~4.5 GB release peak) — paging + lean store is the next step (P2). **P2**: cut the list path over (the measured win), keep sidecar for extract/test. **P3**: migrate extract/test, drop the sidecar. Alternative lane (evaluate, don't assume): pure-Rust crates for 7z/zip handling — far smaller unsafe surface, but verify handler coverage (40 formats) and solid-block/multi-volume behavior against our fixtures first. Also independent: bump the sidecar pin 26.03 → **26.04** (5 Oct 2026, bug + vulnerability fixes).
+**Status (Oct 2026, done):** FFI list + info + extract + test shipped with
+no sidecar anywhere (unix; other targets report "engine not built").
+Whole-archive linking (else format registrars vanish), GUID definition
+TU, shared `summarize_archive_info`. Measured P1: **15.6s debug / 15.0s
+release for 10,001,002 entries**; bit-identical entries + summaries
+across zip/7z/tar.gz (A/B parity has since moved to committed fixtures in
+`src-tauri/tests/zz_ffi_list.rs`). Backend-held paging (`get_page`)
+keeps the renderer at one page. Known boundary: single-arc archives
+only — compound/multi-volume layouts report "multi-part archives are
+not supported" (the old sidecar fallback is gone, deliberately).

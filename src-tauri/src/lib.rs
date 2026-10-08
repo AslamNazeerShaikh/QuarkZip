@@ -5,20 +5,6 @@ pub mod sevenzip;
 
 use std::sync::atomic::{AtomicBool, Ordering};
 use tauri::Manager;
-use tauri_plugin_shell::ShellExt;
-
-/// Bounds for sidecar execution. A hung 7zz — notably a macOS Gatekeeper
-/// block on the unsigned binary, which never exits — must surface as an
-/// error, never an infinite "Reading…"/"Extracting…" spinner.
-/// Listing budget: measured 2026-10 — a 10M-entry `7zz l -slt` emits
-/// ~3 GB in ~25 s, then parsing takes ~5 s release / ~48 s debug and the
-/// 1 GB JSON response still has to cross IPC. 60 s killed real listings.
-const LIST_TIMEOUT_SECS: u64 = 600;
-const EXTRACT_TIMEOUT_SECS: u64 = 600;
-const TEST_TIMEOUT_SECS: u64 = 600;
-
-/// Long 7zz output is truncated for IPC: the frontend shows the tail.
-const ERROR_TAIL_CHARS: usize = 4000;
 
 /// Cooperative cancel flag for [`checksum_file`]. Single-window app, one
 /// checksum at a time: starting resets it, [`cancel_checksum`] sets it.
@@ -56,164 +42,23 @@ struct ListingOpened {
     total: usize,
 }
 
-/// Listing progress snapshot streamed over a Channel while `7zz l -slt`
-/// runs: raw stdout bytes collected plus entry blocks completed so far.
-/// The total is unknowable upfront (`l` reports no percent — verified
-/// against 7zz 26.03), so the frontend shows counters + an indeterminate
-/// bar, never a fake ETA. `bytes` is None on the in-process path, which
-/// has no stdout to measure.
+/// Listing progress snapshot streamed over a Channel while the
+/// in-process listing runs: entries completed so far (totals are
+/// unknowable upfront), so the frontend shows counters + an indeterminate
+/// bar, never a fake ETA. `bytes` stays None (no stdout to measure).
 #[derive(serde::Serialize, Clone)]
 struct ListProgress {
     bytes: Option<u64>,
     entries: u64,
 }
 
-/// Runs the pinned 7zz sidecar with `args`, killing it on timeout.
-/// Collects stdout/stderr the same line-wise way `Command::output` does.
-/// Stdout chunks are additionally scanned for `NN%` progress (7zz `-bsp1`
-/// separates updates with `\r` inside one chunk); `on_progress` fires only
-/// when the max percent grows. `on_line` sees every stdout line (without
-/// its newline) for streaming consumers; `cancel` is polled per event and
-/// kills the child promptly with a cancellation error.
-async fn run_sidecar_progress(
-    app: &tauri::AppHandle,
-    args: Vec<String>,
-    timeout_secs: u64,
-    mut on_progress: impl FnMut(u32) + Send,
-    mut on_line: Option<&mut (dyn FnMut(&[u8]) + Send)>,
-    cancel: Option<&'static AtomicBool>,
-) -> Result<(Option<i32>, Vec<u8>, Vec<u8>), String> {
-    use tauri_plugin_shell::process::CommandEvent;
-    let (mut rx, child) = app
-        .shell()
-        .sidecar("binaries/7zz")
-        .map_err(|e| e.to_string())?
-        .args(args)
-        .spawn()
-        .map_err(|e| e.to_string())?;
-    // Collect outcome: the event loop never touches `child`, so the kill
-    // stays with the caller for timeouts and cooperative cancels alike.
-    enum Collected {
-        Done((Option<i32>, Vec<u8>, Vec<u8>)),
-        Cancelled,
-    }
-    let collect = async {
-        let mut code = None;
-        let mut stdout = Vec::new();
-        let mut stderr = Vec::new();
-        let mut last_pct: u32 = 0;
-        while let Some(event) = rx.recv().await {
-            if cancel.is_some_and(|c| c.load(Ordering::SeqCst)) {
-                return Collected::Cancelled;
-            }
-            match event {
-                CommandEvent::Terminated(payload) => code = payload.code,
-                CommandEvent::Stdout(line) => {
-                    if let Some(hook) = on_line.as_mut() {
-                        hook(&line);
-                    }
-                    if let Some(pct) =
-                        archive::parse_progress_percent(&String::from_utf8_lossy(&line))
-                    {
-                        if pct > last_pct {
-                            last_pct = pct;
-                            on_progress(pct);
-                        }
-                    }
-                    stdout.extend(line);
-                    stdout.push(b'\n');
-                }
-                CommandEvent::Stderr(line) => {
-                    stderr.extend(line);
-                    stderr.push(b'\n');
-                }
-                // Non-exhaustive enum: ignore anything else (e.g. Error).
-                _ => {}
-            }
-        }
-        Collected::Done((code, stdout, stderr))
-    };
-    match tokio::time::timeout(std::time::Duration::from_secs(timeout_secs), collect).await {
-        Ok(Collected::Done(done)) => Ok(done),
-        Ok(Collected::Cancelled) => {
-            let _ = child.kill();
-            Err("Listing cancelled.".to_string())
-        }
-        Err(_) => {
-            let _ = child.kill();
-            Err(format!(
-                "7zz did not respond within {timeout_secs}s and was killed. \
-                Large archives can exceed this (listing millions of entries \
-                takes minutes: emit + parse + transfer). On macOS a fast \
-                failure usually means Gatekeeper blocked the unsigned \
-                sidecar — clear it with `xattr -d com.apple.quarantine \
-                src-tauri/binaries/7zz-*` (or re-run scripts/fetch-7zz.sh) \
-                and try again."
-            ))
-        }
-    }
-}
-
-/// Same as [`run_sidecar_progress`] with progress discarded.
-async fn run_sidecar(
-    app: &tauri::AppHandle,
-    args: Vec<String>,
-    timeout_secs: u64,
-) -> Result<(Option<i32>, Vec<u8>, Vec<u8>), String> {
-    run_sidecar_progress(app, args, timeout_secs, |_| {}, None, None).await
-}
-
-/// Runs a `7zz l -slt` listing like [`run_sidecar`], additionally folding
-/// every stdout line into an [`archive::ListCounter`] and forwarding
-/// throttled [`ListProgress`] snapshots over `on_progress`. Abort mid-run
-/// with [`cancel_list_archive`].
-async fn run_listing(
-    app: &tauri::AppHandle,
-    args: Vec<String>,
-    on_progress: &tauri::ipc::Channel<ListProgress>,
-) -> Result<(Option<i32>, Vec<u8>, Vec<u8>), String> {
-    let mut counter = archive::ListCounter::default();
-    let mut last_send = std::time::Instant::now();
-    let mut on_line = |line: &[u8]| {
-        counter.push_line(line);
-        if last_send.elapsed() >= std::time::Duration::from_millis(200) {
-            last_send = std::time::Instant::now();
-            let _ = on_progress.send(ListProgress {
-                bytes: Some(counter.bytes()),
-                entries: counter.entries(),
-            });
-        }
-    };
-    run_sidecar_progress(
-        app,
-        args,
-        LIST_TIMEOUT_SECS,
-        |_| {},
-        Some(&mut on_line),
-        Some(&LIST_CANCEL),
-    )
-    .await
-}
-
-/// Last ~`ERROR_TAIL_CHARS` chars of long output (char-boundary safe).
-fn tail(text: &str) -> String {
-    if text.len() <= ERROR_TAIL_CHARS {
-        return text.to_string();
-    }
-    let start = text.len() - ERROR_TAIL_CHARS;
-    let idx = (start..text.len())
-        .find(|i| text.is_char_boundary(*i))
-        .unwrap_or(text.len());
-    format!("…{}", &text[idx..])
-}
-
-/// Lists an archive's contents via the pinned 7zz sidecar.
+/// Lists an archive's contents with the in-process 7-Zip engine.
 ///
-/// Argv is built by [`archive::list_args`] (never from raw frontend input);
-/// only the archive *path* (and optional password) cross the IPC boundary.
+/// Only the archive *path* (and optional password) cross the IPC boundary.
 /// Streaming [`ListProgress`] snapshots arrive over `on_progress` while the
 /// listing runs (totals are unknowable upfront); abort with
-/// [`cancel_list_archive`].
+/// [`cancel_list_archive`]. No sidecar anywhere: the engine enumerates
+/// in-process on unix targets, and reports explicitly elsewhere.
 ///
 /// P2: returns only the entry total — rows arrive page by page through
 /// [`get_page`], so the renderer never holds the full listing.
@@ -222,75 +67,44 @@ fn tail(text: &str) -> String {
 /// camelCases command args on IPC by default).
 #[tauri::command]
 async fn list_archive(
-    app: tauri::AppHandle,
     state: tauri::State<'_, ListingState>,
     path: String,
     password: Option<String>,
     on_progress: tauri::ipc::Channel<ListProgress>,
 ) -> Result<ListingOpened, String> {
     LIST_CANCEL.store(false, Ordering::SeqCst);
-    // P1: in-process engine first (unix), sidecar fallback on any engine
-    // error. QUARKZIP_LIST_ENGINE=sidecar forces the legacy path.
-    // Cancel never falls back: re-running a cancelled listing is wrong.
-    #[cfg(qz_ffi)]
-    let try_ffi = std::env::var("QUARKZIP_LIST_ENGINE").as_deref() != Ok("sidecar");
-    #[cfg(not(qz_ffi))]
-    let try_ffi = false;
-    if try_ffi {
-        let owned_path = path.clone();
-        let owned_pw = password.clone();
-        let progress_ffi = on_progress.clone();
-        let res = tokio::task::spawn_blocking(move || {
-            crate::sevenzip::enumerate_detail(
-                &owned_path,
-                owned_pw.as_deref(),
-                &mut |n: u64| {
-                    let _ = progress_ffi.send(ListProgress {
-                        bytes: None,
-                        entries: n,
-                    });
-                },
-                &LIST_CANCEL,
-            )
-        })
-        .await
-        .map_err(|e| format!("listing task failed: {e}"))?;
-        match res {
-            Ok(data) => {
-                let total = data.facts.len();
-                *state.current.lock().expect("listing state") = Some(StoredListing {
-                    path: path.clone(),
-                    header: data.header,
-                    facts: data.facts,
-                    sort: None,
+    let owned_path = path.clone();
+    let owned_pw = password.clone();
+    let progress_ffi = on_progress.clone();
+    let res = tokio::task::spawn_blocking(move || {
+        crate::sevenzip::enumerate_detail(
+            &owned_path,
+            owned_pw.as_deref(),
+            &mut |n: u64| {
+                let _ = progress_ffi.send(ListProgress {
+                    bytes: None,
+                    entries: n,
                 });
-                return Ok(ListingOpened { total });
-            }
-            Err(e) if e == crate::sevenzip::CANCELLED => return Err(e),
-            Err(e) => {
-                eprintln!("[quarkzip] FFI listing failed ({e}), falling back to sidecar");
-            }
+            },
+            &LIST_CANCEL,
+        )
+    })
+    .await
+    .map_err(|e| format!("listing task failed: {e}"))?;
+    // Store for paging + info (no second engine run); only the total crosses.
+    match res {
+        Ok(data) => {
+            let total = data.facts.len();
+            *state.current.lock().expect("listing state") = Some(StoredListing {
+                path: path.clone(),
+                header: data.header,
+                facts: data.facts,
+                sort: None,
+            });
+            Ok(ListingOpened { total })
         }
+        Err(e) => Err(e),
     }
-    let (code, stdout, stderr) = run_listing(
-        &app,
-        archive::list_args(&path, password.as_deref()),
-        &on_progress,
-    )
-    .await?;
-    if code != Some(0) {
-        return Err(String::from_utf8_lossy(&stderr).into_owned());
-    }
-    // Store for paging + info (no second 7zz run); only the total crosses.
-    let (header, facts) = archive::parse_listing_parts(&String::from_utf8_lossy(&stdout));
-    let total = facts.len();
-    *state.current.lock().expect("listing state") = Some(StoredListing {
-        path: path.clone(),
-        header,
-        facts,
-        sort: None,
-    });
-    Ok(ListingOpened { total })
 }
 
 /// Serves one page of the stored listing, sorting server-side on demand.
@@ -342,15 +156,11 @@ async fn get_page(
 }
 #[tauri::command]
 async fn info_archive(
-    app: tauri::AppHandle,
     state: tauri::State<'_, ListingState>,
     path: String,
-    password: Option<String>,
-    on_progress: tauri::ipc::Channel<ListProgress>,
 ) -> Result<archive::ArchiveInfo, String> {
-    // Fast path: summarize the stored in-process listing (no second 7zz
-    // run). Path must match — a stale store belongs to another archive.
-    // The sidecar path below stays for fallback opens.
+    // Summarize the stored in-process listing (no second engine run).
+    // Path must match — a stale store belongs to another archive.
     if let Some(stored) = state.current.lock().expect("listing state").as_ref() {
         if stored.path == path {
             let mut info = archive::summarize_archive_info(&stored.header, &stored.facts);
@@ -366,59 +176,52 @@ async fn info_archive(
             return Ok(info);
         }
     }
-    // No flag reset here: info runs second in the same open flow, so a
-    // cancel landing between the two invokes must still abort it.
-    // No flag reset here: info runs second in the same open flow, so a
-    // cancel landing between the two invokes must still abort it.
-    let (code, stdout, stderr) = run_listing(
-        &app,
-        archive::list_args(&path, password.as_deref()),
-        &on_progress,
-    )
-    .await?;
-    if code != Some(0) {
-        return Err(String::from_utf8_lossy(&stderr).into_owned());
-    }
-    let mut info = archive::parse_archive_info(&String::from_utf8_lossy(&stdout));
-    // Filesystem truth for the container itself (size + mtime as epoch secs).
-    if let Ok(meta) = std::fs::metadata(&path) {
-        info.container_size = Some(meta.len());
-        info.container_modified = meta
-            .modified()
-            .ok()
-            .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
-            .map(|d| d.as_secs());
-    }
-    Ok(info)
+    Err("no open archive".to_string())
 }
 
-/// Extracts an archive via the pinned 7zz sidecar into `dest`
-/// (`7zz x <archive> -o<dest> [files...] [-p<pw>] -y`, no password prompt).
-/// An empty `files` list extracts everything; otherwise only those
-/// in-archive paths. 7zz creates `dest` when missing. Returns 7zz's stdout;
-/// stderr becomes the error.
+/// Maps a filesystem io error to the user-facing contract: permission
+/// denials carry "Permission denied" (the frontend permission dialog keys
+/// off it), missing paths stay "No such file or directory".
+fn map_fs_error(e: std::io::Error, path: &str) -> String {
+    use std::io::ErrorKind;
+    match e.kind() {
+        ErrorKind::PermissionDenied => format!("Permission denied: {path}"),
+        ErrorKind::NotFound => format!("No such file or directory: {path}"),
+        _ => format!("{}: {path}", e),
+    }
+}
+
+/// Extracts an archive in-process into `dest` (overwrite always, no
+/// password prompt). An empty `files` list extracts everything; otherwise
+/// only those in-archive paths (a chosen folder matches everything under
+/// it). `dest` is created with parents; io failures map to the
+/// permission/missing contract above. Empty match → the noop error.
 #[tauri::command]
 async fn extract_archive(
-    app: tauri::AppHandle,
     path: String,
     dest: String,
     files: Vec<String>,
     password: Option<String>,
 ) -> Result<String, String> {
-    let (code, stdout, stderr) = run_sidecar(
-        &app,
-        archive::extract_args(&path, &dest, password.as_deref(), &files),
-        EXTRACT_TIMEOUT_SECS,
-    )
-    .await?;
-    if code != Some(0) {
-        return Err(String::from_utf8_lossy(&stderr).into_owned());
+    if let Err(e) = std::fs::metadata(&path) {
+        return Err(map_fs_error(e, &path));
     }
-    let stdout = String::from_utf8_lossy(&stdout).into_owned();
-    if archive::extract_output_is_noop(&stdout) {
+    if let Err(e) = std::fs::create_dir_all(&dest) {
+        return Err(map_fs_error(e, &dest));
+    }
+    let owned_path = path.clone();
+    let owned_dest = dest.clone();
+    let owned_pw = password.clone();
+    let selective = !files.is_empty();
+    let written = tokio::task::spawn_blocking(move || {
+        crate::sevenzip::extract_ffi(&owned_path, &owned_dest, &files, owned_pw.as_deref())
+    })
+    .await
+    .map_err(|e| format!("extraction task failed: {e}"))??;
+    if written == 0 && selective {
         return Err("No files to process — nothing matched the selection.".to_string());
     }
-    Ok(stdout)
+    Ok(format!("Extracted {written} files"))
 }
 
 /// Starts a native window drag (used by the custom header strip).
@@ -427,47 +230,36 @@ fn drag_window(window: tauri::Window) {
     let _ = window.start_dragging();
 }
 
-/// Tests an archive's integrity via the pinned 7zz sidecar
-/// (`7zz t <archive> [-p<pw>] -bsp1`). Whole-percent progress streams over
-/// `on_progress`; success returns the `Everything is Ok` marker, anything
-/// else (bad CRC, wrong password, truncated output) becomes the error.
+/// Tests an archive's integrity in-process (decode everything, write
+/// nothing). Whole-percent progress streams over `on_progress`; success
+/// returns the `Everything is Ok` marker, anything else (bad CRC, wrong
+/// password, missing archive) becomes the error.
 ///
 /// NOTE: `#[tauri::command]` camelCases argument names on the IPC boundary
 /// by default, so the frontend sends `onProgress` (not `on_progress`).
 #[tauri::command]
 async fn test_archive(
-    app: tauri::AppHandle,
     path: String,
     password: Option<String>,
     on_progress: tauri::ipc::Channel<u32>,
 ) -> Result<String, String> {
-    let (code, stdout, stderr) = run_sidecar_progress(
-        &app,
-        archive::test_progress_args(&path, password.as_deref()),
-        TEST_TIMEOUT_SECS,
-        |pct| {
-            let _ = on_progress.send(pct);
-        },
-        None,
-        None,
-    )
-    .await?;
-    if code != Some(0) {
-        let detail = String::from_utf8_lossy(&stderr).into_owned();
-        return Err(if detail.trim().is_empty() {
-            "Integrity test failed.".to_string()
-        } else {
-            tail(&detail)
-        });
+    if let Err(e) = std::fs::metadata(&path) {
+        return Err(map_fs_error(e, &path));
     }
-    let stdout = String::from_utf8_lossy(&stdout).into_owned();
-    if !archive::test_output_ok(&stdout) {
-        return Err(if stdout.trim().is_empty() {
-            "Integrity test failed.".to_string()
-        } else {
-            tail(&stdout)
-        });
-    }
+    let owned_path = path.clone();
+    let owned_pw = password.clone();
+    let progress = on_progress.clone();
+    tokio::task::spawn_blocking(move || {
+        let mut last = 0u32;
+        crate::sevenzip::test_ffi(&owned_path, owned_pw.as_deref(), &mut |pct| {
+            if pct != last {
+                last = pct;
+                let _ = progress.send(pct);
+            }
+        })
+    })
+    .await
+    .map_err(|e| format!("test task failed: {e}"))??;
     let _ = on_progress.send(100);
     Ok("Everything is Ok".to_string())
 }

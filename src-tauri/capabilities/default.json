@@ -12,10 +12,6 @@
     "os:default",
     "opener:default",
     "shell:default",
-    "dialog:default",
-    {
-      "identifier": "shell:allow-execute",
-      "allow": [{ "name": "7zz-sidecar", "sidecar": true, "args": true }]
-    }
+    "dialog:default"
   ]
 }

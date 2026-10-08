@@ -37,7 +37,6 @@
     "active": true,
     "targets": "all",
     "category": "Utility",
-    "externalBin": ["binaries/7zz"],
     "macOS": {
       "signingIdentity": "-"
     },

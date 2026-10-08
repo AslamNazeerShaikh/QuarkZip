@@ -1,18 +1,17 @@
-//! In-process 7-Zip listing (P1) with sidecar fallback.
+//! In-process 7-Zip engine (list / extract / test, no sidecar).
 //!
 //! The `qz_ffi` cfg is emitted by build.rs when the vendored sources
-//! (`scripts/fetch-7z-src.sh`) compiled on macOS/Linux. Without it the
-//! stub below reports the missing engine so callers fall back to the
-//! sidecar path. Windows keeps the sidecar only for P1.
+//! compile on macOS/Linux. Other targets report so explicitly instead of
+//! falling back anywhere: there is no legacy path anymore.
 //!
-//! Threading: one listing per thread, never shared (matches the engine's
-//! per-handle model). Callers run [`enumerate_detail`] inside
+//! Threading: one operation per thread, never shared (matches the engine's
+//! per-handle model). Callers run blocking engine calls inside
 //! `spawn_blocking`, never on async workers.
 
 use std::sync::atomic::AtomicBool;
 
-/// Error text for user-cancelled listings. lib.rs matches on it to skip
-/// the sidecar fallback (re-running a cancelled listing would be wrong).
+/// Error text for user-cancelled listings. Cancel never retries: the
+/// caller surfaces it as-is.
 pub const CANCELLED: &str = "Listing cancelled.";
 
 #[cfg(qz_ffi)]
@@ -23,6 +22,9 @@ mod ffi {
     pub struct QzList {
         _private: [u8; 0],
     }
+
+    pub type QzProgressCb =
+        Option<unsafe extern "C" fn(ctx: *mut std::ffi::c_void, done: u64, total: u64)>;
 
     extern "C" {
         pub fn qz_list_open(
@@ -56,6 +58,24 @@ mod ffi {
         ) -> c_int;
         pub fn qz_list_close(list: *mut QzList);
         pub fn qz_string_free(s: *mut c_char);
+        pub fn qz_extract(
+            archive: *const c_char,
+            password: *const c_char,
+            dest: *const c_char,
+            sel_paths: *const *const c_char,
+            sel_count: usize,
+            files_out: *mut u64,
+            errbuf: *mut c_char,
+            errlen: usize,
+        ) -> c_int;
+        pub fn qz_test(
+            archive: *const c_char,
+            password: *const c_char,
+            progress: QzProgressCb,
+            progress_ctx: *mut std::ffi::c_void,
+            errbuf: *mut c_char,
+            errlen: usize,
+        ) -> c_int;
     }
 }
 
@@ -233,12 +253,147 @@ pub fn enumerate_detail(
     })
 }
 
+/// In-process extraction (`7zz x -o<dest> -y` semantics, no sidecar):
+/// `files` holds exact in-archive paths (empty = everything; a chosen
+/// folder also matches everything under it). `dest` is created with
+/// parents by the caller (lib.rs maps those io errors); the engine also
+/// creates nested dirs. Returns files written. Errors mirror the sidecar
+/// contract: password markers for the gate, per-file engine failures,
+/// errno-mapped filesystem failures for the permission dialog.
+#[cfg(qz_ffi)]
+pub fn extract_ffi(
+    path: &str,
+    dest: &str,
+    files: &[String],
+    password: Option<&str>,
+) -> Result<u64, String> {
+    use std::ffi::CString;
+
+    let cpath = CString::new(path).map_err(|_| "Archive path contains NUL".to_string())?;
+    let cpw: Option<CString> = password
+        .filter(|p| !p.is_empty())
+        .map(CString::new)
+        .transpose()
+        .map_err(|_| "Password contains NUL".to_string())?;
+    let cdest = CString::new(dest).map_err(|_| "Destination path contains NUL".to_string())?;
+    let cfiles: Vec<CString> = files
+        .iter()
+        .map(|f| CString::new(f.as_str()))
+        .collect::<Result<_, _>>()
+        .map_err(|_| "Entry path contains NUL".to_string())?;
+    let ptrs: Vec<*const std::ffi::c_char> = cfiles.iter().map(|s| s.as_ptr()).collect();
+    let mut errbuf = [0 as std::ffi::c_char; 512];
+    let mut written = 0u64;
+    // SAFETY: all pointers borrow live CStrings for the call; the engine
+    // copies what it needs synchronously and never retains them.
+    let rc = unsafe {
+        ffi::qz_extract(
+            cpath.as_ptr(),
+            cpw.as_ref().map_or(std::ptr::null(), |p| p.as_ptr()),
+            cdest.as_ptr(),
+            if ptrs.is_empty() {
+                std::ptr::null()
+            } else {
+                ptrs.as_ptr()
+            },
+            ptrs.len(),
+            &mut written,
+            errbuf.as_mut_ptr(),
+            errbuf.len(),
+        )
+    };
+    if rc != 0 {
+        let msg = unsafe { std::ffi::CStr::from_ptr(errbuf.as_ptr()) }.to_string_lossy();
+        return Err(if msg.is_empty() {
+            "Extraction failed".to_string()
+        } else {
+            msg.into_owned()
+        });
+    }
+    Ok(written)
+}
+
+/// In-process integrity test (`7zz t` semantics, no sidecar): whole
+/// archive, whole-percent progress. Success is silent like the console.
+#[cfg(qz_ffi)]
+pub fn test_ffi(
+    path: &str,
+    password: Option<&str>,
+    on_progress: &mut dyn FnMut(u32),
+) -> Result<(), String> {
+    use std::ffi::CString;
+
+    // Trampoline: the engine calls back on the calling (blocking) thread
+    // with file counts; the closure lives on our stack for the call.
+    unsafe extern "C" fn trampoline(ctx: *mut std::ffi::c_void, done: u64, total: u64) {
+        if ctx.is_null() || total == 0 {
+            return;
+        }
+        let pct = ((done.saturating_mul(100)) / total).min(100) as u32;
+        // SAFETY: ctx is our live closure (set below, cleared after).
+        let cb = unsafe { &mut *(ctx as *mut &mut dyn FnMut(u32)) };
+        cb(pct);
+    }
+
+    let cpath = CString::new(path).map_err(|_| "Archive path contains NUL".to_string())?;
+    let cpw: Option<CString> = password
+        .filter(|p| !p.is_empty())
+        .map(CString::new)
+        .transpose()
+        .map_err(|_| "Password contains NUL".to_string())?;
+    let mut errbuf = [0 as std::ffi::c_char; 512];
+    let mut cb: &mut dyn FnMut(u32) = on_progress;
+    let ctx: *mut std::ffi::c_void = &mut cb as *mut &mut dyn FnMut(u32) as *mut std::ffi::c_void;
+    // SAFETY: ctx borrows our stack closure; the engine invokes it
+    // synchronously before returning and never retains it.
+    let rc = unsafe {
+        ffi::qz_test(
+            cpath.as_ptr(),
+            cpw.as_ref().map_or(std::ptr::null(), |p| p.as_ptr()),
+            Some(trampoline),
+            ctx,
+            errbuf.as_mut_ptr(),
+            errbuf.len(),
+        )
+    };
+    if rc != 0 {
+        let msg = unsafe { std::ffi::CStr::from_ptr(errbuf.as_ptr()) }.to_string_lossy();
+        return Err(if msg.is_empty() {
+            "Integrity test failed.".to_string()
+        } else {
+            msg.into_owned()
+        });
+    }
+    Ok(())
+}
+
 /// Stub when the engine didn't compile (other targets, missing sources).
 #[cfg(not(qz_ffi))]
 pub struct ListingData {
     pub entries: Vec<crate::archive::ArchiveEntry>,
     pub facts: Vec<crate::archive::EntryFacts>,
     pub header: std::collections::BTreeMap<String, String>,
+}
+
+/// Stub when the engine didn't compile (other targets, missing sources).
+#[cfg(not(qz_ffi))]
+pub fn extract_ffi(
+    _path: &str,
+    _dest: &str,
+    _files: &[String],
+    _password: Option<&str>,
+) -> Result<u64, String> {
+    Err("In-process engine not built for this target".to_string())
+}
+
+/// Stub when the engine didn't compile (other targets, missing sources).
+#[cfg(not(qz_ffi))]
+pub fn test_ffi(
+    _path: &str,
+    _password: Option<&str>,
+    _on_progress: &mut dyn FnMut(u32),
+) -> Result<(), String> {
+    Err("In-process engine not built for this target".to_string())
 }
 
 /// Stub when the engine didn't compile (other targets, missing sources).

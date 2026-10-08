@@ -1,8 +1,9 @@
 # Password-protected archives in QuarkZip
 
-How encrypted archives behave, what the UI does about it, and the 7zz
-findings behind both. All statements below were verified against the
-pinned sidecar (7-Zip 26.03, `src-tauri/binaries/7zz-*`).
+How encrypted archives behave, what the UI does about it, and the engine
+findings behind both. All statements below are pinned by
+`src-tauri/tests/zz_ffi_list.rs` against committed fixtures
+(`src-tauri/tests/fixtures/locked.zip`, `locked7z.7z`).
 
 ## 1. Two encryption scopes — why some archives preview and others don't
 
@@ -20,34 +21,35 @@ formats" — the difference is inherent to the archive, not a QuarkZip
 limitation. (Plain RAR notes: RAR _extraction_ also needs its password;
 listing usually does not — same content-scope rule.)
 
-## 2. What 7zz actually reports (stdin is DEVNULL in-app)
+## 2. What the engine actually reports (single attempt, never prompts)
 
-| Situation                                         | Exit | Output signature                                                   |
-| ------------------------------------------------- | ---- | ------------------------------------------------------------------ |
-| Header-encrypted, no password (`l` or `t`)        | 255  | `Enter password:` then `Break signaled`                            |
-| Header-encrypted, wrong password                  | 2    | `Cannot open encrypted archive. Wrong password?` + `Headers Error` |
-| Content-encrypted, wrong/empty password (`t`/`x`) | 2    | `ERROR: Wrong password : <file>` **once per encrypted file**       |
-| Correct password (`t`)                            | 0    | `Everything is Ok`                                                 |
-| `l` on content-encrypted (any password state)     | 0    | full listing, no verification at all                               |
+| Situation                                          | Bridge error                                   |
+| -------------------------------------------------- | ---------------------------------------------- |
+| Header-encrypted, no password (list/extract/test)  | `Enter password`                               |
+| Header-encrypted, wrong password                   | `Wrong password`                               |
+| Content-encrypted, wrong/empty password (test/`x`) | `Wrong password` (ahead of per-file CRC noise) |
+| Correct password (test)                            | success (silent, like the console)             |
+| List on content-encrypted (any password state)     | success — full listing, no verification at all |
 
 Two consequences shaped the implementation:
 
-1. **`l` never verifies a password.** A correct-looking listing proves
-   nothing for content-encrypted zips — only `7zz t` proves a password.
-   The gate therefore verifies with `test_archive`, never with a listing.
-2. **7zz must never be left without a `-p`.** The shell plugin spawns 7zz
-   with stdin piped and never closes it, so a password _prompt_ blocks
-   until the 60s timeout (once misreported as a Gatekeeper issue). Every
-   argv builder (`list/test/extract`) always appends `-p` — empty when no
-   password is known. Empty `-p` fails fast with the signatures above and
-   is ignored for plain archives and non-archives (no false positives:
-   `Cannot open the file as archive` matches none of the markers).
+1. **Listing never verifies a password.** A correct-looking listing proves
+   nothing for content-encrypted zips — only the in-process test proves
+   a password. The gate therefore verifies with `test_archive`, never
+   with a listing.
+2. **The engine is never left to prompt.** The open/extract callbacks
+   abort (`E_ABORT`) the moment a password is asked but none was
+   supplied — no stdin, no hanging, no timeout. A supplied password gets
+   exactly one attempt; asking mid-run that still fails means
+   `Wrong password`.
 
-Detection lives in two mirrored helpers — keep their marker lists in
-sync: `archive::is_password_output` (Rust) and `isPasswordError`
-(`src/lib/password.ts`). Markers: `wrong password`, `enter password`,
-`cannot open encrypted archive`, `headers error`, `break signaled`
-(case-insensitive; 7zz messages are English-only).
+Detection lives in the bridge errbuf taxonomy plus one frontend helper
+— keep their marker lists in sync: `qz_open_link`/`QzExtractCb` in
+`src-tauri/ffi/bridge.cpp` emit `Enter password`, `Wrong password`
+(and occasionally `Headers Error` on item ops); `isPasswordError`
+(`src/lib/password.ts`) matches those plus the historical console
+markers `cannot open encrypted archive` and `break signaled`
+(case-insensitive; engine messages are English-only).
 
 ## 3. UX flows (all in `PasswordDialog`, same modal language)
 
@@ -72,7 +74,7 @@ clicks never dismiss — like every other popup. Verified passwords are
 remembered per open archive (`archivePassword`, cleared on plain opens
 and failures), so Test/Extract keep working on encrypted content without
 re-asking. Retries that still fail show the normal single-message failure
-popup — raw per-file 7zz lines never reach the UI for password cases.
+popup — raw per-file engine lines never reach the UI for password cases.
 
 ## 4. Edge cases covered
 
@@ -80,8 +82,8 @@ popup — raw per-file 7zz lines never reach the UI for password cases.
   the old `Wrong password : a … : b … : c` pile-up cannot render.
 - **Cancel keeps everything:** listing, selection, destination, theme,
   language — the gate touches no app state except on accept.
-- **Empty password submit:** Check stays disabled; empty `-p` at the 7zz
-  layer fails fast rather than prompting.
+- **Empty password submit:** Check stays disabled; the engine attempt
+  fails fast rather than prompting.
 - **Archive deleted/moved mid-flow:** verify or retry surfaces the real
   filesystem error in-dialog (check) or in the result popup (open).
 - **Wrong password remembered?** Impossible by construction — only verified
@@ -93,11 +95,14 @@ popup — raw per-file 7zz lines never reach the UI for password cases.
 - **Language switch mid-dialog:** all strings go through `t()`, so the
   dialog re-renders in the new language instantly.
 
-## 5. Manual QA fixtures (local only, never committed)
+## 5. Fixtures (committed) and manual QA
 
-- `~/Downloads/protected-demo.zip` (password `Correct123`) — content scope:
-  opens without asking, gates on Extract/Test.
-- `~/Downloads/protected-headers.7z` (password `Correct123`, `-mhe=on`) —
+- `src-tauri/tests/fixtures/locked.zip` (ZipCrypto, `secret`) —
+  content scope: opens without asking, gates on Extract/Test.
+- `src-tauri/tests/fixtures/locked7z.7z` (`secret`, `-mhe=on`) —
   header scope: gates immediately on open.
-- Recreate: `7zz a -tzip <out> <files> -p<pw>` and
-  `7zz a -t7z <out> <files> -p<pw> -mhe=on`.
+- Regenerate: `7zz a -tzip <out> <files> -p<pw> -mem=ZipCrypto` and
+  `7zz a -t7z <out> <files> -p<pw> -mhe=on` (dev sidecar), then commit.
+- Manual QA extras (local only, never committed):
+  `~/Downloads/protected-demo.zip` and `~/Downloads/protected-headers.7z`
+  (both `Correct123`) for the full dialog flows.

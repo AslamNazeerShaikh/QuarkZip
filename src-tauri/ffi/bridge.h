@@ -1,12 +1,15 @@
 // C ABI over the vendored 7-Zip engine (see docs/7zip-reference.md §6).
 //
-// List-only for P1: open an archive by content sniffing (all registered
-// formats, like `7zz l` with no -t filter) and pull entries one by one.
-// The caller (Rust) owns progress + cancel: enumerate in batches and stop
+// Open/listing (P1) plus extract/test, all in-process — no sidecar.
+// Archives open by content sniffing (all registered formats, like `7zz`
+// with no -t filter) and entries are pulled one by one. The caller (Rust)
+// owns progress + cancel for listing: enumerate in batches and stop
 // calling; the open call itself is one blocking C++ call (no mid-open
-// abort in P1 — central-directory parse of huge archives takes seconds).
+// abort — central-directory parse of huge archives takes seconds).
+// Extract/test run synchronously in the caller's blocking thread;
+// progress arrives through the QzProgressCb callback.
 //
-// Threading: one QzList per thread, never shared. Matches the engine's
+// Threading: one handle per thread, never shared. Matches the engine's
 // per-handle model (MacPacker's SevenZipArchive).
 
 #pragma once
@@ -53,6 +56,34 @@ int qz_archive_prop(const QzList *list, uint64_t i, char **key_out,
 
 void qz_list_close(QzList *list);
 void qz_string_free(char *s);
+
+// File-completion callback for qz_test (NULL = no progress): whole-file
+// counts, called when the whole percent changes. `ctx` is opaque.
+typedef void (*QzProgressCb)(void *ctx, uint64_t done_files,
+                             uint64_t total_files);
+
+// Extract the selection to `dest_utf8` (created with parents, like
+// `7zz x -o<dest> -y`: overwrite always, no prompts). `sel_paths` holds
+// exact in-archive paths (`sel_count` of them); NULL/0 extracts
+// everything. A selected folder also matches everything under "folder/".
+// Unsafe entries (absolute paths, ".." escapes) are skipped, never
+// written outside `dest_utf8`.
+// Returns 0 with `files_out` = files written. Errors in `errbuf`:
+// "Enter password" (header-encrypted, none given), "Wrong password"
+// (a password was asked and the run failed — both match the frontend
+// password gate), per-file engine failures ("CRC Failed : <path>" and
+// friends, same wording as the console), filesystem failures
+// ("Permission denied: <path>", "No such file or directory: <path>"),
+// "Cannot open archive (0x…)" otherwise.
+int qz_extract(const char *archive_utf8, const char *password_utf8_or_null,
+               const char *dest_utf8, const char **sel_paths, size_t sel_count,
+               uint64_t *files_out, char *errbuf, size_t errlen);
+
+// Test whole-archive integrity (like `7zz t`: data errors surface per
+// file, success is silent). Same error taxonomy as qz_extract (no dest).
+int qz_test(const char *archive_utf8, const char *password_utf8_or_null,
+            QzProgressCb progress_or_null, void *progress_ctx, char *errbuf,
+            size_t errlen);
 
 #ifdef __cplusplus
 }
