@@ -1,5 +1,6 @@
 import { render } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import userEvent from "@testing-library/user-event";
+import { describe, expect, it, vi } from "vitest";
 import ArchiveOverview, { type ArchiveInfo } from "./ArchiveOverview";
 import ArchiveTable from "./ArchiveTable";
 import ExtractDialog from "./ExtractDialog";
@@ -185,5 +186,95 @@ describe("elementIds", () => {
       expect(container.querySelector(`#${CSS.escape(id)}`)).not.toBeNull();
     }
     expectUniqueIds(container);
+  });
+
+  it("should_always_show_the_entry_total", () => {
+    const { container } = render(
+      <Pagination
+        page={0}
+        pageCount={3}
+        pageSize={100}
+        total={250}
+        onPage={() => {}}
+        onPageSize={() => {}}
+      />,
+    );
+    // No responsive gate: narrow windows show the count too.
+    const total = container.querySelector("#qz-pager-total");
+    expect(total).not.toBeNull();
+    expect(total).not.toHaveClass("hidden");
+    expect(total?.textContent).toBe("250");
+  });
+
+  it("should_drop_menus_downward_when_below", async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <>
+        <Pagination
+          page={0}
+          pageCount={3}
+          pageSize={100}
+          total={250}
+          onPage={() => {}}
+          onPageSize={() => {}}
+          below
+        />
+        <LanguageSwitch below />
+      </>,
+    );
+    // Portals mount on document.body, outside the render container —
+    // and opening one menu closes the other, so assert each in turn.
+    await user.click(
+      container.querySelector("#qz-pager-size-btn") as HTMLElement,
+    );
+    let menu = document.querySelector("#qz-pager-size-menu") as HTMLElement;
+    // jsdom measures every rect as zero, so "8px below" is top: 8px.
+    expect(menu.style.top).toBe("8px");
+    expect(menu.style.bottom).toBe("");
+    await user.click(container.querySelector("#qz-lang-btn") as HTMLElement);
+    menu = document.querySelector("#qz-lang-menu") as HTMLElement;
+    expect(menu.style.top).toBe("8px");
+    expect(menu.style.bottom).toBe("");
+  });
+
+  it("should_raise_menus_upward_by_default", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<LanguageSwitch />);
+    await user.click(container.querySelector("#qz-lang-btn") as HTMLElement);
+    const menu = document.querySelector("#qz-lang-menu") as HTMLElement;
+    expect(menu.style.bottom).not.toBe("");
+    expect(menu.style.top).toBe("");
+  });
+
+  it("should_control_collapse_from_the_parent", async () => {
+    const user = userEvent.setup();
+    const onCollapsedChange = vi.fn();
+    const { container, rerender } = render(
+      <ArchiveOverview
+        archive="/tmp/demo.zip"
+        info={INFO}
+        loading={false}
+        onOpen={() => {}}
+        collapsed={false}
+        onCollapsedChange={onCollapsedChange}
+      />,
+    );
+    await user.click(
+      container.querySelector("#qz-action-collapse-btn") as HTMLElement,
+    );
+    expect(onCollapsedChange).toHaveBeenCalledWith(true);
+    // Uncontrolled renders keep their own toggle.
+    rerender(
+      <ArchiveOverview
+        archive="/tmp/demo.zip"
+        info={INFO}
+        loading={false}
+        onOpen={() => {}}
+      />,
+    );
+    await user.click(
+      container.querySelector("#qz-action-collapse-btn") as HTMLElement,
+    );
+    expect(container.querySelector("#qz-overview-details")).toBeNull();
   });
 });

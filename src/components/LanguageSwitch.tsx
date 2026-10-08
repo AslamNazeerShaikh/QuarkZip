@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { LOCALES } from "../i18n/locales";
 import { useLanguage } from "../i18n/LanguageContext";
-import { menuAbove, usePortaledMenu } from "./usePortaledMenu";
+import { menuAbove, menuBelow, usePortaledMenu } from "./usePortaledMenu";
 
 /// Footer language menu: shell-styled like its Pagination/ThemeSwitch
 /// neighbours (h-9, 10px radius, 1px border, card shadow) with a floating
@@ -13,8 +13,9 @@ import { menuAbove, usePortaledMenu } from "./usePortaledMenu";
 ///
 /// The listbox portals to `document.body`: on the short collapsed card an
 /// in-card upward menu is taller than the card itself and `overflow-hidden`
-/// clips it.
-export default function LanguageSwitch() {
+/// clips it. While the card is collapsed (`below`) the menu drops under
+/// the trigger instead — the table below has the room.
+export default function LanguageSwitch({ below = false }: { below?: boolean }) {
   const { lang, setLang, t } = useLanguage();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -89,9 +90,9 @@ export default function LanguageSwitch() {
             ref={menuRef}
             role="listbox"
             aria-label={t("lang.language")}
-            // Left-aligned to the shell, 8px above it, viewport-anchored
+            // Left-aligned to the shell, 8px beside it, viewport-anchored
             // (see hook): never clipped by the card, never past its left.
-            style={menuAbove(rect)}
+            style={below ? menuBelow(rect) : menuAbove(rect)}
             className="qz-material-bar animate-qz-pop z-50 w-max rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]"
           >
             {LOCALES.map((locale) => {

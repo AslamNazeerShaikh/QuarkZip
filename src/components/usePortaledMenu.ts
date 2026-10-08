@@ -40,3 +40,16 @@ export function menuAbove(rect: DOMRect): React.CSSProperties {
     minWidth: rect.width,
   };
 }
+
+/// Fixed style pinning the menu 8px below its anchor shell, aligned to
+/// the shell's left edge and at least as wide as the shell. Used while
+/// the overview card is collapsed: the table below has ample room, so
+/// the menu drops over it instead of floating up past the card.
+export function menuBelow(rect: DOMRect): React.CSSProperties {
+  return {
+    position: "fixed",
+    left: rect.left,
+    top: rect.bottom + 8,
+    minWidth: rect.width,
+  };
+}

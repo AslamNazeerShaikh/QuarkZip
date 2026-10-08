@@ -257,3 +257,49 @@ test("debug ids are present and unique across the live DOM", async ({
   });
   expect(dupes).toEqual([]);
 });
+
+test("collapsed card drops menus downward over the table", async ({ app }) => {
+  await addArchive(app, "/tmp/menus.zip", { count: 250 });
+  await openViaButton(app, "/tmp/menus.zip");
+  await app.getByRole("button", { name: "Collapse details" }).click();
+  // Language menu: opens below the trigger, still hittable.
+  await app.getByRole("button", { name: "Change language" }).click();
+  const langMenu = app.getByRole("listbox", { name: "Language" });
+  await expect(langMenu).toBeVisible();
+  const langTrigger = await app
+    .getByRole("button", { name: "Change language" })
+    .boundingBox();
+  const langBox = await langMenu.boundingBox();
+  expect(langBox!.y).toBeGreaterThan(langTrigger!.y + langTrigger!.height);
+  await langMenu.getByRole("option", { name: "English" }).click();
+  await expect(langMenu).toHaveCount(0);
+  // Page-size menu: same direction, choosing still applies.
+  await app.getByRole("button", { name: "Rows per page" }).click();
+  const sizeMenu = app.getByRole("listbox", { name: "Rows per page" });
+  await expect(sizeMenu).toBeVisible();
+  const sizeTrigger = await app
+    .getByRole("button", { name: "Rows per page" })
+    .boundingBox();
+  const sizeBox = await sizeMenu.boundingBox();
+  expect(sizeBox!.y).toBeGreaterThan(sizeTrigger!.y + sizeTrigger!.height);
+  await sizeMenu.getByRole("option", { name: "1,000" }).click();
+  await expect(app.getByText("1 / 1")).toBeVisible();
+});
+
+test("collapse survives a reload", async ({ app }) => {
+  await addArchive(app, PATH, { count: 3 });
+  await openViaButton(app, PATH);
+  await app.getByRole("button", { name: "Collapse details" }).click();
+  await expect(
+    app.getByRole("button", { name: "Expand details" }),
+  ).toBeVisible();
+  await app.reload();
+  // Fresh backend state, same persisted UI: re-open and the card is
+  // still collapsed.
+  await addArchive(app, PATH, { count: 3 });
+  await openViaButton(app, PATH);
+  await expect(
+    app.getByRole("button", { name: "Expand details" }),
+  ).toBeVisible();
+  await expect(app.getByRole("button", { name: "More" })).toHaveCount(0);
+});

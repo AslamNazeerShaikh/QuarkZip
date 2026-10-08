@@ -136,7 +136,9 @@ export default function TitleBar({
   if (hidden) {
     // Overlay strip: with an archive the title claims every pixel past
     // the 76px light inset; empty it falls back to the symmetric inset
-    // so bare "QuarkZip" stays exactly centered.
+    // so bare "QuarkZip" stays exactly centered. The right inset matches
+    // the content column (`px-7`) so Open's right edge lands on the same
+    // vertical line as the overview card's right edge.
     return (
       <div
         data-tauri-drag-region
@@ -146,7 +148,7 @@ export default function TitleBar({
         data-testid="mac-titlebar"
         id="qz-titlebar-mac"
         className={`grid h-12 shrink-0 cursor-default grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] items-center select-none ${
-          archive ? "pr-4 pl-[76px]" : "px-[76px]"
+          archive ? "pr-7 pl-[76px]" : "px-[76px]"
         }`}
       >
         <div id="qz-titlebar-mac-spacer" aria-hidden />
@@ -224,7 +226,9 @@ export default function TitleBar({
         if (e.button === 0) void invoke("drag_window");
       }}
       onDoubleClick={() => void toggleMaximize()}
-      className="grid h-12 shrink-0 cursor-default grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] items-center pr-2 pl-4 select-none"
+      // Horizontal insets match the content column (`px-7`): Open's left
+      // edge lands on the card's left edge, controls on its right edge.
+      className="grid h-12 shrink-0 cursor-default grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] items-center px-7 select-none"
     >
       {/* Left: Open sits here on Linux (window controls own the right);
           the app mark rides along so the centered title stays balanced. */}

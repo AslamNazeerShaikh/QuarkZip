@@ -36,6 +36,10 @@ scales (all from the reference):
   One rhythm everywhere: 28px gutters on the content sides/bottom, no top
   pad (card sits under the title strip), 28px gap between the two cards
   and above the action bar (`px-7`/`pb-7`/`gap-7`/`pt-7`).
+  The titlebar shares the gutters (`px-7` both platforms; mac keeps the
+  76px traffic-light inset on the left, empty state stays symmetric), so
+  `Open` lands on the card's edge line and the button's top air equals
+  its gap down to the card.
   Card internals keep their own padding (`px-5` + `py-4/5`). The
   drag-drop frame is window-fixed at `inset-3.5` (14px) — top edge in the
   title strip, other edges centered in the content gutters — identical
@@ -119,14 +123,19 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   out-of-range, non-numeric, empty) opens
   an Invalid-page confirm (warning icon, valid range shown, Jump lands on
   the read-off page / Cancel reverts to the open page). Escape/blur
-  reverts; single pages show a static `1 / 1` (empty: `0 / 0`). The
+  reverts; single pages show a static `1 / 1` (empty: `0 / 0`). The entry
+  total always shows, narrow windows included. The
   page-size listbox portals to `document.body`, viewport-anchored above
   its shell — card `overflow-hidden` would otherwise clip it on the short
-  collapsed card. While the theme segment is out,
+  collapsed card. While the card is collapsed the menus drop _below_
+  their shells instead (`below`, over the table, which has the room).
+  While the theme segment is out,
   pagination shrinks to one icon button (naming the current page,
   re-expanding on click) and returns to full width when it minimizes —
   the card row never overflows at 800px. `LanguageSwitch` portals the
-  same way (its menu is taller than the collapsed card) so floating lists never clip or touch the sidewalls. The footer `About` and
+  same way (its menu is taller than the collapsed card) and likewise
+  drops below its shell while collapsed, so floating lists never clip
+  or touch the sidewalls. The footer `About` and
   `LanguageSwitch` controls reuse the same shell as icon-only buttons
   (h-9 shell, 28px icon button, 8px inner radius — like collapsed
   `ThemeSwitch`); hover/title and aria-labels name them.
@@ -231,7 +240,10 @@ all N instead?` with an `Extract All` confirm). Big centered icon, the
   secondary `sm` shell, square icon-only, arrow rotates with the state):
   collapsed it shrink-wraps to the action row (`flex-none`) and the table
   absorbs the freed space; `Test`/`Checksum` stay available in both
-  states. Pagination never changes with the card — page/row counts are
+  states. The collapsed state is owned by `App` and persisted in
+  localStorage (`quarkzip.collapsed`), so it survives restarts — and it
+  drives the card-row menu direction (down while collapsed, up otherwise).
+  Pagination never changes with the card — page/row counts are
   independent of it.
   Opening an archive shows a progress popup (`LoadDialog`): `7zz l`
   reports no percent, so the bar is indeterminate and the rows show live

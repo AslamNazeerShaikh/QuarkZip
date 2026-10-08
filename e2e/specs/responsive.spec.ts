@@ -21,15 +21,15 @@ test("app fits without horizontal overflow", async ({ app }) => {
   await expect(app.locator("header")).toContainText("narrow.zip");
 });
 
-test("wide-screen total count stays hidden", async ({ app }) => {
+test("narrow-screen total count stays visible", async ({ app }) => {
   await addArchive(app, "/tmp/narrow.zip", { count: 150 });
   await openViaButton(app, "/tmp/narrow.zip");
   await expectPage(app, 1, 2);
-  // Present in the DOM (wide screens show it) but hidden here: scope to
-  // the card controls so the overview "Files" count does not match.
+  // The entry total always shows, narrow windows included — scope to the
+  // card controls so the overview "Files" count does not match.
   await expect(
     app.getByTestId("card-controls").getByText("150", { exact: true }),
-  ).toBeHidden();
+  ).toBeVisible();
 });
 
 test("dialogs stay usable at window size", async ({ app }) => {

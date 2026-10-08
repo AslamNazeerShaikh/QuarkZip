@@ -78,6 +78,8 @@ export default function ArchiveOverview({
   onChecksum = () => {},
   middleControls,
   utilityControls,
+  collapsed: controlledCollapsed,
+  onCollapsedChange,
 }: {
   archive: string | null;
   info: ArchiveInfo | null;
@@ -91,6 +93,12 @@ export default function ArchiveOverview({
   /// Theme / Language / About cluster: left-aligned row of its own when
   /// empty, middle of the action row (after pagination) when open.
   utilityControls?: ReactNode;
+  /// Collapsed state, controlled by the parent (which persists it across
+  /// restarts): collapsed, the card shrink-wraps the action row and the
+  /// card-row menus drop downward over the table. Uncontrolled (internal
+  /// state) when omitted — unit tests render it bare.
+  collapsed?: boolean;
+  onCollapsedChange?: (collapsed: boolean) => void;
 }) {
   const { t } = useLanguage();
   // Three card states. Startup (no archive): flex-1, sharing the column
@@ -100,7 +108,8 @@ export default function ArchiveOverview({
   // engine metadata for advanced users (table shrinks); collapsing hides
   // it all, and re-expanding shows the Extra button without the extras
   // until pressed again. A new archive resets the toggle.
-  const [collapsed, setCollapsed] = useState(false);
+  const [internalCollapsed, setInternalCollapsed] = useState(false);
+  const collapsed = controlledCollapsed ?? internalCollapsed;
   const [showExtra, setShowExtra] = useState(false);
   useEffect(() => {
     setShowExtra(false);
@@ -112,7 +121,9 @@ export default function ArchiveOverview({
   const hasExtras = info !== null && Object.keys(info.extra).length > 0;
   function toggleCollapsed() {
     if (collapsed) setShowExtra(false);
-    setCollapsed((c) => !c);
+    const next = !collapsed;
+    if (controlledCollapsed === undefined) setInternalCollapsed(next);
+    onCollapsedChange?.(next);
   }
   const testLabel = t("overview.test");
   const checksumLabel = t("overview.checksum");

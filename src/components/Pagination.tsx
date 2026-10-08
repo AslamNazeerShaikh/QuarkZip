@@ -10,7 +10,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { formatCount } from "../lib/format";
 import { useLanguage } from "../i18n/LanguageContext";
-import { menuAbove, usePortaledMenu } from "./usePortaledMenu";
+import { menuAbove, menuBelow, usePortaledMenu } from "./usePortaledMenu";
 import { Button } from "./ui/button";
 
 export const PAGE_SIZES = [100, 1000, 5000, 10000] as const;
@@ -211,15 +211,19 @@ function PageJump({
 /// Material shell matching the other footer controls.
 ///
 /// The page-size menu is a custom listbox (not a native `<select>`): native
-/// option popups are painted by the OS and ignore the app theme.
+/// option popups are painted by the OS and ignore the app theme. It opens
+/// above the trigger, or below it when `below` is set (collapsed card —
+/// the table underneath has the room).
 function PageSizeMenu({
   pageSize,
   options,
   onPageSize,
+  below = false,
 }: {
   pageSize: PageSize;
   options: PageSize[];
   onPageSize: (s: PageSize) => void;
+  below?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(() => options.indexOf(pageSize));
@@ -315,9 +319,9 @@ function PageSizeMenu({
             role="listbox"
             aria-label={t("pagination.rowsPerPage")}
             onKeyDown={onListKey}
-            // Viewport-anchored above the trigger (see hook): never
+            // Viewport-anchored beside the trigger (see hook): never
             // clipped by the card, options hug the trigger's left edge.
-            style={menuAbove(rect)}
+            style={below ? menuBelow(rect) : menuAbove(rect)}
             className="qz-material-bar animate-qz-pop z-50 w-max rounded-[10px] border border-[var(--qz-border)] p-1 shadow-[var(--qz-shadow-card)]"
           >
             {options.map((size, i) => {
@@ -380,6 +384,10 @@ function PageJumpOrReadout({
 /// icon button — the row would otherwise overflow at 800px — and returns
 /// to full width the moment the segment minimizes. The icon names the
 /// current page and re-expands on click (by closing the theme segment).
+///
+/// The entry total always shows (narrow windows included). `below` drops
+/// the page-size menu under the trigger instead of over it — set while
+/// the overview card is collapsed, where the table below has the room.
 export default function Pagination({
   page,
   pageCount,
@@ -389,6 +397,7 @@ export default function Pagination({
   onPageSize,
   compact = false,
   onExpand,
+  below = false,
 }: {
   page: number;
   pageCount: number;
@@ -398,6 +407,7 @@ export default function Pagination({
   onPageSize: (s: PageSize) => void;
   compact?: boolean;
   onExpand?: () => void;
+  below?: boolean;
 }) {
   const { t } = useLanguage();
   if (compact) {
@@ -439,6 +449,7 @@ export default function Pagination({
         pageSize={pageSize === "all" && !allowAll ? 10000 : pageSize}
         options={options}
         onPageSize={onPageSize}
+        below={below}
       />
       <button
         id="qz-pager-prev"
@@ -463,7 +474,9 @@ export default function Pagination({
       </button>
       <span
         id="qz-pager-total"
-        className="hidden pr-2 text-[var(--qz-muted)] tabular-nums min-[1100px]:inline"
+        // Always visible, narrow windows included: the merged jump+readout
+        // freed the shell width this costs.
+        className="pr-2 text-[var(--qz-muted)] tabular-nums"
       >
         {formatCount(total)}
       </span>

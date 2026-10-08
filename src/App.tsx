@@ -83,6 +83,24 @@ export default function App() {
   // While the theme segment is out, pagination shrinks to its icon so the
   // card row never overflows at 800px; minimizing restores full width.
   const [themeOpen, setThemeOpen] = useState(false);
+  // Card collapsed state, persisted across restarts (`quarkzip.collapsed`,
+  // same pattern as theme/language): collapsed, the card shrink-wraps the
+  // action row and the card-row menus (page size, language) drop downward
+  // over the table instead of floating up past the card.
+  const [collapsed, setCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem("quarkzip.collapsed") === "1";
+    } catch {
+      return false;
+    }
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem("quarkzip.collapsed", collapsed ? "1" : "0");
+    } catch {
+      /* private-mode writes fail: stay expanded this session */
+    }
+  }, [collapsed]);
   // macOS uses an overlay title bar (traffic lights float over the webview,
   // set in Rust), so TitleBar renders a slim drag strip there instead of the
   // Linux custom window controls.
@@ -564,6 +582,8 @@ export default function App() {
               onOpen={() => void openArchive()}
               onTest={() => setTestOpen(true)}
               onChecksum={() => setChecksumOpen(true)}
+              collapsed={collapsed}
+              onCollapsedChange={setCollapsed}
               middleControls={
                 archive ? (
                   <Pagination
@@ -575,6 +595,7 @@ export default function App() {
                     onPageSize={changePageSize}
                     compact={themeOpen}
                     onExpand={() => setThemeOpen(false)}
+                    below={collapsed}
                   />
                 ) : undefined
               }
@@ -586,7 +607,7 @@ export default function App() {
                     expanded={themeOpen}
                     onExpandedChange={setThemeOpen}
                   />
-                  <LanguageSwitch />
+                  <LanguageSwitch below={collapsed} />
                   {/* Icon-only shell like ThemeSwitch: h-9, 10px radius, 1px
                     border, card shadow. Hover/tip names it (aria-label + title). */}
                   <div
