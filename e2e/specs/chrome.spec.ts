@@ -37,7 +37,7 @@ async function auditButtons(app: Page): Promise<ButtonRow[]> {
 }
 
 /// Sweep every overlay state in stages (one menu at a time — the extract
-/// dialog covers the pager, so stacking them starves Playwright's
+/// dialog covers the action row, so stacking them starves Playwright's
 /// actionability checks). Merged + deduped by id.
 async function auditEverywhere(app: Page): Promise<ButtonRow[]> {
   const seen = new Map<string, ButtonRow>();
@@ -45,9 +45,6 @@ async function auditEverywhere(app: Page): Promise<ButtonRow[]> {
     for (const r of await auditButtons(app)) seen.set(r.id, r);
   };
   await collect();
-  await app.getByRole("button", { name: "Rows per page" }).click();
-  await collect();
-  await app.keyboard.press("Escape");
   await app.getByRole("button", { name: "Change theme" }).click();
   await collect();
   await app.keyboard.press("Escape");

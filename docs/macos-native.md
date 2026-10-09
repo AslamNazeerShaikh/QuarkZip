@@ -183,6 +183,7 @@ Hardening shipped:
   crashing subsystem; check it before assuming app code.
 - Follow-up (P2, 2026-10-08): a second blanking wave under 10M listings
   showed a 5.5GB renderer heap, not a new crash — full IPC
-  materialization. Listings are now backend-held with paged IPC
-  (`get_page`) and server-side sort; the renderer holds one page.
-  Pending the user's 10M reopen on a restarted dev build (Rust changed).
+  materialization. Listings are now backend-held with chunked tree IPC
+  (`get_children`) and server-side sort; the renderer holds bounded
+  per-folder chunks. Pending the user's 10M reopen on a restarted dev
+  build (Rust changed).

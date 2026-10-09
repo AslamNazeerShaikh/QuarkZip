@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 /// Viewport-anchored floating menu: measures the trigger shell while open
 /// and positions the listbox through a `document.body` portal, so card
 /// `overflow-hidden` (and material `backdrop-filter` traps) can never
-/// clip it — e.g. the Language or page-size menu on the short collapsed
+/// clip it — e.g. the Language menu on the short collapsed
 /// card, where an upward menu is taller than the card itself. Re-measures
 /// on window resize. Callers keep their own outside-click/Escape close,
 /// extended to the menu element (a portal click would otherwise read as

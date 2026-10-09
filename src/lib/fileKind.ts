@@ -120,8 +120,13 @@ export function fileKind(
   if (isFolder) {
     return { label: labels.folder, icon: Folder, isFolder: true };
   }
-  const dot = path.lastIndexOf(".");
-  const ext = dot >= 0 ? path.slice(dot + 1).toLowerCase() : "";
+  // Extension comes from the file name only: dots in directory names
+  // (`.opencode`, `.bin`, `.git`) are not extensions — the old full-path
+  // `lastIndexOf` labeled `.bin/download-msgpackr-prebuilds` as
+  // `BIN/DOWNLOAD-…`, overflowing the fixed Type column into other rows.
+  const base = path.split(/[/\\]/).pop() ?? path;
+  const dot = base.lastIndexOf(".");
+  const ext = dot > 0 ? base.slice(dot + 1).toLowerCase() : "";
   const known = ext ? EXTENSIONS[ext] : undefined;
   if (!known)
     return {

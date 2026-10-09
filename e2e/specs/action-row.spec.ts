@@ -1,13 +1,7 @@
 /// Narrow-window action row (800px): one centered line — More, the
-/// controls cluster (Pagination, icon-only Test/Checksum, Theme,
-/// Language, About last) and the collapse chevron pack with no dead gaps.
-import {
-  addArchive,
-  expect,
-  expectPage,
-  openViaButton,
-  test,
-} from "../fixtures";
+/// controls cluster (icon-only Test/Checksum, Theme, Language, About last)
+/// and the collapse chevron pack with no dead gaps.
+import { addArchive, expect, openViaButton, test } from "../fixtures";
 
 test.use({ viewport: { width: 800, height: 675 } });
 
@@ -43,7 +37,7 @@ async function openWithExtras(
     },
   });
   await openViaButton(app, PATH);
-  await expectPage(app, 1, 3);
+  await expect(app.getByText("file-1.txt")).toBeVisible();
 }
 
 test("centered single line with no dead gaps", async ({ app }) => {

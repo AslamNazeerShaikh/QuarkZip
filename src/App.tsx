@@ -13,10 +13,7 @@ import {
   ListChecks,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import ArchiveTable, {
-  type SortDir,
-  type SortKey,
-} from "./components/ArchiveTable";
+import ArchiveTree from "./components/ArchiveTree";
 import TitleBar from "./components/TitleBar";
 import AboutDialog from "./components/AboutDialog";
 import PasswordDialog from "./components/PasswordDialog";
@@ -32,10 +29,6 @@ import LoadDialog, { type LoadStats } from "./components/LoadDialog";
 import ExtractDoneDialog, {
   type ExtractResult,
 } from "./components/ExtractDoneDialog";
-import Pagination, {
-  ALL_PAGE_CAP,
-  type PageSize,
-} from "./components/Pagination";
 import ThemeSwitch from "./components/ThemeSwitch";
 import LanguageSwitch from "./components/LanguageSwitch";
 import { Button } from "./components/ui/button";
@@ -167,17 +160,10 @@ export default function App() {
     return () => window.removeEventListener("focus", release);
   }, []);
   const [archive, setArchive] = useState<string | null>(null);
-  // P2: the renderer holds ONE page only. The full listing lives in the
-  // backend (`ListingState`); pages arrive via `get_page`, sorted
-  // server-side. A 10M listing no longer materializes here (~5GB death).
-  const [rows, setRows] = useState<ArchiveEntry[]>([]);
+  // The renderer holds tree chunks only (bounded `get_children` calls per
+  // expanded folder). The full listing lives in the backend
+  // (`ListingState`); collapsing a folder drops its chunk from RAM.
   const [totalEntries, setTotalEntries] = useState(0);
-  const [sortKey, setSortKey] = useState<SortKey | null>(null);
-  const [sortDir, setSortDir] = useState<SortDir>("asc");
-  // A page fetch in flight (page turns are ms; sorts of millions take
-  // seconds). Stale responses lose to the latest request id.
-  const [paging, setPaging] = useState(false);
-  const pageReqRef = useRef(0);
   const [info, setInfo] = useState<ArchiveInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -191,8 +177,6 @@ export default function App() {
   const [opening, setOpening] = useState<string | null>(null);
   const cancelLoadRef = useRef(false);
   const [dragging, setDragging] = useState(false);
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState<PageSize>(100);
   const [dest, setDest] = useState("");
   const [extracting, setExtracting] = useState(false);
   // Extract confirm mode: `selected` (K of N), `all` (whole archive), or
@@ -252,45 +236,6 @@ export default function App() {
       .catch(() => {});
   }
 
-  const pageCount = pageSize === "all" ? 1 : Math.ceil(totalEntries / pageSize);
-
-  /// One page from the backend store. Late responses stay silent when a
-  /// newer request (page turn, sort, or fresh open) has superseded them.
-  async function fetchPage(
-    path: string,
-    page: number,
-    size: number,
-    key: SortKey | null,
-    dir: SortDir,
-  ) {
-    const id = ++pageReqRef.current;
-    setPaging(true);
-    try {
-      const res = await invoke<{ rows: ArchiveEntry[]; total: number }>(
-        "get_page",
-        { path, page, pageSize: size, sortKey: key, sortDir: key ? dir : null },
-      );
-      if (pageReqRef.current !== id) return;
-      setRows(res.rows);
-      setTotalEntries(res.total);
-    } catch (e) {
-      if (pageReqRef.current !== id) return;
-      setError(typeof e === "string" ? e : String(e));
-    } finally {
-      if (pageReqRef.current === id) setPaging(false);
-    }
-  }
-
-  /// Numeric page size: "all" spans the whole listing (the menu hides it
-  /// past the spacer cap, so this never exceeds it).
-  function resolvedSize(size: PageSize, total: number): number {
-    return size === "all" ? Math.max(total, 1) : size;
-  }
-
-  // New archive, or a shrink that strands the page: go back into range.
-  useEffect(() => {
-    setPage(0);
-  }, [archive]);
   // Elapsed-time ticker for the opening progress popup.
   useEffect(() => {
     if (!loading) return;
@@ -300,9 +245,6 @@ export default function App() {
     );
     return () => window.clearInterval(id);
   }, [loading, loadStart]);
-  useEffect(() => {
-    setPage((p) => Math.min(p, Math.max(0, pageCount - 1)));
-  }, [pageCount]);
 
   async function listPath(path: string, password: string | null = null) {
     setLoading(true);
@@ -329,23 +271,10 @@ export default function App() {
         onProgress: channel,
       });
       if (cancelLoadRef.current) return;
-      pageReqRef.current += 1;
       setArchive(path);
       setTotalEntries(opened.total);
       setArchivePassword(password);
       void setWindowTitle(path);
-      // A stale "all" from a smaller listing cannot span a huge one (the
-      // menu hides it past the cap, but state can outlive it by a render).
-      let size = resolvedSize(pageSize, opened.total);
-      if (size > ALL_PAGE_CAP) {
-        size = 10000;
-        setPageSize(10000);
-      }
-      if (opened.total > 0) {
-        await fetchPage(path, 0, size, null, "asc");
-      } else {
-        setRows([]);
-      }
       if (cancelLoadRef.current) return;
       // Details are best-effort: the table must work even if the
       // summary parse fails (or the backend predates `info_archive`).
@@ -376,7 +305,6 @@ export default function App() {
       } else {
         setError(message);
         setArchive(null);
-        setRows([]);
         setTotalEntries(0);
         setInfo(null);
         setArchivePassword(null);
@@ -417,49 +345,6 @@ export default function App() {
       });
     return () => unlisten?.();
   }, []);
-
-  /// Page turn / size / sort: rows always come from the backend store.
-  /// Sort keeps the current page (like the old client sort); size resets
-  /// to the first page. Stale responses lose via the fetch request id.
-  function changePage(next: number) {
-    if (!archive) return;
-    setPage(next);
-    void fetchPage(
-      archive,
-      next,
-      resolvedSize(pageSize, totalEntries),
-      sortKey,
-      sortDir,
-    );
-  }
-
-  function changePageSize(size: PageSize) {
-    if (!archive) return;
-    setPageSize(size);
-    setPage(0);
-    void fetchPage(
-      archive,
-      0,
-      resolvedSize(size, totalEntries),
-      sortKey,
-      sortDir,
-    );
-  }
-
-  function changeSort(key: SortKey) {
-    if (!archive || paging) return;
-    const dir: SortDir =
-      sortKey !== key ? "asc" : sortDir === "asc" ? "desc" : "asc";
-    setSortKey(key);
-    setSortDir(dir);
-    void fetchPage(
-      archive,
-      page,
-      resolvedSize(pageSize, totalEntries),
-      key,
-      dir,
-    );
-  }
 
   async function openArchive() {
     let selected: string | string[] | null;
@@ -626,22 +511,6 @@ export default function App() {
               onChecksum={() => setChecksumOpen(true)}
               collapsed={collapsed}
               onCollapsedChange={setCollapsed}
-              middleControls={
-                archive ? (
-                  <Pagination
-                    page={page}
-                    pageCount={totalEntries === 0 ? 0 : pageCount}
-                    pageSize={pageSize}
-                    total={totalEntries}
-                    onPage={changePage}
-                    onPageSize={changePageSize}
-                    compact={themeOpen}
-                    onExpand={() => setThemeOpen(false)}
-                    below={collapsed}
-                    busy={paging}
-                  />
-                ) : undefined
-              }
               utilityControls={
                 <>
                   <ThemeSwitch
@@ -671,19 +540,11 @@ export default function App() {
                 </>
               }
             />
-            <div
-              id="qz-app-table-wrap"
-              className="flex min-h-0 flex-1 flex-col"
-            >
-              <ArchiveTable
-                data={rows}
-                page={page}
-                pageSize={pageSize}
-                sortKey={sortKey}
-                sortDir={sortDir}
-                onSortKey={changeSort}
-                listingId={archive}
-                busy={paging}
+            <div id="qz-app-tree-wrap" className="flex min-h-0 flex-1 flex-col">
+              <ArchiveTree
+                archive={archive}
+                totalEntries={totalEntries}
+                selected={selectedPaths}
                 onSelectionChange={setSelectedPaths}
               />
             </div>

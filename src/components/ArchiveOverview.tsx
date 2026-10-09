@@ -76,7 +76,6 @@ export default function ArchiveOverview({
   onOpen,
   onTest = () => {},
   onChecksum = () => {},
-  middleControls,
   utilityControls,
   collapsed: controlledCollapsed,
   onCollapsedChange,
@@ -87,11 +86,8 @@ export default function ArchiveOverview({
   onOpen: () => void;
   onTest?: () => void;
   onChecksum?: () => void;
-  /// Pagination cluster: rendered only when open, ahead of the utilities
-  /// in the action-row middle.
-  middleControls?: ReactNode;
   /// Theme / Language / About cluster: left-aligned row of its own when
-  /// empty, middle of the action row (after pagination) when open.
+  /// empty, middle of the action row (after the integrity checks) when open.
   utilityControls?: ReactNode;
   /// Collapsed state, controlled by the parent (which persists it across
   /// restarts): collapsed, the card shrink-wraps the action row and the
@@ -128,8 +124,8 @@ export default function ArchiveOverview({
   const testLabel = t("overview.test");
   const checksumLabel = t("overview.checksum");
   // Integrity checks ride inside the controls cluster (icon-only squares,
-  // like the collapse chevron) — Test between Pagination and Theme,
-  // Checksum between Test and Theme — with About last. Only the collapse
+  // like the collapse chevron) — Test first, Checksum next, then Theme,
+  // Language, with About last. Only the collapse
   // chevron keeps the row's end. Each check is the same shell + `h-7 w-7`
   // inner button as Theme/Language/About (18px glyph, ~5px inner padding):
   // a `w-9` Button around the same glyph leaves ~9px padding and reads
@@ -439,8 +435,8 @@ export default function ArchiveOverview({
           {/* Integrity actions need only the open archive, not the parsed
           summary — pinned to the card bottom, available collapsed,
           loading, or when details are unavailable. One centered row:
-          More, then the controls cluster (Pagination, icon-only Test,
-          icon-only Checksum, Theme, Language, About last), then the
+          More, then the controls cluster (icon-only Test, icon-only
+          Checksum, Theme, Language, About last), then the
           collapse chevron. The More cell unmounts when collapsed or when
           no extras exist (never a dead button, never an empty spacer).
           The row is centered (`justify-center`): `justify-between` spread
@@ -468,13 +464,12 @@ export default function ArchiveOverview({
                 </Button>
               </div>
             )}
-            {(middleControls || utilityControls) && (
+            {utilityControls && (
               <div
                 id="qz-card-controls"
                 data-testid="card-controls"
                 className="flex min-w-0 flex-wrap items-center justify-center gap-2"
               >
-                {middleControls}
                 {clusterChecks}
                 {utilityControls}
               </div>

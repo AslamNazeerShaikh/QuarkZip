@@ -1,10 +1,4 @@
-import {
-  addArchive,
-  expect,
-  expectPage,
-  openViaButton,
-  test,
-} from "../fixtures";
+import { addArchive, expect, openViaButton, test } from "../fixtures";
 import type { Page } from "@playwright/test";
 
 async function openSwitcher(app: Page) {
@@ -73,22 +67,18 @@ test("theme control keeps working with an archive open", async ({ app }) => {
   await expect(app.getByText("file-1.txt")).toBeVisible();
 });
 
-test("expanding theme shrinks pagination to an icon and back", async ({
+test("theme segment opens over the tree and restores after", async ({
   app,
 }) => {
   await addArchive(app, "/tmp/t.zip", { count: 250 });
   await openViaButton(app, "/tmp/t.zip");
-  await expectPage(app, 1, 3);
+  await expect(app.getByText("file-1.txt")).toBeVisible();
   await openSwitcher(app);
-  // The full shell yields while the segment is out.
-  await expect(
-    app.getByRole("button", { name: /Show pagination/ }),
-  ).toBeVisible();
-  await expect(app.getByRole("spinbutton", { name: "Go to page" })).toHaveCount(
-    0,
-  );
-  // Choosing minimizes the segment and restores the shell.
+  // The segment opens with all options while the tree stays put.
+  await expect(app.getByRole("button", { name: "Dark" })).toBeVisible();
+  await expect(app.getByText("file-1.txt")).toBeVisible();
+  // Choosing minimizes the segment back to the icon.
   await app.getByRole("button", { name: "Dark" }).click();
   await expect(app.getByRole("button", { name: "Change theme" })).toBeVisible();
-  await expectPage(app, 1, 3);
+  await expect(app.getByText("file-1.txt")).toBeVisible();
 });

@@ -5,9 +5,9 @@ import { LOCALES } from "../i18n/locales";
 import { useLanguage } from "../i18n/LanguageContext";
 import { menuAbove, menuBelow, usePortaledMenu } from "./usePortaledMenu";
 
-/// Footer language menu: shell-styled like its Pagination/ThemeSwitch
+/// Footer language menu: shell-styled like its ThemeSwitch
 /// neighbours (h-9, 10px radius, 1px border, card shadow) with a floating
-/// listbox above it — same pattern as the page-size menu. Lists every
+/// listbox above it. Lists every
 /// locale from the registry by native name; switching persists to
 /// localStorage and re-renders instantly (no restart).
 ///

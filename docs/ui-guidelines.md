@@ -17,8 +17,7 @@ medium-weight typography, rounded controls, single thin outline icon set
 
 Explicit non-goals: CSS-imitated glass anywhere, glass on content/cards/
 controls (rule 6 in color-system.md), Material/Bootstrap/admin-dashboard
-look, gradients, neon, heavy shadows, 2px dark borders, vertical table
-gridlines, bold-everything type, dark-mode-by-default (dark exists via
+look, gradients, neon, heavy shadows, 2px dark borders, vertical gridlines, bold-everything type, dark-mode-by-default (dark exists via
 the theme switch but System is home). Native Liquid Glass is allowed for
 the window background only — see `docs/macos-native.md` §8.
 
@@ -26,8 +25,8 @@ the window background only — see `docs/macos-native.md` §8.
 
 Palette, roles, accent system, and measured contrast live in
 `docs/color-system.md`. Every component shell is translucent material
-(`.qz-material-bar`: frame, cards, table, dialogs, buttons, inputs,
-menus) — the pagination/theme/about shells are the reference look.
+(`.qz-material-bar`: frame, cards, tree, dialogs, buttons, inputs,
+menus) — the theme/about shells are the reference look.
 Solid fills survive only inside components: progress tracks, soft status
 pills, readout boxes (their pairs are contrast-measured). Supporting
 scales (all from the reference):
@@ -85,7 +84,7 @@ Linux custom bar left; the empty state's card CTA owns opening.
 shadcn-style API (`variant` + `size`), reference tokens underneath:
 
 - `Button`: shell-chrome API (`variant` + `size`) over reference tokens —
-  every variant shares the Pagination/ThemeSwitch look (translucent
+  every variant shares the ThemeSwitch look (translucent
   material, 10px radius, 1px border, card shadow, centered content):
   `primary`/`accent`/`success`/`highlight`/`warning` are accent/blue/
   green/yellow/orange translucent tints (`.qz-tint-*`, body-text labels —
@@ -93,58 +92,45 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   `secondary` the neutral shell, `ghost` text-only. Sizes default
   (h-10, modal actions)/`sm` (h-8, small dialog utilities)/`bar` (h-9 —
   the universal chrome height: footer actions, card-row buttons, titlebar
-  actions, all matching the Pagination/ThemeSwitch shells)/icon.
+  actions, all matching the ThemeSwitch shells)/icon.
 - `Card`: surface, 13px radius, 1px border, card shadow. `CardTitle` 16/600,
   `CardDescription` 13px muted, content scrolls internally (`min-h-0`).
 - `Badge`: StatusPill language — 999px, 11px/600, 6px dot + text.
   Variants neutral/success/info/warning/danger, AA pairs in color-system doc.
 - `Separator`: 1px `--qz-border`, no verticals.
-- `ArchiveTable`: card container (13px radius), checkbox + `#` serial column
-  (1-based across the sorted dataset, stable under paging), header row fixed
-  to the 36px row height with 12px uppercase labels synced with their cells
-  (Name left; Type/Size/Modified centered
-  both axes), `#` fixed at `w-24` (fits 8-digit serials for 10M+ rows;
-  the flex-1 Name column absorbs the width), Size fixed at `w-32` (fits the longest `formatSize` output —
-  7 chars — with slack, no ellipsis), Modified fixed at `w-64` showing the full local stamp
-  (`formatModified`: system time zone, AM/PM, raw stamp on hover),
-  horizontal separators only, checkbox multi-select with soft primary-tint
-  selection (accumulates across pages, resets per archive), native slim
-  scrollbar (`.scroll-slim`), empty state centered on
-  both axes. Sorting and paging are server-side (`get_page`: natural path
-  order, null sizes first, folders-first type approximation — see
-  backend-commands.md); the renderer holds one page only, so 10M listings
-  never materialize in the webview. The listing never contains the archive itself: `parse_list_slt`
+- `ArchiveTree`: card container (13px radius), nested rows with static
+  box-drawing guides (one vertical line per continuing ancestor level, no
+  expand animation), per-row tri-state checkbox + chevron + icon + basename
+  (full path on hover), header row fixed to the 36px row height with
+  12px uppercase sort toggles synced with their cells (Name left,
+  Type/Size/Modified centered both axes), Type fixed at `w-24` (truncated
+  with full-label tooltip — extensions derive from the file _name_ only,
+  so dotted directories never produce `BIN/…` overflow), Size fixed at
+  `w-32` (folders show `—`), Modified fixed at `w-64` showing the full
+  local stamp (`formatModified`: system time zone, AM/PM, raw stamp on
+  hover), horizontal separators only, checkbox multi-select with soft
+  primary-tint selection (folder-prefix collapse: checking a folder
+  selects the folder path only, unchecking inside splits to loaded
+  siblings; resets per archive), native slim scrollbar (`.scroll-slim`),
+  empty state centered on both axes. Children load per folder from the
+  backend in bounded 10k chunks (`get_children`: folders-first, natural
+  path order — see backend-commands.md); collapsing drops a folder's
+  chunks, so 10M listings never materialize in the webview. The listing
+  never contains the archive itself: `parse_list_slt`
   skips the header block before the `----------` separator, so only real
   files/folders appear.
   reference empty state (16px icon + 14px gray text + 12px hint).
-- `Pagination` / `ThemeSwitch`: material shells, 10px radius, card shadow,
+- `ThemeSwitch`: material shell, 10px radius, card shadow,
   8px inner radii. Segmented behavior (sliding indicator) preserved.
-  The page-size menu hugs its trigger (`left-0`, `w-max min-w-full`, 8px
-  gap) with option text insets matching the trigger (`px-2`), so list
-  edges and text align with the control below. The readout and the
-  jump field are one combined control (`[<input>] / <total>`, `spinbutton`,
-  same h-7 inner shell, input sized to the page count): only clean
-  in-range numbers jump silently on Enter; anything else (`66abc`,
-  out-of-range, non-numeric, empty) opens
-  an Invalid-page confirm (warning icon, valid range shown, Jump lands on
-  the read-off page / Cancel reverts to the open page). Escape/blur
-  reverts; single pages show a static `1 / 1` (empty: `0 / 0`). The entry
-  total always shows, narrow windows included. The
-  page-size listbox portals to `document.body`, viewport-anchored above
-  its shell — card `overflow-hidden` would otherwise clip it on the short
-  collapsed card. While the card is collapsed the menus drop _below_
-  their shells instead (`below`, over the table, which has the room).
-  While the theme segment is out,
-  pagination shrinks to one icon button (naming the current page,
-  re-expanding on click) and returns to full width when it minimizes —
-  the card row never overflows at 800px. `LanguageSwitch` portals the
-  same way (its menu is taller than the collapsed card) and likewise
-  drops below its shell while collapsed, so floating lists never clip
-  or touch the sidewalls. The footer `About` and
+  `LanguageSwitch` portals its menu to `document.body`,
+  viewport-anchored above its shell — card `overflow-hidden` would
+  otherwise clip it on the short collapsed card. While the card is
+  collapsed the menu drops _below_ its shell instead (`below`, over the
+  tree, which has the room). The footer `About` and
   `LanguageSwitch` controls reuse the same shell as icon-only buttons
   (h-9 shell, 28px icon button, 8px inner radius — like collapsed
   `ThemeSwitch`); hover/title and aria-labels name them.
-- Action bar (`App.tsx` footer, in normal flow below the table — nothing
+- Action bar (`App.tsx` footer, in normal flow below the tree — nothing
   floats or overlaps): `Extract Selected` (primary CTA with `ListChecks`
   icon; disabled with no dest/while extracting/on empty archives — with
   nothing checked it opens the Nothing-selected confirm instead),
@@ -185,11 +171,13 @@ all N instead?` with an `Extract All` confirm). Big centered icon, the
   the translucent cards would gray out showing it through). Any dialog rendered
   inside a material (`backdrop-filter`) ancestor must portal to
   `document.body`, or `fixed inset-0` centers on the ancestor instead of
-  the window (this bit the page-jump confirm once).
+  the window (this bit a centered confirm once).
 - `ExtractDoneDialog`: same modal language for the result — green center
   icon with file count + destination on success, red icon with the error on
-  failure, single OK action either way. The footer carries no status text.
-  The backdrop never dismisses — OK or Esc only.
+  failure. Success adds Reveal in Finder beside OK (the webview cannot
+  drag files out, so Reveal is the one-click bridge to the native file
+  manager). The footer carries no status text. The backdrop never
+  dismisses — buttons or Esc only.
 - `TestDialog`: integrity result popup (in-process decode with file-count
   progress streamed over a Tauri `Channel`) — auto-starts on open, determinate
   progress bar while running, pass/fail result, OK enabled only when done.
@@ -206,7 +194,7 @@ all N instead?` with an `Extract All` confirm). Big centered icon, the
   commit/OS/arch grid, 7-Zip attribution paragraph with `7-zip.org` link,
   origin note, single OK. Backdrop never dismisses.
 - `LanguageSwitch`: icon-only footer shell control (same shell as
-  Pagination) with a floating listbox of native language names; the button
+  ThemeSwitch) with a floating listbox of native language names; the button
   tooltip shows the active language. Switching persists to `localStorage`
   and re-renders instantly, no restart.
 - `PasswordDialog`: password gate for encrypted archives — lock icon,
@@ -224,10 +212,10 @@ Settings` grant (Full Disk Access pane, best-effort), plus `Choose
 Different Folder` for extracts. Replaces the generic result popup for
   permission failures only; Cancel/Esc dismiss. Same modal language;
   backdrop never dismisses.
-- `ArchiveTable` reports checkbox selection via `onSelectionChange`
+- `ArchiveTree` reports checkbox selection via `onSelectionChange`
   (cleared on each new listing); `App` feeds it to the dialog + extract.
 - `ArchiveOverview`: three-state overview card — startup (no archive) shares
-  the column equally with the table (both `flex-1`, centered empty state:
+  the column equally with the tree (both `flex-1`, centered empty state:
   icon tile + title + description + primary CTA + hint); once open, the
   card shrink-wraps a fixed 4×4 metadata grid (micro-label + 14px medium
   value, no card header, no pills: path lives in the centered window
@@ -237,31 +225,28 @@ Different Folder` for extracts. Replaces the generic result popup for
   is textual only ("73.9% of original", `—` when unmeasurable) — no bar.
   A `More`/`Less` toggle (secondary `bar`, left of the action row, same
   shell as Test/Checksum) grows the card with the engine's full header
-  metadata for advanced users while the table shrinks; it renders only
+  metadata for advanced users while the tree shrinks; it renders only
   when extras exist (no dead button — the cluster shifts left without it),
   collapsing hides the toggle, and re-expanding shows it without reshowing
   the extras.
   Below the details (always, once an archive is open —
   even when the summary is unavailable) sits one centered integrity
-  action row: `More`/`Less`, then the controls cluster (`Pagination`,
-  icon-only `Test` (`BadgeCheck`), icon-only `Checksum` (`Binary`),
-  `ThemeSwitch`, `LanguageSwitch`,
-  `About` last), then the collapse chevron. `More` renders only when
-  extras exist and unmounts collapsed (never a dead button or spacer);
-  the row is `justify-center`, wrapping to packed centered lines. Collapsing unmounts the
-  More cell (no empty spacer), so the cluster shifts to the extreme left;
-  expanding puts it back. With no archive the card
-  shows the centered empty state with the Theme/Language/About utilities
-  in an extreme-left row of their own.
+  action row: `More`/`Less`, then the controls cluster (icon-only `Test`
+  (`BadgeCheck`), icon-only `Checksum` (`Binary`), `ThemeSwitch`,
+  `LanguageSwitch`, `About` last), then the collapse chevron. `More`
+  renders only when extras exist and unmounts collapsed (never a dead
+  button or spacer); the row is `justify-center`, wrapping to packed
+  centered lines. Collapsing unmounts the More cell (no empty spacer), so
+  the cluster shifts to the extreme left; expanding puts it back. With no
+  archive the card shows the centered empty state with the
+  Theme/Language/About utilities in an extreme-left row of their own.
   The card collapses via the chevron toggle beside `Checksum` (same
   secondary `sm` shell, square icon-only, arrow rotates with the state):
-  collapsed it shrink-wraps to the action row (`flex-none`) and the table
+  collapsed it shrink-wraps to the action row (`flex-none`) and the tree
   absorbs the freed space; `Test`/`Checksum` stay available in both
   states. The collapsed state is owned by `App` and persisted in
   localStorage (`quarkzip.collapsed`), so it survives restarts — and it
   drives the card-row menu direction (down while collapsed, up otherwise).
-  Pagination never changes with the card — page/row counts are
-  independent of it.
   Opening an archive shows a progress popup (`LoadDialog`): `7zz l`
   reports no percent, so the bar is indeterminate and the rows show live
   counters instead (entries completed, data read, elapsed, throughput —
@@ -274,15 +259,14 @@ Single window (800×675 default/minimum, Tauri `tauri.conf.json`), no sidebar: t
 drag strip (`h-23`, 92px — `pt-7`/`pb-7` air around the `h-9` titlebar
 buttons, the footer's equal-air treatment, pushing the details below),
 then the content column: startup shares it equally
-(`ArchiveOverview` and table both `flex-1`); once open, the card
-shrink-wraps its fixed grid and the table (`flex-1`) absorbs all
-leftover space (growing the card via More shrinks the table) — then the
-action bar, all on the 28px rhythm. Only the table, menus, dropdowns,
+(`ArchiveOverview` and tree both `flex-1`); once open, the card
+shrink-wraps its fixed grid and the tree (`flex-1`) absorbs all
+leftover space (growing the card via More shrinks the tree) — then the
+action bar, all on the 28px rhythm. Only the tree, menus, dropdowns,
 and the More panel (pathological key counts only) scroll; the card
 itself never does. The
-table scroller carries no bottom padding, so at max scroll the last row
-lands exactly on the viewport bottom (no dead zone), with or without
-pagination.
+tree scroller carries no bottom padding, so at max scroll the last row
+lands exactly on the viewport bottom (no dead zone).
 Window chrome differs per OS (Linux floating card vs macOS overlay
 lights + flush layout): see `docs/window-chrome.md`.
 
@@ -292,12 +276,12 @@ Every structural `div` and every interactive element (buttons, inputs,
 menus, options) carries a stable `id="qz-<scope>-<element>"` so Inspect
 Element maps straight back to the source: searching the id finds the one
 call site. Rules: ids are kebab-case, never translated text, and unique
-within the mounted DOM. Repeated items suffix a stable key — table rows
-and their cells use the 1-based serial (`qz-table-row-42-path`), page-size
-/ theme / language / checksum options use their value
-(`qz-pager-size-opt-all`), extras/about rows use their index. Shared
-primitives (`Button`, `Card`, `Meta`, `TableCheckbox`, `Stat`) never hardcode
-an id — they accept an optional `id` prop and callers pass unique values.
+within the mounted DOM. Repeated items suffix a stable key — tree rows
+and their cells use the flattened index (`qz-tree-row-7-path`), theme /
+language / checksum options use their value, extras/about rows use their
+index. Shared primitives (`Button`, `Card`, `Meta`, `TableCheckbox`,
+`Stat`) never hardcode an id — they accept an optional `id` prop and
+callers pass unique values.
 Pre-existing ids (`archive-password`, `extract-folder-name`, …) and all
 `data-testid` hooks are kept as-is.
 
@@ -323,8 +307,8 @@ Pre-existing ids (`archive-password`, `extract-folder-name`, …) and all
   their `aria-label`, text buttons their label) — hover always names the
   action. `src/lib/uiRules.test.ts` + `e2e/specs/chrome.spec.ts` pin it.
 - Single press per operation: async actions disable their controls while
-  in flight (footer buttons on `extracting`/`loading`, pager on `paging`
-  like the sort headers), and a document-level guard swallows the one
+  in flight (footer buttons on `extracting`/`loading`, tree chunks on
+  per-folder loading like the sort headers), and a document-level guard swallows the one
   same-spot click that follows a dialog-button press (the second half of
   a fast double-click would otherwise activate whatever the closed dialog
   uncovered at that spot). Clicks elsewhere and every dialog control
@@ -335,7 +319,7 @@ Pre-existing ids (`archive-password`, `extract-folder-name`, …) and all
 
 ## Deliberate deviations (with rationale)
 
-1. Table rows are 36px single-line, not the reference 60–76px two-line —
+1. Tree rows are 36px single-line, not the reference 60–76px two-line —
    archives hold 10k+ entries, so rows are virtualized and density is a
    performance requirement. Headers, separators, selection, and empty-state
    language still follow the reference.

@@ -11,7 +11,7 @@ type Variant =
   | "highlight";
 type Size = "default" | "sm" | "bar" | "icon";
 
-/// Every action variant shares the Pagination/ThemeSwitch shell chrome:
+/// Every action variant shares the ThemeSwitch shell chrome:
 /// translucent material, 10px radius, 1px border, card shadow, centered
 /// content at the h-9 chrome height (height itself comes from `size`).
 /// Hues survive as translucent tints (`.qz-tint-*`) with body-text labels —
@@ -43,7 +43,7 @@ const SIZES: Record<Size, string> = {
   default: "h-10 px-4 text-sm",
   sm: "h-8 px-3 text-[13px]",
   // Chrome control height (36px): footer actions, card-row buttons,
-  // titlebar actions — matches the Pagination/ThemeSwitch/Language shells
+  // titlebar actions — matches the ThemeSwitch/Language shells
   // sitting in the same rows.
   bar: "h-9 px-3 text-[13px]",
   icon: "h-8 w-8",

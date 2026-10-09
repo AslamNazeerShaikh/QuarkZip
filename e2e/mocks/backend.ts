@@ -62,6 +62,7 @@ export interface E2EState {
     dragWindow: number;
     extracts: Array<{ path: string; dest: string; files: string[] }>;
     openedUrls: string[];
+    revealed: string[];
   };
   dropHandlers: Array<(e: DropEvent) => void>;
 }
@@ -90,6 +91,7 @@ function freshState(): E2EState {
       dragWindow: 0,
       extracts: [],
       openedUrls: [],
+      revealed: [],
     },
     dropHandlers: [],
   };
@@ -183,37 +185,49 @@ export async function handleInvoke(
       if (archive.listError) throw archive.listError;
       return { total: archive.entries.length };
     }
-    case "get_page": {
-      // P2: the backend holds the listing; pages arrive sliced and sorted
-      // server-side (comparators mirror the old client sort exactly).
+    case "get_children": {
+      // The tree holds chunks only: immediate children of `parent`,
+      // folders first (Finder-style) then the requested order, sliced by
+      // offset/limit like the server.
       const archive = lookup(a.path as string);
-      const page = a.page as number;
-      const pageSize = a.pageSize as number;
-      const sortKey = a.sortKey as string | null;
+      const parent = (a.parent as string).replace(/[/\\]+$/, "");
+      const offset = a.offset as number;
+      const limit = a.limit as number;
+      const sortKey = (a.sortKey as string) ?? "path";
       const sortDir = a.sortDir as string | null;
-      const rows = [...archive.entries];
-      if (sortKey) {
-        const value = (e: FakeEntry): string | number => {
-          if (sortKey === "size") return e.size ?? -1;
-          if (sortKey === "modified") return e.modified ?? "";
-          return e.path;
-        };
-        rows.sort((x, y) => {
-          const va = value(x);
-          const vb = value(y);
-          const ord =
-            typeof va === "number" && typeof vb === "number"
-              ? va - vb
-              : String(va).localeCompare(String(vb), undefined, {
-                  numeric: true,
-                });
-          return ord;
-        });
-        if (sortDir === "desc") rows.reverse();
-      }
+      const prefix = parent ? `${parent}/` : "";
+      const kids = archive.entries.filter((e) => {
+        if (!e.path.startsWith(prefix)) return false;
+        const rest = e.path.slice(prefix.length).replace(/[/\\]+$/, "");
+        return rest.length > 0 && !/[/\\]/.test(rest);
+      });
+      const value = (e: FakeEntry): string | number => {
+        if (sortKey === "size") return e.size ?? 0;
+        if (sortKey === "modified") return e.modified ?? "";
+        if (sortKey === "type") {
+          if (e.is_folder) return "";
+          const base = e.path.split(/[/\\]/).pop() ?? e.path;
+          const dot = base.lastIndexOf(".");
+          return dot > 0 ? base.slice(dot + 1).toLowerCase() : "";
+        }
+        return e.path;
+      };
+      kids.sort((x, y) => {
+        const folders = Number(y.is_folder) - Number(x.is_folder);
+        if (folders !== 0) return folders;
+        const va = value(x);
+        const vb = value(y);
+        const ord =
+          typeof va === "number" && typeof vb === "number"
+            ? va - vb
+            : String(va).localeCompare(String(vb), undefined, {
+                numeric: true,
+              });
+        return sortDir === "desc" ? -ord : ord;
+      });
       return {
-        rows: rows.slice(page * pageSize, (page + 1) * pageSize),
-        total: rows.length,
+        rows: kids.slice(offset, offset + limit),
+        total: kids.length,
       };
     }
     case "info_archive": {

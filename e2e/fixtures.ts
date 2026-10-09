@@ -94,16 +94,9 @@ export async function openViaDrop(page: Page, path: string): Promise<void> {
   await page.evaluate((p) => window.__e2e.drop([p]), path);
 }
 
-/** Assert the combined jump+readout shows page `current` of `total`. */
-export async function expectPage(
-  page: Page,
-  current: number,
-  total: number,
-): Promise<void> {
-  await expect(
-    page.getByRole("spinbutton", { name: "Go to page" }),
-  ).toHaveValue(String(current));
-  await expect(page.getByText(`/ ${total}`, { exact: true })).toBeVisible();
+/** Assert the tree shows `name` as a loaded row. */
+export async function expectRow(page: Page, name: string): Promise<void> {
+  await expect(page.getByText(name, { exact: true })).toBeVisible();
 }
 
 export async function calls(page: Page): Promise<E2ECalls> {
@@ -123,4 +116,8 @@ export async function failNextTest(page: Page, message: string): Promise<void> {
 
 export async function openedUrls(page: Page): Promise<string[]> {
   return (await e2e(page, "window.__e2e.state.calls.openedUrls")) as string[];
+}
+
+export async function revealedPaths(page: Page): Promise<string[]> {
+  return (await e2e(page, "window.__e2e.state.calls.revealed")) as string[];
 }

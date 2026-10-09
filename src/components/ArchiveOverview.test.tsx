@@ -178,7 +178,6 @@ describe("ArchiveOverview", () => {
         info={{ ...INFO, extra: {} }}
         loading={false}
         onOpen={() => {}}
-        middleControls={<button>Pager</button>}
         utilityControls={<button>Theme</button>}
       />,
     );
@@ -198,7 +197,6 @@ describe("ArchiveOverview", () => {
         info={INFO}
         loading={false}
         onOpen={() => {}}
-        middleControls={<button>Pager</button>}
         utilityControls={<button>Theme</button>}
       />,
     );
@@ -221,21 +219,19 @@ describe("ArchiveOverview", () => {
         info={INFO}
         loading={false}
         onOpen={() => {}}
-        middleControls={<button>Pager</button>}
         utilityControls={<button>Theme</button>}
       />,
     );
     expect(screen.getByTestId("action-row")).toHaveClass("justify-center");
   });
 
-  it("should_order_icon_checks_between_pager_and_theme_with_about_last", () => {
+  it("should_order_icon_checks_before_theme_with_about_last", () => {
     render(
       <ArchiveOverview
         archive="/tmp/qz-sample.7z"
         info={INFO}
         loading={false}
         onOpen={() => {}}
-        middleControls={<button>Pager</button>}
         utilityControls={
           <>
             <button>Theme</button>
@@ -265,9 +261,9 @@ describe("ArchiveOverview", () => {
         .getByRole("button", { name: "Checksum" })
         .querySelector("svg.lucide-binary"),
     ).not.toBeNull();
-    // Cluster order: Pager, Test, Checksum, Theme, About.
+    // Cluster order: Test, Checksum, Theme, About.
     const html = screen.getByTestId("card-controls").innerHTML;
-    const order = ["Pager", '"Test"', '"Checksum"', "Theme", "About"].map((s) =>
+    const order = ['"Test"', '"Checksum"', "Theme", "About"].map((s) =>
       html.indexOf(s),
     );
     expect(order.every((i) => i >= 0)).toBe(true);
@@ -281,12 +277,10 @@ describe("ArchiveOverview", () => {
         info={INFO}
         loading={false}
         onOpen={() => {}}
-        middleControls={<button>Pager</button>}
         utilityControls={<button>Theme</button>}
       />,
     );
     const row = screen.getByTestId("card-controls");
-    expect(row).toHaveTextContent("Pager");
     expect(row).toHaveTextContent("Theme");
     // Test/Checksum keep the right end of the same row.
     expect(screen.getByRole("button", { name: "Test" })).toBeInTheDocument();

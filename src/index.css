@@ -255,7 +255,7 @@
 .dark .qz-dialog-backdrop {
   background: rgb(0 0 0 / 0.45);
 }
-/* Tinted chrome shells: the exact Pagination/ThemeSwitch look with the
+/* Tinted chrome shells: the exact ThemeSwitch look with the
    hue carried as a translucent tint. Labels stay body text (a hue fails
    AA on its own tint — verified in color-system.md); icons at usage
    sites carry the hue. Each declares the plain bar fill first so engines

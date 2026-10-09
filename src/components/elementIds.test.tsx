@@ -1,12 +1,22 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import ArchiveOverview, { type ArchiveInfo } from "./ArchiveOverview";
-import ArchiveTable from "./ArchiveTable";
+import ArchiveTree from "./ArchiveTree";
 import ExtractDialog from "./ExtractDialog";
 import LanguageSwitch from "./LanguageSwitch";
-import Pagination from "./Pagination";
 import ThemeSwitch from "./ThemeSwitch";
+
+/// Tree chunks come from a canned backend (unit tests never touch Tauri).
+vi.mock("@tauri-apps/api/core", () => ({
+  invoke: vi.fn().mockResolvedValue({
+    rows: [
+      { path: "docs", size: null, modified: null, is_folder: true },
+      { path: "top.txt", size: 3, modified: null, is_folder: false },
+    ],
+    total: 2,
+  }),
+}));
 
 /// Debug-id pins: every structural div and interactive element carries a
 /// stable `qz-*` id so Inspect Element maps back to one call site.
@@ -44,29 +54,28 @@ function expectUniqueIds(container: HTMLElement) {
 }
 
 describe("elementIds", () => {
-  it("should_expose_pager_shell_and_jump_ids", () => {
+  it("should_expose_tree_shell_and_sort_ids", async () => {
     const { container } = render(
-      <Pagination
-        page={0}
-        pageCount={3}
-        pageSize={100}
-        total={250}
-        onPage={() => {}}
-        onPageSize={() => {}}
+      <ArchiveTree
+        archive="/tmp/demo.zip"
+        totalEntries={2}
+        selected={new Set()}
+        onSelectionChange={() => {}}
       />,
     );
     for (const id of [
-      "qz-pager",
-      "qz-pager-size",
-      "qz-pager-size-btn",
-      "qz-pager-prev",
-      "qz-pager-next",
-      "qz-pager-jump",
-      "qz-pager-jump-input",
-      "qz-pager-jump-total",
+      "qz-tree-root",
+      "qz-tree-card",
+      "qz-tree-header",
+      "qz-tree-select-all",
+      "qz-tree-sort-path",
+      "qz-tree-sort-type",
+      "qz-tree-scroll",
     ]) {
       expect(container.querySelector(`#${CSS.escape(id)}`)).not.toBeNull();
     }
+    const row = await screen.findByText("docs");
+    expect(row.closest("[id^='qz-tree-row-']")).not.toBeNull();
     expectUniqueIds(container);
   });
 
@@ -78,7 +87,7 @@ describe("elementIds", () => {
         info={INFO}
         loading={false}
         onOpen={() => {}}
-        middleControls={<span>pager</span>}
+        utilityControls={<button>Theme</button>}
       />,
     );
     for (const id of [
@@ -123,34 +132,19 @@ describe("elementIds", () => {
     expectUniqueIds(container);
   });
 
-  it("should_expose_table_rows_with_serial_ids", () => {
+  it("should_expose_tree_rows_with_index_ids", () => {
+    // Rows carry stable per-index ids (paths contain slashes, so indices
+    // identify rows); names render basenames with full-path tooltips.
     const { container } = render(
-      <ArchiveTable
-        data={[
-          { path: "b.txt", size: 2, modified: null, is_folder: false },
-          { path: "a.txt", size: 1, modified: null, is_folder: false },
-          { path: "docs", size: null, modified: null, is_folder: true },
-        ]}
-        page={0}
-        pageSize={100}
-        sortKey={null}
-        sortDir="asc"
-        onSortKey={() => {}}
-        listingId="/tmp/demo.zip"
+      <ArchiveTree
+        archive={null}
+        totalEntries={0}
+        selected={new Set()}
+        onSelectionChange={() => {}}
       />,
     );
-    for (const id of [
-      "qz-table-root",
-      "qz-table-header",
-      "qz-table-sort-path",
-      "qz-table-scroll",
-      "qz-table-row-1",
-      "qz-table-row-1-path",
-      "qz-table-row-2-size",
-      "qz-table-select-row-3",
-    ]) {
-      expect(container.querySelector(`#${CSS.escape(id)}`)).not.toBeNull();
-    }
+    expect(container.querySelector("#qz-tree-root")).not.toBeNull();
+    expect(container.querySelector("#qz-tree-empty")).not.toBeNull();
     expectUniqueIds(container);
   });
 
@@ -190,49 +184,25 @@ describe("elementIds", () => {
 
   it("should_always_show_the_entry_total", () => {
     const { container } = render(
-      <Pagination
-        page={0}
-        pageCount={3}
-        pageSize={100}
-        total={250}
-        onPage={() => {}}
-        onPageSize={() => {}}
+      <ArchiveOverview
+        archive="/tmp/demo.zip"
+        info={INFO}
+        loading={false}
+        onOpen={() => {}}
       />,
     );
-    // No responsive gate: narrow windows show the count too.
-    const total = container.querySelector("#qz-pager-total");
-    expect(total).not.toBeNull();
-    expect(total).not.toHaveClass("hidden");
-    expect(total?.textContent).toBe("250");
+    // The overview card owns the entry count now (the pager is gone):
+    // files + folders stay visible without scrolling.
+    expect(container.querySelector("#qz-overview-meta-files")).not.toBeNull();
+    expect(container.querySelector("#qz-overview-meta-folders")).not.toBeNull();
   });
 
   it("should_drop_menus_downward_when_below", async () => {
     const user = userEvent.setup();
-    const { container } = render(
-      <>
-        <Pagination
-          page={0}
-          pageCount={3}
-          pageSize={100}
-          total={250}
-          onPage={() => {}}
-          onPageSize={() => {}}
-          below
-        />
-        <LanguageSwitch below />
-      </>,
-    );
-    // Portals mount on document.body, outside the render container —
-    // and opening one menu closes the other, so assert each in turn.
-    await user.click(
-      container.querySelector("#qz-pager-size-btn") as HTMLElement,
-    );
-    let menu = document.querySelector("#qz-pager-size-menu") as HTMLElement;
-    // jsdom measures every rect as zero, so "8px below" is top: 8px.
-    expect(menu.style.top).toBe("8px");
-    expect(menu.style.bottom).toBe("");
+    const { container } = render(<LanguageSwitch below />);
     await user.click(container.querySelector("#qz-lang-btn") as HTMLElement);
-    menu = document.querySelector("#qz-lang-menu") as HTMLElement;
+    const menu = document.querySelector("#qz-lang-menu") as HTMLElement;
+    // jsdom measures every rect as zero, so "8px below" is top: 8px.
     expect(menu.style.top).toBe("8px");
     expect(menu.style.bottom).toBe("");
   });

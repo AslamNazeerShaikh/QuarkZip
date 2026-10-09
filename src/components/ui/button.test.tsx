@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { Button } from "./button";
 
 /// Locks the shell-chrome unification: every action variant wears the
-/// Pagination/ThemeSwitch look (translucent tint, 10px radius, 1px border,
+/// ThemeSwitch look (translucent tint, 10px radius, 1px border,
 /// card shadow, h-9 chrome height) — hues as tints, never solids.
 describe("Button shell chrome", () => {
   const cases = [

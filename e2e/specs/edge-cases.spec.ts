@@ -1,10 +1,4 @@
-import {
-  addArchive,
-  expect,
-  expectPage,
-  openViaButton,
-  test,
-} from "../fixtures";
+import { addArchive, expect, openViaButton, test } from "../fixtures";
 
 test("folders, unknown types, and extensionless files label correctly", async ({
   app,
@@ -60,25 +54,35 @@ test("very long names truncate with ellipsis instead of overflowing", async ({
   expect(box?.width).toBeLessThanOrEqual((row?.width ?? 0) + 1);
 });
 
-test("large listing paginates and All collapses to one page", async ({
+test("large folders chunk behind Show-more and stay virtualized", async ({
   app,
 }) => {
-  await addArchive(app, "/tmp/huge.zip", { count: 2500 });
+  await addArchive(app, "/tmp/huge.zip", { count: 10500 });
   await openViaButton(app, "/tmp/huge.zip");
-  await expectPage(app, 1, 25);
-  // Virtualized: only the visible window mounts, not all 2500 rows.
+  await expect(app.getByText("file-1.txt")).toBeVisible();
+  // Virtualized: only the visible window mounts, not all 10k rows.
   const mounted = await app.locator('div[style*="translateY"]').count();
   expect(mounted).toBeLessThan(200);
 
-  await app.getByRole("button", { name: "Rows per page" }).click();
-  await app
-    .getByRole("listbox", { name: "Rows per page" })
-    .getByRole("option", { name: "All" })
-    .click();
-  await expect(app.getByText("1 / 1")).toBeVisible();
-  // Still virtualized: the full 2500 rows never mount at once.
+  // The 500-entry tail waits behind one Show-more row (bounded RAM).
+  // Virtualized, so scroll to the bottom to reach it.
+  const scroller = app.locator("#qz-tree-scroll");
+  await scroller.evaluate((el) => {
+    el.scrollTop = el.scrollHeight;
+  });
+  const more = app.getByRole("button", { name: /Show .* more/ });
+  await expect(more).toContainText("500 remaining");
+  await more.click();
+  await scroller.evaluate((el) => {
+    el.scrollTop = el.scrollHeight;
+  });
+  await expect(app.getByText("file-10500.txt")).toBeVisible();
+  // Still virtualized: the full 10,500 rows never mount at once.
   expect(await app.locator('div[style*="translateY"]').count()).toBeLessThan(
     200,
+  );
+  await expect(app.getByRole("button", { name: /Show .* more/ })).toHaveCount(
+    0,
   );
 });
 
@@ -140,15 +144,16 @@ test("rich info keeps extras behind More and respects collapse", async ({
   ).toHaveCount(0);
 });
 
-test("single-entry archive has no pagination beyond one page", async ({
-  app,
-}) => {
+test("single-entry archive shows one row and no Show-more", async ({ app }) => {
   await addArchive(app, "/tmp/one.zip", { count: 1 });
   await openViaButton(app, "/tmp/one.zip");
-  await expect(app.getByText("1 / 1")).toBeVisible();
+  await expect(app.getByText("file-1.txt")).toBeVisible();
+  await expect(app.getByRole("button", { name: /Show .* more/ })).toHaveCount(
+    0,
+  );
+  // Sort headers stand above the single row.
+  await expect(app.getByRole("button", { name: /Name/ })).toBeVisible();
   await expect(
-    app.getByRole("button", { name: "Previous page" }),
-  ).toBeDisabled();
-  await expect(app.getByRole("button", { name: "Next page" })).toBeDisabled();
-  await expect(app.getByText("1", { exact: true }).first()).toBeVisible();
+    app.getByRole("checkbox", { name: "Select file-1.txt" }),
+  ).toBeVisible();
 });

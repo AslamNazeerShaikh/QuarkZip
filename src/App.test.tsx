@@ -50,8 +50,8 @@ vi.mock("@tauri-apps/api/core", () => ({
     listCtl.calls.push(cmd);
     if (cmd === "drag_window") return Promise.resolve();
     if (cmd === "cancel_list_archive") return Promise.resolve(null);
-    // P2: the backend holds the listing; list opens return the total,
-    // pages arrive through get_page (sliced here, like the server).
+    // The backend holds the listing; list opens return the total,
+    // tree chunks arrive through get_children (like the server).
     const entriesFor = (path: string) => {
       if (path === "/tmp/secret.zip") {
         return [
@@ -129,15 +129,30 @@ vi.mock("@tauri-apps/api/core", () => ({
       }
       return Promise.resolve({ total: entriesFor(path).length });
     }
-    if (cmd === "get_page") {
-      const { path, page, pageSize } = (args ?? {}) as {
+    if (cmd === "get_children") {
+      const { path, parent, offset, limit } = (args ?? {}) as {
         path: string;
-        page: number;
-        pageSize: number;
+        parent: string;
+        offset: number;
+        limit: number;
       };
       const all = entriesFor(path);
-      const rows = all.slice(page * pageSize, (page + 1) * pageSize);
-      return Promise.resolve({ rows, total: all.length });
+      const prefix = parent ? `${parent}/` : "";
+      const kids = all.filter((e: { path: string }) => {
+        if (!e.path.startsWith(prefix)) return false;
+        const rest = e.path.slice(prefix.length).replace(/[/\\]+$/, "");
+        return rest.length > 0 && !/[/\\]/.test(rest);
+      });
+      kids.sort(
+        (
+          a: { path: string; is_folder: boolean },
+          b: { path: string; is_folder: boolean },
+        ) =>
+          Number(b.is_folder) - Number(a.is_folder) ||
+          a.path.localeCompare(b.path, undefined, { numeric: true }),
+      );
+      const rows = kids.slice(offset, offset + limit);
+      return Promise.resolve({ rows, total: kids.length });
     }
     if (cmd === "info_archive") {
       const { path } = (args ?? {}) as { path: string };
@@ -332,32 +347,47 @@ describe("drag and drop", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("should_survive_stress_shaped_listing_without_blanking", async () => {
-    // Regression: hostile names (200-char runs, unicode, `=`, spaces,
-    // null sizes/dates, folders) must render, not unmount the tree.
-    const user = userEvent.setup();
-    render(<App />);
-    dragHandlers[dragHandlers.length - 1]?.({
-      payload: { type: "drop", paths: ["/tmp/stress.zip"] },
-    });
-    expect(await screen.findByText("file-00001.txt")).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        "name with spaces and = equals and café ünïcode Dateiächstones.txt",
-      ),
-    ).toBeInTheDocument();
-    // Tree intact: footer actions + overview populated, no blank canvas.
-    expect(
-      screen.getByRole("button", { name: "Extract Selected" }),
-    ).toBeVisible();
-    expect(screen.getByRole("button", { name: "Extract All" })).toBeVisible();
-    expect(screen.getAllByText("Store")).toHaveLength(2);
-    expect(screen.getAllByText("10,021")).toHaveLength(2);
-    // Engine extras stay behind More, even at 10k rows.
-    expect(screen.queryByText("Zip64")).not.toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "More" }));
-    expect(screen.getByText("Zip64")).toBeInTheDocument();
-  });
+  it(
+    "should_survive_stress_shaped_listing_without_blanking",
+    { timeout: 30000 },
+    async () => {
+      // Regression: hostile names (200-char runs, unicode, `=`, spaces,
+      // null sizes/dates, folders) must render, not unmount the tree.
+      const user = userEvent.setup();
+      render(<App />);
+      dragHandlers[dragHandlers.length - 1]?.({
+        payload: { type: "drop", paths: ["/tmp/stress.zip"] },
+      });
+      expect(await screen.findByText("file-00001.txt")).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          "a-very-long-filename-that-keeps-going-and-going-and-going-and-going-and-going-and-going-and-going.txt",
+        ),
+      ).toBeInTheDocument();
+      // 10,020 root children exceed one 10k chunk: the tail waits behind a
+      // Show-more row (bounded RAM) instead of materializing.
+      const more = await screen.findByRole("button", { name: /Show .* more/ });
+      expect(more).toHaveTextContent("21 remaining");
+      await user.click(more);
+      expect(
+        await screen.findByText(
+          "name with spaces and = equals and café ünïcode Dateiächstones.txt",
+        ),
+      ).toBeInTheDocument();
+      // Tree intact: footer actions + overview populated, no blank canvas.
+      expect(
+        screen.getByRole("button", { name: "Extract Selected" }),
+      ).toBeVisible();
+      expect(screen.getByRole("button", { name: "Extract All" })).toBeVisible();
+      expect(screen.getAllByText("Store")).toHaveLength(2);
+      // The entry total lives on the overview card now (the pager is gone).
+      expect(screen.getByText("10,021")).toBeInTheDocument();
+      // Engine extras stay behind More, even at 10k rows.
+      expect(screen.queryByText("Zip64")).not.toBeInTheDocument();
+      await user.click(screen.getByRole("button", { name: "More" }));
+      expect(screen.getByText("Zip64")).toBeInTheDocument();
+    },
+  );
 
   it("should_keep_previous_listing_when_open_is_cancelled", async () => {
     const user = userEvent.setup();
@@ -548,25 +578,21 @@ describe("drag and drop", () => {
     expect(extractCtl.calls[0].files).toEqual([]);
   });
 
-  it("should_shrink_pagination_while_theme_is_out_and_restore_after", async () => {
+  it("should_expand_theme_to_options_and_minimize_after_choosing", async () => {
     const user = userEvent.setup();
     render(<App />);
     dragHandlers[dragHandlers.length - 1]?.({
       payload: { type: "drop", paths: ["/tmp/dropped.zip"] },
     });
-    await expect(await screen.findByText("1 / 1")).toBeVisible();
+    await expect(await screen.findByText("dropped.txt")).toBeVisible();
     await user.click(screen.getByRole("button", { name: "Change theme" }));
-    // Full shell yields to the icon naming the page.
-    expect(
-      await screen.findByRole("button", { name: /Show pagination/ }),
-    ).toBeVisible();
-    expect(screen.queryByText("1 / 1")).not.toBeInTheDocument();
-    // Choosing minimizes the segment and restores the shell.
+    // The segment opens with all three options…
+    expect(await screen.findByRole("button", { name: "Dark" })).toBeVisible();
+    // …choosing minimizes back to the icon.
     await user.click(screen.getByRole("button", { name: "Dark" }));
     expect(
       await screen.findByRole("button", { name: "Change theme" }),
     ).toBeVisible();
-    expect(await screen.findByText("1 / 1")).toBeVisible();
   });
 
   it("should_open_test_dialog_from_overview_that_backdrop_cannot_close", async () => {

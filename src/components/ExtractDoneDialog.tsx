@@ -1,4 +1,5 @@
-import { CheckCircle2, XCircle } from "lucide-react";
+import { revealItemInDir } from "@tauri-apps/plugin-opener";
+import { CheckCircle2, FolderSearch, XCircle } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "./ui/button";
 import { formatCount } from "../lib/format";
@@ -9,9 +10,12 @@ export type ExtractResult =
   | { ok: false; message: string; dest: string };
 
 /// Extraction result popup, mirroring the confirm dialog: frosted-glass backdrop,
-/// white card with a big centered icon, and a single OK action. Success
-/// shows the extracted file count and destination; failure shows the error.
-/// Esc also dismisses. The backdrop never dismisses — use OK.
+/// white card with a big centered icon, and OK plus (on success) Reveal in
+/// Finder actions — the webview cannot drag files out to Finder, so Reveal
+/// is the one-click bridge (opens the destination in the native file
+/// manager). Success shows the extracted file count and destination;
+/// failure shows the error. Esc also dismisses. The backdrop never
+/// dismisses — use the buttons.
 export default function ExtractDoneDialog({
   open,
   result,
@@ -104,12 +108,23 @@ export default function ExtractDoneDialog({
         )}
         <div
           id="qz-extract-done-actions"
-          className="mt-5 flex items-center justify-center"
+          className="mt-5 flex items-center justify-center gap-2"
         >
+          {result.ok && (
+            <Button
+              id="qz-extract-done-reveal"
+              variant="secondary"
+              onClick={() => void revealItemInDir(result.dest).catch(() => {})}
+              title={t("done.revealInFinder")}
+            >
+              <FolderSearch size={14} aria-hidden />
+              {t("done.revealInFinder")}
+            </Button>
+          )}
           <Button
             id="qz-extract-done-ok"
             onClick={onOk}
-            autoFocus
+            autoFocus={!result.ok}
             title={t("common.ok")}
           >
             {t("common.ok")}

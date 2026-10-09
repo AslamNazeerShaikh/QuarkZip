@@ -205,7 +205,7 @@ test("collapsed card menus stay hittable (portaled, never clipped)", async ({
 test("debug ids are present and unique across the live DOM", async ({
   app,
 }) => {
-  // Multi-page + extras: the jump input and the More button both mount.
+  // Tree rows + the More button mount.
   await addArchive(app, "/tmp/ids.zip", {
     count: 250,
     info: {
@@ -238,9 +238,9 @@ test("debug ids are present and unique across the live DOM", async ({
     "#qz-overview-card",
     "#qz-overview-meta-container",
     "#qz-action-row",
-    "#qz-pager-jump-input",
+    "#qz-tree-sort-path",
     "#qz-action-more-btn",
-    "#qz-table-row-1-path",
+    "#qz-tree-row-0-path",
     "#qz-app-extract-selected",
   ]) {
     await expect(app.locator(id)).toBeVisible();
@@ -273,17 +273,10 @@ test("collapsed card drops menus downward over the table", async ({ app }) => {
   expect(langBox!.y).toBeGreaterThan(langTrigger!.y + langTrigger!.height);
   await langMenu.getByRole("option", { name: "English" }).click();
   await expect(langMenu).toHaveCount(0);
-  // Page-size menu: same direction, choosing still applies.
-  await app.getByRole("button", { name: "Rows per page" }).click();
-  const sizeMenu = app.getByRole("listbox", { name: "Rows per page" });
-  await expect(sizeMenu).toBeVisible();
-  const sizeTrigger = await app
-    .getByRole("button", { name: "Rows per page" })
-    .boundingBox();
-  const sizeBox = await sizeMenu.boundingBox();
-  expect(sizeBox!.y).toBeGreaterThan(sizeTrigger!.y + sizeTrigger!.height);
-  await sizeMenu.getByRole("option", { name: "1,000" }).click();
-  await expect(app.getByText("1 / 1")).toBeVisible();
+  // Tree Name sort toggles row order in place (no pager anymore).
+  await expect(app.getByText("file-1.txt")).toBeVisible();
+  await app.getByRole("button", { name: /Name/ }).click();
+  await expect(app.getByText("file-250.txt")).toBeVisible();
 });
 
 test("collapse survives a reload", async ({ app }) => {

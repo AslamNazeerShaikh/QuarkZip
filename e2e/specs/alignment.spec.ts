@@ -72,10 +72,10 @@ test("macOS open aligns to the card's right edge", async ({ page }) => {
   );
 });
 
-test("footer, table, and window share one inset rhythm", async ({ app }) => {
+test("footer, tree, and window share one inset rhythm", async ({ app }) => {
   await openBig(app);
   const extract = await app.locator("#qz-app-extract-selected").boundingBox();
-  const wrap = await app.locator("#qz-app-table-wrap").boundingBox();
+  const wrap = await app.locator("#qz-app-tree-wrap").boundingBox();
   const frame = await app.getByTestId("app-frame").boundingBox();
   const footer = await app.locator("#qz-app-footer").boundingBox();
   // Extract's left edge lands on the table's left edge.
@@ -92,6 +92,7 @@ test("footer, table, and window share one inset rhythm", async ({ app }) => {
 
 test("entry total shows at minimum width", async ({ app }) => {
   await openBig(app);
-  await expect(app.locator("#qz-pager-total")).toBeVisible();
-  await expect(app.locator("#qz-pager-total")).toContainText("250");
+  // The overview card owns the entry count now (the pager is gone).
+  await expect(app.locator("#qz-overview-meta-files")).toContainText("250");
+  await expect(app.locator("#qz-overview-meta-folders")).toBeVisible();
 });
