@@ -83,10 +83,11 @@ test("a held press answers with a scale", async ({ app }) => {
   const btn = app.getByRole("button", { name: "Extract All" });
   await btn.hover();
   await app.mouse.down();
-  // The held state needs a frame to apply — poll, don't snapshot.
+  // The held state needs a frame to apply — poll, don't snapshot (roomy
+  // timeout: full-suite parallelism can starve the compositor).
   await expect
     .poll(() => btn.evaluate((el) => getComputedStyle(el).scale), {
-      timeout: 2000,
+      timeout: 5000,
     })
     .not.toBe("none");
   await app.mouse.up();
