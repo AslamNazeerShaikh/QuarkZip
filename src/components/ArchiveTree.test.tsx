@@ -221,4 +221,23 @@ describe("ArchiveTree", () => {
     expect(label).toHaveClass("truncate");
     expect(label?.textContent).toBe("File");
   });
+
+  it("should_draw_unicode_guides_with_room_around_the_chevron", async () => {
+    const user = userEvent.setup();
+    setup();
+    await screen.findByText("docs");
+    // Root gutter: elbow only, in faint monospace text.
+    const rootRow = screen.getByText("docs").closest("[role='treeitem']")!;
+    expect(rootRow.textContent).toMatch(/[├└]── /);
+    const chevron = screen.getByRole("button", { name: "Expand folder" });
+    // 24px hit box around the 14px glyph — no more crowding the icon.
+    expect(chevron).toHaveClass("w-6");
+    await user.click(chevron);
+    const childRow = (await screen.findByText("a.txt")).closest(
+      "[role='treeitem']",
+    )!;
+    // Nested level: parent continuation line + own elbow (a.txt has a
+    // next sibling, so ├──).
+    expect(childRow.textContent).toMatch(/│ {3}├── /);
+  });
 });

@@ -103,6 +103,19 @@ export function displayName(path: string): string {
   return segs.length > 0 ? segs[segs.length - 1] : path;
 }
 
+/// Box-drawing prefix for one row (`guides` = continuation flags from the
+/// flatten step, `depth` = the row's own level): one 4-char cell per
+/// ancestor (`│   ` while that level continues, blanks after it ends) plus
+/// the row's own elbow (`├── ` / `└── `). Rendered as text (monospace, pre
+/// whitespace) so it always paints — CSS border guides collapsed to zero
+/// height inside centered flex rows and were invisible.
+export function guidePrefix(guides: boolean[], depth: number): string {
+  let out = "";
+  for (let i = 0; i < depth; i++) out += guides[i] ? "│   " : "    ";
+  const last = depth < guides.length ? guides[depth] : true;
+  return out + (last ? "├── " : "└── ");
+}
+
 function parentPath(path: string): string | null {
   const trimmed = path.replace(/[/\\]+$/, "");
   const i = Math.max(trimmed.lastIndexOf("/"), trimmed.lastIndexOf("\\"));

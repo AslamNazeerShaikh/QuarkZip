@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   deselectPath,
   displayName,
+  guidePrefix,
   isUnder,
   nodeState,
   selectPath,
@@ -66,5 +67,12 @@ describe("treeSelection", () => {
     expect(displayName("pics/")).toBe("pics");
     expect(displayName("a/b/c.txt")).toBe("c.txt");
     expect(displayName("lonely")).toBe("lonely");
+  });
+
+  it("should_draw_box_drawing_prefixes_per_level", () => {
+    expect(guidePrefix([true], 0)).toBe("├── ");
+    expect(guidePrefix([false], 0)).toBe("└── ");
+    expect(guidePrefix([true, false], 1)).toBe("│   └── ");
+    expect(guidePrefix([false, true, false], 2)).toBe("    │   └── ");
   });
 });

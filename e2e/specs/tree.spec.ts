@@ -30,6 +30,9 @@ test("folders expand to children and collapse drops them", async ({ app }) => {
   await app.getByRole("button", { name: "Expand folder" }).click();
   await expect(app.getByText("a.txt")).toBeVisible();
   await expect(app.getByText("b.txt")).toBeVisible();
+  // Box-drawing gutter: the nested rows carry elbows under the parent.
+  const childRow = app.locator('[id$="-path"]', { hasText: "a.txt" });
+  await expect(childRow).toContainText("├──");
   await app.getByRole("button", { name: "Collapse folder" }).click();
   await expect(app.getByText("a.txt")).toHaveCount(0);
 });

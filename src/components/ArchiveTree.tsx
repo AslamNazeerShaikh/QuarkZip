@@ -14,6 +14,7 @@ import { fileKind } from "../lib/fileKind";
 import {
   deselectPath,
   displayName,
+  guidePrefix,
   isUnder,
   nodeState,
   selectPath,
@@ -51,11 +52,10 @@ function SortIcon({ state }: { state: TreeSortDir | null }) {
 
 /// Nested file-tree browser: folders expand in place, children load from
 /// the backend in bounded chunks (`get_children`), collapsing drops them
-/// again so a 10M archive never sits in webview RAM. Guides draw one
-/// vertical line per continuing ancestor level (static box-drawing, no
-/// expand animation — motion stays out of the way of large listings).
-///
-/// Selection is an explicit path set with folder-prefix collapse (see
+/// again so a 10M archive never sits in webview RAM. Gutters draw Unicode
+/// box-drawing guides (├── └── │ ─, monospace text that always paints —
+/// instant expand, no animation). Selection is an explicit path set with
+/// folder-prefix collapse (see
 /// `treeSelection`): checking a folder selects the folder path only (the
 /// extract backend expands it to the subtree), unchecking a file inside a
 /// checked folder splits the ancestor into its *loaded* children. The set
@@ -463,7 +463,7 @@ export default function ArchiveTree({
                       }}
                       className="flex items-center gap-2 border-t border-[var(--qz-border)] px-4 text-xs text-[var(--qz-faint)]"
                     >
-                      <Guides guides={row.guides} />
+                      <GuidePrefix guides={row.guides} depth={row.depth} />
                       <span className="animate-pulse">{t("tree.loading")}</span>
                     </div>
                   );
@@ -483,7 +483,7 @@ export default function ArchiveTree({
                       }}
                       className="flex items-center border-t border-[var(--qz-border)] px-4 text-xs text-[var(--qz-faint)]"
                     >
-                      <Guides guides={row.guides} />
+                      <GuidePrefix guides={row.guides} depth={row.depth} />
                       <span>{t("tree.emptyFolder")}</span>
                     </div>
                   );
@@ -512,19 +512,16 @@ export default function ArchiveTree({
   );
 }
 
-/// One vertical guide per ancestor level: a line while that level
-/// continues (static box-drawing, no animation).
-function Guides({ guides }: { guides: boolean[] }) {
+/// Box-drawing gutter prefix for loading/empty rows: monospace text that
+/// always paints (CSS border guides collapsed inside centered flex rows).
+function GuidePrefix({ guides, depth }: { guides: boolean[]; depth: number }) {
   return (
-    <>
-      {guides.map((continues, i) => (
-        <span
-          key={i}
-          aria-hidden
-          className={`h-full w-4 shrink-0 ${continues ? "border-l border-[var(--qz-border)]" : ""}`}
-        />
-      ))}
-    </>
+    <span
+      aria-hidden
+      className="shrink-0 font-mono whitespace-pre text-[var(--qz-faint)]"
+    >
+      {guidePrefix(guides, depth)}
+    </span>
   );
 }
 
@@ -589,7 +586,12 @@ function TreeNodeRow({
         className="flex h-full min-w-0 flex-1 items-center"
       >
         <span className="flex min-w-0 items-center">
-          <Guides guides={guides.slice(0, depth)} />
+          <span
+            aria-hidden
+            className="shrink-0 font-mono whitespace-pre text-[var(--qz-faint)]"
+          >
+            {guidePrefix(guides, depth)}
+          </span>
           {entry.is_folder ? (
             <button
               id={`qz-tree-expand-${index}`}
@@ -602,7 +604,7 @@ function TreeNodeRow({
               }
               aria-expanded={expanded}
               onClick={onToggleExpand}
-              className="grid h-6 w-4 shrink-0 place-items-center rounded-[5px] text-[var(--qz-faint)] outline-none transition-all duration-150 hover:text-[var(--qz-text)] motion-safe:active:scale-95 focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+              className="grid h-6 w-6 shrink-0 place-items-center rounded-[5px] text-[var(--qz-faint)] outline-none transition-all duration-150 hover:text-[var(--qz-text)] motion-safe:active:scale-95 focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
             >
               <ChevronRight
                 size={14}
@@ -611,7 +613,7 @@ function TreeNodeRow({
               />
             </button>
           ) : (
-            <span aria-hidden className="w-4 shrink-0" />
+            <span aria-hidden className="w-6 shrink-0" />
           )}
           <Icon
             size={16}

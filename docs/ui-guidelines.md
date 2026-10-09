@@ -98,9 +98,10 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
 - `Badge`: StatusPill language — 999px, 11px/600, 6px dot + text.
   Variants neutral/success/info/warning/danger, AA pairs in color-system doc.
 - `Separator`: 1px `--qz-border`, no verticals.
-- `ArchiveTree`: card container (13px radius), nested rows with static
-  box-drawing guides (one vertical line per continuing ancestor level, no
-  expand animation), per-row tri-state checkbox + chevron + icon + basename
+- `ArchiveTree`: card container (13px radius), nested rows with Unicode
+  box-drawing gutters (├── └── │ ─ in faint monospace, one 4-char cell
+  per ancestor level plus the row's own elbow — text that always paints),
+  per-row tri-state checkbox + chevron + icon + basename
   (full path on hover), header row fixed to the 36px row height with
   12px uppercase sort toggles synced with their cells (Name left,
   Type/Size/Modified centered both axes), Type fixed at `w-24` (truncated
