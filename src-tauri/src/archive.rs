@@ -185,12 +185,9 @@ pub fn summarize_archive_info(
     }
 }
 
-/// Cap for one page (`rows × 36px` spacer): past ~3.6M px engines clamp
-/// element height and virtualized rows misplace. The UI hides "show all"
-/// above the same cap, and `get_page` enforces it.
-pub const MAX_PAGE_SIZE: usize = 100_000;
-
-/// Sort column for server-side paging (mirrors the table's `SortKey`).
+/// Sort column for server-side tree chunks (mirrors the tree's `SortKey`).
+/// Folders always lead within a folder listing (Finder-style), in both
+/// directions; `desc` reverses within each group only.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum PageSortKey {
     Path,
@@ -211,12 +208,14 @@ impl PageSortKey {
     }
 }
 
-/// One served page: display rows plus the listing total (unchanged by
-/// paging, so the UI can keep `1 / N` readouts without a second call).
-#[derive(Debug, serde::Serialize, PartialEq)]
-pub struct Page {
-    pub rows: Vec<ArchiveEntry>,
-    pub total: usize,
+/// Display row for one facts entry (mirrors the FFI enumerate mapping).
+pub fn entry_from_facts(f: &EntryFacts) -> ArchiveEntry {
+    ArchiveEntry {
+        path: f.path.clone(),
+        size: f.size,
+        modified: f.modified.clone(),
+        is_folder: f.is_folder,
+    }
 }
 
 /// Natural order for archive paths: case-folded, digit runs by numeric
@@ -283,78 +282,109 @@ pub fn cmp_natural(a: &str, b: &str) -> std::cmp::Ordering {
     }
 }
 
-/// Extension rule mirroring `fileKind`: after the last `.`, lowercased
-/// (`""` when none). Folders sort before files; unknown extensions sort
-/// with `""` first — a locale-independent approximation of the table's
-/// translated-label sort (exact in `en` for the common cases).
+/// Extension rule mirroring `fileKind`: from the file *name* only, after
+/// the last `.`, lowercased (`""` when none). Dots in directory names
+/// (`.opencode`, `.bin`) are not extensions — the full-path `rfind` once
+/// labeled `.bin/download-msgpackr-prebuilds` as `BIN/DOWNLOAD-…`.
 fn type_key(f: &EntryFacts) -> (u8, String, &str) {
     if f.is_folder {
         return (0, String::new(), f.path.as_str());
     }
-    let ext = f
-        .path
+    let base = f.path.rsplit(['/', '\\']).next().unwrap_or(&f.path);
+    let ext = base
         .rfind('.')
-        .map(|i| f.path[i + 1..].to_lowercase())
+        .filter(|&i| i > 0)
+        .map(|i| base[i + 1..].to_lowercase())
         .unwrap_or_default();
     (1, ext, f.path.as_str())
 }
 
-/// Sorts facts in place, then reverses the whole vec for `desc` — exactly
-/// the table's old `[...rows].sort()` + `.reverse()` semantics, including
-/// null placement (`size` nulls first asc / last desc; `modified` nulls
-/// sort as `""`).
-pub fn sort_facts(facts: &mut [EntryFacts], key: PageSortKey, desc: bool) {
-    match key {
-        PageSortKey::Path => {
-            facts.sort_by(|a, b| cmp_natural(&a.path, &b.path));
-        }
-        PageSortKey::Size => {
-            facts.sort_by_key(|f| f.size.map_or(-1, |s| s as i128));
-        }
-        PageSortKey::Type => {
-            facts.sort_by(|a, b| {
-                type_key(a)
-                    .0
-                    .cmp(&type_key(b).0)
-                    .then(cmp_natural(&type_key(a).1, &type_key(b).1))
-                    .then(cmp_natural(type_key(a).2, type_key(b).2))
-            });
-        }
-        PageSortKey::Modified => {
-            facts.sort_by(|a, b| {
-                a.modified
-                    .as_deref()
-                    .unwrap_or("")
-                    .cmp(b.modified.as_deref().unwrap_or(""))
-            });
-        }
-    }
-    if desc {
-        facts.reverse();
-    }
+/// Max children served per `get_children` call (one tree chunk): bounds
+/// webview RAM the way `MAX_PAGE_SIZE` bounded the table. A folder with
+/// more children grows a "Show more" row per chunk.
+pub const MAX_CHILD_CHUNK: usize = 10_000;
+
+/// One served children chunk: immediate-child rows plus the folder total
+/// (unchanged by chunking, so the UI can label "Show N more" rows without
+/// a second call).
+#[derive(Debug, serde::Serialize, PartialEq)]
+pub struct ChildrenPage {
+    pub rows: Vec<ArchiveEntry>,
+    pub total: usize,
 }
 
-/// Display row for one facts entry (mirrors the FFI enumerate mapping).
-pub fn entry_from_facts(f: &EntryFacts) -> ArchiveEntry {
-    ArchiveEntry {
-        path: f.path.clone(),
-        size: f.size,
-        modified: f.modified.clone(),
-        is_folder: f.is_folder,
+/// Immediate children of `parent` (`""` = archive root), sorted
+/// folders-first (Finder-style tree: folders always lead, in both
+/// directions) then by `key`/`desc` within each group, sliced
+/// `[offset, offset+limit)`. Out-of-range offsets yield `[]`.
+///
+/// Paths are matched verbatim — including any trailing slash the engine
+/// reported for directories (`pics/`) — but the self entry (empty
+/// remainder) is never its own child. Sorting touches indices only, so a
+/// 10M root expansion never clones the facts vec.
+pub fn children_of(
+    facts: &[EntryFacts],
+    parent: &str,
+    offset: usize,
+    limit: usize,
+    key: PageSortKey,
+    desc: bool,
+) -> ChildrenPage {
+    let trimmed_parent = parent.trim_end_matches(['/', '\\']);
+    let mut idx: Vec<usize> = Vec::new();
+    for (i, f) in facts.iter().enumerate() {
+        let p = f.path.as_str();
+        let rest = if trimmed_parent.is_empty() {
+            Some(p)
+        } else {
+            p.strip_prefix(trimmed_parent)
+                .and_then(|r| r.strip_prefix(['/', '\\']))
+        };
+        let Some(rest) = rest else { continue };
+        let rest = rest.trim_end_matches(['/', '\\']);
+        // Empty remainder = the folder itself; a remainder with a separator
+        // is a grandchild, not an immediate child.
+        if rest.is_empty() || rest.contains(['/', '\\']) {
+            continue;
+        }
+        idx.push(i);
     }
-}
-
-/// Bounds-safe slice: out-of-range pages yield `[]`, never a panic.
-pub fn page_of(facts: &[EntryFacts], page: usize, page_size: usize) -> &[EntryFacts] {
-    if page_size == 0 {
-        return &[];
-    }
-    let start = page.saturating_mul(page_size);
-    if start >= facts.len() {
-        return &[];
-    }
-    let end = (start.saturating_add(page_size)).min(facts.len());
-    &facts[start..end]
+    let total = idx.len();
+    idx.sort_by(|&a, &b| {
+        let (fa, fb) = (&facts[a], &facts[b]);
+        // Folders first in both directions; `desc` reverses within groups.
+        let folders = (fb.is_folder as u8).cmp(&(fa.is_folder as u8));
+        if folders != std::cmp::Ordering::Equal {
+            return folders;
+        }
+        let ord = match key {
+            PageSortKey::Path => cmp_natural(&fa.path, &fb.path),
+            PageSortKey::Size => (fa.size.unwrap_or(0)).cmp(&fb.size.unwrap_or(0)),
+            PageSortKey::Type => {
+                let (ka, kb) = (type_key(fa), type_key(fb));
+                ka.0.cmp(&kb.0)
+                    .then(cmp_natural(&ka.1, &kb.1))
+                    .then(cmp_natural(ka.2, kb.2))
+            }
+            PageSortKey::Modified => fa
+                .modified
+                .as_deref()
+                .unwrap_or("")
+                .cmp(fb.modified.as_deref().unwrap_or("")),
+        };
+        if desc {
+            ord.reverse()
+        } else {
+            ord
+        }
+    });
+    let rows = idx
+        .into_iter()
+        .skip(offset)
+        .take(limit)
+        .map(|i| entry_from_facts(&facts[i]))
+        .collect();
+    ChildrenPage { rows, total }
 }
 
 /// Archive extensions stripped (case-insensitive, innermost first) when
@@ -509,80 +539,126 @@ mod tests {
         assert_eq!(cmp_natural("b", "a"), std::cmp::Ordering::Greater);
     }
 
+    fn child_paths(page: &ChildrenPage) -> Vec<&str> {
+        page.rows.iter().map(|r| r.path.as_str()).collect()
+    }
+
+    fn nested_facts() -> Vec<EntryFacts> {
+        vec![
+            fact("root.txt", Some(10), Some("2026-09-02 00:00:00"), false),
+            fact("docs", None, None, true),
+            fact(
+                "docs/report.pdf",
+                Some(5000),
+                Some("2026-09-01 00:00:00"),
+                false,
+            ),
+            fact("docs/notes.txt", Some(50), None, false),
+            // Dots in directory names are not extensions (old full-path
+            // `rfind` labeled these `BIN/…` and overflowed the Type cell).
+            fact(".cache", None, None, true),
+            fact(".cache/blob", Some(5), None, false),
+            fact("pics/", None, None, true),
+            fact("pics/a.png", Some(200), None, false),
+        ]
+    }
+
     #[test]
-    fn should_sort_paths_asc_then_reverse_for_desc() {
-        let mut facts = sample_facts();
-        sort_facts(&mut facts, PageSortKey::Path, false);
+    fn should_sort_paths_asc_with_folders_first() {
+        // `sample_facts` root children: the `backup` folder + 3 files
+        // (`docs/report.pdf` lives under `docs/`, not at root).
+        let facts = sample_facts();
+        let page = children_of(&facts, "", 0, 100, PageSortKey::Path, false);
+        assert_eq!(page.total, 4);
         assert_eq!(
-            paths(&facts),
-            [
-                "backup",
-                "docs/report.pdf",
-                "inner.zip",
-                "notes.txt",
-                "photo.png"
-            ]
+            child_paths(&page),
+            ["backup", "inner.zip", "notes.txt", "photo.png"]
         );
-        sort_facts(&mut facts, PageSortKey::Path, true);
+        // Desc reverses within groups only — folders still lead.
+        let page = children_of(&facts, "", 0, 100, PageSortKey::Path, true);
         assert_eq!(
-            paths(&facts),
-            [
-                "photo.png",
-                "notes.txt",
-                "inner.zip",
-                "docs/report.pdf",
-                "backup"
-            ]
+            child_paths(&page),
+            ["backup", "photo.png", "notes.txt", "inner.zip"]
         );
     }
 
     #[test]
-    fn should_sort_null_sizes_first_asc_and_last_desc() {
-        let mut facts = sample_facts();
-        sort_facts(&mut facts, PageSortKey::Size, false);
-        assert_eq!(paths(&facts)[0], "backup");
-        assert_eq!(paths(&facts).last(), Some(&"inner.zip"));
-        sort_facts(&mut facts, PageSortKey::Size, true);
-        assert_eq!(paths(&facts)[0], "inner.zip");
+    fn should_sort_null_sizes_as_zero() {
+        let facts = sample_facts();
+        let page = children_of(&facts, "", 0, 100, PageSortKey::Size, false);
+        // `backup` (null) sorts as 0, folders-first still applies.
+        assert_eq!(child_paths(&page)[0], "backup");
+        assert_eq!(child_paths(&page).last(), Some(&"inner.zip"));
+        let page = children_of(&facts, "", 0, 100, PageSortKey::Size, true);
+        assert_eq!(child_paths(&page)[1], "inner.zip");
     }
 
     #[test]
     fn should_sort_folders_before_files_by_extension() {
-        let mut facts = sample_facts();
-        sort_facts(&mut facts, PageSortKey::Type, false);
-        let ordered = paths(&facts);
+        let facts = sample_facts();
+        let page = children_of(&facts, "", 0, 100, PageSortKey::Type, false);
+        let ordered = child_paths(&page);
         assert_eq!(ordered[0], "backup");
-        // Extensions ascend after the folder: pdf, png, txt, zip.
-        assert_eq!(
-            ordered[1..],
-            ["docs/report.pdf", "photo.png", "notes.txt", "inner.zip"]
-        );
+        // Extensions ascend after the folder: png, txt, zip.
+        assert_eq!(ordered[1..], ["photo.png", "notes.txt", "inner.zip"]);
+    }
+
+    #[test]
+    fn should_derive_extension_from_the_file_name_only() {
+        let facts = nested_facts();
+        let page = children_of(&facts, ".cache", 0, 10, PageSortKey::Type, false);
+        assert_eq!(page.total, 1);
+        // `blob` has no extension in its own name → sorts with "" (first).
+        assert_eq!(child_paths(&page), [".cache/blob"]);
     }
 
     #[test]
     fn should_sort_modified_as_raw_strings_with_nulls_first() {
-        let mut facts = sample_facts();
-        sort_facts(&mut facts, PageSortKey::Modified, false);
+        let facts = sample_facts();
+        let page = children_of(&facts, "", 0, 100, PageSortKey::Modified, false);
         assert_eq!(
-            paths(&facts),
-            [
-                "backup",
-                "notes.txt",
-                "docs/report.pdf",
-                "photo.png",
-                "inner.zip"
-            ]
+            child_paths(&page),
+            ["backup", "notes.txt", "photo.png", "inner.zip"]
         );
     }
 
     #[test]
-    fn should_page_bounds_safely() {
+    fn should_chunk_bounds_safely() {
         let facts = sample_facts();
-        assert_eq!(page_of(&facts, 0, 2).len(), 2);
-        assert_eq!(page_of(&facts, 2, 2).len(), 1);
-        assert!(page_of(&facts, 9, 2).is_empty());
-        assert!(page_of(&facts, 0, 0).is_empty());
-        assert!(page_of(&facts, usize::MAX, 100).is_empty());
+        let first = children_of(&facts, "", 0, 2, PageSortKey::Path, false);
+        assert_eq!(first.total, 4);
+        assert_eq!(first.rows.len(), 2);
+        let second = children_of(&facts, "", 2, 2, PageSortKey::Path, false);
+        assert_eq!(second.rows.len(), 2);
+        assert!(children_of(&facts, "", 9, 2, PageSortKey::Path, false)
+            .rows
+            .is_empty());
+        assert!(children_of(&facts, "", 0, 0, PageSortKey::Path, false)
+            .rows
+            .is_empty());
+        assert!(
+            children_of(&facts, "", usize::MAX, 100, PageSortKey::Path, false)
+                .rows
+                .is_empty()
+        );
+    }
+
+    #[test]
+    fn should_serve_immediate_children_only() {
+        let facts = nested_facts();
+        // Root: files + folders only, never grandchildren; `pics/` (trailing
+        // slash from zip-style listings) is a root child, not hidden.
+        let root = children_of(&facts, "", 0, 20, PageSortKey::Path, false);
+        assert_eq!(root.total, 4);
+        assert_eq!(child_paths(&root), [".cache", "docs", "pics/", "root.txt"]);
+        // Subfolder: its own entry is never its child.
+        let docs = children_of(&facts, "docs", 0, 20, PageSortKey::Path, false);
+        assert_eq!(docs.total, 2);
+        assert_eq!(child_paths(&docs), ["docs/notes.txt", "docs/report.pdf"]);
+        // Unknown folders yield an empty chunk, never an error.
+        let missing = children_of(&facts, "nope", 0, 20, PageSortKey::Path, false);
+        assert_eq!(missing.total, 0);
+        assert!(missing.rows.is_empty());
     }
 
     #[test]

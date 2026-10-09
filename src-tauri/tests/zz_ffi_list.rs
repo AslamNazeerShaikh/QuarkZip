@@ -150,6 +150,28 @@ fn should_extract_a_folder_prefix_and_single_files() {
 
 #[test]
 #[cfg(qz_ffi)]
+fn should_extract_a_folder_with_a_trailing_slash() {
+    // Zip-style listings report directories as `pics/`; the UI sends that
+    // verbatim. The old exact/prefix compare matched neither the folder
+    // itself nor anything under it — a silent empty extraction.
+    let work = work("extract-slash");
+    let dest = work.join("out");
+    let written = quarkzip_lib::sevenzip::extract_ffi(
+        fixtures().join("basic.zip").to_str().unwrap(),
+        dest.to_str().unwrap(),
+        &["pics/".to_string(), "emptydir/".to_string()],
+        None,
+    )
+    .expect("trailing-slash selection works");
+    assert_eq!(written, 2, "two files under pics/");
+    assert!(dest.join("pics").join("a = b.png").is_file());
+    assert!(dest.join("pics").join("café.txt").is_file());
+    assert!(dest.join("emptydir").is_dir());
+    let _ = std::fs::remove_dir_all(&work);
+}
+
+#[test]
+#[cfg(qz_ffi)]
 fn should_write_nothing_when_nothing_matches() {
     let work = work("extract-noop");
     let dest = work.join("out");

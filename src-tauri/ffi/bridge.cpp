@@ -816,11 +816,26 @@ static int qz_run_op(const char *archive_utf8, const char *pw_or_null,
     }
     // Selection: exact paths, plus "folder/" prefix for chosen folders.
     // Empty request = everything. Unsafe entries never leave the engine.
+    // Trailing slashes are ignored on both sides: directory entries arrive
+    // as `pics/` from zip-style archives while the UI sends the verbatim
+    // listing path, and the old exact/prefix compare matched neither the
+    // folder itself nor anything under it (silent empty extraction).
     std::vector<std::string> want;
     if (sel && nsel > 0)
       for (size_t k = 0; k < nsel; k++)
-        if (sel[k])
-          want.push_back(sel[k]);
+        if (sel[k]) {
+          std::string w(sel[k]);
+          while (w.size() > 1 &&
+                 (w.back() == '/' || w.back() == '\\'))
+            w.pop_back();
+          want.push_back(w);
+        }
+    auto trim_rel = [](const std::string &r) {
+      size_t n = r.size();
+      while (n > 1 && (r[n - 1] == '/' || r[n - 1] == '\\'))
+        n--;
+      return r.substr(0, n);
+    };
     std::vector<UInt32> idx;
     for (UInt32 i = 0; i < n; i++) {
       NWindows::NCOM::CPropVariant prop;
@@ -832,13 +847,15 @@ static int qz_run_op(const char *archive_utf8, const char *pw_or_null,
       std::string rel(a.Ptr());
       if (!qz_path_safe(rel))
         continue;
+      const std::string trel = trim_rel(rel);
       if (!want.empty()) {
         bool hit = false;
         for (size_t k = 0; k < want.size() && !hit; k++)
-          hit = (rel == want[k] ||
-                 (rel.size() > want[k].size() &&
-                  rel.compare(0, want[k].size(), want[k]) == 0 &&
-                  rel[want[k].size()] == '/'));
+          hit = (trel == want[k] ||
+                 (trel.size() > want[k].size() &&
+                  trel.compare(0, want[k].size(), want[k]) == 0 &&
+                  (trel[want[k].size()] == '/' ||
+                   trel[want[k].size()] == '\\')));
         if (!hit)
           continue;
       }

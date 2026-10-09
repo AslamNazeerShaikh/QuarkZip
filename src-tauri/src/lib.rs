@@ -29,14 +29,11 @@ struct StoredListing {
     path: String,
     header: std::collections::BTreeMap<String, String>,
     facts: Vec<crate::archive::EntryFacts>,
-    /// Last applied server sort (key + desc). A page request with the same
-    /// pair skips re-sorting; anything else re-sorts in place first.
-    sort: Option<(crate::archive::PageSortKey, bool)>,
 }
 
-/// P2: listings stay backend-held; only the total crosses IPC on open.
-/// A 10M listing no longer materializes in the renderer (that peaked at
-/// ~5GB and killed WebContent) — pages arrive via [`get_page`].
+/// Listings stay backend-held; only the total crosses IPC on open.
+/// A 10M listing never materializes in the renderer — tree folders arrive
+/// via [`get_children`] in bounded chunks.
 #[derive(serde::Serialize)]
 struct ListingOpened {
     total: usize,
@@ -60,8 +57,8 @@ struct ListProgress {
 /// [`cancel_list_archive`]. No sidecar anywhere: the engine enumerates
 /// in-process on unix targets, and reports explicitly elsewhere.
 ///
-/// P2: returns only the entry total — rows arrive page by page through
-/// [`get_page`], so the renderer never holds the full listing.
+/// P2: returns only the entry total — rows arrive per folder through
+/// [`get_children`], so the renderer never holds the full listing.
 ///
 /// NOTE: like [`test_archive`], the frontend sends `onProgress` (Tauri
 /// camelCases command args on IPC by default).
@@ -99,7 +96,6 @@ async fn list_archive(
                 path: path.clone(),
                 header: data.header,
                 facts: data.facts,
-                sort: None,
             });
             Ok(ListingOpened { total })
         }
@@ -107,52 +103,48 @@ async fn list_archive(
     }
 }
 
-/// Serves one page of the stored listing, sorting server-side on demand.
-/// `path` must match the open archive (a newer open replaces the store, so
-/// a mismatched path means this request is stale). `page_size` is capped at
-/// [`archive::MAX_PAGE_SIZE`]; `sort_dir` needs no `sort_key` to be absent —
-/// a lone direction is ignored. Sorting 10M rows takes seconds in release;
-/// the frontend disables paging controls while a page is in flight.
+/// Serves one children chunk of the stored listing for the tree view,
+/// sorted server-side on demand. `path` must match the open archive (a
+/// newer open replaces the store, so a mismatched path means this request
+/// is stale). `parent` is the in-archive folder path (`""` = root);
+/// `offset`/`limit` page through that folder's immediate children only, so
+/// a 1M-child folder arrives in bounded `MAX_CHILD_CHUNK` pieces behind
+/// "Show more" rows. `limit` is capped at
+/// [`archive::MAX_CHILD_CHUNK`]. Sorting 10M root indices takes seconds in
+/// release; the frontend shows a loading row while a chunk is in flight.
 #[tauri::command]
-async fn get_page(
+async fn get_children(
     state: tauri::State<'_, ListingState>,
     path: String,
-    page: usize,
-    page_size: usize,
+    parent: String,
+    offset: usize,
+    limit: usize,
     sort_key: Option<String>,
     sort_dir: Option<String>,
-) -> Result<archive::Page, String> {
-    if page_size == 0 || page_size > archive::MAX_PAGE_SIZE {
-        return Err(format!("page_size must be 1..={}", archive::MAX_PAGE_SIZE));
+) -> Result<archive::ChildrenPage, String> {
+    if limit == 0 || limit > archive::MAX_CHILD_CHUNK {
+        return Err(format!("limit must be 1..={}", archive::MAX_CHILD_CHUNK));
     }
     let key = match sort_key.as_deref() {
-        None => None,
+        None => archive::PageSortKey::Path,
         Some(k) => {
-            Some(archive::PageSortKey::parse(k).ok_or_else(|| format!("unknown sort key: {k}"))?)
+            archive::PageSortKey::parse(k).ok_or_else(|| format!("unknown sort key: {k}"))?
         }
     };
     let desc = sort_dir.as_deref() == Some("desc");
-    let mut store = state.current.lock().expect("listing state");
-    let stored = store.as_mut().ok_or("no open archive")?;
+    let store = state.current.lock().expect("listing state");
+    let stored = store.as_ref().ok_or("no open archive")?;
     if stored.path != path {
-        return Err("listing changed; page request is stale".to_string());
+        return Err("listing changed; children request is stale".to_string());
     }
-    let want = key.map(|k| (k, desc));
-    if want != stored.sort {
-        if let Some((k, d)) = want {
-            archive::sort_facts(&mut stored.facts, k, d);
-        }
-        // Clearing the sort restores enumerate order only on a fresh open;
-        // within one listing, going back to "unsorted" keeps current order
-        // (documented: the table never un-sorts mid-listing).
-        stored.sort = want;
-    }
-    let total = stored.facts.len();
-    let rows = archive::page_of(&stored.facts, page, page_size)
-        .iter()
-        .map(archive::entry_from_facts)
-        .collect();
-    Ok(archive::Page { rows, total })
+    Ok(archive::children_of(
+        &stored.facts,
+        &parent,
+        offset,
+        limit,
+        key,
+        desc,
+    ))
 }
 #[tauri::command]
 async fn info_archive(
@@ -425,7 +417,7 @@ pub fn run() {
             greet,
             drag_window,
             list_archive,
-            get_page,
+            get_children,
             info_archive,
             cancel_list_archive,
             extract_archive,
