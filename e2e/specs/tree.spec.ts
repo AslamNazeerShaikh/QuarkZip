@@ -24,12 +24,18 @@ async function openNested(app: Parameters<typeof openViaButton>[0]) {
 
 test("folders expand to children and collapse drops them", async ({ app }) => {
   await openNested(app);
-  // Basenames at root; children hidden until expanded.
+  // Basenames at root; children hidden until expanded. `#` shows the
+  // enumerate-order serial: stable identity, not display rank.
   await expect(app.getByText("docs", { exact: true })).toBeVisible();
+  await expect(app.locator("#qz-tree-row-0-index")).toContainText("1");
   await expect(app.getByText("a.txt")).toHaveCount(0);
   await app.getByRole("button", { name: "Expand folder" }).click();
   await expect(app.getByText("a.txt")).toBeVisible();
   await expect(app.getByText("b.txt")).toBeVisible();
+  // Children keep their listing-time serials (a=2, b=3); the folder shows
+  // its item count beside the name.
+  await expect(app.locator("#qz-tree-row-1-index")).toContainText("2");
+  await expect(app.getByText("2 items")).toBeVisible();
   // Box-drawing gutter: the nested rows carry elbows under the parent.
   const childRow = app.locator('[id$="-path"]', { hasText: "a.txt" });
   await expect(childRow).toContainText("├──");

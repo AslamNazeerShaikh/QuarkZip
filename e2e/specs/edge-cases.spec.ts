@@ -54,9 +54,7 @@ test("very long names truncate with ellipsis instead of overflowing", async ({
   expect(box?.width).toBeLessThanOrEqual((row?.width ?? 0) + 1);
 });
 
-test("large folders chunk behind Show-more and stay virtualized", async ({
-  app,
-}) => {
+test("large folders page chunks and stay virtualized", async ({ app }) => {
   await addArchive(app, "/tmp/huge.zip", { count: 10500 });
   await openViaButton(app, "/tmp/huge.zip");
   await expect(app.getByText("file-1.txt")).toBeVisible();
@@ -64,26 +62,29 @@ test("large folders chunk behind Show-more and stay virtualized", async ({
   const mounted = await app.locator('div[style*="translateY"]').count();
   expect(mounted).toBeLessThan(200);
 
-  // The 500-entry tail waits behind one Show-more row (bounded RAM).
-  // Virtualized, so scroll to the bottom to reach it.
-  const scroller = app.locator("#qz-tree-scroll");
-  await scroller.evaluate((el) => {
-    el.scrollTop = el.scrollHeight;
-  });
-  const more = app.getByRole("button", { name: /Show .* more/ });
-  await expect(more).toContainText("500 remaining");
-  await more.click();
-  await scroller.evaluate((el) => {
-    el.scrollTop = el.scrollHeight;
-  });
+  // The 500-entry tail waits behind the chunk pager (bounded RAM): only
+  // the current chunk mounts, so memory stays flat however far you page.
+  // Reach the folder end with the keyboard (also pins focus scrolling).
+  await app.getByText("file-1.txt").click();
+  await app.keyboard.press("End");
+  const pager = app.getByRole("button", { name: "Next chunk" });
+  await expect(app.getByText("1–10,000 of 10,500")).toBeVisible();
+  await pager.click();
+  await expect(app.getByText("10,001–10,500 of 10,500")).toBeVisible();
   await expect(app.getByText("file-10500.txt")).toBeVisible();
+  await expect(app.getByText("file-1.txt")).toHaveCount(0);
   // Still virtualized: the full 10,500 rows never mount at once.
   expect(await app.locator('div[style*="translateY"]').count()).toBeLessThan(
     200,
   );
-  await expect(app.getByRole("button", { name: /Show .* more/ })).toHaveCount(
-    0,
-  );
+  // Paging back restores the head chunk: the tail readout detaching
+  // proves the turn, then Home returns to the head and End to its pager.
+  await app.getByRole("button", { name: "Previous chunk" }).click();
+  await expect(app.getByText("10,001–10,500 of 10,500")).toHaveCount(0);
+  await app.keyboard.press("Home");
+  await expect(app.getByText("file-1.txt")).toBeVisible();
+  await app.keyboard.press("End");
+  await expect(app.getByText("1–10,000 of 10,500")).toBeVisible();
 });
 
 test("archive path with spaces and quotes titles correctly", async ({

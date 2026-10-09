@@ -14,17 +14,37 @@ interface Row {
   size: number | null;
   modified: string | null;
   is_folder: boolean;
+  index: number;
 }
 
 /// In-memory archive: root has a folder + files; docs/ has two files.
+/// Indices mirror enumerate order (not display order).
 const FS: Record<string, Row[]> = {
   "": [
-    { path: "docs", size: null, modified: null, is_folder: true },
-    { path: "top.txt", size: 3, modified: null, is_folder: false },
+    { path: "docs", size: null, modified: null, is_folder: true, index: 0 },
+    {
+      path: "top.txt",
+      size: 3,
+      modified: null,
+      is_folder: false,
+      index: 3,
+    },
   ],
   docs: [
-    { path: "docs/a.txt", size: 1, modified: null, is_folder: false },
-    { path: "docs/b.txt", size: 2, modified: null, is_folder: false },
+    {
+      path: "docs/a.txt",
+      size: 1,
+      modified: null,
+      is_folder: false,
+      index: 1,
+    },
+    {
+      path: "docs/b.txt",
+      size: 2,
+      modified: null,
+      is_folder: false,
+      index: 2,
+    },
   ],
 };
 
@@ -34,7 +54,9 @@ function setup(selected = new Set<string>()) {
     (cmd: string, args: Record<string, unknown>) => {
       if (cmd !== "get_children") return Promise.reject(`unexpected ${cmd}`);
       const rows = FS[args.parent as string] ?? [];
-      return Promise.resolve({ rows, total: rows.length });
+      const child_counts: Record<string, number> = {};
+      if (args.parent === "") child_counts["docs"] = 2;
+      return Promise.resolve({ rows, total: rows.length, child_counts });
     },
   );
   render(
@@ -145,35 +167,67 @@ describe("ArchiveTree", () => {
     ).toHaveAttribute("aria-checked", "mixed");
   });
 
-  it("should_show_more_when_a_chunk_is_partial", async () => {
+  it("should_page_chunks_in_place_without_accumulating", async () => {
     const user = userEvent.setup();
-    invokeMock.mockImplementation((cmd: string) => {
-      if (cmd !== "get_children") return Promise.reject(cmd);
-      return Promise.resolve({
-        rows: [{ path: "f1.txt", size: 1, modified: null, is_folder: false }],
-        total: 15000,
-      });
-    });
-    const onSelectionChange = vi.fn();
+    invokeMock.mockImplementation(
+      (cmd: string, args: Record<string, unknown>) => {
+        if (cmd !== "get_children") return Promise.reject(cmd);
+        // Two chunks: turning the page replaces rows, never appends.
+        const first = (args.offset as number) === 0;
+        return Promise.resolve({
+          rows: first
+            ? [
+                {
+                  path: "f1.txt",
+                  size: 1,
+                  modified: null,
+                  is_folder: false,
+                  index: 0,
+                },
+              ]
+            : [
+                {
+                  path: "f2.txt",
+                  size: 2,
+                  modified: null,
+                  is_folder: false,
+                  index: 1,
+                },
+              ],
+          total: 15000,
+          child_counts: {},
+        });
+      },
+    );
     render(
       <ArchiveTree
         archive="/tmp/big.zip"
         totalEntries={15000}
         selected={new Set()}
-        onSelectionChange={onSelectionChange}
+        onSelectionChange={() => {}}
       />,
     );
-    const more = await screen.findByRole("button", {
-      name: /Show .* more/,
-    });
-    expect(more).toHaveTextContent("14,999 remaining");
-    await user.click(more);
+    // Pager reads 1–10,000 of 15,000; Prev starts disabled.
+    const pager = await screen.findByText(/of 15,000/);
+    expect(pager).toHaveTextContent("1–10,000 of 15,000");
+    expect(
+      screen.getByRole("button", { name: "Previous chunk" }),
+    ).toBeDisabled();
+    await user.click(screen.getByRole("button", { name: "Next chunk" }));
     await waitFor(() =>
       expect(invokeMock).toHaveBeenCalledWith(
         "get_children",
-        expect.objectContaining({ parent: "", offset: 1 }),
+        expect.objectContaining({ parent: "", offset: 10000 }),
       ),
     );
+    // Replaced, not appended: the old chunk's row is gone.
+    await waitFor(() =>
+      expect(screen.queryByText("f1.txt")).not.toBeInTheDocument(),
+    );
+    expect(screen.getByText("f2.txt")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Previous chunk" }),
+    ).toBeEnabled();
   });
 
   it("should_keep_a_static_header_with_no_sort_buttons", async () => {
@@ -201,6 +255,7 @@ describe("ArchiveTree", () => {
             size: 1,
             modified: null,
             is_folder: false,
+            index: 0,
           },
         ],
         total: 1,
@@ -229,18 +284,29 @@ describe("ArchiveTree", () => {
     await screen.findByText("docs");
     const scroller = screen.getByRole("tree");
     // ArrowDown from nothing lands on the first row and focuses it.
+    // (waitFor: parallel workers can defer React's effect flush.)
     scroller.focus();
     await user.keyboard("{ArrowDown}");
-    expect(document.activeElement?.id).toBe("qz-tree-row-0");
+    await waitFor(() =>
+      expect(document.activeElement?.id).toBe("qz-tree-row-0"),
+    );
     await user.keyboard("{ArrowDown}");
-    expect(document.activeElement?.id).toBe("qz-tree-row-1");
+    await waitFor(() =>
+      expect(document.activeElement?.id).toBe("qz-tree-row-1"),
+    );
     // ArrowUp walks back; Home/End jump.
     await user.keyboard("{ArrowUp}");
-    expect(document.activeElement?.id).toBe("qz-tree-row-0");
+    await waitFor(() =>
+      expect(document.activeElement?.id).toBe("qz-tree-row-0"),
+    );
     await user.keyboard("{End}");
-    expect(document.activeElement?.id).toBe("qz-tree-row-1");
+    await waitFor(() =>
+      expect(document.activeElement?.id).toBe("qz-tree-row-1"),
+    );
     await user.keyboard("{Home}");
-    expect(document.activeElement?.id).toBe("qz-tree-row-0");
+    await waitFor(() =>
+      expect(document.activeElement?.id).toBe("qz-tree-row-0"),
+    );
     // Right expands the folder, Left collapses it again.
     await user.keyboard("{ArrowRight}");
     expect(await screen.findByText("a.txt")).toBeInTheDocument();
@@ -257,7 +323,9 @@ describe("ArchiveTree", () => {
     await screen.findByText("docs");
     screen.getByRole("tree").focus();
     await user.keyboard("t");
-    expect(document.activeElement?.id).toBe("qz-tree-row-1");
+    await waitFor(() =>
+      expect(document.activeElement?.id).toBe("qz-tree-row-1"),
+    );
   });
 
   it("should_render_skeleton_rows_while_a_folder_loads", async () => {

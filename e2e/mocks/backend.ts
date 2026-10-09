@@ -225,9 +225,26 @@ export async function handleInvoke(
               });
         return sortDir === "desc" ? -ord : ord;
       });
+      const order = new Map(archive.entries.map((e, i) => [e, i]));
+      const indexed = kids.map((e) => ({ ...e, index: order.get(e) ?? 0 }));
+      const child_counts: Record<string, number> = {};
+      for (const row of indexed) {
+        if (!row.is_folder) continue;
+        const stem = row.path.replace(/[/\\]+$/, "");
+        let n = 0;
+        for (const e of archive.entries) {
+          if (e.path === row.path) continue;
+          const rest = e.path.startsWith(`${stem}/`)
+            ? e.path.slice(stem.length + 1).replace(/[/\\]+$/, "")
+            : null;
+          if (rest !== null && rest.length > 0 && !/[/\\]/.test(rest)) n++;
+        }
+        child_counts[row.path] = n;
+      }
       return {
-        rows: kids.slice(offset, offset + limit),
+        rows: indexed.slice(offset, offset + limit),
         total: kids.length,
+        child_counts,
       };
     }
     case "info_archive": {

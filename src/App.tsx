@@ -43,6 +43,9 @@ export interface ArchiveEntry {
   size: number | null;
   modified: string | null;
   is_folder: boolean;
+  /// Enumerate-order serial (position at listing time): stable identity
+  /// for the index column. Display order differs — the number is identity.
+  index: number;
 }
 
 const ARCHIVE_FILTERS = [

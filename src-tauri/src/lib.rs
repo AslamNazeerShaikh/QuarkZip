@@ -29,6 +29,10 @@ struct StoredListing {
     path: String,
     header: std::collections::BTreeMap<String, String>,
     facts: Vec<crate::archive::EntryFacts>,
+    /// Memoized immediate-child counts per trimmed folder path: filled on
+    /// demand by `get_children` (one linear scan per newly seen folder set),
+    /// so reopened folders never rescan.
+    child_counts: std::collections::HashMap<String, usize>,
 }
 
 /// Listings stay backend-held; only the total crosses IPC on open.
@@ -96,6 +100,7 @@ async fn list_archive(
                 path: path.clone(),
                 header: data.header,
                 facts: data.facts,
+                child_counts: std::collections::HashMap::new(),
             });
             Ok(ListingOpened { total })
         }
@@ -132,19 +137,40 @@ async fn get_children(
         }
     };
     let desc = sort_dir.as_deref() == Some("desc");
-    let store = state.current.lock().expect("listing state");
-    let stored = store.as_ref().ok_or("no open archive")?;
+    let mut store = state.current.lock().expect("listing state");
+    let stored = store.as_mut().ok_or("no open archive")?;
     if stored.path != path {
         return Err("listing changed; children request is stale".to_string());
     }
-    Ok(archive::children_of(
-        &stored.facts,
-        &parent,
-        offset,
-        limit,
-        key,
-        desc,
-    ))
+    let page = archive::children_of(&stored.facts, &parent, offset, limit, key, desc);
+    // Counts for the folder rows in this chunk: memoized, so each folder
+    // set pays one linear scan ever.
+    let want: std::collections::HashSet<String> = page
+        .rows
+        .iter()
+        .filter(|r| r.is_folder)
+        .map(|r| r.path.trim_end_matches(['/', '\\']).to_string())
+        .filter(|p| !stored.child_counts.contains_key(p))
+        .collect();
+    if !want.is_empty() {
+        let fresh = archive::immediate_child_counts(&stored.facts, &want);
+        stored.child_counts.extend(fresh);
+    }
+    let child_counts: std::collections::HashMap<String, usize> = page
+        .rows
+        .iter()
+        .filter(|r| r.is_folder)
+        .map(|r| {
+            let p = r.path.trim_end_matches(['/', '\\']).to_string();
+            let n = stored.child_counts.get(&p).copied().unwrap_or(0);
+            (r.path.clone(), n)
+        })
+        .collect();
+    Ok(archive::ChildrenPage {
+        rows: page.rows,
+        total: page.total,
+        child_counts,
+    })
 }
 #[tauri::command]
 async fn info_archive(

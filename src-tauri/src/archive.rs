@@ -16,6 +16,11 @@ pub struct ArchiveEntry {
     /// True for directories, read from the `Attributes` field (`D` flag).
     /// Never infer folders from size: empty files also report `Size = 0`.
     pub is_folder: bool,
+    /// Enumerate-order serial (position in the stored facts): stable entry
+    /// identity for the tree's index column, assigned once at open. Display
+    /// order (folders-first natural) differs — the number is identity, not
+    /// rank.
+    pub index: usize,
 }
 
 /// Summary of an archive's container + content, derived from one
@@ -209,12 +214,14 @@ impl PageSortKey {
 }
 
 /// Display row for one facts entry (mirrors the FFI enumerate mapping).
-pub fn entry_from_facts(f: &EntryFacts) -> ArchiveEntry {
+/// `index` is the entry's facts position (enumerate-order serial).
+pub fn entry_from_facts(f: &EntryFacts, index: usize) -> ArchiveEntry {
     ArchiveEntry {
         path: f.path.clone(),
         size: f.size,
         modified: f.modified.clone(),
         is_folder: f.is_folder,
+        index,
     }
 }
 
@@ -305,12 +312,50 @@ fn type_key(f: &EntryFacts) -> (u8, String, &str) {
 pub const MAX_CHILD_CHUNK: usize = 10_000;
 
 /// One served children chunk: immediate-child rows plus the folder total
-/// (unchanged by chunking, so the UI can label "Show N more" rows without
-/// a second call).
+/// (unchanged by chunking, so the UI can label pager rows without a second
+/// call) plus immediate-child counts for the folder rows in this chunk
+/// (keyed by trimmed folder path — every visible subfolder shows its item
+/// count without further round-trips).
 #[derive(Debug, serde::Serialize, PartialEq)]
 pub struct ChildrenPage {
     pub rows: Vec<ArchiveEntry>,
     pub total: usize,
+    pub child_counts: std::collections::HashMap<String, usize>,
+}
+
+/// Immediate-child counts for `folders` in one linear pass: each fact
+/// contributes to its own parent only. Requested paths are trimmed, so
+/// `pics/` and `pics` are one folder and read under the trimmed key.
+pub fn immediate_child_counts(
+    facts: &[EntryFacts],
+    folders: &std::collections::HashSet<String>,
+) -> std::collections::HashMap<String, usize> {
+    fn trim(p: &str) -> &str {
+        p.trim_end_matches(['/', '\\'])
+    }
+    let want: std::collections::HashSet<&str> = folders.iter().map(|f| trim(f)).collect();
+    let mut out: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+    if want.is_empty() {
+        return out;
+    }
+    for f in facts {
+        let p = trim(&f.path);
+        let parent = match p.rfind(['/', '\\']) {
+            Some(i) => &p[..i],
+            None => "",
+        };
+        // The root ("") is never a requested folder; the folder itself
+        // (empty remainder) is never its own child.
+        if parent.is_empty() || !want.contains(parent) {
+            continue;
+        }
+        *out.entry(parent.to_string()).or_insert(0) += 1;
+    }
+    // Requested folders with no children read as zero, not missing.
+    for folder in want {
+        out.entry(folder.to_string()).or_insert(0);
+    }
+    out
 }
 
 /// Immediate children of `parent` (`""` = archive root), sorted
@@ -382,9 +427,15 @@ pub fn children_of(
         .into_iter()
         .skip(offset)
         .take(limit)
-        .map(|i| entry_from_facts(&facts[i]))
+        .map(|i| entry_from_facts(&facts[i], i))
         .collect();
-    ChildrenPage { rows, total }
+    // Counts ride the command layer (memoized per listing in lib.rs), so
+    // pure index math here stays allocation-free.
+    ChildrenPage {
+        rows,
+        total,
+        child_counts: std::collections::HashMap::new(),
+    }
 }
 
 /// Archive extensions stripped (case-insensitive, innermost first) when
@@ -662,12 +713,51 @@ mod tests {
     }
 
     #[test]
+    fn should_number_rows_by_enumerate_order() {
+        // Index is stable identity from listing time, not display rank:
+        // `docs/report.pdf` keeps its facts position however it sorts.
+        let facts = nested_facts();
+        let root = children_of(&facts, "", 0, 20, PageSortKey::Path, false);
+        let by_path: std::collections::HashMap<&str, usize> = root
+            .rows
+            .iter()
+            .map(|r| (r.path.as_str(), r.index))
+            .collect();
+        assert_eq!(by_path["root.txt"], 0);
+        assert_eq!(by_path["docs"], 1);
+        assert_eq!(by_path["pics/"], 6);
+        // Display order is folders-first natural, not index order.
+        assert_eq!(child_paths(&root), [".cache", "docs", "pics/", "root.txt"]);
+    }
+
+    #[test]
+    fn should_count_immediate_children_per_folder() {
+        use std::collections::HashSet;
+        let facts = nested_facts();
+        let want: HashSet<String> = ["docs".to_string(), "pics".to_string(), ".cache".to_string()]
+            .into_iter()
+            .collect();
+        let counts = immediate_child_counts(&facts, &want);
+        assert_eq!(counts["docs"], 2);
+        assert_eq!(counts["pics"], 1);
+        assert_eq!(counts[".cache"], 1);
+        // Trailing-slash spellings merge under the trimmed key.
+        let want2: HashSet<String> = ["pics/".to_string()].into_iter().collect();
+        let counts2 = immediate_child_counts(&facts, &want2);
+        assert_eq!(counts2["pics"], 1);
+    }
+
+    #[test]
     fn should_map_facts_to_display_entries() {
-        let entry = entry_from_facts(&fact("a.txt", Some(6), Some("2026-01-01 00:00:00"), false));
+        let entry = entry_from_facts(
+            &fact("a.txt", Some(6), Some("2026-01-01 00:00:00"), false),
+            41,
+        );
         assert_eq!(entry.path, "a.txt");
         assert_eq!(entry.size, Some(6));
         assert_eq!(entry.modified.as_deref(), Some("2026-01-01 00:00:00"));
         assert!(!entry.is_folder);
+        assert_eq!(entry.index, 41);
     }
 
     #[test]

@@ -51,19 +51,22 @@ vi.mock("@tauri-apps/api/core", () => ({
     if (cmd === "drag_window") return Promise.resolve();
     if (cmd === "cancel_list_archive") return Promise.resolve(null);
     // The backend holds the listing; list opens return the total,
-    // tree chunks arrive through get_children (like the server).
+    // tree chunks arrive through get_children (like the server). Every
+    // entry carries its enumerate-order index for the `#` column.
     const entriesFor = (path: string) => {
+      const withIndex = <T extends { path: string }>(rows: T[]) =>
+        rows.map((e, index) => ({ ...e, index }));
       if (path === "/tmp/secret.zip") {
-        return [
+        return withIndex([
           { path: "secret.txt", size: 5, modified: null, is_folder: false },
-        ];
+        ]);
       }
       if (path === "/tmp/locked.zip") {
         // Content-encrypted zip: names list without a password, but
         // extraction needs one — the reported Extract-before-password case.
-        return [
+        return withIndex([
           { path: "locked.txt", size: 5, modified: null, is_folder: false },
-        ];
+        ]);
       }
       if (path === "/tmp/stress.zip") {
         // Stress-shaped listing: 10k entries with hostile names (200-char
@@ -107,11 +110,11 @@ vi.mock("@tauri-apps/api/core", () => ({
             is_folder: false,
           });
         }
-        return entries;
+        return entries.map((e, index) => ({ ...e, index }));
       }
-      return [
+      return withIndex([
         { path: "dropped.txt", size: 10, modified: null, is_folder: false },
-      ];
+      ]);
     };
     if (cmd === "list_archive") {
       if (listCtl.deferList) {
@@ -151,8 +154,23 @@ vi.mock("@tauri-apps/api/core", () => ({
           Number(b.is_folder) - Number(a.is_folder) ||
           a.path.localeCompare(b.path, undefined, { numeric: true }),
       );
-      const rows = kids.slice(offset, offset + limit);
-      return Promise.resolve({ rows, total: kids.length });
+      const order = new Map(all.map((e, i) => [e, i] as const));
+      const rows = kids
+        .slice(offset, offset + limit)
+        .map((e) => ({ ...e, index: order.get(e) ?? 0 }));
+      const child_counts: Record<string, number> = {};
+      for (const row of rows) {
+        if (!row.is_folder) continue;
+        const stem = (row.path as string).replace(/[/\\]+$/, "");
+        child_counts[row.path as string] = all.filter((e) => {
+          if (e.path === row.path) return false;
+          const rest = e.path.startsWith(`${stem}/`)
+            ? e.path.slice(stem.length + 1).replace(/[/\\]+$/, "")
+            : null;
+          return rest !== null && rest.length > 0 && !/[/\\]/.test(rest);
+        }).length;
+      }
+      return Promise.resolve({ rows, total: kids.length, child_counts });
     }
     if (cmd === "info_archive") {
       const { path } = (args ?? {}) as { path: string };
@@ -364,11 +382,11 @@ describe("drag and drop", () => {
           "a-very-long-filename-that-keeps-going-and-going-and-going-and-going-and-going-and-going-and-going.txt",
         ),
       ).toBeInTheDocument();
-      // 10,020 root children exceed one 10k chunk: the tail waits behind a
-      // Show-more row (bounded RAM) instead of materializing.
-      const more = await screen.findByRole("button", { name: /Show .* more/ });
-      expect(more).toHaveTextContent("21 remaining");
-      await user.click(more);
+      // 10,021 root children exceed one 10k chunk: the tail waits behind a
+      // chunk pager row (bounded RAM) instead of materializing.
+      const pager = await screen.findByText(/of 10,021/);
+      expect(pager).toHaveTextContent("1–10,000 of 10,021");
+      await user.click(screen.getByRole("button", { name: "Next chunk" }));
       expect(
         await screen.findByText(
           "name with spaces and = equals and café ünïcode Dateiächstones.txt",

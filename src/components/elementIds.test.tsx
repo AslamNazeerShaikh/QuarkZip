@@ -11,10 +11,17 @@ import ThemeSwitch from "./ThemeSwitch";
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: vi.fn().mockResolvedValue({
     rows: [
-      { path: "docs", size: null, modified: null, is_folder: true },
-      { path: "top.txt", size: 3, modified: null, is_folder: false },
+      { path: "docs", size: null, modified: null, is_folder: true, index: 0 },
+      {
+        path: "top.txt",
+        size: 3,
+        modified: null,
+        is_folder: false,
+        index: 1,
+      },
     ],
     total: 2,
+    child_counts: { docs: 0 },
   }),
 }));
 

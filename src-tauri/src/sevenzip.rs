@@ -226,6 +226,7 @@ pub fn enumerate_detail(
             },
             modified: modified.clone(),
             is_folder,
+            index: entries.len(),
         });
         facts.push(crate::archive::EntryFacts {
             path,
