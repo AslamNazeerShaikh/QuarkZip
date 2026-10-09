@@ -37,6 +37,30 @@ test("folders expand to children and collapse drops them", async ({ app }) => {
   await expect(app.getByText("a.txt")).toHaveCount(0);
 });
 
+test("keyboard walks, expands, and checks rows", async ({ app }) => {
+  await openNested(app);
+  await app.getByText("docs", { exact: true }).click();
+  await app.keyboard.press("End");
+  let focused = await app.evaluate(() => document.activeElement?.id);
+  expect(focused).toMatch(/qz-tree-row-1/);
+  await app.keyboard.press("Home");
+  focused = await app.evaluate(() => document.activeElement?.id);
+  expect(focused).toMatch(/qz-tree-row-0/);
+  // Right expands the focused folder; Space checks it.
+  await app.keyboard.press("ArrowRight");
+  await expect(app.getByText("a.txt")).toBeVisible();
+  await app.keyboard.press(" ");
+  await expect(
+    app.getByRole("checkbox", { name: "Select docs", exact: true }),
+  ).toBeChecked();
+  // Typeahead jumps by name prefix.
+  await app.keyboard.press("ArrowRight");
+  await app.keyboard.press("t");
+  focused = await app.evaluate(() => document.activeElement?.id);
+  const text = await app.locator(`#${focused}`).textContent();
+  expect(text).toContain("top.txt");
+});
+
 test("checking a folder sends the folder path only", async ({ app }) => {
   await openNested(app);
   await app.getByRole("checkbox", { name: "Select docs", exact: true }).click();

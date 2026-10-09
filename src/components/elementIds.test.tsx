@@ -68,8 +68,8 @@ describe("elementIds", () => {
       "qz-tree-card",
       "qz-tree-header",
       "qz-tree-select-all",
-      "qz-tree-sort-path",
-      "qz-tree-sort-type",
+      "qz-tree-col-path",
+      "qz-tree-col-type",
       "qz-tree-scroll",
     ]) {
       expect(container.querySelector(`#${CSS.escape(id)}`)).not.toBeNull();

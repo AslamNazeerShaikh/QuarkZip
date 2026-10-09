@@ -176,18 +176,19 @@ describe("ArchiveTree", () => {
     );
   });
 
-  it("should_refetch_in_the_new_order_when_sorting", async () => {
-    const user = userEvent.setup();
+  it("should_keep_a_static_header_with_no_sort_buttons", async () => {
     setup();
     await screen.findByText("docs");
-    invokeMock.mockClear();
-    await user.click(screen.getByRole("button", { name: /Name/ }));
-    await waitFor(() =>
-      expect(invokeMock).toHaveBeenCalledWith(
-        "get_children",
-        expect.objectContaining({ sortKey: "path", sortDir: "desc" }),
-      ),
-    );
+    // One fixed order (folders-first, natural): headers are labels, not
+    // buttons — sorting re-sorted millions of rows and froze the UI.
+    expect(screen.getByText("Name").tagName).not.toBe("BUTTON");
+    expect(
+      screen.queryByRole("button", { name: /Name/ }),
+    ).not.toBeInTheDocument();
+    // Folders lead even without any toggle.
+    const items = screen.getAllByRole("treeitem");
+    expect(items[0]).toHaveTextContent("docs");
+    expect(items[1]).toHaveTextContent("top.txt");
   });
 
   it("should_truncate_type_labels_with_a_full_tooltip", async () => {
@@ -220,6 +221,78 @@ describe("ArchiveTree", () => {
     const label = type.querySelector("span");
     expect(label).toHaveClass("truncate");
     expect(label?.textContent).toBe("File");
+  });
+
+  it("should_walk_with_the_keyboard", async () => {
+    const user = userEvent.setup();
+    const { onSelectionChange } = setup();
+    await screen.findByText("docs");
+    const scroller = screen.getByRole("tree");
+    // ArrowDown from nothing lands on the first row and focuses it.
+    scroller.focus();
+    await user.keyboard("{ArrowDown}");
+    expect(document.activeElement?.id).toBe("qz-tree-row-0");
+    await user.keyboard("{ArrowDown}");
+    expect(document.activeElement?.id).toBe("qz-tree-row-1");
+    // ArrowUp walks back; Home/End jump.
+    await user.keyboard("{ArrowUp}");
+    expect(document.activeElement?.id).toBe("qz-tree-row-0");
+    await user.keyboard("{End}");
+    expect(document.activeElement?.id).toBe("qz-tree-row-1");
+    await user.keyboard("{Home}");
+    expect(document.activeElement?.id).toBe("qz-tree-row-0");
+    // Right expands the folder, Left collapses it again.
+    await user.keyboard("{ArrowRight}");
+    expect(await screen.findByText("a.txt")).toBeInTheDocument();
+    await user.keyboard("{ArrowLeft}");
+    expect(screen.queryByText("a.txt")).not.toBeInTheDocument();
+    // Space toggles the focused checkbox.
+    await user.keyboard(" ");
+    expect(onSelectionChange).toHaveBeenLastCalledWith(new Set(["docs"]));
+  });
+
+  it("should_typeahead_to_matching_names", async () => {
+    const user = userEvent.setup();
+    setup();
+    await screen.findByText("docs");
+    screen.getByRole("tree").focus();
+    await user.keyboard("t");
+    expect(document.activeElement?.id).toBe("qz-tree-row-1");
+  });
+
+  it("should_render_skeleton_rows_while_a_folder_loads", async () => {
+    let release!: (v: unknown) => void;
+    invokeMock.mockImplementation((cmd: string) => {
+      if (cmd !== "get_children") return Promise.reject(cmd);
+      return new Promise((resolve) => {
+        release = resolve as (v: unknown) => void;
+      });
+    });
+    render(
+      <ArchiveTree
+        archive="/tmp/t.zip"
+        totalEntries={2}
+        selected={new Set()}
+        onSelectionChange={() => {}}
+      />,
+    );
+    // Bounded shimmer placeholders (never real data) while root loads.
+    await waitFor(() =>
+      expect(document.querySelectorAll(".qz-skel").length).toBeGreaterThan(0),
+    );
+    expect(document.querySelectorAll(".qz-skel").length).toBeLessThanOrEqual(
+      18,
+    );
+    release({ rows: [], total: 0 });
+  });
+
+  it("should_show_child_counts_on_expanded_folders", async () => {
+    const user = userEvent.setup();
+    setup();
+    await screen.findByText("docs");
+    await user.click(screen.getByRole("button", { name: "Expand folder" }));
+    await screen.findByText("a.txt");
+    expect(screen.getByText("2 items")).toBeInTheDocument();
   });
 
   it("should_draw_unicode_guides_with_room_around_the_chevron", async () => {

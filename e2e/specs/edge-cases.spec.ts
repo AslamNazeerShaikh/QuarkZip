@@ -151,8 +151,9 @@ test("single-entry archive shows one row and no Show-more", async ({ app }) => {
   await expect(app.getByRole("button", { name: /Show .* more/ })).toHaveCount(
     0,
   );
-  // Sort headers stand above the single row.
-  await expect(app.getByRole("button", { name: /Name/ })).toBeVisible();
+  // Static header labels stand above the single row (no column
+  // sorting — it re-sorted millions of rows and froze the UI).
+  await expect(app.locator("#qz-tree-col-path")).toHaveText("Name");
   await expect(
     app.getByRole("checkbox", { name: "Select file-1.txt" }),
   ).toBeVisible();

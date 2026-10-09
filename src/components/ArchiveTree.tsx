@@ -1,11 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import {
-  ArrowDown,
-  ArrowUp,
-  ArrowUpDown,
-  ChevronRight,
-  PackageOpen,
-} from "lucide-react";
+import { ChevronRight, PackageOpen } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ArchiveEntry } from "../App";
 import { useLanguage } from "../i18n/LanguageContext";
@@ -23,15 +17,17 @@ import {
 } from "../lib/treeSelection";
 import TableCheckbox from "./ui/TableCheckbox";
 
-export type TreeSortKey = "path" | "size" | "type" | "modified";
-export type TreeSortDir = "asc" | "desc";
-
 /// One backend chunk: bounds webview RAM the way pages once did — a folder
 /// with more children grows a "Show more" row per chunk instead of
 /// materializing everything.
 const CHILD_CHUNK = 10_000;
 const ROW_HEIGHT = 36;
 const OVERSCAN = 8;
+/// Skeleton placeholder rows per loading folder (bounded shimmer, never
+/// real data).
+const SKELETON_ROWS = 6;
+/// Typeahead buffer lifetime: keystrokes further apart start a new search.
+const TYPEAHEAD_MS = 500;
 
 interface FolderCache {
   rows: ArchiveEntry[];
@@ -44,23 +40,23 @@ type FlatRow =
   | { kind: "loading"; parent: string; depth: number; guides: boolean[] }
   | { kind: "empty"; parent: string; depth: number; guides: boolean[] };
 
-function SortIcon({ state }: { state: TreeSortDir | null }) {
-  if (state === "asc") return <ArrowUp size={14} aria-hidden />;
-  if (state === "desc") return <ArrowDown size={14} aria-hidden />;
-  return <ArrowUpDown size={14} aria-hidden className="opacity-40" />;
-}
-
 /// Nested file-tree browser: folders expand in place, children load from
-/// the backend in bounded chunks (`get_children`), collapsing drops them
-/// again so a 10M archive never sits in webview RAM. Gutters draw Unicode
-/// box-drawing guides (├── └── │ ─, monospace text that always paints —
-/// instant expand, no animation). Selection is an explicit path set with
-/// folder-prefix collapse (see
-/// `treeSelection`): checking a folder selects the folder path only (the
-/// extract backend expands it to the subtree), unchecking a file inside a
-/// checked folder splits the ancestor into its *loaded* children. The set
-/// survives collapse, chunk appends, and sort changes; a new archive
-/// clears it. Sort toggles re-fetch every loaded folder in the new order.
+/// the backend in bounded chunks (`get_children`, always folders-first
+/// natural order — no column sorting, which re-sorted millions of rows and
+/// froze the UI), collapsing drops them again so a 10M archive never sits
+/// in webview RAM. Gutters draw Unicode box-drawing guides (├── └── │ ─,
+/// monospace text that always paints — instant expand, no animation).
+///
+/// Keyboard (WAI-ARIA tree pattern, roving tabindex): Up/Down move,
+/// Right expands (or steps into an open folder), Left collapses (or steps
+/// to the parent), Home/End jump, Enter toggles folders (loads more on a
+/// Show-more row), Space toggles the checkbox, typing jumps to the next
+/// visible name with that prefix. Selection is an explicit path set with
+/// folder-prefix collapse (see `treeSelection`): checking a folder selects
+/// the folder path only (the extract backend expands it to the subtree),
+/// unchecking a file inside a checked folder splits the ancestor into its
+/// *loaded* children. The set survives collapse, chunk appends, and new
+/// sorts; a new archive clears it.
 export default function ArchiveTree({
   archive,
   totalEntries,
@@ -73,16 +69,29 @@ export default function ArchiveTree({
   onSelectionChange?: (selected: ReadonlySet<string>) => void;
 }) {
   const { t } = useLanguage();
-  const [sortKey, setSortKey] = useState<TreeSortKey>("path");
-  const [sortDir, setSortDir] = useState<TreeSortDir>("asc");
   const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set());
   const [cache, setCache] = useState<Map<string, FolderCache>>(new Map());
   const [loading, setLoading] = useState<ReadonlySet<string>>(new Set());
+  /// Keyboard focus as a flattened-row index (`null` = nothing focused yet;
+  /// Tab lands on the first row). Rows carry roving tabindex.
+  const [focusIndex, setFocusIndex] = useState<number | null>(null);
   // Ref-held so reset/fetch effects never re-fire on re-created callbacks.
   const selectionCb = useRef(onSelectionChange);
   selectionCb.current = onSelectionChange;
   const reqIds = useRef(new Map<string, number>());
-  const sortGen = useRef(0);
+  const typeahead = useRef<{
+    text: string;
+    timer: ReturnType<typeof setTimeout> | null;
+  }>({
+    text: "",
+    timer: null,
+  });
+  useEffect(
+    () => () => {
+      if (typeahead.current.timer) clearTimeout(typeahead.current.timer);
+    },
+    [],
+  );
 
   // A new archive is a new listing: drop expansion, chunks, and selection.
   const listingRef = useRef(archive);
@@ -92,6 +101,7 @@ export default function ArchiveTree({
       setExpanded(new Set());
       setCache(new Map());
       setLoading(new Set());
+      setFocusIndex(null);
       reqIds.current.clear();
       const empty = new Set<string>();
       selectionCb.current?.(empty);
@@ -102,9 +112,6 @@ export default function ArchiveTree({
     if (!archive) return;
     const reqId = (reqIds.current.get(parent) ?? 0) + 1;
     reqIds.current.set(parent, reqId);
-    const gen = sortGen.current;
-    const key = sortKey;
-    const dir = sortDir;
     const path = archive;
     setLoading((prev) => new Set(prev).add(parent));
     void invoke<{ rows: ArchiveEntry[]; total: number }>("get_children", {
@@ -112,15 +119,11 @@ export default function ArchiveTree({
       parent,
       offset,
       limit: CHILD_CHUNK,
-      sortKey: key,
-      sortDir: dir,
+      sortKey: "path",
+      sortDir: "asc",
     })
       .then((res) => {
-        if (
-          reqIds.current.get(parent) !== reqId ||
-          sortGen.current !== gen ||
-          listingRef.current !== path
-        )
+        if (reqIds.current.get(parent) !== reqId || listingRef.current !== path)
           return;
         setCache((prev) => {
           const next = new Map(prev);
@@ -138,11 +141,7 @@ export default function ArchiveTree({
         });
       })
       .catch(() => {
-        if (
-          reqIds.current.get(parent) !== reqId ||
-          sortGen.current !== gen ||
-          listingRef.current !== path
-        )
+        if (reqIds.current.get(parent) !== reqId || listingRef.current !== path)
           return;
         setLoading((prev) => {
           const next = new Set(prev);
@@ -152,15 +151,14 @@ export default function ArchiveTree({
       });
   }
 
-  // Root loads with the listing; a sort change drops every chunk (expansion
-  // and selection survive — rows refetch in the new order on render).
+  // Root loads with the listing.
   useEffect(() => {
     if (!archive) return;
     setCache(new Map());
     setLoading(new Set());
     fetchChunk("", 0, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [archive, sortKey, sortDir]);
+  }, [archive]);
 
   function toggleExpand(path: string) {
     const isOpen = expanded.has(path);
@@ -205,17 +203,6 @@ export default function ArchiveTree({
     }
   }
 
-  function toggleSort(key: TreeSortKey) {
-    if (key === sortKey) {
-      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-    } else {
-      setSortKey(key);
-      setSortDir("asc");
-    }
-    sortGen.current += 1;
-    reqIds.current.clear();
-  }
-
   // Header checkbox covers loaded rows only (the Extract All button owns
   // the whole archive): checked when every loaded row is selected.
   const loadedPaths = useMemo(() => {
@@ -244,11 +231,17 @@ export default function ArchiveTree({
 
   // Flattened visible rows with guide continuation per ancestor level: a
   // level draws its vertical line while its ancestor has a following
-  // sibling (or an unloaded remainder behind a Show-more row).
+  // sibling (or an unloaded remainder behind a Show-more row). Loading
+  // folders show bounded skeleton rows (never real data).
   const flat: FlatRow[] = useMemo(() => {
     const out: FlatRow[] = [];
     const root = cache.get("")?.rows ?? [];
     const rootHasMore = (cache.get("")?.total ?? 0) > root.length;
+    function pushSkeletons(parent: string, depth: number, guides: boolean[]) {
+      for (let s = 0; s < SKELETON_ROWS; s++) {
+        out.push({ kind: "loading", parent, depth, guides });
+      }
+    }
     function walk(
       rows: ArchiveEntry[],
       depth: number,
@@ -271,12 +264,7 @@ export default function ArchiveTree({
           if (kids.length > 0) {
             walk(kids, depth + 1, [...guides, continues], more);
           } else if (loading.has(entry.path)) {
-            out.push({
-              kind: "loading",
-              parent: entry.path,
-              depth: depth + 1,
-              guides: [...guides, continues],
-            });
+            pushSkeletons(entry.path, depth + 1, [...guides, continues]);
           } else if ((cached?.total ?? -1) === 0) {
             out.push({
               kind: "empty",
@@ -300,8 +288,13 @@ export default function ArchiveTree({
     if (root.length > 0 && rootHasMore) {
       out.push({ kind: "more", parent: "", depth: 0, guides: [] });
     }
-    if (root.length === 0 && !loading.has("") && totalEntries > 0) {
-      out.push({ kind: "loading", parent: "", depth: 0, guides: [] });
+    if (root.length === 0) {
+      if (loading.has("")) pushSkeletons("", 0, []);
+      else if (totalEntries > 0) {
+        // Loaded nothing and idle (a failed fetch): one shimmer row holds
+        // the space instead of a blank card.
+        out.push({ kind: "loading", parent: "", depth: 0, guides: [] });
+      }
     }
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -321,7 +314,135 @@ export default function ArchiveTree({
   const totalH = flat.length * ROW_HEIGHT;
   const anyLoading = loading.size > 0;
 
-  const columns: { key: TreeSortKey; headerKey: string; width: string }[] = [
+  // Focus follows keyboard movement: clamp into range, scroll the row into
+  // view, then move DOM focus (preventScroll — we position it ourselves).
+  useEffect(() => {
+    if (focusIndex === null) return;
+    if (flat.length === 0) {
+      setFocusIndex(null);
+      return;
+    }
+    const clamped = Math.min(Math.max(0, focusIndex), flat.length - 1);
+    if (clamped !== focusIndex) {
+      setFocusIndex(clamped);
+      return;
+    }
+    const top = clamped * ROW_HEIGHT;
+    const height = viewportHeight || totalH;
+    if (top < scrollTop) setScrollTop(top);
+    else if (top + ROW_HEIGHT > scrollTop + height)
+      setScrollTop(top + ROW_HEIGHT - height);
+    document
+      .getElementById(`qz-tree-row-${clamped}`)
+      ?.focus({ preventScroll: true });
+  }, [focusIndex, flat.length, viewportHeight, scrollTop, totalH]);
+
+  function focusRow(index: number) {
+    setFocusIndex(Math.min(Math.max(0, index), flat.length - 1));
+  }
+
+  function rowEntryAt(index: number): ArchiveEntry | null {
+    const row = flat[index];
+    return row && row.kind === "node" ? row.entry : null;
+  }
+
+  function parentRowIndex(index: number): number | null {
+    const row = flat[index];
+    if (!row || row.kind !== "node" || row.depth === 0) return null;
+    for (let i = index - 1; i >= 0; i--) {
+      const cand = flat[i];
+      if (cand.kind === "node" && cand.depth === row.depth - 1) return i;
+    }
+    return null;
+  }
+
+  function onTreeKeyDown(e: React.KeyboardEvent) {
+    if (flat.length === 0) return;
+    const cur = focusIndex ?? 0;
+    const row = flat[Math.min(cur, flat.length - 1)];
+    const move = (next: number) => {
+      e.preventDefault();
+      focusRow(next);
+    };
+    switch (e.key) {
+      case "ArrowDown":
+        move(
+          focusIndex === null ? 0 : Math.min(focusIndex + 1, flat.length - 1),
+        );
+        return;
+      case "ArrowUp":
+        move(
+          focusIndex === null ? flat.length - 1 : Math.max(focusIndex - 1, 0),
+        );
+        return;
+      case "Home":
+        move(0);
+        return;
+      case "End":
+        move(flat.length - 1);
+        return;
+      case "ArrowRight": {
+        if (row.kind !== "node" || !row.entry.is_folder) return;
+        e.preventDefault();
+        if (!expanded.has(row.entry.path)) toggleExpand(row.entry.path);
+        else focusRow(Math.min(cur + 1, flat.length - 1));
+        return;
+      }
+      case "ArrowLeft": {
+        if (row.kind !== "node" || !row.entry.is_folder) return;
+        e.preventDefault();
+        if (expanded.has(row.entry.path)) toggleExpand(row.entry.path);
+        else {
+          const parent = parentRowIndex(cur);
+          if (parent !== null) focusRow(parent);
+        }
+        return;
+      }
+      case "Enter": {
+        if (row.kind === "more") {
+          e.preventDefault();
+          const cached = cache.get(row.parent);
+          fetchChunk(row.parent, cached?.rows.length ?? 0, true);
+        } else if (row.kind === "node" && row.entry.is_folder) {
+          e.preventDefault();
+          toggleExpand(row.entry.path);
+        }
+        return;
+      }
+      case " ": {
+        if (row.kind !== "node") return;
+        e.preventDefault();
+        toggleNode(row.entry);
+        return;
+      }
+      default: {
+        // Typeahead: jump to the next visible name with the typed prefix.
+        if (e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey) {
+          const prev = typeahead.current;
+          if (prev.timer) clearTimeout(prev.timer);
+          const text = (prev.text + e.key).toLowerCase();
+          prev.text = text;
+          prev.timer = setTimeout(() => {
+            typeahead.current.text = "";
+          }, TYPEAHEAD_MS);
+          for (let step = 1; step <= flat.length; step++) {
+            const i = (cur + step) % flat.length;
+            const entry = rowEntryAt(i);
+            if (
+              entry &&
+              displayName(entry.path).toLowerCase().startsWith(text)
+            ) {
+              e.preventDefault();
+              focusRow(i);
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  const columns: { key: string; headerKey: string; width: string }[] = [
     { key: "path", headerKey: "table.colName", width: "flex-1" },
     { key: "type", headerKey: "table.colType", width: "w-24" },
     { key: "size", headerKey: "table.colSize", width: "w-32" },
@@ -338,6 +459,8 @@ export default function ArchiveTree({
         id="qz-tree-card"
         className="qz-material-bar flex h-full min-h-0 w-full flex-col overflow-hidden rounded-[13px] border border-[var(--qz-border)] text-[13px]"
       >
+        {/* Static header: one fixed order (folders-first, natural) — column
+            sorting re-sorted millions of rows and froze the UI, so it goes. */}
         <div
           id="qz-tree-header"
           className="qz-material-bar flex shrink-0 items-center"
@@ -357,22 +480,17 @@ export default function ArchiveTree({
             />
           </div>
           {columns.map((column) => (
-            <button
-              id={`qz-tree-sort-${column.key}`}
+            <div
+              id={`qz-tree-col-${column.key}`}
               key={column.key}
-              type="button"
-              onClick={() => toggleSort(column.key)}
-              aria-label={`${t(column.headerKey)} — ${t("table.sortTip")}`}
-              title={t("table.sortTip")}
-              className={`flex h-full items-center gap-1 px-4 text-xs font-semibold tracking-wide text-[var(--qz-faint)] uppercase select-none transition-all duration-150 motion-safe:active:scale-[0.98] ${
+              className={`flex h-full items-center px-4 text-xs font-semibold tracking-wide text-[var(--qz-faint)] uppercase select-none ${
                 column.key === "path"
                   ? "min-w-0 flex-1"
                   : `${column.width} shrink-0 justify-center`
               }`}
             >
               {t(column.headerKey)}
-              <SortIcon state={sortKey === column.key ? sortDir : null} />
-            </button>
+            </div>
           ))}
         </div>
         <div
@@ -380,7 +498,9 @@ export default function ArchiveTree({
           ref={scrollRef}
           role="tree"
           aria-label={t("tree.label")}
+          tabIndex={-1}
           onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)}
+          onKeyDown={onTreeKeyDown}
           className="scroll-slim min-h-0 flex-1 overflow-y-auto"
         >
           {flat.length === 0 && !anyLoading ? (
@@ -452,7 +572,7 @@ export default function ArchiveTree({
                   return (
                     <div
                       id={`qz-tree-row-${index}-loading`}
-                      key={`loading-${row.parent}`}
+                      key={`loading-${row.parent}-${index}`}
                       style={{
                         position: "absolute",
                         top: 0,
@@ -461,10 +581,13 @@ export default function ArchiveTree({
                         height: `${ROW_HEIGHT}px`,
                         transform: `translateY(${index * ROW_HEIGHT}px)`,
                       }}
-                      className="flex items-center gap-2 border-t border-[var(--qz-border)] px-4 text-xs text-[var(--qz-faint)]"
+                      className="flex items-center gap-2 border-t border-[var(--qz-border)] px-4"
+                      aria-hidden
                     >
                       <GuidePrefix guides={row.guides} depth={row.depth} />
-                      <span className="animate-pulse">{t("tree.loading")}</span>
+                      <span className="qz-skel h-3 w-40 rounded-full" />
+                      <span className="qz-skel h-3 w-12 shrink-0 rounded-full" />
+                      <span className="qz-skel h-3 w-14 shrink-0 rounded-full" />
                     </div>
                   );
                 }
@@ -499,6 +622,13 @@ export default function ArchiveTree({
                     expanded={
                       row.entry.is_folder && expanded.has(row.entry.path)
                     }
+                    childTotal={
+                      row.entry.is_folder
+                        ? cache.get(row.entry.path)?.total
+                        : undefined
+                    }
+                    focused={focusIndex === index}
+                    onFocusRow={() => setFocusIndex(index)}
                     onToggleExpand={() => toggleExpand(row.entry.path)}
                     onToggleSelect={() => toggleNode(row.entry)}
                   />
@@ -532,6 +662,9 @@ function TreeNodeRow({
   guides,
   state,
   expanded,
+  childTotal,
+  focused,
+  onFocusRow,
   onToggleExpand,
   onToggleSelect,
 }: {
@@ -541,6 +674,11 @@ function TreeNodeRow({
   guides: boolean[];
   state: boolean | "mixed";
   expanded: boolean;
+  /// Immediate-child total (folders with a loaded chunk only): shown as a
+  /// muted count beside the name.
+  childTotal: number | undefined;
+  focused: boolean;
+  onFocusRow: () => void;
   onToggleExpand: () => void;
   onToggleSelect: () => void;
 }) {
@@ -556,6 +694,8 @@ function TreeNodeRow({
     <div
       id={`qz-tree-row-${index}`}
       role="treeitem"
+      tabIndex={focused ? 0 : -1}
+      onFocus={onFocusRow}
       aria-expanded={entry.is_folder ? expanded : undefined}
       aria-selected={isSelected}
       style={{
@@ -566,7 +706,7 @@ function TreeNodeRow({
         height: `${ROW_HEIGHT}px`,
         transform: `translateY(${index * ROW_HEIGHT}px)`,
       }}
-      className={`flex items-center border-t border-[var(--qz-border)] ${
+      className={`flex items-center border-t border-[var(--qz-border)] outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--qz-primary)]/50 ${
         isSelected ? "bg-[var(--qz-primary)]/10" : ""
       }`}
     >
@@ -623,6 +763,13 @@ function TreeNodeRow({
           <span title={entry.path} className="truncate leading-5">
             {name}
           </span>
+          {entry.is_folder && childTotal !== undefined && childTotal > 0 && (
+            <span className="ml-2 shrink-0 text-xs tabular-nums text-[var(--qz-faint)]">
+              {childTotal === 1
+                ? t("tree.itemOne")
+                : t("tree.itemsOther", { count: formatCount(childTotal) })}
+            </span>
+          )}
         </span>
       </div>
       <div

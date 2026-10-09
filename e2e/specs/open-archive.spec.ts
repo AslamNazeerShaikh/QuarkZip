@@ -238,7 +238,7 @@ test("debug ids are present and unique across the live DOM", async ({
     "#qz-overview-card",
     "#qz-overview-meta-container",
     "#qz-action-row",
-    "#qz-tree-sort-path",
+    "#qz-tree-col-path",
     "#qz-action-more-btn",
     "#qz-tree-row-0-path",
     "#qz-app-extract-selected",
@@ -273,10 +273,8 @@ test("collapsed card drops menus downward over the table", async ({ app }) => {
   expect(langBox!.y).toBeGreaterThan(langTrigger!.y + langTrigger!.height);
   await langMenu.getByRole("option", { name: "English" }).click();
   await expect(langMenu).toHaveCount(0);
-  // Tree Name sort toggles row order in place (no pager anymore).
+  // Tree expands in place while the card stays collapsed.
   await expect(app.getByText("file-1.txt")).toBeVisible();
-  await app.getByRole("button", { name: /Name/ }).click();
-  await expect(app.getByText("file-250.txt")).toBeVisible();
 });
 
 test("collapse survives a reload", async ({ app }) => {

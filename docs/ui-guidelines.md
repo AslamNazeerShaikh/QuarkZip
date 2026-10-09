@@ -102,17 +102,25 @@ shadcn-style API (`variant` + `size`), reference tokens underneath:
   box-drawing gutters (├── └── │ ─ in faint monospace, one 4-char cell
   per ancestor level plus the row's own elbow — text that always paints),
   per-row tri-state checkbox + chevron + icon + basename
-  (full path on hover), header row fixed to the 36px row height with
-  12px uppercase sort toggles synced with their cells (Name left,
-  Type/Size/Modified centered both axes), Type fixed at `w-24` (truncated
+  (full path on hover), static header row fixed to the 36px row height
+  with 12px uppercase labels synced with their cells (Name left,
+  Type/Size/Modified centered both axes — labels, never sort buttons:
+  column sorting re-sorted millions of rows and froze the UI, so order is
+  always folders-first natural), Type fixed at `w-24` (truncated
   with full-label tooltip — extensions derive from the file _name_ only,
   so dotted directories never produce `BIN/…` overflow), Size fixed at
-  `w-32` (folders show `—`), Modified fixed at `w-64` showing the full
-  local stamp (`formatModified`: system time zone, AM/PM, raw stamp on
-  hover), horizontal separators only, checkbox multi-select with soft
-  primary-tint selection (folder-prefix collapse: checking a folder
-  selects the folder path only, unchecking inside splits to loaded
-  siblings; resets per archive), native slim scrollbar (`.scroll-slim`),
+  `w-32` (folders show `—`), expanded folders show a muted child count
+  beside the name (`2 items`, from the loaded chunk total), Modified
+  fixed at `w-64` showing the full local stamp (`formatModified`:
+  system time zone, AM/PM, raw stamp on hover), horizontal separators
+  only, checkbox multi-select with soft primary-tint selection
+  (folder-prefix collapse: checking a folder selects the folder path
+  only, unchecking inside splits to loaded siblings; resets per
+  archive), keyboard navigation (WAI-ARIA tree pattern:
+  arrows/Home/End/typeahead, Enter expands, Space checks — roving
+  tabindex over virtualized rows), skeleton shimmer rows while a folder
+  loads (bounded count, reduced-motion safe), native slim scrollbar
+  (`.scroll-slim`),
   empty state centered on both axes. Children load per folder from the
   backend in bounded 10k chunks (`get_children`: folders-first, natural
   path order — see backend-commands.md); collapsing drops a folder's
