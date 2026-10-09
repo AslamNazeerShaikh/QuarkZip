@@ -458,8 +458,25 @@ body {
   background-clip: padding-box;
 }
 
+/* Native cursor + press feedback (Apple HIG: the arrow is the standard
+   pointer for buttons — the pointing hand is URL links only. Tailwind v4
+   preflight agrees: buttons default to `cursor: default`, matching the
+   browser. So: NEVER add `cursor-pointer` to a button — `src/lib/uiRules.test.ts`
+   fails the suite if one appears. Raw buttons get their press scale from
+   the shared `active:scale-[0.97]` class + `transition-all` (NOT
+   `transition-colors`, which would snap the scale without animating it);
+   the `Button` primitive bakes both in. The `motion-safe:` prefix keeps
+   press motion out of reduced-motion mode. Press motion honors
+   reduced-motion via the keyframes gate below. */
+@layer base {
+  button,
+  [role="button"] {
+    cursor: default;
+  }
+}
+
 /* No global color transitions: a universal `transition` on every div
    fans out into hundreds of concurrent CoreAnimation transactions on
    large listings, and was implicated in a WebContent SIGSEGV during a
    system appearance flip (see docs/macos-native.md §9). Theme switches
-   apply instantly; buttons keep their own `transition-colors`. */
+   apply instantly; buttons keep their own `transition-all`. */

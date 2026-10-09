@@ -104,7 +104,12 @@ export default function AboutDialog({
           id="qz-about-actions"
           className="mt-4 flex items-center justify-center"
         >
-          <Button id="qz-about-ok" onClick={onOk} autoFocus>
+          <Button
+            id="qz-about-ok"
+            onClick={onOk}
+            autoFocus
+            title={t("common.ok")}
+          >
             {t("common.ok")}
           </Button>
         </div>

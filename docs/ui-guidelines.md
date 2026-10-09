@@ -309,6 +309,19 @@ Pre-existing ids (`archive-password`, `extract-folder-name`, …) and all
 - Empty: centered icon + gray text in the same card language.
 - Keyboard: every control is a real button/input/select with visible
   `focus-visible` primary ring; Esc/outside-click closes the theme switch.
+- Cursor: native arrow everywhere — NEVER `cursor-pointer` on a button
+  (Apple HIG: the arrow is the standard button pointer, the pointing hand
+  is URL links only; Tailwind v4 preflight agrees). A base rule in
+  `index.css` pins `cursor: default`; `src/lib/uiRules.test.ts` fails on
+  any `cursor-pointer` in source. The earlier mixed cursors (hand on
+  `Button`/triggers, arrow elsewhere) were the bug.
+- Press feedback: every button scales to 0.97 while held
+  (`motion-safe:active:scale-[0.97]` on raw buttons, baked into the
+  `Button` primitive with `transition-all` so the scale animates —
+  `transition-colors` would snap it). Reduced-motion disables it.
+- Tooltips: every button carries a native `title` (icon buttons mirror
+  their `aria-label`, text buttons their label) — hover always names the
+  action. `src/lib/uiRules.test.ts` + `e2e/specs/chrome.spec.ts` pin it.
 - Single press per operation: async actions disable their controls while
   in flight (footer buttons on `extracting`/`loading`, pager on `paging`
   like the sort headers), and a document-level guard swallows the one

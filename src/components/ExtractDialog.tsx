@@ -244,8 +244,9 @@ export default function ExtractDialog({
             role="checkbox"
             aria-checked={createFolder}
             aria-label={t("extract.folderToggle")}
+            title={t("extract.folderToggle")}
             onClick={() => setCreateFolder((v) => !v)}
-            className="flex w-full cursor-pointer items-center justify-center gap-2.5 outline-none"
+            className="flex w-full items-center justify-center gap-2.5 transition-all duration-150 outline-none motion-safe:active:scale-[0.99]"
           >
             <span
               aria-hidden
@@ -304,10 +305,11 @@ export default function ExtractDialog({
                   role="checkbox"
                   aria-checked={stamp !== null}
                   aria-label={t("extract.appendDate")}
+                  title={t("extract.appendDate")}
                   onClick={() =>
                     setStamp((cur) => (cur === null ? dateStamp() : null))
                   }
-                  className="flex cursor-pointer items-center justify-center gap-2 outline-none"
+                  className="flex items-center justify-center gap-2 transition-all duration-150 outline-none motion-safe:active:scale-[0.98]"
                 >
                   <span
                     aria-hidden
@@ -374,7 +376,12 @@ export default function ExtractDialog({
           id="qz-extract-actions"
           className="mt-5 flex items-center justify-center gap-2"
         >
-          <Button id="qz-extract-cancel" variant="warning" onClick={onCancel}>
+          <Button
+            id="qz-extract-cancel"
+            variant="warning"
+            onClick={onCancel}
+            title={t("common.cancel")}
+          >
             {t("common.cancel")}
           </Button>
           <Button
@@ -383,6 +390,7 @@ export default function ExtractDialog({
             onClick={() => onConfirm(finalDest)}
             disabled={blocked}
             autoFocus
+            title={confirmLabel}
           >
             {confirmLabel}
           </Button>

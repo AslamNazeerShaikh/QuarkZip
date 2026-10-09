@@ -32,4 +32,19 @@ describe("Button shell chrome", () => {
     render(<Button size="default">Go</Button>);
     expect(screen.getByRole("button", { name: "Go" })).toHaveClass("h-10");
   });
+
+  it("should_use_the_native_arrow_cursor_never_the_hand", () => {
+    render(<Button title="Go">Go</Button>);
+    const btn = screen.getByRole("button", { name: "Go" });
+    // The hand (`cursor-pointer`) is URL-links-only per Apple HIG —
+    // buttons keep the arrow (pinned by the base rule in index.css).
+    expect(btn.className).not.toMatch(/cursor-pointer/);
+  });
+
+  it("should_answer_presses_with_a_scale_and_tooltip", () => {
+    render(<Button title="Extract the files">Go</Button>);
+    const btn = screen.getByRole("button", { name: "Go" });
+    expect(btn).toHaveClass("motion-safe:active:scale-[0.97]");
+    expect(btn).toHaveAttribute("title", "Extract the files");
+  });
 });

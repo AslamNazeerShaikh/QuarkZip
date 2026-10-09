@@ -85,6 +85,7 @@ export default function PermissionDialog({
             id="qz-permission-cancel"
             variant="warning"
             onClick={onCancel}
+            title={t("common.cancel")}
           >
             {t("common.cancel")}
           </Button>
@@ -93,6 +94,7 @@ export default function PermissionDialog({
               id="qz-permission-folder"
               variant="secondary"
               onClick={onChooseFolder}
+              title={t("permission.chooseFolder")}
             >
               {t("permission.chooseFolder")}
             </Button>
@@ -102,6 +104,7 @@ export default function PermissionDialog({
             variant="accent"
             onClick={onOpenSettings}
             autoFocus
+            title={t("permission.openSettings")}
           >
             {t("permission.openSettings")}
           </Button>

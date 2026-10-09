@@ -106,7 +106,12 @@ export default function ExtractDoneDialog({
           id="qz-extract-done-actions"
           className="mt-5 flex items-center justify-center"
         >
-          <Button id="qz-extract-done-ok" onClick={onOk} autoFocus>
+          <Button
+            id="qz-extract-done-ok"
+            onClick={onOk}
+            autoFocus
+            title={t("common.ok")}
+          >
             {t("common.ok")}
           </Button>
         </div>

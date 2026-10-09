@@ -176,6 +176,7 @@ export default function TestDialog({
             onClick={onOk}
             disabled={phase.running}
             autoFocus={!phase.running}
+            title={t("common.ok")}
           >
             {t("common.ok")}
           </Button>

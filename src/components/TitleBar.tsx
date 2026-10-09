@@ -143,7 +143,7 @@ export default function TitleBar({
   // every other button), so dark-mode white text applies — glass-dark
   // text would stay black on the dark tint.
   const openClass =
-    "qz-tint-yellow flex h-9 items-center gap-1.5 rounded-[10px] border border-[var(--qz-border)] px-3 text-[13px] font-medium whitespace-nowrap text-[var(--qz-text)] shadow-[var(--qz-shadow-card)] transition-opacity outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40 disabled:pointer-events-none disabled:opacity-50";
+    "qz-tint-yellow flex h-9 items-center gap-1.5 rounded-[10px] border border-[var(--qz-border)] px-3 text-[13px] font-medium whitespace-nowrap text-[var(--qz-text)] shadow-[var(--qz-shadow-card)] transition-all duration-150 outline-none hover:opacity-90 motion-safe:active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40 disabled:pointer-events-none disabled:opacity-50";
   if (hidden) {
     // Overlay strip: with an archive the title claims every pixel past
     // the 76px light inset; empty it falls back to the symmetric inset
@@ -193,6 +193,8 @@ export default function TitleBar({
                 onMouseDown={stopDrag}
                 onClick={onOpen}
                 disabled={openDisabled}
+                aria-label={t("app.openNew")}
+                title={t("app.openNew")}
                 className={openClass}
               >
                 <FolderOpen size={14} aria-hidden />
@@ -241,7 +243,7 @@ export default function TitleBar({
   }
 
   const btn =
-    "flex h-9 w-11 items-center justify-center rounded-md text-[var(--qz-muted)] transition-colors hover:bg-black/5 hover:text-[var(--qz-text)] dark:hover:bg-white/10";
+    "flex h-9 w-11 items-center justify-center rounded-md text-[var(--qz-muted)] transition-all duration-150 hover:bg-black/5 hover:text-[var(--qz-text)] motion-safe:active:scale-[0.97] dark:hover:bg-white/10";
 
   return (
     <header
@@ -268,6 +270,8 @@ export default function TitleBar({
             onMouseDown={stopDrag}
             onClick={onOpen}
             disabled={openDisabled}
+            aria-label={t("app.openNew")}
+            title={t("app.openNew")}
             className={openClass}
           >
             <FolderOpen size={14} aria-hidden />
@@ -333,7 +337,7 @@ export default function TitleBar({
           title={t("titlebar.close")}
           onMouseDown={stopDrag}
           onClick={() => void close()}
-          className="flex h-9 w-11 items-center justify-center rounded-md text-[var(--qz-muted)] transition-colors hover:bg-[#e81123] hover:text-white"
+          className="flex h-9 w-11 items-center justify-center rounded-md text-[var(--qz-muted)] transition-all duration-150 hover:bg-[#e81123] hover:text-white motion-safe:active:scale-[0.97]"
         >
           <X size={16} aria-hidden />
         </button>

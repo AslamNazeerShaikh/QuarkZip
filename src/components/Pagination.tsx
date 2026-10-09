@@ -193,6 +193,7 @@ function PageJump({
                   id="qz-pager-jump-cancel"
                   variant="warning"
                   onClick={cancelJump}
+                  title={t("common.cancel")}
                 >
                   {t("common.cancel")}
                 </Button>
@@ -201,6 +202,7 @@ function PageJump({
                   variant="accent"
                   onClick={confirmJump}
                   autoFocus
+                  title={t("pagination.jump")}
                 >
                   {t("pagination.jump")}
                 </Button>
@@ -304,6 +306,7 @@ function PageSizeMenu({
         ref={buttonRef}
         type="button"
         aria-label={t("pagination.rowsPerPage")}
+        title={t("pagination.rowsPerPage")}
         aria-haspopup="listbox"
         aria-expanded={open}
         disabled={busy}
@@ -312,7 +315,7 @@ function PageSizeMenu({
           setOpen((o) => !o);
         }}
         onKeyDown={onButtonKey}
-        className="flex h-7 cursor-pointer items-center gap-1 rounded-[7px] px-2 text-[var(--qz-muted)] tabular-nums outline-none hover:text-[var(--qz-text)] disabled:pointer-events-none disabled:opacity-50"
+        className="flex h-7 items-center gap-1 rounded-[7px] px-2 text-[var(--qz-muted)] tabular-nums outline-none transition-all duration-150 hover:text-[var(--qz-text)] motion-safe:active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50"
       >
         {formatSize(pageSize, allLabel)}
         <ChevronDown
@@ -344,9 +347,10 @@ function PageSizeMenu({
                   type="button"
                   role="option"
                   aria-selected={selected}
+                  title={formatSize(size, allLabel)}
                   onClick={() => choose(size)}
                   onMouseEnter={() => setActive(i)}
-                  className={`flex h-8 w-full items-center justify-between gap-4 rounded-[7px] px-2 tabular-nums transition-colors ${
+                  className={`flex h-8 w-full items-center justify-between gap-4 rounded-[7px] px-2 tabular-nums transition-all duration-150 motion-safe:active:scale-[0.98] ${
                     i === active
                       ? "bg-[var(--qz-primary-soft)] text-[var(--qz-text)]"
                       : "text-[var(--qz-muted)]"
@@ -446,7 +450,7 @@ export default function Pagination({
           aria-label={label}
           title={label}
           onClick={onExpand}
-          className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-colors outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+          className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-all duration-150 outline-none hover:text-[var(--qz-text)] motion-safe:active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
         >
           <ListOrdered size={18} aria-hidden />
         </button>
@@ -476,9 +480,10 @@ export default function Pagination({
         id="qz-pager-prev"
         type="button"
         aria-label={t("pagination.prevPage")}
+        title={t("pagination.prevPage")}
         disabled={page === 0 || busy}
         onClick={() => onPage(page - 1)}
-        className="rounded-[7px] p-1.5 text-[var(--qz-muted)] transition-colors hover:text-[var(--qz-text)] disabled:opacity-30"
+        className="rounded-[7px] p-1.5 text-[var(--qz-muted)] transition-all duration-150 hover:text-[var(--qz-text)] motion-safe:active:scale-[0.97] disabled:opacity-30"
       >
         <ChevronLeft size={16} aria-hidden />
       </button>
@@ -492,9 +497,10 @@ export default function Pagination({
         id="qz-pager-next"
         type="button"
         aria-label={t("pagination.nextPage")}
+        title={t("pagination.nextPage")}
         disabled={pageCount === 0 || page >= pageCount - 1 || busy}
         onClick={() => onPage(page + 1)}
-        className="rounded-[7px] p-1.5 text-[var(--qz-muted)] transition-colors hover:text-[var(--qz-text)] disabled:opacity-30"
+        className="rounded-[7px] p-1.5 text-[var(--qz-muted)] transition-all duration-150 hover:text-[var(--qz-text)] motion-safe:active:scale-[0.97] disabled:opacity-30"
       >
         <ChevronRight size={16} aria-hidden />
       </button>

@@ -55,6 +55,7 @@
   "loading.rate": "गति",
   "loading.progress": "खोलने की प्रगति",
   "table.selectAll": "सभी चुनें",
+  "table.sortTip": "इस कॉलम से क्रमबद्ध करें",
   "table.selectItem": "{name} चुनें",
   "table.colName": "नाम",
   "table.colType": "प्रकार",

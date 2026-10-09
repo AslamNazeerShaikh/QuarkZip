@@ -193,11 +193,12 @@ export default function ChecksumDialog({
                 id="qz-checksum-algo-btn"
                 type="button"
                 aria-label={t("checksum.algorithmList")}
+                title={t("checksum.algorithmList")}
                 aria-haspopup="listbox"
                 aria-expanded={menuOpen}
                 disabled={running}
                 onClick={() => setMenuOpen((o) => !o)}
-                className="qz-material-bar flex h-9 w-full cursor-pointer items-center justify-between rounded-[10px] border border-[var(--qz-border)] px-3 text-[13px] font-medium outline-none transition-colors hover:bg-black/5 focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40 disabled:cursor-default disabled:opacity-50 dark:hover:bg-white/10"
+                className="qz-material-bar flex h-9 w-full items-center justify-between rounded-[10px] border border-[var(--qz-border)] px-3 text-[13px] font-medium outline-none transition-all duration-150 hover:bg-black/5 motion-safe:active:scale-[0.99] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40 disabled:opacity-50 dark:hover:bg-white/10"
               >
                 {algoLabel}
                 <ChevronDown
@@ -222,11 +223,12 @@ export default function ChecksumDialog({
                         type="button"
                         role="option"
                         aria-selected={selected}
+                        title={option.label}
                         onClick={() => {
                           setAlgo(option.id);
                           setMenuOpen(false);
                         }}
-                        className={`flex h-8 w-full items-center justify-between gap-4 rounded-[7px] px-2 text-[13px] transition-colors ${
+                        className={`flex h-8 w-full items-center justify-between gap-4 rounded-[7px] px-2 text-[13px] transition-all duration-150 motion-safe:active:scale-[0.98] ${
                           selected
                             ? "bg-[var(--qz-primary-soft)] font-semibold text-[var(--qz-primary)]"
                             : "text-[var(--qz-muted)] hover:text-[var(--qz-text)]"
@@ -349,6 +351,7 @@ export default function ChecksumDialog({
               id="qz-checksum-cancel"
               variant="secondary"
               onClick={cancel}
+              title={t("common.cancel")}
             >
               {t("common.cancel")}
             </Button>
@@ -357,11 +360,17 @@ export default function ChecksumDialog({
               id="qz-checksum-calculate"
               onClick={start}
               autoFocus={phase.name === "idle"}
+              title={t("checksum.calculate")}
             >
               {t("checksum.calculate")}
             </Button>
           )}
-          <Button id="qz-checksum-close" variant="secondary" onClick={close}>
+          <Button
+            id="qz-checksum-close"
+            variant="secondary"
+            onClick={close}
+            title={t("checksum.close")}
+          >
             {t("checksum.close")}
           </Button>
         </div>

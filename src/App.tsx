@@ -663,7 +663,7 @@ export default function App() {
                       onClick={openAbout}
                       aria-label="About QuarkZip"
                       title="About QuarkZip"
-                      className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-colors outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+                      className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-all duration-150 outline-none hover:text-[var(--qz-text)] motion-safe:active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
                     >
                       <Info size={18} aria-hidden />
                     </button>
@@ -706,6 +706,7 @@ export default function App() {
                     )
                   }
                   disabled={!dest || extracting || totalEntries === 0}
+                  title={t("app.extractSelected")}
                   className="shrink-0"
                 >
                   <ListChecks
@@ -721,6 +722,7 @@ export default function App() {
                   size="bar"
                   onClick={() => setConfirming("all")}
                   disabled={!dest || extracting || totalEntries === 0}
+                  title={t("app.extractAll")}
                   className="shrink-0"
                 >
                   <Download

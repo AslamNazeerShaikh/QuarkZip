@@ -55,6 +55,7 @@
   "loading.rate": "Rate",
   "loading.progress": "Opening progress",
   "table.selectAll": "Select all",
+  "table.sortTip": "Sort by this column",
   "table.selectItem": "Select {name}",
   "table.colName": "Name",
   "table.colType": "Type",

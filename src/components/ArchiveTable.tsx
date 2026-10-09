@@ -83,8 +83,9 @@ function TableCheckbox({
       role="checkbox"
       aria-checked={checked}
       aria-label={label}
+      title={label}
       onClick={onToggle}
-      className={`flex h-4 w-4 items-center justify-center rounded-[5px] border transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--qz-primary)] ${
+      className={`flex h-4 w-4 items-center justify-center rounded-[5px] border transition-all duration-150 outline-none motion-safe:active:scale-[0.9] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--qz-primary)] ${
         on
           ? "border-transparent bg-[var(--qz-primary)]"
           : "border-[var(--qz-border)] bg-transparent hover:border-[var(--qz-primary)]"
@@ -267,7 +268,9 @@ export default function ArchiveTable({
               type="button"
               onClick={() => toggleSort(column.key)}
               disabled={busy}
-              className={`flex h-full cursor-pointer items-center gap-1 px-4 text-xs font-semibold tracking-wide text-[var(--qz-faint)] uppercase select-none disabled:cursor-default ${
+              aria-label={`${t(column.headerKey)} — ${t("table.sortTip")}`}
+              title={t("table.sortTip")}
+              className={`flex h-full items-center gap-1 px-4 text-xs font-semibold tracking-wide text-[var(--qz-faint)] uppercase select-none transition-all duration-150 motion-safe:active:scale-[0.98] ${
                 column.key === "path"
                   ? "min-w-0 flex-1"
                   : `${column.width} shrink-0 justify-center`

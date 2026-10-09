@@ -78,7 +78,7 @@ export default function LanguageSwitch({ below = false }: { below?: boolean }) {
             setOpen(true);
           }
         }}
-        className="grid h-7 w-7 cursor-pointer place-items-center rounded-[8px] text-[var(--qz-muted)] outline-none transition-colors hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+        className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] outline-none transition-all duration-150 hover:text-[var(--qz-text)] motion-safe:active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
       >
         <Languages size={18} aria-hidden />
       </button>
@@ -104,8 +104,9 @@ export default function LanguageSwitch({ below = false }: { below?: boolean }) {
                   type="button"
                   role="option"
                   aria-selected={selected}
+                  title={locale.native}
                   onClick={() => choose(locale.code)}
-                  className={`flex h-8 w-full items-center justify-between gap-4 rounded-[7px] px-2 text-[13px] transition-colors ${
+                  className={`flex h-8 w-full items-center justify-between gap-4 rounded-[7px] px-2 text-[13px] transition-all duration-150 motion-safe:active:scale-[0.98] ${
                     selected
                       ? "bg-[var(--qz-primary-soft)] font-semibold text-[var(--qz-primary)]"
                       : "text-[var(--qz-muted)] hover:text-[var(--qz-text)]"

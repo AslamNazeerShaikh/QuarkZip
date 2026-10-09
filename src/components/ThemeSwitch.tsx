@@ -103,8 +103,15 @@ export default function ThemeSwitch({
               }}
               type="button"
               aria-pressed={choice === opt.value}
+              title={
+                opt.value === "light"
+                  ? t("theme.light")
+                  : opt.value === "dark"
+                    ? t("theme.dark")
+                    : t("theme.system")
+              }
               onClick={() => select(opt.value)}
-              className={`relative z-10 inline-flex h-7 items-center rounded-[8px] px-3 font-medium transition-colors duration-300 ${
+              className={`relative z-10 inline-flex h-7 items-center rounded-[8px] px-3 font-medium transition-all duration-300 motion-safe:active:scale-[0.97] ${
                 choice === opt.value
                   ? "text-[var(--qz-on-primary)]"
                   : "text-[var(--qz-muted)] hover:text-[var(--qz-text)]"
@@ -123,9 +130,10 @@ export default function ThemeSwitch({
           id="qz-theme-btn"
           type="button"
           aria-label={t("theme.change")}
+          title={t("theme.change")}
           aria-expanded={open}
           onClick={() => setOpen(true)}
-          className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-colors duration-300 hover:text-[var(--qz-text)]"
+          className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-all duration-300 hover:text-[var(--qz-text)] motion-safe:active:scale-[0.97]"
         >
           <CurrentIcon size={18} aria-hidden />
         </button>

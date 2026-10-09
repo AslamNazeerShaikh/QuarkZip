@@ -206,7 +206,7 @@ export default function PasswordDialog({
                 title={show ? t("password.hide") : t("password.show")}
                 disabled={locked}
                 onClick={() => setShow((s) => !s)}
-                className="mr-1 grid h-7 w-7 shrink-0 place-items-center rounded-[7px] text-[var(--qz-muted)] transition-colors hover:text-[var(--qz-text)] disabled:opacity-50"
+                className="mr-1 grid h-7 w-7 shrink-0 place-items-center rounded-[7px] text-[var(--qz-muted)] transition-all duration-150 hover:text-[var(--qz-text)] motion-safe:active:scale-[0.97] disabled:opacity-50"
               >
                 {show ? (
                   <EyeOff size={16} aria-hidden />
@@ -265,6 +265,7 @@ export default function PasswordDialog({
               id="qz-password-accept"
               onClick={() => onAccept(archive, password)}
               autoFocus
+              title={acceptLabel}
             >
               {acceptLabel}
             </Button>
@@ -274,6 +275,7 @@ export default function PasswordDialog({
               onClick={check}
               disabled={password === "" || locked}
               autoFocus={!checking}
+              title={t("password.check")}
             >
               {t("password.check")}
             </Button>
@@ -283,6 +285,7 @@ export default function PasswordDialog({
             variant="secondary"
             onClick={onCancel}
             disabled={checking}
+            title={t("common.cancel")}
           >
             {t("common.cancel")}
           </Button>

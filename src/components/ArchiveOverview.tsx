@@ -146,7 +146,7 @@ export default function ArchiveOverview({
           onClick={onTest}
           aria-label={testLabel}
           title={testLabel}
-          className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-colors outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+          className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-all duration-150 outline-none hover:text-[var(--qz-text)] motion-safe:active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
         >
           <BadgeCheck size={18} aria-hidden />
         </button>
@@ -158,7 +158,7 @@ export default function ArchiveOverview({
           onClick={onChecksum}
           aria-label={checksumLabel}
           title={checksumLabel}
-          className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-colors outline-none hover:text-[var(--qz-text)] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
+          className="grid h-7 w-7 place-items-center rounded-[8px] text-[var(--qz-muted)] transition-all duration-150 outline-none hover:text-[var(--qz-text)] motion-safe:active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40"
         >
           <Binary size={18} aria-hidden />
         </button>
@@ -225,6 +225,7 @@ export default function ArchiveOverview({
               id="qz-overview-open-cta"
               onClick={onOpen}
               disabled={loading}
+              title={loading ? t("overview.reading") : t("overview.openCta")}
               className="mt-1 min-w-40"
             >
               <PackageOpen size={16} aria-hidden />

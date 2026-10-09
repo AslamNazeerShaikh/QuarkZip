@@ -50,6 +50,10 @@ const SIZES: Record<Size, string> = {
 };
 
 /// shadcn-style Button: `variant` + `size` API, reference tokens underneath.
+/// Native cursor (arrow, never the hand — see the base rule in index.css)
+/// and a press scale (`active:scale`) so every action answers the click.
+/// `title` (native tooltip) is required at usage sites — pass the visible
+/// label or the aria-label text.
 export function Button({
   variant = "primary",
   size = "default",
@@ -64,7 +68,7 @@ export function Button({
     <button
       type={type}
       className={cn(
-        "inline-flex cursor-pointer items-center justify-center gap-2 rounded-[10px] font-medium whitespace-nowrap shadow-[var(--qz-shadow-card)] transition outline-none select-none",
+        "inline-flex items-center justify-center gap-2 rounded-[10px] font-medium whitespace-nowrap shadow-[var(--qz-shadow-card)] transition-all duration-150 outline-none select-none motion-safe:active:scale-[0.97]",
         "focus-visible:ring-2 focus-visible:ring-[var(--qz-primary)]/40",
         "disabled:pointer-events-none disabled:opacity-50",
         VARIANTS[variant],

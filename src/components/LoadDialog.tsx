@@ -133,7 +133,12 @@ export default function LoadDialog({
           id="qz-load-actions"
           className="mt-5 flex items-center justify-center"
         >
-          <Button id="qz-load-cancel" variant="secondary" onClick={onCancel}>
+          <Button
+            id="qz-load-cancel"
+            variant="secondary"
+            onClick={onCancel}
+            title={t("common.cancel")}
+          >
             <X size={14} aria-hidden />
             {t("common.cancel")}
           </Button>
