@@ -1,0 +1,12 @@
+[package]
+name = "quarkzip-iced"
+version = "0.1.0"
+edition = "2021"
+description = "QuarkZip iced frontend — same compact CRM shell as the egui app, for comparison (develop branch)"
+
+[[bin]]
+name = "quarkzip-iced"
+path = "src/main.rs"
+
+[dependencies]
+iced = { version = "0.14", features = [] }
