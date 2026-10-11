@@ -1,0 +1,15 @@
+[package]
+name = "quarkzip-egui"
+version = "0.1.0"
+edition = "2021"
+description = "QuarkZip egui frontend — compact CRM-style UI with macOS native feel (develop branch scaffold)"
+
+[[bin]]
+name = "quarkzip-egui"
+path = "src/main.rs"
+
+[dependencies]
+eframe = "0.36"
+
+[profile.dev]
+opt-level = 1
