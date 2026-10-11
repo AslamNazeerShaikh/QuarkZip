@@ -73,11 +73,10 @@ Model: `opencode/muse-spark-1.3-contributor-free` via OpenCode Zen (reasoning ef
 
 ## MCP
 
-| Server       | Purpose                                                 |
-| ------------ | ------------------------------------------------------- |
-| `ui-skills`  | UI skill registry (frontend patterns)                   |
-| `github`     | GitHub access (uses `GITHUB_PERSONAL_ACCESS_TOKEN` env) |
-| `whiteboard` | Whiteboard review sessions                              |
+| Server      | Purpose                                                 |
+| ----------- | ------------------------------------------------------- |
+| `ui-skills` | UI skill registry (frontend patterns)                   |
+| `github`    | GitHub access (uses `GITHUB_PERSONAL_ACCESS_TOKEN` env) |
 
 ## Guardrails
 

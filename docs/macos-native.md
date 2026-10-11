@@ -114,7 +114,7 @@ Blender, 21st-dev, Inspo…). None earns a place: Figma needs an API key
 plus Figma files we don't have; 21st-dev generates components we don't
 need; Inspo is reference browsing. The configured `ui-skills` MCP
 already serves all three Apple skills on demand with zero install.
-Decision: keep `ui-skills` + `github` + `whiteboard`; revisit only if a
+Decision: keep `ui-skills` + `github`; revisit only if a
 Figma-based design handoff begins.
 
 ## 8. Liquid-glass window background (native, macOS only)
