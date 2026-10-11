@@ -1,17 +1,17 @@
 # Graph Report - QuarkZip  (2026-10-11)
 
 ## Corpus Check
-- 1274 files · ~1,759,313 words
+- 1281 files · ~1,766,226 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 305 file(s) not represented in the graph (top: .rc 63, .mak 58, (none) 44)
+- Unclassified: 306 file(s) not represented in the graph (top: .rc 63, .mak 58, (none) 45)
 
 ## Summary
-- 21942 nodes · 47281 edges · 873 communities (773 shown, 100 thin omitted)
+- 22096 nodes · 47559 edges · 910 communities (797 shown, 113 thin omitted)
 - Extraction: 87% EXTRACTED · 13% INFERRED · 0% AMBIGUOUS · INFERRED: 6367 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `cd31104f`
+- Built from commit: `2bfb7bb1`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -27,7 +27,7 @@
 - compilerOptions
 - Enum
 - devDependencies
-- Button
+- Components (`src/components/ui/` + feature components)
 - checksum.rs
 - Opencode Configuration for QuarkZip
 - MacPacker reference (upstream)
@@ -46,10 +46,10 @@
 - QuarkZip color system
 - AkiZip reference (upstream)
 - LzFindMt.c
-- LzmaEnc_CodeOneBlock
-- AddSwitchWildcardsToCensor
+- CompressDialog.cpp
+- ArchiveCommandLine.cpp
 - fetch-7zz.sh
-- 7zHandlerOut.cpp
+- tokens.rs
 - CHandlerImg
 - CExtent
 - build.rs
@@ -63,8 +63,8 @@
 - lsp/default.md
 - permissions/default.md
 - quarkzip
-- HashCalc
-- UString
+- CBenchInfo
+- TextPairs.cpp
 - LanguageContext.tsx
 - check-locales.mjs
 - EEnum
@@ -74,24 +74,25 @@
 - COpenType
 - AString
 - DeflateEncoder.cpp
+- hig-lookup.md
 - Security Policy
-- StringConvert.h
+- MyCom.h
 - CpuArch.h
 - CCompressDialog
 - ExtractDialog.tsx
 - Bench.cpp
 - ArchiveTree.tsx
-- CInArchiveInfo
+- CDbEx
 - sevenzip.rs
 - pull-hig.mjs
-- FileDir.cpp
-- CBenchProgressSync
+- Z7_COM7F_IMF
+- CCommandMapItem
 - BenchmarkDialog.cpp
-- CChildProcesses
+- CLongAllocDesc
 - vitest
 - CMethodProps
 - fetch-7z-src.sh
-- MyCom.h
+- Alloc.h
 - Typography
 - Live Activities
 - Widgets
@@ -116,14 +117,14 @@
 - Design principles
 - Designing for iPhone Duo
 - Generative AI
-- Inclusion
+- CrmApp
 - Menus
 - Playing haptics
 - Privacy
 - Search fields
 - SF Symbols
 - AirPlay
-- Alerts
+- sheets.md
 - App icons
 - Apple In-App Purchase
 - Dark Mode
@@ -150,14 +151,14 @@
 - Right to left
 - Scroll views
 - Segmented controls
-- Sheets
+- CCodecs
 - Siri
 - Split views
 - Virtual keyboards
 - Boxes
 - Controls
 - Disclosure controls
-- Game controls
+- Feedback
 - Gauges
 - Going full screen
 - Image views
@@ -168,7 +169,7 @@
 - EDescriptorType
 - Page controls
 - Pickers
-- Progress indicators
+- CTargetTransferInfo
 - Sidebars
 - Sliders
 - Tab bars
@@ -184,46 +185,46 @@
 - Managing accounts
 - DeflateDecoder.cpp
 - Pop-up buttons
-- Popovers
+- LRESULTToBool
 - Pull-down buttons
 - Searching
 - Snippets
 - Text views
 - Undo and redo
 - EEnum
-- Writing
-- Action sheets
-- Activity views
+- Z7_COM7F_IMF
+- data.rs
+- CInArchive::ReadEntries
 - Branding
-- Collaboration and sharing
+- CItem
 - Collections
 - Color wells
 - iCloud
-- Modality
+- CPlugin
 - Panels
-- Printing
-- CHandler::Open2
+- UInt32
+- CFile
 - Steppers
 - contrast-check.py
 - Cross-platform translation
 - CDialog
 - Combo boxes
 - Dock menus
-- CFieldPrinter
+- CCallbackConsoleBase
 - .SendMsg
 - Home Screen quick actions
 - Image wells
 - CFile
 - COutHandler
 - Path controls
-- ListArchives
+- CListOptions
 - Token fields
 - Web views
 - macOS design (QuarkZip)
 - macos-design-reviewer.md
 - CProgressDialog
 - CApp
-- FileFind.cpp
+- fs2us
 - CCoder
 - CXmlItem
 - FString
@@ -232,21 +233,21 @@
 - 7zIn.cpp
 - BrowseDialog2.cpp
 - CGroup
-- .Ptr
+- CMultiMethodProps
 - Wildcard.cpp
 - Z7_COM7F_IMF
 - Z7_COM7F_IMF
 - Main.cpp
-- CCachedInStream
-- LangString
+- StreamObjects.cpp
+- PanelMenu.cpp
 - CArc
 - CDecoder
 - CoderMixer2.cpp
 - CApfs
-- Close
+- .Detach
 - NsisIn.cpp
-- CUpdatePair2
-- ShowDialog
+- CCachedInStream
+- .FormatChanged
 - XzEnc.c
 - 7zipUninstall.c
 - CWindow
@@ -257,7 +258,7 @@
 - CItem
 - CShellDll
 - RINOK
-- Event_Set
+- CGlobal
 - CCoder
 - CBitDecoder
 - ZipIn.cpp
@@ -272,20 +273,20 @@
 - COutArchive
 - CHeader
 - CNode
-- 7zHandler.cpp
+- CHandler::SetMethodToProp
 - 7zipInstall.c
 - CPartition
-- CUpdateCallbackGUI2
+- widgets.rs
 - GetLastError
 - LzmaEnc.c
 - FSFolderCopy.cpp
 - CRecordVector
-- OutStreamWithSha1.h
+- ZipStrong.cpp
 - CItem
 - COutBuffer
 - CArcCmdLineOptions
 - Threads.c
-- ContextMenu.cpp
+- Z7_COMWF_B
 - CListView
 - CProgressDialog
 - CArcInfoEx
@@ -297,43 +298,43 @@
 - Z7_COM7F_IMF
 - CInArchive
 - Lzma2DecMt.c
-- CLinkInfo
+- CPostLink
 - Sha256_Update
 - CFolders
 - CBase
 - Z7_COM7F_IMF
 - CDatabase
 - ZstdDec.c
-- LPCTSTR
+- CKey
 - CInArcInfo
 - HashCon.cpp
 - CPolicy
 - CItem
 - CpuArch.c
-- CLzxInfo
+- CDatabase
 - CHeader
 - ExtractCallbackConsole.cpp
 - UpdateCallbackGUI.cpp
 - Z7_COM7F_IMF
 - CInArchive
-- _len
+- .Add_UInt32
 - Client7z.cpp
 - CProxyDir
 - FarUtils.cpp
 - ChmIn.cpp
-- CItem
-- Agent.cpp
+- UefiHandler.cpp
+- MyCompare
 - CProxyArc2
 - EnumDirItems.cpp
-- PanelMenu.cpp
-- CUInt32DefVector
+- CMenu
+- CFolder
 - CArchiveDatabaseOut
 - Z7_COM7F_IMF
 - CHeader
 - CItem
 - CArchive
 - CProgressSync
-- Windows/StdAfx.h
+- ProcessUtils.h
 - Lzma2Enc.c
 - CMatchFinderMt_
 - CHeader
@@ -343,7 +344,7 @@
 - CDatabase
 - FileName.cpp
 - CAesCoder
-- renderBlock
+- CSection
 - GetLastError_noZero_HRESULT
 - CCodecInfo
 - CBindInfo
@@ -352,12 +353,12 @@
 - CLocalItem
 - CStdOutStream
 - CInfo
-- SetLzmaProp
+- CData
 - CWrappers.cpp
 - CPartition
 - Enum
 - CDecoder
-- ListView.cpp
+- .OnMessage
 - XzDec.c
 - CreateCoder.cpp
 - Z7_COM7F_IMF
@@ -366,30 +367,30 @@
 - LzmaDec.c
 - 7zArcIn.c
 - LzmaAlone.cpp
-- WriteStream
+- CItem
 - CInArchive
 - Z7_COM7F_IMF
 - CUpdateOptions
-- 7zAes.cpp
+- CKeyInfo
 - Z7_COM7F_IMF
-- ArchiveExtractCallback.h
+- FileStreams.h
 - CCoderMT
 - CInArchive
 - CDynHeader
 - CBaseDecoder
 - 7zUpdate.cpp
-- Z7_COM7F_IMF
-- Xxh64.c
+- CPropertyPage
+- UNUSED_VAR
 - List.cpp
 - ViewSettings.cpp
 - Alloc.c
 - CMyComPtr
-- FileFind.h
+- DeviceIoControlOut
 - CHeader
 - COptHeader
 - CUnpacker
 - CCdInfo
-- AgentProxy.cpp
+- CProxyArc
 - CWindow2
 - CRawLocn
 - CLogVol
@@ -398,34 +399,34 @@
 - CFormatOptions
 - RegistryUtils.cpp
 - AgentOut.cpp
-- UInt32
-- CMemBlockManagerMt
-- ZipRegistry.cpp
-- GetSystemString
+- CSpecState
+- MemBlocks.cpp
+- LPCTSTR
+- COverwriteDialog
 - CCoder
-- Xz_ReadBackward
-- Extract
+- XzIn.c
+- Z7_COM7F_IMF
 - CItem
 - IsoIn.cpp
 - CVols
 - CInBufferBase
-- CThreadArchiveOpen
+- FileFolderPluginOpen.cpp
 - CBaseCoder
 - BoolToInt
 - Blake2s.c
-- MyString.cpp
+- .IsEmpty
 - CItem
-- Common.h
-- Rar5Aes.cpp
+- EEnum
+- CKey
 - CThreadExtracting
 - CMyComPtr2
 - CrcCalc
 - CImageList
 - UpdateArchive
 - MyWindows.cpp
-- CSingleMethodProps
+- LONG_PTR
 - CDatabase
-- CBootInitialEntry
+- CDateTime
 - CVolumeDescriptor
 - CMessagesDialog
 - ExtractCallback.cpp
@@ -433,28 +434,28 @@
 - .CodeReal
 - CBaseThreadInfo
 - Z7_COM7F_IMF
-- Z7_COM7F_IMF
+- Ppmd7_Alloc
 - CDatabase
 - CDatabase
-- CPanel::SetItemText
+- 7zFolderInStream.h
 - LzfseDecoder.cpp
-- DllGetClassObject
+- DllExportsExplorer.cpp
 - CCoder
 - Far.cpp
 - CIn
 - CCompressionMethodMode
 - PanelSort.cpp
-- InitLocalPrivileges
+- BoolToBOOL
 - CStreamBinder
 - Z7_COM7F_IMF
 - Rar3Decoder.cpp
 - CConfigProp
-- CPasswordDialog
-- Z7_COM7F_IMF
-- ExtractGroupCommand
+- CUpdateCallbackGUI2
+- CUInt32DefVector
+- CompressCall2.cpp
 - WRes
 - Rar3Vm.cpp
-- CAlignedBuffer
+- z7_AlignedAlloc
 - Ppmd7.c
 - CDirRecord
 - CInArcInfo
@@ -462,26 +463,26 @@
 - COneMethodInfo
 - EEnum
 - CCipher
-- CReparseAttr
-- CBenchProps
+- Z7_COM7F_IMF
+- CCodecInfoUser
 - COpenCallbackConsole
-- CProgressBox
+- ConvertUInt64ToString
 - CHeader
 - CInfo
-- CPlugin
+- CompressFiles
 - Panel.cpp
 - Sha512.c
 - CDecoder
-- System.cpp
-- InStream_SeekSet
-- CData
+- MyMin
+- WriteStream
+- Plugin.cpp
 - CItemEx
-- CItem
+- CMenuPage
 - CSystemPage
 - CBitDecoder
 - 7zStream.c
 - CFolderHistory
-- HashGUI.cpp
+- FileManager/StdAfx.h
 - CConfigItem
 - CItem
 - Md5.c
@@ -495,31 +496,31 @@
 - CResource
 - CUpdateItem
 - CExternalCodecs
-- BZip2Encoder.cpp
+- .EncodeBlock
 - CFilter
 - CVolumeName
-- CProgressThreadVirt
+- PanelOperations.cpp
 - CThreadInfo
 - CFieldInfo
 - SysIconUtils.cpp
 - CompressCall.cpp
 - Lzma2Dec_DecodeToDic
 - 7zDec.c
-- OutMemStream.h
+- CPrimeVol
 - EState
 - CInOutTempBuffer
 - CItem
+- CHeader
+- CDirItemsStat
 - Z7_COM7F_IMF
-- Z7_COM7F_IMF
-- CheckBreak2
-- CWimXml
+- CImage
 - CDecoder
-- CCopyDialog
+- .ProcessVirt
 - TimeUtils.cpp
-- .MoveArc_UpdateStatus
-- CSplitDialog
+- FSE_DecodeHeader
+- CRangeDecoder
 - CParseItem
-- CPropertyPage
+- CFoldersPage
 - CBuffer
 - CProcessAffinity
 - CMsbfEncoderTemp
@@ -529,84 +530,85 @@
 - CArchInfo
 - CMixItem
 - CUnpacker
-- CArcItem
+- CArcTime
 - CPercentPrinter
 - PanelDrag.cpp
-- CHandler::Decompress
+- GetUpdatePairInfoList
 - EEnum
-- MyCompare
+- CArchivePath
 - CDecoder
 - RarHandler.h
 - AvbVBMetaImageHeader
 - CItem
-- NtfsHandler.cpp
+- .GetStream
 - CUpdateItem
 - CMemBitDecoder
-- CBitByteDecoder
+- LzxDecoder.cpp
 - Rar1Decoder.cpp
 - EFileType
-- CMemDialog
+- .Hmac
 - DecodeBlock
 - CInitDialogItem
 - CZstdDecState
-- string
-- ConvertUtcFileTimeToString
-- CHeader
+- Z7_COM7F_IMF
+- Sha1.c
+- LzmaHandler.cpp
 - EBlockType
-- CHandler::Open2
+- UInt32
 - CVirtFile
 - WndProc
-- CImage
+- AvbHashtreeDescriptor
 - Rar2Decoder.cpp
 - App.tsx
 - WimIn.cpp
-- CUserTime
-- CPanel::CreateShellContextMenu
+- NsisIn.h
+- CLogVol
 - CUpdateOptions
 - CabIn.cpp
 - CAttr
-- CLocator
+- CCryptoInfo
 - Byte
 - UdfIn.cpp
-- CModalDialog
-- UNUSED_VAR
+- LangString
+- Z7_COM7F_IMF
 - CodecExports.cpp
+- CCoder
 - EStandardFilter
 - PropIDUtils.cpp
 - RegistryContextMenu.cpp
-- CModifiedExtInfo
 - RegistryAssociations.cpp
+- .CreateEx
 - CPropVariant
-- .SetOperation_Base
+- appInfo.ts
 - window-chrome.md
-- CThreadFolderOperations
+- 7zExtract.cpp
 - Net.cpp
 - CBitmEncoder
 - CMvDatabaseEx
-- CramfsHandler.cpp
-- .ParseRec
+- .Open
+- NtfsHandler.cpp
 - CPanelCopyThread
 - Z7_COM7F_IMF
 - CBlockPackData
-- ZipUpdate.cpp
+- OutStreamWithSha1.h
 - Shell.cpp
 - Z7_COM7F_IMF
 - CBitlEncoder
-- .CodeReal
-- CLinkDialog
-- fs2us
+- CBitDecoder
+- LinkDialog.cpp
+- CDirEnumerator
 - CProgressSync
 - CMyComBSTR
 - CCommandBar
-- HRESULT
+- Z7_COM7F_IMF
 - CLangPage
 - LzmaUtil.c
-- CZipDecoder::Decode
+- CFileSet
 - CDecoder256
 - CThreadExtracting
 - Z7_COM7F_IMF
 - Z7_COM7F_IMF
-- CInBuffer
+- FilterCoder.cpp
 - ThemeSwitch.tsx
 - Z7_COM7F_IMF
 - CKeyInfo
@@ -615,67 +617,68 @@
 - Z7_COM7F_IMF
 - Z7_COM7F_IMF
 - CPaxTime
-- OutMemStream.cpp
+- CMtCompressProgressMixer
 - CImageInfo
 - CInArchiveInfo
-- CSpecState
+- CBlock
 - CTables
 - EEnum
 - CVm
 - CExtractOptionsBase
-- Sha1Prepare
+- CSettingsPage
 - CCopyToOptions
 - apfs_hash_type_t
-- .OpenFileFolderPlugin
+- CLibrary
 - CInArchive
 - EArcType
 - CDatabase
-- LzxDecoder.cpp
-- ZlibEncoder.h
-- CFolderLink
+- CBool1
+- CBootInitialEntry
+- PanelItemOpen.cpp
 - CResourceBase
 - CSection
 - CChunk
-- CEncodingCharacts
+- CDynLimBuf
 - CHeader
-- CProxyFile2
-- renderInlineNode
+- MyMessages.cpp
 - Z7_COM7F_IMF
-- CProbEntry
+- Z7_COM7F_IMF
+- CRangeDecoder
 - CExtractNtOptions
-- CAgentFolder::CommonUpdateOperation
+- AGENT_OP
 - .GetNextItem
 - LvmHandler.cpp
 - CDriveInfo
 - Z7_COM7F_IMF2
-- CLang
+- CLangPage::OnInit
 - CBitmapInfoHeader
-- CMemBlockManager
+- MyProperyPageProcedure
 - CSignatureFinder
-- 7zCrc.h
-- CEncProps
-- Main2
+- ICoder.h
+- CompareFileTime
+- CNsis_CtlColors
+- FM.cpp
 - CObjectVector
-- CButtonInfo
+- CRenamePair
 - Motion
 - CHuffmanDecoder
 - CHuffDecoder
-- ArchiveCommandLine.cpp
-- useLanguage
+- CActionSet
+- TitleBar.tsx
 - tauri.conf.json
 - zz_ffi_list.rs
-- CParsedMethods
-- CHmac
-- ConvertPropertyToShortString2
+- CFolderLink
+- 7zAes.cpp
+- CPropColumn
 - CGroupDescriptor
-- CSwitchForm
-- Byte
-- CCrcInfo
+- CParser
+- ExtHandler.cpp
 - CItem
-- CExtentInfo
 - CItem
-- CCompressionMethodMode
-- CMultiMethodProps
+- CSection
+- CItem
+- CPartition
+- CBitDecoder
 - CAnalysis
 - Enum
 - CTempFilter
@@ -683,15 +686,15 @@
 - EEnum
 - CStdInStream
 - CMtf8Decoder
-- .IsEmpty
+- UString
 - EEnum
-- CBitReader
+- CPanel::InitColumns
 - Aes.c
 - Z7_COM7F_IMF
-- Ppmd7z_DecodeSymbol
+- CDecoder::CodeSpec
 - CoCreateInstance
 - EEnum
-- BrowseForFolder
+- CItemIDList
 - CVolHeader
 - CHash
 - CMftRec
@@ -699,157 +702,184 @@
 - CStreamFileProps
 - EEnum
 - CDynamicBuffer
-- MyLoadString
+- CArcItem
 - 7zBuf2.c
-- MyDlgProc
-- Decode
+- CSelectedState
+- Page
 - AvbDescriptorTag
 - EType
-- CExtentTreeHeader
+- Final
 - CItem
 - .ReadHeaderReal
 - CDir
 - CRarTime
 - CMy_VS_FIXEDFILEINFO
-- CHandlerTimeOptions
-- CMemBlocks
-- CStreamInfo
-- CCoderReleaser
+- HRESULT
+- CArcHeader
+- CFooter
+- Z7_COM7F_IMF
 - CFinishArchiveStat
-- GetFolderPath
-- EEnum
+- PanelFolderChange.cpp
+- Z7_COM7F_IMF
 - GetMatchesSpecN_2
+- CLocator
 - CHashOptions
-- CHashOptionsLocal
-- Seek2
+- InStream_SeekSet
 - EType
-- CEncoder::SetCoderProp
+- IsString1PrefixedByString2_NoCase_Ascii
 - EErrorType
 - ERecordType
 - CEncProps
 - EErrorType
-- WinMain
+- TextConfig.cpp
 - EGuidType
 - CWriteBufferLoc
-- WinMain2
+- CSolid
 - CCoder::CodeReal
 - CCommand
 - CMtSem
-- CHandler::Open2
+- CHandler::OpenDir
 - EOpType
-- CScreenRestorer
+- CDecoder
 - github
-- FilterType
+- .Changed
 - Next
 - Live-viewing apps
-- CProxyFile
+- CFfpOpen
 - EEnum
 - EErrorType
 - Z7_COM7F_IMF
-- StringConvert.cpp
-- LoadGlobalCodecs
+- 7zAlloc.c
 - CRecordingDateTime
 - CFreqBench
 - CDebugEntry
 - CItem
-- IMP_IInArchive_ArcProps
-
-Z7_COM7F_IMF
-- CTag
+- CExtendedInfo
+- CHandler::Open2
 - CEncProps
-- CDirPathSortPair
+- Byte
 - EErrorType
-- CDecompressStat
-- enum_BuildMode
+- Extract
+- UInt32
 - E_CheckCrcMode
 - CMyUniquePtr
 - CNode
-- EEnum
+- IsPark
 - CPpmd8_Context_
 - Z7_C_IFACE_DECL
 - EExtState
 - MyGetDateFormat
-- Huffman_Generate
-- Lzma2Dec.h
-- Sha512Prepare
-- CSiAttr
+- ExtractCallbackSfx.cpp
+- CEditPage
+- CObjArray
+- Game controls
 - BwtSort.c
-- .EncodeBlock3
+- BZip2Encoder.cpp
 - AvbHashtreeDescriptorFlags
-- FileLink.cpp
+- Windows/StdAfx.h
 - CFileInfo
 - Z7_COM7F_IMF
-- EHostOS
+- Onboarding
 - IsZlib
 - CItem
-- Ppmd7_MakeEscFreq
+- Ppmd7a_RD_Decode
 - CItem
 - CStartHeader
-- IMP_IInArchive_ArcProps_NO
-
-Z7_COM7F_IMF
-- CCryptoInfo
+- Ppmd8_Alloc
+- CSolidGroup
 - CTempBuffer
-- CFileInfoStrings
-- CPU_Sys_Is_SSE_Supported
+- CBondsChecks
+- Byte
+- CSegment
 - CNode
-- CArcLevelInfo
-- CBlake2sp_Prepare
-- CPU_IsSupported_CRC32
+- CItem
+- CHostOS
+- EIcbFileType
 - CProgressCloser
 - Z7_COM7F_IMF
-- CFastPosInit
-- CItem2
-- CExitEventLauncher
+- CMarker
+- CFilter
+- CKeyInfo
+- .ReadPluginPanelItem
 - CPpmd7_Context_
+- E_Program_ISA
 - CDirItem
-- Z7_COM7F_IMF
+- Enum_DragTargetMode
+- Managing notifications
+- egui app (`egui-app/`) — develop-branch scaffold
+- CHandler::Open2
 - CRleEncoder
 - CLinkFile
 - CBlock
-- CBitDecoder
+- Z7_COM7F_IMF
 - CSortedIndex
 - IMP_IInArchive_ArcProps
 
 Z7_COM7F_IMF
-- CRangeDecoder
-- DllMain
+- CStatProp
+- EEnum
+- EPx
+- CHandler::Open2
+- UTFConvert.cpp
 - CProgressFinalMessage
-- IArchive.h
-- CRefItem
+- OffsetStream.cpp
+- ProgressUtils.cpp
+- Z7_COM7F_IMF
+- Common.h
+- CArchiveExtractCallback_Closer
+- CTempFiles
+- Rar5Handler.h
 - CProcessedFileInfo
-- BenchCon
+- BenchCon.cpp
 - Code
+- Enum_CmdId
 - SetComplexString
 - CVKeyPropIDPair
 - NFC
-- Lzma86_Decode
-- .Create
+- Enum_FolderType
+- QuarkZip translations (i18n)
+- App.cpp
+- GetTime
+- CMyComboBoxEdit
+- installSingleClickGuard
+- CEncoder::CreateMixerCoder
 - CBlock
 - UNDER_CE
 - Z7_COM7F_IMF
+- IsAbsolutePath
 - CBuf
 - CBZip2Crc
 - PeHandler.cpp
 - GetTime
-- CIDLangPair
+- CVersionBlock
+- DECLARE_INTERFACE
+- CArchiveUpdateCallback::InFileStream_On_Error
 - CCoderReleaser
 - SetLzma2Prop
 - CBenchHash
+- CArchiveItemProperty
+- CAltStream
+- CByteBuffer_Wipe
+- Ppmd7z_RD_Decode
 - Column views
 - Z7_COM7F_IMF
 - Distribution (macOS arm64 only, for now)
+- .Parse
+- CTempItem
 - ReadStream_OpenProgress
 - Outline views
 - COtherArc
 - CAppleName
-- CPaxExtra
+- Z7_COM7F_IMF2
 - CMethodNamePair
-- CUpdateOptions
-- CInBufferException
-- COutBufferException
+- CPanel::Create
+- Sha
+- Sha1_UpdateBlocks_HW
+- Z7_COM7F_IMF
+- Z7_COM7F_IMF
 - Status bars
 - Z7_COM7F_IMF
+- DECLARE_INTERFACE
 - IsArc_Apm
 - IMP_IInArchive_ArcProps
 
@@ -859,6 +889,8 @@ Z7_COM7F_IMF
 
 Z7_COM7F_IMF
 - MyFree
+- CPanel::OnRightClick
+- CSystemPage::OnNotify
 - IMP_IInArchive_ArcProps
 
 Z7_COM7F_IMF
@@ -871,12 +903,14 @@ Z7_COM7F_IMF
 - IMP_IInArchive_ArcProps
 
 Z7_COM7F_IMF
-- Seek2
+- CFileUnmapper
+- Designing for iPadOS
+- Z7_COM7F_IMF
 - IsArc_Z
 - IMP_IInArchive_ArcProps_NO_Table
 
 Z7_COM7F_IMF
-- CPanel::OpenFocusedItemAsInternal
+- quarkzip-egui
 - _IO_STATUS_BLOCK
 - 7zip/README.md
 
@@ -893,21 +927,21 @@ Z7_COM7F_IMF
 10. `CApp` - 111 edges
 
 ## Surprising Connections (you probably didn't know these)
-- ``ArchiveInfo` schema (fixed 16 cells + More panel)` --references--> `ArchiveInfo`  [INFERRED]
-  docs/backend-commands.md → src/components/ArchiveOverview.tsx
-- `Commands` --references--> `ArchiveInfo`  [INFERRED]
-  docs/backend-commands.md → src/components/ArchiveOverview.tsx
 - `Components (`src/components/ui/` + feature components)` --references--> `stopDrag()`  [INFERRED]
   docs/ui-guidelines.md → src/components/TitleBar.tsx
+- `Interaction / states` --references--> `Button()`  [INFERRED]
+  docs/ui-guidelines.md → src/components/ui/button.tsx
 - `Components (`src/components/ui/` + feature components)` --references--> `Channel`  [INFERRED]
   docs/ui-guidelines.md → e2e/mocks/core.ts
 - `Components (`src/components/ui/` + feature components)` --references--> `App()`  [INFERRED]
   docs/ui-guidelines.md → src/App.tsx
+- `Components (`src/components/ui/` + feature components)` --references--> `AboutDialog()`  [INFERRED]
+  docs/ui-guidelines.md → src/components/AboutDialog.tsx
 
 ## Import Cycles
 - None detected.
 
-## Communities (873 total, 100 thin omitted)
+## Communities (910 total, 113 thin omitted)
 
 ### Community 0 - "scripts"
 Cohesion: 0.12
@@ -915,15 +949,15 @@ Nodes (16): scripts, build, dev, format, format:check, format:rust, format:rust:
 
 ### Community 1 - "bridge.cpp"
 Cohesion: 0.04
-Nodes (31): qz_archive_prop(), qz_archive_prop_count(), qz_extract(), qz_fs_error(), qz_list_close(), qz_op_result_name(), qz_open_link(), qz_path_safe() (+23 more)
+Nodes (36): dup_utf8(), prop_display_name(), prop_display_string(), qz_archive_prop(), qz_archive_prop_count(), qz_extract(), qz_fs_error(), qz_list_close() (+28 more)
 
 ### Community 2 - "opencode.json"
 Cohesion: 0.07
 Nodes (24): agents, default, list, commands, custom, instructions, lsp, model (+16 more)
 
 ### Community 3 - "package.json"
-Cohesion: 0.05
-Nodes (33): dependencies, @fontsource/inter, lucide-react, react, react-dom, @tauri-apps/api, @tauri-apps/plugin-dialog, @tauri-apps/plugin-opener (+25 more)
+Cohesion: 0.06
+Nodes (30): dependencies, @fontsource/inter, lucide-react, react, react-dom, @tauri-apps/api, @tauri-apps/plugin-dialog, @tauri-apps/plugin-opener (+22 more)
 
 ### Community 4 - "archive.rs"
 Cohesion: 0.10
@@ -947,23 +981,23 @@ Nodes (18): compilerOptions, allowImportingTsExtensions, isolatedModules, jsx, l
 
 ### Community 9 - "Enum"
 Cohesion: 0.03
-Nodes (65): Enum, kAffinity, kAltStreams, kArchiveType, kArcNameMode, kArExclude, kArInclude, kCaseSensitive (+57 more)
+Nodes (66): Enum, kAffinity, kAltStreams, kArchiveType, kArcNameMode, kArExclude, kArInclude, kCaseSensitive (+58 more)
 
 ### Community 10 - "devDependencies"
 Cohesion: 0.11
 Nodes (19): devDependencies, husky, jsdom, lint-staged, @playwright/test, prettier, tailwindcss, @tailwindcss/vite (+11 more)
 
-### Community 11 - "Button"
-Cohesion: 0.07
-Nodes (44): Components (`src/components/ui/` + feature components), Deliberate deviations (with rationale), Design direction, Element IDs (DOM debugging), Interaction / states, Layout, QuarkZip UI guidelines, Tokens (+36 more)
+### Community 11 - "Components (`src/components/ui/` + feature components)"
+Cohesion: 0.10
+Nodes (27): Components (`src/components/ui/` + feature components), Deliberate deviations (with rationale), Design direction, Interaction / states, Layout, QuarkZip UI guidelines, Tokens, Typography (Inter, OFL) (+19 more)
 
 ### Community 12 - "checksum.rs"
 Cohesion: 0.09
 Nodes (14): ChecksumAlgo, Md5, Sha1, Sha256, Sha512, CHUNK_BYTES, hash_bytes(), hash_file_async() (+6 more)
 
 ### Community 13 - "Opencode Configuration for QuarkZip"
-Cohesion: 0.15
-Nodes (12): Agents, Documentation, Guardrails, Knowledge graph, MCP, Opencode Configuration for QuarkZip, Repo layout (target project), Run Command (+4 more)
+Cohesion: 0.14
+Nodes (13): Agents, Commands, Documentation, Guardrails, Knowledge graph, MCP, Opencode Configuration for QuarkZip, Repo layout (target project) (+5 more)
 
 ### Community 14 - "MacPacker reference (upstream)"
 Cohesion: 0.07
@@ -998,8 +1032,8 @@ Cohesion: 0.33
 Nodes (5): Conventions, graphify, Guardrails, QuarkZip — agent instructions, Toolchain
 
 ### Community 22 - "BZip2Decoder.cpp"
-Cohesion: 0.09
-Nodes (7): CDecoder::CreateThread(), CDecoder::RunScout(), DecodeBlock1(), IsBlockSig(), IsEndSig(), RunScout2(), Z7_COM7F_IMF()
+Cohesion: 0.13
+Nodes (4): CDecoder::CreateThread(), CDecoder::RunScout(), RunScout2(), Z7_COM7F_IMF()
 
 ### Community 23 - "7zz binaries for QuarkZip"
 Cohesion: 0.29
@@ -1007,11 +1041,13 @@ Nodes (6): 7zz binaries for QuarkZip, Assets we use, Checked-in vs fetch-at-buil
 
 ### Community 24 - "COptionsDialog"
 Cohesion: 0.06
-Nodes (23): CBool1, Supported, Val, CBoolBox, BoolPair, DefaultVal, Id, IsSupported (+15 more)
+Nodes (19): CBoolBox, BoolPair, DefaultVal, Id, IsSupported, Set_Id, COptionsDialog, ATime (+11 more)
 
 ### Community 25 - "HashCalc.cpp"
-Cohesion: 0.07
-Nodes (16): AddDigests(), CHashBundle::Final(), CHashBundle::SetSize(), CHashBundle::Update(), CheckDigests(), CreateHashHandler_In(), CreateHashHandler_Out(), CSum_Name_EscapeToOriginal() (+8 more)
+Cohesion: 0.04
+Nodes (15): CreateHashHandler_In(), CreateHashHandler_Out(), CSum_Name_EscapeToOriginal(), IMP_IInArchive_ArcProps
+
+Z7_COM7F_IMF(), SkipWhite(), CompareArcItems(), CompareArcItemsBase(), CUncopyable (+7 more)
 
 ### Community 26 - "default.json"
 Cohesion: 0.33
@@ -1026,28 +1062,28 @@ Cohesion: 0.08
 Nodes (25): 0. File hierarchy (accurate, `master` root), 10. What QuarkZip borrows, 11.1 System architecture (UI → app → queue → plugins → 7zz), 11.2 Main window composition (`src/window.ui`), 11.3 Startup + distribution (Flatpak build → run), 11.4 Job lifecycle (`job_queue.py` + `status.py`), 11.5 7z invocation with progress / cancel / timeout (`sevenzip._run_7zip`), 11.6 Compress with Auto Recommend (`compress-dialog.ui` + `system_job`) (+17 more)
 
 ### Community 29 - "LzFindMt.c"
-Cohesion: 0.14
+Cohesion: 0.13
 Nodes (27): BtFillBlock(), BtGetMatches(), BtThreadFunc(), BtThreadFunc2(), HashThreadFunc2(), MatchFinderMt0_Skip(), MatchFinderMt2_GetMatches(), MatchFinderMt_Construct() (+19 more)
 
-### Community 30 - "LzmaEnc_CodeOneBlock"
-Cohesion: 0.14
-Nodes (25): Backward(), CheckErrors(), FillAlignPrices(), FillDistancesPrices(), Flush(), GetOptimum(), GetOptimumFast(), GetPosSlot1() (+17 more)
+### Community 30 - "CompressDialog.cpp"
+Cohesion: 0.09
+Nodes (13): AddMemSize(), AddProp(), AddProp_switch(), AddPropName(), AddTimeOption(), Combo_AddDict2(), ComboBox_AddStringAscii(), ComboBox_AddStringAscii_SetItemData() (+5 more)
 
-### Community 31 - "AddSwitchWildcardsToCensor"
-Cohesion: 0.10
-Nodes (23): AddNameToCensor(), AddRenamePair(), AddSwitchWildcardsToCensor(), AddToCensorFromListFile(), AddToCensorFromNonSwitchesStrings(), CCodePagePair, CodePage, Name (+15 more)
+### Community 31 - "ArchiveCommandLine.cpp"
+Cohesion: 0.09
+Nodes (29): AddNameToCensor(), AddSwitchWildcardsToCensor(), AddToCensorFromListFile(), AddToCensorFromNonSwitchesStrings(), CCodePagePair, CodePage, Name, CEventSetEnd (+21 more)
 
 ### Community 32 - "fetch-7zz.sh"
 Cohesion: 0.83
 Nodes (3): fetch(), pick(), fetch-7zz.sh script
 
-### Community 33 - "7zHandlerOut.cpp"
-Cohesion: 0.11
-Nodes (14): C_Id_Name_pair, Id, Name, CHandler::PropsMethod_To_FullMethod(), CHandler::SetHeaderMethod(), CHandler::SetMainMethod(), COutHandler::SetProperty(), COutHandler::SetSolidFromPROPVARIANT() (+6 more)
+### Community 33 - "tokens.rs"
+Cohesion: 0.06
+Nodes (47): BORDER, BTN_H, CARD, CARD_GAP, CARD_PAD, CONTENT, CTA_GREEN, CTA_GREEN_DIM (+39 more)
 
 ### Community 34 - "CHandlerImg"
 Cohesion: 0.08
-Nodes (14): IInArchiveGetStream, CHandlerCont, CHandlerImg, _imgExt, _posInArc, _size, Stream, _stream_dataError (+6 more)
+Nodes (13): IInArchiveGetStream, CHandlerCont, CHandlerImg, _imgExt, _posInArc, _size, Stream, _stream_dataError (+5 more)
 
 ### Community 35 - "CExtent"
 Cohesion: 0.07
@@ -1089,29 +1125,29 @@ Nodes (4): General settings, JSON Language Server (tauri.conf.json, opencode.jso
 Cohesion: 0.29
 Nodes (6): Bash operations (safe commands for this toolchain), Dangerous bash commands, File operations, File operations on sensitive files, Task operations, Web operations
 
-### Community 56 - "HashCalc"
-Cohesion: 0.08
-Nodes (14): CHashBundle::SetMethods(), CHashMidBuf, _data, CUpdateItem, IndexInArc, IndexInClient, IsDir, NewData (+6 more)
+### Community 56 - "CBenchInfo"
+Cohesion: 0.06
+Nodes (28): CBenchCallbackToPrint::SetEncodeResult(), CBenchInfo, GlobalFreq, GlobalTime, NumIterations, PackSize, UnpackSize, UserFreq (+20 more)
 
-### Community 58 - "UString"
-Cohesion: 0.02
-Nodes (84): AddComment_modified_by_t(), AddComment_Name(), AddComment_Time(), AddComment_UInt64(), GetOsPath(), GetOsPath_Remove_TailSlash(), NormalizeSlashes_in_FileName_for_OsPath(), ReplaceToWinSlashes() (+76 more)
+### Community 58 - "TextPairs.cpp"
+Cohesion: 0.11
+Nodes (19): CLangListRecord, IsSelected, LangInfoIndex, Mark, Name, Order, ComparePairIDs(), ComparePairItems() (+11 more)
 
 ### Community 59 - "LanguageContext.tsx"
 Cohesion: 0.12
 Nodes (23): @fontsource/inter, react, react-dom, LanguageSwitch(), menuAbove(), menuBelow(), usePortaledMenu(), EN_KEYS (+15 more)
 
 ### Community 60 - "check-locales.mjs"
-Cohesion: 0.12
-Nodes (6): dir, enKeys, files, registry, registryPath, root
+Cohesion: 0.09
+Nodes (9): @tailwindcss/vite, @vitejs/plugin-react, dir, enKeys, files, registry, registryPath, root (+1 more)
 
 ### Community 61 - "EEnum"
 Cohesion: 0.07
 Nodes (27): EEnum, kAdditionalStreamsInfo, kAnti, kArchiveProperties, kATime, kCodersUnpackSize, kComment, kCRC (+19 more)
 
 ### Community 62 - "Channel"
-Cohesion: 0.25
-Nodes (5): `ArchiveInfo` schema (fixed 16 cells + More panel), Commands, QuarkZip backend commands (`src-tauri/src/lib.rs`), Rules, Channel
+Cohesion: 0.24
+Nodes (6): `ArchiveInfo` schema (fixed 16 cells + More panel), Commands, QuarkZip backend commands (`src-tauri/src/lib.rs`), Rules, Channel, ArchiveInfo
 
 ### Community 63 - "permission"
 Cohesion: 0.18
@@ -1127,88 +1163,90 @@ Nodes (22): COpenSpecFlags, CanReturnFrontal, CanReturnMid, CanReturnTail, COpen
 
 ### Community 66 - "AString"
 Cohesion: 0.02
-Nodes (92): GetString(), Z7_COM7F_IMF(), Is_Apple_FS_Or_Unknown(), IMP_IInArchive_ArcProps
-
-Z7_COM7F_IMF(), AddErrorMessage(), AddProp_Size64(), Z7_COM7F_IMF(), AddComment_UInt64() (+84 more)
+Nodes (87): CHandler::AddMethodName(), ConvertMethodIdToString(), ConvertMethodIdToString_Back(), GetHex(), AddVolInternalName_toString(), GetString(), SetMethodName(), Z7_COM7F_IMF() (+79 more)
 
 ### Community 67 - "DeflateEncoder.cpp"
-Cohesion: 0.27
-Nodes (5): GetPosSlot(), GetStorePrice(), Huffman_GetPrice(), Huffman_GetPrice_Spec(), Huffman_ReverseBits()
+Cohesion: 0.22
+Nodes (6): CFastPosInit, GetPosSlot(), GetStorePrice(), Huffman_GetPrice(), Huffman_GetPrice_Spec(), Huffman_ReverseBits()
+
+### Community 68 - "hig-lookup.md"
+Cohesion: 0.08
+Nodes (4): Best practices, Designing for iOS, Best practices, Designing for macOS
 
 ### Community 69 - "Security Policy"
 Cohesion: 0.40
 Nodes (4): Reporting a Vulnerability, Scope notes, Security Policy, Supported Versions
 
-### Community 70 - "StringConvert.h"
+### Community 70 - "MyCom.h"
 Cohesion: 0.02
-Nodes (18): CExtractCallbackImp, GetFormatNamePtr(), FlushStreams(), PrintError(), CShellExtClassFactory, EEnum, kLocal, kUNC (+10 more)
+Nodes (30): CExtractCallbackImp, ErrorMessageForHRESULT(), GetDllVersion(), WinMain2(), C_CopyFileProgress_to_FolderCallback_MoveArc, CAgentFolder::GetPathParts(), Init(), InitCRC() (+22 more)
 
 ### Community 71 - "CpuArch.h"
-Cohesion: 0.05
-Nodes (28): CLzhCrc16TableInit, IMP_IInArchive_ArcProps_NO_Table
+Cohesion: 0.04
+Nodes (31): CLzhCrc16TableInit, IMP_IInArchive_ArcProps_NO_Table
 
-CHandler::CHandler(), CHandler, IMP_IInArchive_ArcProps
+CHandler::CHandler(), IMP_IInArchive_ArcProps
 
 
 UInt64 CHandler::GetPackSize(), IMP_IInArchive_ArcProps
 
-UInt64 CHandler::GetPackSize(), Z7_COM7F_IMF(), AreParentsOK(), CHandler::AddErrorMessage() (+20 more)
+UInt64 CHandler::GetPackSize(), Z7_COM7F_IMF(), AreParentsOK(), CHandler::AddErrorMessage(), NeedParent() (+23 more)
 
 ### Community 72 - "CCompressDialog"
-Cohesion: 0.03
-Nodes (68): SetArcName(), AddFilter(), AddProp(), AddProp_switch(), AddPropName(), AddText_from_Bool1(), AddText_from_BoolPair(), AddTimeOption() (+60 more)
+Cohesion: 0.04
+Nodes (47): CCompressDialog, AltStreams, ArcFormats, ArcIndices, _auto_Dict, _auto_Dict_Chain, _auto_MethodId, _auto_NumThreads (+39 more)
 
 ### Community 73 - "ExtractDialog.tsx"
 Cohesion: 0.26
 Nodes (15): count(), ExtractDialog(), ExtractMode, invokeMock, setup(), appendDateStamp(), ARCHIVE_EXTENSIONS, DATE_STAMP_SUFFIX_BYTES (+7 more)
 
 ### Community 74 - "Bench.cpp"
-Cohesion: 0.04
-Nodes (82): AreSameMethodNames(), Bench(), Bench_BW_Print_Usage_Speed(), Benchmark_GetUsage_Percents(), CAffinityMode, NumBundleThreads, NumCores, NumCoreThreads (+74 more)
+Cohesion: 0.03
+Nodes (94): AreSameMethodNames(), Bench(), Bench_BW_Print_Usage_Speed(), Benchmark_GetUsage_Percents(), CAffinityMode, NumBundleThreads, NumCores, NumCoreThreads (+86 more)
 
 ### Community 75 - "ArchiveTree.tsx"
-Cohesion: 0.13
-Nodes (32): lucide-react, ArchiveEntry, ArchiveTree(), fetchChunk(), focusRow(), loadedChildPaths(), onTreeKeyDown(), parentRowIndex() (+24 more)
+Cohesion: 0.11
+Nodes (37): lucide-react, ArchiveEntry, ArchiveTree(), fetchChunk(), focusRow(), loadedChildPaths(), onTreeKeyDown(), parentRowIndex() (+29 more)
 
-### Community 76 - "CInArchiveInfo"
-Cohesion: 0.17
-Nodes (10): CArchiveVersion, Major, Minor, CInArchiveInfo, DataStartPosition, DataStartPosition2, FileInfoPopIDs, StartPosition (+2 more)
+### Community 76 - "CDbEx"
+Cohesion: 0.07
+Nodes (23): CArchiveVersion, Major, Minor, CDbEx, ArcInfo, FileIndexToFolderIndexMap, FolderStartFileIndex, HeadersSize (+15 more)
 
 ### Community 77 - "sevenzip.rs"
 Cohesion: 0.21
 Nodes (14): CANCELLED, enumerate_detail(), extract_ffi(), qz_archive_prop(), qz_archive_prop_count(), qz_extract(), qz_list_close(), qz_list_entry() (+6 more)
 
 ### Community 78 - "pull-hig.mjs"
-Cohesion: 0.09
-Nodes (38): abstractOf(), ALL_PLATFORMS, anchorEntries(), anchorMapFor(), collapseBlankLines(), coveredPlatformsLine(), crawlSection(), CURATED_FILES (+30 more)
+Cohesion: 0.07
+Nodes (65): abstractOf(), ALL_PLATFORMS, anchorEntries(), anchorMapFor(), cellText(), collapseBlankLines(), collectReferences(), coveredPlatformsLine() (+57 more)
 
-### Community 79 - "FileDir.cpp"
-Cohesion: 0.08
-Nodes (19): Z7_COM7F_IMF(), Delete_EmptyFolder_And_EmptySubFolders(), CArchiveExtractCallback::CheckExistFile(), ICopyFileProgress(), CWorkDirTempFile::MoveToOriginal(), fs2fas(), CopyProgressRoutine_to_ICopyFileProgress(), DECLARE_INTERFACE() (+11 more)
+### Community 79 - "Z7_COM7F_IMF"
+Cohesion: 0.14
+Nodes (8): Z7_COM7F_IMF(), CopyProgressRoutine_to_ICopyFileProgress(), FiTime_To_timespec(), SetDirTime(), SetFileAttrib(), SetFileAttrib_PosixHighDetect(), SetFileTime_Base(), SetLinkFileTime()
 
-### Community 80 - "CBenchProgressSync"
-Cohesion: 0.06
-Nodes (31): CBenchProgressSync, BenchFinish_Task_HRESULT, BenchFinish_Thread_HRESULT, CS, DictSize, Exit, FreqString_GUI, FreqString_Sync (+23 more)
+### Community 80 - "CCommandMapItem"
+Cohesion: 0.05
+Nodes (33): CCommandMapItem, ArcName, ArcType, CommandInternalID, CtxCommandType, Folder, IsPopup, UserString (+25 more)
 
 ### Community 81 - "BenchmarkDialog.cpp"
-Cohesion: 0.03
-Nodes (66): CTotalBenchRes, NumIterations2, Rating, RPU, Speed, Usage, DECLARE_INTERFACE(), Add_Dot3String() (+58 more)
+Cohesion: 0.02
+Nodes (82): AddSizeValue(), Add_Dot3String(), AddRatingsLine(), AddRatingString(), AddSize_MB(), AddUsageString(), Benchmark(), CBenchmarkDialog (+74 more)
 
-### Community 82 - "CChildProcesses"
-Cohesion: 0.10
-Nodes (12): CChildProcesses, Handles, NeedWait, CProcessSnapshot, _handle, CSnapshotProcess, Id, Name (+4 more)
+### Community 82 - "CLongAllocDesc"
+Cohesion: 0.07
+Nodes (23): CExtent, Len, Pos, CFileId, FileCharacteristics, Icb, Id, CInArchive::CheckItemExtents() (+15 more)
 
 ### Community 83 - "vitest"
 Cohesion: 0.09
-Nodes (22): @testing-library/react, @testing-library/user-event, vitest, DragEvent, dragHandlers, extractCtl, listCtl, osCtl (+14 more)
+Nodes (20): @testing-library/react, @testing-library/user-event, vitest, DragEvent, dragHandlers, extractCtl, listCtl, osCtl (+12 more)
 
 ### Community 84 - "CMethodProps"
-Cohesion: 0.06
-Nodes (29): CCoderProps, _numProps, _numPropsMax, _propIDs, _props, CMethodProps, CNameToPropID, Name (+21 more)
+Cohesion: 0.05
+Nodes (36): COutHandler::SetProperty(), COutHandler::SetSolidFromPROPVARIANT(), PROPVARIANT_to_BoolPair(), CCoderProps, _numProps, _numPropsMax, _propIDs, _props (+28 more)
 
-### Community 86 - "MyCom.h"
+### Community 86 - "Alloc.h"
 Cohesion: 0.02
-Nodes (55): typedef(), CXzDecMt, CreateObject(), SetCaseSensitive(), SetCodecs(), SetLargePageMode(), CAddCommon::SetOptions(), CHandler (+47 more)
+Nodes (34): ISzAlloc, Z7_BRANCH_CONV_ST(), typedef(), typedef(), CXzDecMt, Crc64GenerateTable(), ReadByte(), WriteByte() (+26 more)
 
 ### Community 87 - "Typography"
 Cohesion: 0.06
@@ -1291,8 +1329,8 @@ Cohesion: 0.18
 Nodes (11): Apple Pencil and Scribble, Barrel roll, Best practices, Change log, Custom drawing, Double tap, Hover, Platform considerations (+3 more)
 
 ### Community 107 - "Charts"
-Cohesion: 0.18
-Nodes (11): Anatomy, Axes, Best practices, Change log, Charts, Color, Descriptive content, Enhancing the accessibility of a chart (+3 more)
+Cohesion: 0.05
+Nodes (34): Anatomy, Axes, Best practices, Change log, Charts, Color, Descriptive content, Enhancing the accessibility of a chart (+26 more)
 
 ### Community 108 - "Design principles"
 Cohesion: 0.18
@@ -1306,9 +1344,9 @@ Nodes (11): Anatomy, Arrangement views, Best practices, Change log, Designing fo
 Cohesion: 0.18
 Nodes (11): Best practices, Change log, Continuous improvement, Generative AI, Inputs, Models and datasets, Outputs, Platform considerations (+3 more)
 
-### Community 111 - "Inclusion"
-Cohesion: 0.18
-Nodes (11): Accessibility, Avoiding stereotypes, Being approachable, Gender identity, Inclusion, Inclusive by design, Languages, People and settings (+3 more)
+### Community 111 - "CrmApp"
+Cohesion: 0.15
+Nodes (9): CrmApp, dim(), drawer_section(), kv(), micro_head(), settings_title(), TABS, TAG_NAMES (+1 more)
 
 ### Community 112 - "Menus"
 Cohesion: 0.18
@@ -1334,9 +1372,9 @@ Nodes (11): Animations, Change log, Custom symbols, Design variants, Gradients, 
 Cohesion: 0.20
 Nodes (9): AirPlay, Best practices, Black AirPlay icon, Change log, Custom color AirPlay icon, Platform considerations, Referring to AirPlay, Using AirPlay icons (+1 more)
 
-### Community 118 - "Alerts"
-Cohesion: 0.20
-Nodes (10): Alerts, Anatomy, Best practices, Buttons, Change log, Content, Desktop (macOS), Mobile (iOS, iPadOS) (+2 more)
+### Community 118 - "sheets.md"
+Cohesion: 0.03
+Nodes (56): Action sheets, Best practices, Mobile (iOS, iPadOS), Platform considerations, Related guidelines, Activity views, Best practices, Platform considerations (+48 more)
 
 ### Community 119 - "App icons"
 Cohesion: 0.20
@@ -1375,7 +1413,7 @@ Cohesion: 0.22
 Nodes (9): Best practices, Change log, Content, Desktop (macOS), Lists and tables, Mobile (iOS, iPadOS, visionOS), Platform considerations, Related guidelines (+1 more)
 
 ### Community 128 - "Maps"
-Cohesion: 0.22
+Cohesion: 0.20
 Nodes (9): Adding place cards outside of a map, Best practices, Change log, Custom information, Displaying place cards in a map, Indoor maps, Maps, Place cards (+1 more)
 
 ### Community 129 - "Notifications"
@@ -1442,9 +1480,9 @@ Nodes (8): Best practices, Change log, Desktop (macOS), Mobile (iOS, iPadOS), Pl
 Cohesion: 0.25
 Nodes (8): Best practices, Change log, Content, Desktop (macOS), Mobile (iOS, iPadOS), Platform considerations, Related guidelines, Segmented controls
 
-### Community 145 - "Sheets"
-Cohesion: 0.25
-Nodes (8): Anatomy, Best practices, Change log, Desktop (macOS), Mobile (iOS, iPadOS), Platform considerations, Related guidelines, Sheets
+### Community 145 - "CCodecs"
+Cohesion: 0.09
+Nodes (20): CCodecs, CReleaser, _codecs, CArcErrorInfo, ErrorFlags, ErrorFlags_Defined, ErrorFormatIndex, ErrorMessage (+12 more)
 
 ### Community 146 - "Siri"
 Cohesion: 0.25
@@ -1470,9 +1508,9 @@ Nodes (7): Anatomy, Best practices, Camera experiences on a locked device, Chang
 Cohesion: 0.29
 Nodes (7): Best practices, Disclosure buttons, Disclosure controls, Disclosure triangles, Mobile (iOS, iPadOS, visionOS), Platform considerations, Related guidelines
 
-### Community 152 - "Game controls"
-Cohesion: 0.04
-Nodes (40): Best practices, Designing for iOS, Best practices, Designing for iPadOS, Best practices, Designing for macOS, Best practices, Feedback (+32 more)
+### Community 152 - "Feedback"
+Cohesion: 0.19
+Nodes (8): Best practices, Feedback, Platform considerations, Related guidelines, Best practices, Gyroscope and accelerometer, Platform considerations, Related guidelines
 
 ### Community 153 - "Gauges"
 Cohesion: 0.11
@@ -1514,9 +1552,9 @@ Nodes (7): Best practices, Change log, Customizing indicators, Mobile (iOS, iPad
 Cohesion: 0.29
 Nodes (7): Best practices, Change log, Desktop (macOS), Mobile (iOS, iPadOS), Pickers, Platform considerations, Related guidelines
 
-### Community 163 - "Progress indicators"
-Cohesion: 0.29
-Nodes (7): Best practices, Change log, Desktop (macOS), Mobile (iOS, iPadOS), Platform considerations, Progress indicators, Refresh content controls
+### Community 163 - "CTargetTransferInfo"
+Cohesion: 0.07
+Nodes (28): CDataObject_GetTransfer, Flags, _reserved2, CDataObject_SetTransfer, Target, CDataObject_TransferBase, ProcessId, Program_Flags (+20 more)
 
 ### Community 164 - "Sidebars"
 Cohesion: 0.29
@@ -1559,8 +1597,8 @@ Cohesion: 0.33
 Nodes (6): Best practices, Change log, Desktop (macOS), Labels, Platform considerations, Related guidelines
 
 ### Community 174 - "UInt64"
-Cohesion: 0.03
-Nodes (76): UInt64, AddOutSize(), Get_TotalSize_for_Coder(), ApfsTimeToFileTime(), ApfsTimeToProp(), j_key_t, obj_id_and_type, GetSize() (+68 more)
+Cohesion: 0.02
+Nodes (92): Sha512_UpdateBlocks(), Sha512_UpdateBlocks_HW(), UInt64, AddOutSize(), Get_TotalSize_for_Coder(), AddComment_modified_by_t(), AddComment_Name(), AddComment_Time() (+84 more)
 
 ### Community 175 - "Loading"
 Cohesion: 0.33
@@ -1574,9 +1612,9 @@ Nodes (6): Best practices, Deleting accounts, Managing accounts, Platform consid
 Cohesion: 0.33
 Nodes (6): Best practices, Change log, Platform considerations, Pop-up buttons, Related guidelines, Tablet (iPadOS)
 
-### Community 179 - "Popovers"
-Cohesion: 0.33
-Nodes (6): Best practices, Desktop (macOS), Mobile (iOS, iPadOS), Platform considerations, Popovers, Related guidelines
+### Community 179 - "LRESULTToBool"
+Cohesion: 0.10
+Nodes (10): CReBar, Create(), CStatusBar, SetText(), AddButton(), AddButtonW(), ButtonStructSize(), EnableButton() (+2 more)
 
 ### Community 180 - "Pull-down buttons"
 Cohesion: 0.33
@@ -1602,25 +1640,27 @@ Nodes (6): Best practices, Desktop (macOS), Mobile (iOS, iPadOS), Platform consi
 Cohesion: 0.10
 Nodes (21): EEnum, kAcorn, kAMIGA, kAtari, kBeOS, kCPM, kFAT, kHPFS (+13 more)
 
-### Community 186 - "Writing"
-Cohesion: 0.33
-Nodes (6): Best practices, Change log, Getting started, Platform considerations, Related guidelines, Writing
+### Community 186 - "Z7_COM7F_IMF"
+Cohesion: 0.09
+Nodes (18): IMP_IInArchive_ArcProps
 
-### Community 187 - "Action sheets"
-Cohesion: 0.40
-Nodes (5): Action sheets, Best practices, Mobile (iOS, iPadOS), Platform considerations, Related guidelines
+Z7_COM7F_IMF(), AddName(), Z7_COM7F_IMF(), Z7_COM7F_IMF(), AString_Wipe, UString_Wipe, AddHex(), CUInt32PCharPair (+10 more)
 
-### Community 188 - "Activity views"
-Cohesion: 0.40
-Nodes (5): Activity views, Best practices, Platform considerations, Related guidelines, Share and action extensions
+### Community 187 - "data.rs"
+Cohesion: 0.10
+Nodes (15): avatar_color(), Job, Kpi, kpis(), schedule(), Status, Booked, Done (+7 more)
+
+### Community 188 - "CInArchive::ReadEntries"
+Cohesion: 0.09
+Nodes (25): CBlockHeader, Num, Offset, CCommandInfo, NumParams, CheckPeOffset(), CInArchive::CompareCommands(), CInArchive::DetectNsisType() (+17 more)
 
 ### Community 189 - "Branding"
 Cohesion: 0.40
 Nodes (5): Best practices, Branding, Change log, Platform considerations, Related guidelines
 
-### Community 190 - "Collaboration and sharing"
-Cohesion: 0.40
-Nodes (5): Best practices, Change log, Collaboration and sharing, Platform considerations, Related guidelines
+### Community 190 - "CItem"
+Cohesion: 0.07
+Nodes (20): CIcbTag, FileType, Flags, CItem, ATime, AttribTime, CreateTime, Extents (+12 more)
 
 ### Community 191 - "Collections"
 Cohesion: 0.40
@@ -1634,21 +1674,21 @@ Nodes (5): Best practices, Color wells, Desktop (macOS), Platform considerations
 Cohesion: 0.40
 Nodes (4): Best practices, Change log, iCloud, Platform considerations
 
-### Community 194 - "Modality"
-Cohesion: 0.40
-Nodes (5): Best practices, Change log, Modality, Platform considerations, Related guidelines
+### Community 194 - "CPlugin"
+Cohesion: 0.08
+Nodes (15): CPlugin, _agent, _archiveTypeName, _folder, m_ArchiveHandler, m_CurrentDir, m_CurrentDirBuffer, m_FileInfo (+7 more)
 
 ### Community 195 - "Panels"
 Cohesion: 0.40
 Nodes (5): Best practices, HUD-style panels, Panels, Platform considerations, Related guidelines
 
-### Community 196 - "Printing"
-Cohesion: 0.40
-Nodes (5): Best practices, Desktop (macOS), Platform considerations, Printing, Related guidelines
+### Community 196 - "UInt32"
+Cohesion: 0.08
+Nodes (18): CBTreeNodePhys, flags, level, nkeys, ophys, table_space, CPhys, oid (+10 more)
 
-### Community 197 - "CHandler::Open2"
-Cohesion: 0.04
-Nodes (43): AddToComment_Prop(), AddToComment_UInt64(), CBlock, PackPos, PackSize, Type, UnpPos, CChecksum (+35 more)
+### Community 197 - "CFile"
+Cohesion: 0.05
+Nodes (32): AddToComment_Prop(), AddToComment_UInt64(), CBlock, PackPos, PackSize, Type, UnpPos, CChecksum (+24 more)
 
 ### Community 198 - "Steppers"
 Cohesion: 0.40
@@ -1658,10 +1698,6 @@ Nodes (5): Best practices, Desktop (macOS), Platform considerations, Related gui
 Cohesion: 0.50
 Nodes (3): Conventions to check, Cross-platform translation, Vocabulary
 
-### Community 201 - "CDialog"
-Cohesion: 0.03
-Nodes (19): CComboDialog, _comboBox, Static, Strings, Title, Value, Z7_override, AreRectsEqual() (+11 more)
-
 ### Community 202 - "Combo boxes"
 Cohesion: 0.50
 Nodes (4): Best practices, Combo boxes, Platform considerations, Related guidelines
@@ -1670,13 +1706,13 @@ Nodes (4): Best practices, Combo boxes, Platform considerations, Related guideli
 Cohesion: 0.50
 Nodes (4): Best practices, Dock menus, Platform considerations, Related guidelines
 
-### Community 204 - "CFieldPrinter"
-Cohesion: 0.10
-Nodes (16): CFieldInfoInit, Name, PrefixSpacesWidth, PropID, TextAdjustment, TitleAdjustment, Width, CFieldPrinter (+8 more)
+### Community 204 - "CCallbackConsoleBase"
+Cohesion: 0.09
+Nodes (16): CCallbackConsoleBase, FailedFiles, LogLevel, NeedFlush, NumNonOpenFiles, _percent, PercentsNameLevel, ScanErrors (+8 more)
 
 ### Community 205 - ".SendMsg"
-Cohesion: 0.03
-Nodes (27): CComboBox, CComboBoxEx, InsertItem(), InsertColumn(), InsertItem(), SetItem(), CProgressBar, SetBackgroundColor() (+19 more)
+Cohesion: 0.08
+Nodes (10): CComboBox, CComboBoxEx, InsertItem(), InsertColumn(), InsertItem(), SetItem(), SetBackgroundColor(), SetBarColor() (+2 more)
 
 ### Community 206 - "Home Screen quick actions"
 Cohesion: 0.50
@@ -1698,9 +1734,9 @@ Nodes (18): COutHandler, _compressHeaders, _decoderCompatibilityVersion, _disabl
 Cohesion: 0.50
 Nodes (4): Best practices, Path controls, Platform considerations, Related guidelines
 
-### Community 211 - "ListArchives"
-Cohesion: 0.08
-Nodes (18): Z7_NO_CRYPTO, CListOptions, DisablePercents, ExcludeDirItems, ExcludeFileItems, CListStat, CListStat2, AltStreams (+10 more)
+### Community 211 - "CListOptions"
+Cohesion: 0.40
+Nodes (4): CListOptions, DisablePercents, ExcludeDirItems, ExcludeFileItems
 
 ### Community 212 - "Token fields"
 Cohesion: 0.50
@@ -1720,163 +1756,163 @@ Nodes (58): CProgressDialog, _background, _background_String, _backgrounded_Stri
 
 ### Community 217 - "CApp"
 Cohesion: 0.03
-Nodes (23): CApp, AppState, AutoRefresh_Mode, _buttonsImageList, _dropTarget, _dropTargetSpec, LangString_N_SELECTED_ITEMS, LargeButtons (+15 more)
+Nodes (21): CApp, AppState, AutoRefresh_Mode, _buttonsImageList, _dropTarget, _dropTargetSpec, LangString_N_SELECTED_ITEMS, LargeButtons (+13 more)
 
-### Community 218 - "FileFind.cpp"
-Cohesion: 0.06
-Nodes (34): Copy_From_FileInfoBase(), CPanel::IsFolderTypeEqTo(), StringsAreEqual_Ascii(), CDirEntry, iNode, Name, CEnumerator::Fill_FileInfo(), CEnumerator::Next() (+26 more)
+### Community 218 - "fs2us"
+Cohesion: 0.03
+Nodes (68): CTailOutStream, CAgentFolder::CommonUpdateOperation(), Delete_EmptyFolder_And_EmptySubFolders(), Copy_From_FileInfoBase(), CPanel::IsFolderTypeEqTo(), fs2fas(), fs2us(), StringsAreEqual_Ascii() (+60 more)
 
 ### Community 219 - "CCoder"
-Cohesion: 0.04
-Nodes (25): CCoder, _deflate64Mode, _deflateNSIS, _keepHistory, m_DistDecoder, m_FinalBlock, m_InBitStream, m_InStreamRef (+17 more)
+Cohesion: 0.03
+Nodes (28): CCoder, _deflate64Mode, _deflateNSIS, _keepHistory, m_DistDecoder, m_FinalBlock, m_InBitStream, m_InStreamRef (+20 more)
 
 ### Community 220 - "CXmlItem"
-Cohesion: 0.09
-Nodes (23): FindKeyPair(), GetStringFromKeyPair(), AddItem(), Size, CHandler::Open2(), Find_ChecksumId_for_Name(), GetHashSize(), ParseChecksum() (+15 more)
+Cohesion: 0.06
+Nodes (36): CExtraFile, Data, Name, Size, CForkPair, Len, Offset, CHandler::Open2() (+28 more)
 
 ### Community 221 - "FString"
 Cohesion: 0.03
-Nodes (73): CExtractCallbackImp::Init(), AutoRenamePath(), MakeAutoName(), GetModuleDirPrefix(), AddPathToMessage(), Archive_Get_HardLinkNode(), CArchiveExtractCallback::CloseArc(), CArchiveExtractCallback::CloseFile() (+65 more)
+Nodes (93): CExtractCallbackImp::Init(), AutoRenamePath(), MakeAutoName(), GetModuleDirPrefix(), AddPathToMessage(), Archive_Get_HardLinkNode(), CArchiveExtractCallback::CArchiveExtractCallback(), CArchiveExtractCallback::CheckExistFile() (+85 more)
 
 ### Community 222 - "FileIO.cpp"
 Cohesion: 0.03
-Nodes (43): Z7_COM7F_IMF(), ReadDataString(), CFiTimesCAM, ATime, ATime_Defined, CTime, CTime_Defined, MTime (+35 more)
+Nodes (53): Z7_COM7F_IMF(), ReadDataString(), ReadZoneFile_Of_BaseFile(), CopyFileSpec(), CFSFolder::LoadComments(), CCopyStateIO::MyCopyFile(), CApp::VerCtrl(), CFileDataInfo (+45 more)
 
 ### Community 223 - "CPanel::OnKeyDown"
-Cohesion: 0.10
+Cohesion: 0.08
 Nodes (3): CPanel::EditItem(), CPanel::OnKeyDown(), CPanel::KillSelection()
 
 ### Community 224 - "7zIn.cpp"
-Cohesion: 0.07
-Nodes (29): BoolVector_CountSum(), BoolVector_Fill_False(), BoolVector_Item_IsValidAndTrue(), CInArchive, _arhiveBeginStreamPosition, _fileEndPosition, _header, HeadersSize (+21 more)
+Cohesion: 0.06
+Nodes (29): BoolVector_Fill_False(), BoolVector_Item_IsValidAndTrue(), CInArchive, _arhiveBeginStreamPosition, _fileEndPosition, _header, HeadersSize, _inByteBack (+21 more)
 
 ### Community 225 - "BrowseDialog2.cpp"
-Cohesion: 0.05
-Nodes (49): Browse_ConvertSizeToString(), CBrowseDialog2, _ascending, _columnIndex_fileNameInDir, _columnIndex_NumDirs, _columnIndex_NumFiles, CBrowseDialog2::CompareItems(), DirPrefix (+41 more)
+Cohesion: 0.04
+Nodes (51): Browse_ConvertSizeToString(), CBrowseDialog2, _ascending, _columnIndex_fileNameInDir, _columnIndex_NumDirs, _columnIndex_NumFiles, CBrowseDialog2::CompareItems(), DirPrefix (+43 more)
 
 ### Community 226 - "CGroup"
 Cohesion: 0.03
 Nodes (60): AddName36ToString(), CDescriptor, entry_size, num_entries, offset, CDevice, alignment, alignment_offset (+52 more)
 
-### Community 227 - ".Ptr"
-Cohesion: 0.07
-Nodes (25): CMultiMethodProps::Set_Method_NumThreadGroups_IfNotFinded(), CMultiMethodProps::SetMethodThreadsTo_IfNotFinded(), CMultiMethodProps::SetMethodThreadsTo_Replace(), ParseSizeString(), PROPVARIANT_to_BoolPair(), SetMethodProp32(), SetMethodProp32_Replace(), CHandler::Open2() (+17 more)
+### Community 227 - "CMultiMethodProps"
+Cohesion: 0.05
+Nodes (38): CCommonMethodProps, _memAvail, _memUsage_Compress, _memUsage_Decompress, _memUsage_WasSet, CHandlerTimeOptions, Prec, Write_ATime (+30 more)
 
 ### Community 228 - "Wildcard.cpp"
-Cohesion: 0.04
-Nodes (50): CompareEmptyItems(), ConvertToLongName(), CompareStrings(), GetRelativePath(), DoesNameContainWildcard_SkipRoot(), CPanel::SelectByType(), IsString1PrefixedByString2_NoCase(), MyCharUpper() (+42 more)
+Cohesion: 0.05
+Nodes (42): CompareEmptyItems(), CompareStrings(), IsString1PrefixedByString2(), CCensor::AddPathsToCensor(), CCensor::AddPreItem(), CCensor::FindPairForPrefix(), CCensorNode::AddItem(), CCensorNode::AddItemSimple() (+34 more)
 
 ### Community 229 - "Z7_COM7F_IMF"
-Cohesion: 0.04
-Nodes (27): Z7_COM7F_IMF(), CEditPageCtrl, Button, Ctrl, Edit, WasChanged, CCopyStateIO, CurrentSize (+19 more)
+Cohesion: 0.03
+Nodes (30): Z7_COM7F_IMF(), CEditPageCtrl, Button, Ctrl, Edit, WasChanged, CFSDrives::BindToFolderSpec(), CCopyStateIO (+22 more)
 
 ### Community 230 - "Z7_COM7F_IMF"
 Cohesion: 0.08
 Nodes (14): CInStreamWithHash, inStreamLim, inStreamSha1, inStreamSha256, Final256(), Final512(), Init(), ReleaseStream() (+6 more)
 
 ### Community 231 - "Main.cpp"
-Cohesion: 0.07
-Nodes (8): CCtrlHandlerSetter, HandlerRoutine(), Z7_final(), CExtractCallbackConsole, rlimit, ShowMessageAndThrowException(), winsize, CUpdateCallbackConsole
-
-### Community 232 - "CCachedInStream"
 Cohesion: 0.05
-Nodes (23): CAlignedMidBuffer, _buf, CFilterCoder::Alloc(), CFilterCoder::Flush2(), CFilterCoder::Init_and_Alloc(), CFilterCoder::Init_NoSubFilterInit(), InitSpecVars(), CCachedInStream (+15 more)
+Nodes (31): Init_ForceToUTF8(), AddCommandLineWildcardToCensor(), AddNameToCensor(), CArchiveCommand, CommandType, EEnum, kFullExtract, kList (+23 more)
 
-### Community 233 - "LangString"
-Cohesion: 0.03
-Nodes (58): StartProgressDialog(), LangStringAlt(), AddPropValueToSum(), AddSizeValue(), AddValuePair1(), AddValuePair2(), CPanel::GetItemsInfoString(), CorrectFsPath() (+50 more)
+### Community 232 - "StreamObjects.cpp"
+Cohesion: 0.12
+Nodes (7): CDynBufSeqOutStream::CopyToBuffer(), CDynBufSeqOutStream::GetBufPtrForWriting(), Create_BufInStream_WithNewBuffer(), Create_BufInStream_WithReference(), Init(), UpdateSize(), Z7_COM7F_IMF()
+
+### Community 233 - "PanelMenu.cpp"
+Cohesion: 0.04
+Nodes (39): CZipContextMenu, CListViewDialog, DeleteIsAllowed, FocusedItemIndex, _listView, NumColumns, CListViewDialog::OnOK(), SelectFirst (+31 more)
 
 ### Community 234 - "CArc"
-Cohesion: 0.03
-Nodes (47): IArchiveGetRawProps, CArc, Archive, ArcStreamOffset, Ask_AltStream, Ask_Aux, Ask_Deleted, Ask_INode (+39 more)
+Cohesion: 0.05
+Nodes (27): CArc, Archive, ArcStreamOffset, Ask_AltStream, Ask_Aux, Ask_Deleted, Ask_INode, AvailPhySize (+19 more)
 
 ### Community 235 - "CDecoder"
 Cohesion: 0.05
 Nodes (25): CDecoder, Base, BlockCrcError, _blockFinished, _calcedBlockCrc, _counters, ErrorResult, FinishMode (+17 more)
 
 ### Community 236 - "CoderMixer2.cpp"
-Cohesion: 0.07
-Nodes (17): BoolVector_Fill_False(), CBondsChecks, BindInfo, _coderUsed, CCoderStreamsInfo, NumStreams, CMixerMT, _coders (+9 more)
+Cohesion: 0.08
+Nodes (13): CCoderStreamsInfo, NumStreams, CMixerMT, _coders, CMixerMT::ReInit2(), _streamBinders, Z7_override, CMixerST (+5 more)
 
 ### Community 237 - "CApfs"
 Cohesion: 0.04
-Nodes (49): AddVolInternalName_toString(), apfs_modified_by_t, id, last_xid, timestamp, C_omap_phys, tree_oid, CApfs (+41 more)
+Nodes (48): apfs_modified_by_t, id, last_xid, timestamp, C_omap_phys, tree_oid, CApfs, fext_tree_oid (+40 more)
 
-### Community 238 - "Close"
-Cohesion: 0.05
-Nodes (11): Z7_COM7F_IMF(), Z7_COM7F_IMF(), Z7_COM7F_IMF(), IsArc_Ihex(), Parse(), Z7_COM7F_IMF(), Z7_COM7F_IMF(), Z7_COM7F_IMF() (+3 more)
+### Community 238 - ".Detach"
+Cohesion: 0.03
+Nodes (19): Z7_COM7F_IMF(), Z7_COM7F_IMF(), IMP_IInArchive_ArcProps
+
+Z7_COM7F_IMF(), IsArc_BZip2(), Z7_COM7F_IMF(), IMP_IInArchive_ArcProps_NO_Table
+
+Z7_COM7F_IMF(), Z7_COM7F_IMF(), GetHeaderSize() (+11 more)
 
 ### Community 239 - "NsisIn.cpp"
-Cohesion: 0.03
-Nodes (91): Add_Hex(), Add_ShowWindow_Cmd_2(), Add_SignedInt(), AreStringsEqual_16and8(), CBlockHeader, Num, Offset, CCommandInfo (+83 more)
+Cohesion: 0.05
+Nodes (47): Add_ShowWindow_Cmd_2(), AreStringsEqual_16and8(), CInArchive::Add_ButtonID(), CInArchive::Add_Color(), CInArchive::Add_Color2(), CInArchive::Add_ColorParam(), CInArchive::Add_ExecFlags(), CInArchive::Add_FuncName() (+39 more)
 
-### Community 240 - "CUpdatePair2"
-Cohesion: 0.15
-Nodes (11): IsDir(), CUpdatePair2, ArcIndex, DirIndex, IsAnti, IsMainRenameItem, IsSameTime, NewData (+3 more)
-
-### Community 241 - "ShowDialog"
-Cohesion: 0.14
-Nodes (14): CUpdateCallbackGUI, CThreadUpdating, cmdArcPath, codecs, formatIndices, needSetPath, Options, UpdateCallbackGUI (+6 more)
+### Community 240 - "CCachedInStream"
+Cohesion: 0.09
+Nodes (17): BigFree(), MidFree(), CHandler::Free(), CAddCommon::CAddCommon(), CCachedInStream, _blockSizeLog, _data, _dataSize (+9 more)
 
 ### Community 242 - "XzEnc.c"
-Cohesion: 0.07
-Nodes (50): Xz_WriteVarInt(), XzCheck_Update(), CompressProgress_XzEncOffset_Progress(), Lzma2WithFilters_Construct(), Lzma2WithFilters_Create(), Lzma2WithFilters_Free(), SbEncInStream_Construct(), SbEncInStream_Free() (+42 more)
+Cohesion: 0.06
+Nodes (52): Xz_WriteVarInt(), XzCheck_Final(), XzCheck_Init(), XzCheck_Update(), XzFlags_GetCheckSize(), CompressProgress_XzEncOffset_Progress(), Lzma2WithFilters_Construct(), Lzma2WithFilters_Free() (+44 more)
 
 ### Community 243 - "7zipUninstall.c"
-Cohesion: 0.13
-Nodes (31): AddPathParam(), AreEqual_Path_PrefixName(), AreStringsEqual_NoCase(), CatAscii(), CpyAscii(), CreateShellLink(), DoesFileOrDirExist(), GetCmdParam() (+23 more)
+Cohesion: 0.11
+Nodes (32): AddPathParam(), AreEqual_Path_PrefixName(), AreStringsEqual_NoCase(), CatAscii(), CpyAscii(), CreateShellLink(), DoesFileOrDirExist(), GetCmdParam() (+24 more)
 
 ### Community 244 - "CWindow"
-Cohesion: 0.05
-Nodes (12): InitInstance(), CProgressDialog::AddToTitle(), CDialogChildControl, CWindow, _window, GetLongPtr(), GetUserDataLongPtr(), MyRegisterClass() (+4 more)
+Cohesion: 0.07
+Nodes (4): CDialogChildControl, CProgressBar, CWindow, _window
 
 ### Community 245 - "UpdateCallbackConsole.cpp"
-Cohesion: 0.07
-Nodes (46): CCallbackConsoleBase, FailedFiles, LogLevel, NeedFlush, NumNonOpenFiles, _percent, PercentsNameLevel, ScanErrors (+38 more)
+Cohesion: 0.11
+Nodes (32): CheckBreak2(), CUpdateCallbackConsole::CheckBreak(), CUpdateCallbackConsole::CryptoGetTextPassword(), CUpdateCallbackConsole::CryptoGetTextPassword2(), CUpdateCallbackConsole::DeletingAfterArchiving(), CUpdateCallbackConsole::FinishArchive(), CUpdateCallbackConsole::FinishDeletingAfterArchiving(), CUpdateCallbackConsole::FinishScanning() (+24 more)
 
 ### Community 246 - "Z7_COM7F_IMF"
 Cohesion: 0.13
 Nodes (4): CopyName(), NtfsTimeToProp(), Z7_COM7F_IMF(), _len
 
 ### Community 247 - "Ppmd8.c"
-Cohesion: 0.09
-Nodes (40): CutOff(), ExpandTextArea(), FreeUnits(), GetUsedMemory(), Ppmd8_Alloc(), Ppmd8_AllocUnits(), Ppmd8_AllocUnitsRare(), Ppmd8_Construct() (+32 more)
+Cohesion: 0.19
+Nodes (30): CutOff(), ExpandTextArea(), FreeUnits(), GetUsedMemory(), Ppmd8_AllocUnits(), Ppmd8_AllocUnitsRare(), Ppmd8_CreateSuccessors(), Ppmd8_GlueFreeBlocks() (+22 more)
 
 ### Community 248 - "COutArchive"
 Cohesion: 0.08
-Nodes (22): Bv_GetSizeInBytes(), COutArchive, _countMode, _countSize, COutArchive::GetVolHeadersSize(), COutArchive::GetVolPureSize(), _outByte, _outByte2 (+14 more)
+Nodes (23): BoolVector_CountSum(), Bv_GetSizeInBytes(), COutArchive, _countMode, _countSize, COutArchive::GetVolHeadersSize(), COutArchive::GetVolPureSize(), _outByte (+15 more)
 
 ### Community 249 - "CItem"
-Cohesion: 0.07
-Nodes (21): CCoder, _inBitStream, _outWindow, CCoderReleaser, _coder, CItem, Comment, DataPosition (+13 more)
+Cohesion: 0.11
+Nodes (16): CItem, Comment, DataPosition, ExtendedInfo, ExtractVersion, FileAccessMode, FileCRC, FileType (+8 more)
 
 ### Community 250 - "CShellDll"
 Cohesion: 0.25
 Nodes (6): CShellDll, ctrl, Path, prevValue, wasChanged, wow
 
 ### Community 251 - "RINOK"
-Cohesion: 0.05
-Nodes (43): CInFileStream, Z7_COM7F_IMF(), RINOK(), COpenCallbackImp, IsArcFunc, Archive_GetArcProp_Bool(), Archive_GetArcProp_Int(), Archive_GetArcProp_UInt() (+35 more)
+Cohesion: 0.04
+Nodes (51): Z7_COM7F_IMF(), RINOK(), COpenCallbackImp, IsArcFunc, Archive_GetArcProp_Bool(), Archive_GetArcProp_Int(), Archive_GetArcProp_UInt(), Archive_GetItem_Size() (+43 more)
 
-### Community 252 - "Event_Set"
-Cohesion: 0.21
-Nodes (12): MtCoder_Code(), MtCoder_Construct(), MtCoder_Destruct(), MtCoder_Free(), MtCoderThread_CreateAndStart(), MtCoderThread_Destruct(), MtProgressThunk_Progress(), ThreadFunc() (+4 more)
+### Community 252 - "CGlobal"
+Cohesion: 0.13
+Nodes (7): ClipboardSetData(), CGlobal, _global, CGlobalLock, _global, _ptr, ~CCriticalSectionLock()
 
 ### Community 253 - "CCoder"
 Cohesion: 0.04
 Nodes (45): CCoder, BlockSizeRes, _btMode, distCodes, distFreqs, _fastMode, levelCodes, levelLens (+37 more)
 
 ### Community 254 - "CBitDecoder"
-Cohesion: 0.07
-Nodes (33): CBitDecoder, _bitPos, _blockEnd, _blockEndBits7, _buf, _bufBase, _bufCheck, _bufCheck_Block (+25 more)
+Cohesion: 0.08
+Nodes (27): CBitDecoder, _bitPos, _blockEnd, _blockEndBits7, _buf, _bufBase, _bufCheck, _bufCheck_Block (+19 more)
 
 ### Community 255 - "ZipIn.cpp"
 Cohesion: 0.11
-Nodes (10): AreEqualPaths_IgnoreSlashes(), AreItemsEqual(), Size, CheckDosTime(), CUnexpectEnd, FindItem(), FindPK_4(), FlagsAreSame() (+2 more)
+Nodes (9): AreEqualPaths_IgnoreSlashes(), AreItemsEqual(), Size, CheckDosTime(), CUnexpectEnd, FindItem(), FindPK_4(), FlagsAreSame() (+1 more)
 
 ### Community 256 - "LzFind.c"
 Cohesion: 0.09
-Nodes (50): AllocRefs(), Bt2_MatchFinder_GetMatches(), Bt2_MatchFinder_Skip(), Bt3_MatchFinder_GetMatches(), Bt3_MatchFinder_Skip(), Bt3Zip_MatchFinder_GetMatches(), Bt3Zip_MatchFinder_Skip(), Bt4_MatchFinder_GetMatches() (+42 more)
+Nodes (51): AllocRefs(), Bt2_MatchFinder_GetMatches(), Bt2_MatchFinder_Skip(), Bt3_MatchFinder_GetMatches(), Bt3_MatchFinder_Skip(), Bt3Zip_MatchFinder_GetMatches(), Bt3Zip_MatchFinder_Skip(), Bt4_MatchFinder_GetMatches() (+43 more)
 
 ### Community 257 - "HfsHandler.cpp"
 Cohesion: 0.08
@@ -1895,32 +1931,32 @@ Cohesion: 0.05
 Nodes (19): CItem, ACL, Attrib, CommonFlags, CRC, DataPos, Extra, Flags (+11 more)
 
 ### Community 261 - "CUpdateErrorInfo"
-Cohesion: 0.16
-Nodes (5): CUpdateErrorInfo, FileNames, Message, SystemError, CUpdateProduceCallbackImp::ShowDeleteFile()
+Cohesion: 0.08
+Nodes (16): CensorNode_CheckPath(), CensorNode_CheckPath2(), CReadArcItem, IsDir, MainIsDir, ParentIndex, Path, PathParts (+8 more)
 
 ### Community 262 - "BrowseDialog.cpp"
-Cohesion: 0.06
-Nodes (29): Browse_ConvertSizeToString(), CBrowseDialog, _ascending, CBrowseDialog::CompareItems(), DirPrefix, _extToIconMap, FilePath, _files (+21 more)
+Cohesion: 0.07
+Nodes (26): Browse_ConvertSizeToString(), CBrowseDialog, _ascending, CBrowseDialog::CompareItems(), DirPrefix, _extToIconMap, FilePath, _files (+18 more)
 
 ### Community 263 - "PanelItems.cpp"
-Cohesion: 0.06
-Nodes (23): CPropColumn, ID, IsRawProp, IsVisible, Name, Order, Type, Width (+15 more)
+Cohesion: 0.09
+Nodes (14): CPanel::AddColumn(), CPanel::Get_ItemIndices_All(), CPanel::Get_ItemIndices_Operated(), CPanel::Get_ItemIndices_OperSmart(), CPanel::Get_ItemIndices_Selected(), CPanel::GetItem_BoolProp(), CPanel::GetItem_UInt64Prop(), CPanel::GetItemFullPath() (+6 more)
 
 ### Community 264 - "COutArchive"
-Cohesion: 0.09
-Nodes (16): CItemOut, Name_Utf, Ntfs_ATime, Ntfs_CTime, Ntfs_MTime, Write_NtfsTime, Write_UnixTime, COutArchive (+8 more)
+Cohesion: 0.06
+Nodes (22): CItemOut, Name_Utf, Ntfs_ATime, Ntfs_CTime, Ntfs_MTime, Write_NtfsTime, Write_UnixTime, COutArchive (+14 more)
 
 ### Community 265 - "CHeader"
-Cohesion: 0.05
-Nodes (40): CHandler::GetSectionName(), CHandler::Open2(), CHeader, AbiVer, Be, Flags, HeaderSize, Machine (+32 more)
+Cohesion: 0.12
+Nodes (16): CHeader, AbiVer, Be, Flags, HeaderSize, Machine, Mode64, NamesSectIndex (+8 more)
 
 ### Community 266 - "CNode"
 Cohesion: 0.06
 Nodes (31): AddNodeName(), CDatabase::GetItemPath(), CNode, access_time, Attrs, bsd_flags, change_time, CompressHeader (+23 more)
 
-### Community 267 - "7zHandler.cpp"
-Cohesion: 0.09
-Nodes (14): AddProp32(), CHandler::AddMethodName(), CHandler::IsFolderEncrypted(), CHandler::SetMethodToProp(), ConvertMethodIdToString(), ConvertMethodIdToString_Back(), GetHex(), GetLzma2String() (+6 more)
+### Community 267 - "CHandler::SetMethodToProp"
+Cohesion: 0.16
+Nodes (8): AddProp32(), CHandler::IsFolderEncrypted(), CHandler::SetMethodToProp(), GetStringForSizeValue(), CInByte2, _buffer, _pos, _size
 
 ### Community 268 - "7zipInstall.c"
 Cohesion: 0.09
@@ -1930,29 +1966,29 @@ Nodes (38): PrintProcess_Info(), BrowseCallbackProc(), CatAscii(), CpyAscii(), C
 Cohesion: 0.05
 Nodes (32): AllAreZeros(), CChs, Cyl8, Head, SectCyl, CHandler::ReadTables(), CItem, FileSystem (+24 more)
 
-### Community 270 - "CUpdateCallbackGUI2"
-Cohesion: 0.09
-Nodes (17): CUpdateCallbackGUI2, _arcMoving_current, _arcMoving_name1, _arcMoving_name2, _arcMoving_percents, _arcMoving_total, _arcMoving_updateMode, _emptyString (+9 more)
+### Community 270 - "widgets.rs"
+Cohesion: 0.21
+Nodes (17): avatar(), empty_state(), field(), kpi_card(), multiline(), nav_item(), outline_button(), page_header() (+9 more)
 
 ### Community 271 - "GetLastError"
-Cohesion: 0.08
-Nodes (31): File_Close(), File_Construct(), File_GetLength(), File_Open(), File_OpenW(), File_Read(), File_Seek(), File_Write() (+23 more)
+Cohesion: 0.09
+Nodes (29): File_Close(), File_Construct(), File_GetLength(), File_Open(), File_OpenW(), File_Read(), File_Seek(), File_Write() (+21 more)
 
 ### Community 272 - "LzmaEnc.c"
-Cohesion: 0.11
-Nodes (39): LenEnc_Init(), LzmaEnc_Alloc(), LzmaEnc_AllocAndInit(), LzmaEnc_CodeOneMemBlock(), LzmaEnc_Construct(), LzmaEnc_Create(), LzmaEnc_Destroy(), LzmaEnc_Destruct() (+31 more)
+Cohesion: 0.07
+Nodes (65): Backward(), CheckErrors(), FillAlignPrices(), FillDistancesPrices(), Flush(), GetOptimum(), GetOptimumFast(), GetPosSlot1() (+57 more)
 
 ### Community 273 - "FSFolderCopy.cpp"
 Cohesion: 0.07
-Nodes (26): CCopyState, Callback, IsAltStreamsDest, MoveMode, ProgressInfo, UseReadWriteMode, CCopyStateIO::MyCopyFile(), CombinePath() (+18 more)
+Nodes (24): CCopyState, Callback, IsAltStreamsDest, MoveMode, ProgressInfo, UseReadWriteMode, CombinePath(), CopyFile_Ask() (+16 more)
 
 ### Community 274 - "CRecordVector"
-Cohesion: 0.07
-Nodes (10): Z7_final(), CPanel::Get_ItemIndices_All(), CPanel::Get_ItemIndices_Operated(), CPanel::Get_ItemIndices_OperSmart(), CPanel::Get_ItemIndices_Selected(), GetNumberOfVolumes(), CRecordVector, _capacity (+2 more)
+Cohesion: 0.09
+Nodes (5): Z7_final(), CRecordVector, _capacity, _items, _size
 
-### Community 275 - "OutStreamWithSha1.h"
-Cohesion: 0.04
-Nodes (38): Sha1_Final(), Sha1_GetBlockDigest(), Sha1_Init(), Sha1_InitState(), Sha1_PrepareBlock(), Sha1_SetFunction(), Sha1_Update(), Sha1_UpdateBlocks() (+30 more)
+### Community 275 - "ZipStrong.cpp"
+Cohesion: 0.17
+Nodes (8): CDecoder::CalcKey(), CContext, _s, CDecoder::Init_and_CheckPassword(), CDecoder::ReadHeader(), DeriveKey(), DeriveKey2(), Z7_COM7F_IMF2()
 
 ### Community 276 - "CItem"
 Cohesion: 0.05
@@ -1967,28 +2003,28 @@ Cohesion: 0.04
 Nodes (42): CArcCmdLineOptions, AltStreams, arcCensor, ArchiveName, ArcName_for_StdInMode, ArcType, CaseSensitive, CaseSensitive_Change (+34 more)
 
 ### Community 279 - "Threads.c"
-Cohesion: 0.10
-Nodes (33): MtSync_Create_WRes(), AutoResetEvent_Create(), AutoResetEvent_CreateNotSignaled(), AutoResetEvent_OptCreate_And_Reset(), BOOLToWRes(), CriticalSection_Init(), Event_Close(), Event_Create() (+25 more)
+Cohesion: 0.12
+Nodes (30): AutoResetEvent_Create(), AutoResetEvent_CreateNotSignaled(), AutoResetEvent_OptCreate_And_Reset(), BOOLToWRes(), Event_Close(), Event_Create(), Event_Reset(), GetError() (+22 more)
 
-### Community 280 - "ContextMenu.cpp"
-Cohesion: 0.03
-Nodes (62): CCommandMapItem, ArcName, ArcType, CommandInternalID, CtxCommandType, Folder, IsPopup, UserString (+54 more)
+### Community 280 - "Z7_COMWF_B"
+Cohesion: 0.06
+Nodes (21): CCoTaskWSTR, m_str, CZipContextMenu::Clone(), CZipContextMenu::Initialize(), CZipContextMenu::Next(), CZipContextMenu::Reset(), CZipContextMenu::Skip(), CZipExplorerCommand::EnumSubCommands() (+13 more)
 
 ### Community 282 - "CProgressDialog"
-Cohesion: 0.05
-Nodes (23): CPanel::Post_Refresh_StatusBar(), CPanel::OnNotifyComboBox(), CPanel::OnNotifyComboBoxEndEdit(), CPanel::OnNotifyComboBoxEnter(), CPanel::OnArrowWithShift(), CProgressCloser, _p, CProgressDialog (+15 more)
+Cohesion: 0.06
+Nodes (20): End, CProgressCloser, _p, CProgressDialog, CProgressDialog::AddToTitle(), _converter, _dialogCreatedEvent, _externalCloseMessageWasReceived (+12 more)
 
 ### Community 283 - "CArcInfoEx"
-Cohesion: 0.04
-Nodes (28): IUpdateCallbackUI(), CArcInfoEx, CreateInArchive, Exts, Flags, Name, TimeFlags, CCodecInfoUser (+20 more)
+Cohesion: 0.08
+Nodes (11): IUpdateCallbackUI(), CArcInfoEx, CreateInArchive, Exts, Flags, Name, TimeFlags, CDllHasherInfo (+3 more)
 
 ### Community 284 - "C/Precomp.h"
-Cohesion: 0.02
-Nodes (41): Print_Alloc(), Print_Free(), SzAlloc(), SzAllocTemp(), SzFree(), SzFreeTemp(), Z7_CRC_NUM_TABLES_USE(), typedef() (+33 more)
+Cohesion: 0.03
+Nodes (35): typedef(), AesCbc_Decode_HW(), AesCbc_Encode_HW(), AesCtr_Code_HW(), AesCtr_Code_HW_256(), LOAD_data(), SINGLE_LOOP(), WOP() (+27 more)
 
 ### Community 285 - "LoadCodecs.cpp"
 Cohesion: 0.10
-Nodes (32): CCodecs::FindFormatForExtension(), CCodecs::GetCodec_DecoderIsAssigned(), CCodecs::GetCodec_EncoderIsAssigned(), CCodecs::GetCodec_Id(), CCodecs::GetCodec_IsFilter(), CCodecs::GetCodec_LibIndex(), CCodecs::GetCodec_Name(), CCodecs::GetCodec_NumStreams() (+24 more)
+Nodes (31): CCodecs::FindFormatForExtension(), CCodecs::GetCodec_DecoderIsAssigned(), CCodecs::GetCodec_EncoderIsAssigned(), CCodecs::GetCodec_Id(), CCodecs::GetCodec_IsFilter(), CCodecs::GetCodec_LibIndex(), CCodecs::GetCodec_Name(), CCodecs::GetCodec_NumStreams() (+23 more)
 
 ### Community 286 - "CDecoder"
 Cohesion: 0.05
@@ -1999,50 +2035,54 @@ Cohesion: 0.05
 Nodes (37): CHeaderOptions, CompressMainHeader, CUpdateItem, ATime, ATimeDefined, Attrib, AttribDefined, CTime (+29 more)
 
 ### Community 288 - "CArc"
+Cohesion: 0.13
+Nodes (11): CArc, _block, _blockSize, Callback, Error, ExtendedInfo, Header, IsArc (+3 more)
+
+### Community 289 - "Z7_COM7F_IMF"
 Cohesion: 0.07
-Nodes (25): CArc, _block, _blockSize, Callback, Error, ExtendedInfo, Header, IsArc (+17 more)
+Nodes (6): Z7_COM7F_IMF(), GetPos(), ReleaseOutStream(), SetOutStream(), SetSeqOutStream(), StopWriting()
 
 ### Community 290 - "CInArchive"
 Cohesion: 0.04
 Nodes (36): CInArchive, ArcInfo, _bufCached, Buffer, _bufPos, Callback, CanStartNewVol, Cd_NumEntries_Overflow_16bit (+28 more)
 
 ### Community 291 - "Lzma2DecMt.c"
-Cohesion: 0.14
-Nodes (16): AlignOffsetAlloc_CreateVTable(), Lzma2Dec_Decode_ST(), Lzma2Dec_Prepare_ST(), Lzma2DecMt_Create(), Lzma2DecMt_Decode(), Lzma2DecMt_Destroy(), Lzma2DecMt_FreeOutBufs(), Lzma2DecMt_FreeSt() (+8 more)
+Cohesion: 0.09
+Nodes (16): Lzma2Dec_Decode_ST(), Lzma2Dec_Prepare_ST(), Lzma2DecMt_Create(), Lzma2DecMt_Decode(), Lzma2DecMt_Destroy(), Lzma2DecMt_FreeOutBufs(), Lzma2DecMt_FreeSt(), Lzma2DecMt_Init() (+8 more)
 
-### Community 292 - "CLinkInfo"
-Cohesion: 0.04
-Nodes (32): CIndexToPathPair, Index, Path, CLinkInfo, isRelative, isWindowsPath, LinkPath, LinkType (+24 more)
+### Community 292 - "CPostLink"
+Cohesion: 0.07
+Nodes (22): CIndexToPathPair, Index, Path, COwnerInfo, Id, Id_Defined, Name, CPostLink (+14 more)
 
 ### Community 293 - "Sha256_Update"
-Cohesion: 0.08
-Nodes (18): Sha256_Final(), Sha256_Init(), Sha256_InitState(), Sha256_SetFunction(), Sha256_Update(), Sha256_UpdateBlocks(), Sha256_UpdateBlocks_HW(), COutStreamWithHash() (+10 more)
+Cohesion: 0.07
+Nodes (22): Sha256_Final(), Sha256_Init(), Sha256_InitState(), Sha256_SetFunction(), Sha256_Update(), Sha256_UpdateBlocks(), Sha256_UpdateBlocks_HW(), COutStreamWithHash() (+14 more)
 
 ### Community 294 - "CFolders"
 Cohesion: 0.04
-Nodes (38): CDatabase, ATime, Attrib, CTime, Files, IsAnti, MTime, NameOffsets (+30 more)
+Nodes (29): CDatabase, ATime, Attrib, CTime, Files, IsAnti, MTime, NameOffsets (+21 more)
 
 ### Community 295 - "CBase"
-Cohesion: 0.04
-Nodes (38): CBase, blockSize, blockSizeMax, CombinedCrc, Counters, crc, DecodeAllStreams, FinishedPackSize (+30 more)
+Cohesion: 0.05
+Nodes (35): CBase, blockSize, blockSizeMax, CombinedCrc, Counters, crc, DecodeAllStreams, FinishedPackSize (+27 more)
 
 ### Community 296 - "Z7_COM7F_IMF"
-Cohesion: 0.07
-Nodes (11): SetFileTimeProp_From_UInt64Def(), Z7_COM7F_IMF(), CUInt64DefVector, Defs, Vals, IMP_IInArchive_ArcProps
+Cohesion: 0.09
+Nodes (9): GetLzma2String(), SetFileTimeProp_From_UInt64Def(), Z7_COM7F_IMF(), IMP_IInArchive_ArcProps
 
-Z7_COM7F_IMF(), Z7_COM7F_IMF(), PropVarEm_Set_Bool() (+3 more)
+Z7_COM7F_IMF(), Z7_COM7F_IMF(), PropVarEm_Set_Bool(), PropVarEm_Set_FileTime64_Prec(), PropVarEm_Set_UInt32() (+1 more)
 
 ### Community 297 - "CDatabase"
-Cohesion: 0.05
-Nodes (26): CDatabase, DataStreams, DirData, DirSize, DirStartOffset, ExcludedItem, HeadersError, Images (+18 more)
+Cohesion: 0.04
+Nodes (27): CDatabase, DataStreams, DirData, DirSize, DirStartOffset, ExcludedItem, HeadersError, Images (+19 more)
 
 ### Community 298 - "ZstdDec.c"
-Cohesion: 0.10
-Nodes (25): CopyLiterals(), do(), FSE_Decode_SeqTable(), FSE_DecodeHeader(), FSE_Generate(), GetHighestSetBit_32_nonzero_big(), Huf_Build(), Huf_DecodeTable() (+17 more)
+Cohesion: 0.11
+Nodes (22): do(), ZstdDec1_Construct(), ZstdDec1_Init(), ZstdDec1_NeedTempBufferForInput(), ZstdDec_AllocateMisc(), ZstdDec_Create(), ZstdDec_Decode(), ZstdDec_DecodeBlock() (+14 more)
 
-### Community 299 - "LPCTSTR"
-Cohesion: 0.12
-Nodes (6): LPCTSTR(), BoolToUINT32(), CKey, _object, SetValue(), UINT32ToBool()
+### Community 299 - "CKey"
+Cohesion: 0.14
+Nodes (5): BoolToUINT32(), CKey, _object, SetValue(), UINT32ToBool()
 
 ### Community 300 - "CInArcInfo"
 Cohesion: 0.06
@@ -2050,7 +2090,7 @@ Nodes (24): CArc, Info, Stream, CInArcInfo, EndFlags, EndOfArchive_was_Read, End
 
 ### Community 301 - "HashCon.cpp"
 Cohesion: 0.10
-Nodes (31): CHasherState, Digests, DigestSize, Hasher, Name, NumSums, AddMinuses(), AddSpace() (+23 more)
+Nodes (30): CHasherState, Digests, DigestSize, Hasher, Name, NumSums, AddMinuses(), AddSpace() (+22 more)
 
 ### Community 302 - "CPolicy"
 Cohesion: 0.13
@@ -2058,41 +2098,43 @@ Nodes (5): AddLockMemoryPrivilege(), CPolicy, _handle, GetSid(), SetLsaString()
 
 ### Community 303 - "CItem"
 Cohesion: 0.07
-Nodes (28): CHandler::ChangeDuplicateNames(), CHandler::FindItem(), CHandler::ParseLibSymbols(), CInArchive, m_Stream, Position, SubType, CItem (+20 more)
+Nodes (29): CHandler::AddFunc(), CHandler::ChangeDuplicateNames(), CHandler::FindItem(), CHandler::ParseLibSymbols(), CInArchive, m_Stream, Position, SubType (+21 more)
 
 ### Community 304 - "CpuArch.c"
-Cohesion: 0.15
-Nodes (28): z7_Black2sp_Prepare(), CPU_IsSupported_AES(), CPU_IsSupported_AVX(), CPU_IsSupported_AVX2(), CPU_IsSupported_AVX512F_AVX512VL(), CPU_IsSupported_CMOV(), CPU_IsSupported_CRYPTO(), CPU_IsSupported_NEON() (+20 more)
+Cohesion: 0.08
+Nodes (44): AesGenTables(), z7_Black2sp_Prepare(), CPU_IsSupported_AES(), CPU_IsSupported_AVX(), CPU_IsSupported_AVX2(), CPU_IsSupported_AVX512F_AVX512VL(), CPU_IsSupported_CMOV(), CPU_IsSupported_CRC32() (+36 more)
 
-### Community 305 - "CLzxInfo"
-Cohesion: 0.06
-Nodes (23): CDatabase, ContentOffset, Help2Format, Items, NewFormat, NewFormatString, PhySize, StartPosition (+15 more)
+### Community 305 - "CDatabase"
+Cohesion: 0.11
+Nodes (13): CDatabase, ContentOffset, Help2Format, Items, NewFormat, NewFormatString, PhySize, StartPosition (+5 more)
 
 ### Community 306 - "CHeader"
-Cohesion: 0.07
-Nodes (25): CHeader, BadCluster, ClusterSizeLog, DataSector, FatSize, Flags, FsInfoSector, HeadersWarning (+17 more)
+Cohesion: 0.08
+Nodes (24): CHeader, BadCluster, ClusterSizeLog, DataSector, FatSize, Flags, FsInfoSector, HeadersWarning (+16 more)
 
 ### Community 307 - "ExtractCallbackConsole.cpp"
-Cohesion: 0.05
-Nodes (35): IMP_IInArchive_ArcProps
-
-Z7_COM7F_IMF(), IsEmptyGuid(), CDirItemsStat, CDirItemsStat2, Anti_NumAltStreams, Anti_NumDirs, Anti_NumFiles, AltStreamsSize (+27 more)
+Cohesion: 0.09
+Nodes (19): Add_Messsage_Pre_ArcType(), CExtractCallbackConsole::BeforeOpen(), CExtractCallbackConsole::ExtractResult(), CExtractCallbackConsole::PrintTo_se_Path_WithTitle(), CExtractCallbackConsole::SetPassword(), CExtractCallbackConsole::ThereAreNoFiles(), CExtractScanConsole::PrintStat(), CExtractScanConsole::ScanError() (+11 more)
 
 ### Community 308 - "UpdateCallbackGUI.cpp"
-Cohesion: 0.15
-Nodes (22): CUpdateCallbackGUI::CheckBreak(), CUpdateCallbackGUI::CryptoGetTextPassword(), CUpdateCallbackGUI::CryptoGetTextPassword2(), CUpdateCallbackGUI::DeletingAfterArchiving(), CUpdateCallbackGUI::FinishDeletingAfterArchiving(), CUpdateCallbackGUI::FinishScanning(), CUpdateCallbackGUI::Open_CheckBreak(), CUpdateCallbackGUI::Open_CryptoGetTextPassword() (+14 more)
+Cohesion: 0.10
+Nodes (34): CUpdateCallbackGUI::CheckBreak(), CUpdateCallbackGUI::CryptoGetTextPassword(), CUpdateCallbackGUI::CryptoGetTextPassword2(), CUpdateCallbackGUI::DeletingAfterArchiving(), CUpdateCallbackGUI::FinishArchive(), CUpdateCallbackGUI::FinishDeletingAfterArchiving(), CUpdateCallbackGUI::FinishScanning(), CUpdateCallbackGUI::GetStream() (+26 more)
 
 ### Community 309 - "Z7_COM7F_IMF"
-Cohesion: 0.05
+Cohesion: 0.06
 Nodes (16): Bcj2Dec_Init(), Bcj2_RangeEnc_ShiftLow(), Bcj2Enc_Encode(), Bcj2Enc_Encode_2(), Bcj2Enc_Init(), CBaseCoder, _bufs, _bufsSizes (+8 more)
 
 ### Community 310 - "CInArchive"
 Cohesion: 0.10
 Nodes (15): CInArchive, ArcInfo, _comment, HeaderErrorWarning, m_BlockHeader, m_CryptoMode, m_CryptoPos, m_DecryptedDataAligned (+7 more)
 
-### Community 311 - "_len"
-Cohesion: 0.09
-Nodes (22): CEncodingCharacts::Check(), AddPax_UInt32_ifBig(), AddPaxLine(), AddPaxTime(), CopyString(), COutArchive, Glob_Name, IsPosixMode (+14 more)
+### Community 311 - ".Add_UInt32"
+Cohesion: 0.07
+Nodes (24): IMP_IInArchive_ArcProps
+
+void CHandler::GetVersion(), IMP_IInArchive_ArcProps
+
+void CHandler::AddCPU(), AddPax_UInt32_ifBig(), AddPaxLine(), AddPaxTime(), CopyString(), COutArchive, Glob_Name (+16 more)
 
 ### Community 312 - "Client7z.cpp"
 Cohesion: 0.05
@@ -2103,40 +2145,40 @@ Cohesion: 0.07
 Nodes (25): CProxyDir, CProxyDir2, ArcIndex, Crc, CrcIsDefined, Items, NumSubDirs, NumSubFiles (+17 more)
 
 ### Community 314 - "FarUtils.cpp"
-Cohesion: 0.13
-Nodes (5): CStartupInfo, m_Data, m_RegistryPath, GetBOOLValue(), ShowLastErrorMessage()
+Cohesion: 0.10
+Nodes (9): CCodecIcons::LoadIcons(), CScreenRestorer, m_HANDLE, m_Saved, CStartupInfo, m_Data, m_RegistryPath, ShowLastErrorMessage() (+1 more)
 
 ### Community 315 - "ChmIn.cpp"
 Cohesion: 0.07
 Nodes (28): AreGuidsEqual(), CEnexpectedEndException, CFilesDatabase, Indices, LowLevel, Sections, CHeaderErrorException, CInArchive (+20 more)
 
-### Community 316 - "CItem"
+### Community 316 - "UefiHandler.cpp"
 Cohesion: 0.04
-Nodes (66): AddGuid(), AreGuidsEq(), CCapsuleHeader, CapsuleImageSize, Flags, HeaderSize, OffsetToApplicableDevices, OffsetToAuthorInformation (+58 more)
+Nodes (75): AddGuid(), AddSpaceAndString(), AreGuidsEq(), CCapsuleHeader, CapsuleImageSize, Flags, HeaderSize, OffsetToApplicableDevices (+67 more)
 
-### Community 317 - "Agent.cpp"
-Cohesion: 0.10
-Nodes (16): HeapSort(), CAgentFolder::CompareItems2(), CAgentFolder::CompareItems3(), CAgentFolder::ComparePrefixes(), CAgentFolder::GetFullPrefix(), CAgentFolder::GetName(), CAgentFolder::GetPrefix(), CAgentFolder::GetRealIndices() (+8 more)
+### Community 317 - "MyCompare"
+Cohesion: 0.07
+Nodes (22): IArchiveGetRawProps, CompareFiles(), CompareItems(), CompareUpdateItems(), CompareIDs(), CAgentFolder::CompareItems2(), CAgentFolder::CompareItems3(), CAgentFolder::ComparePrefixes() (+14 more)
 
 ### Community 318 - "CProxyArc2"
-Cohesion: 0.09
-Nodes (6): CProxyArc2, Dirs, Files, MemUsage, MemUsage_Limit, NumFiles
+Cohesion: 0.06
+Nodes (16): CProxyArc2, Dirs, Files, MemUsage, MemUsage_Limit, NumFiles, CProxyFile2, AltDirIndex (+8 more)
 
 ### Community 319 - "EnumDirItems.cpp"
-Cohesion: 0.06
-Nodes (35): CDirItem(), CDirItems, Callback, ExcludeDirItems, ExcludeFileItems, Items, LogParents, PhyParents (+27 more)
+Cohesion: 0.05
+Nodes (44): CInFileStream, CDirItem(), CDirItems, Callback, ExcludeDirItems, ExcludeFileItems, Items, LogParents (+36 more)
 
-### Community 320 - "PanelMenu.cpp"
-Cohesion: 0.03
-Nodes (47): CAboutDialog, Z7_override, CFileMenu::Load(), CFileMenuDestroyer, CopyMenu(), CopyPopMenu_IfRequired(), ExecuteFileCommand(), FindLangItem() (+39 more)
+### Community 320 - "CMenu"
+Cohesion: 0.05
+Nodes (20): Drag_OnContextMenu(), CMenu, _menu, CMenuDestroyer, _menu, CMenuItem, dwItemData, fMask (+12 more)
 
-### Community 321 - "CUInt32DefVector"
-Cohesion: 0.06
-Nodes (16): CBond, PackIndex, UnpackIndex, CCoderInfo, MethodID, NumStreams, Props, CFolder (+8 more)
+### Community 321 - "CFolder"
+Cohesion: 0.08
+Nodes (13): CBond, PackIndex, UnpackIndex, CCoderInfo, MethodID, NumStreams, Props, CFolder (+5 more)
 
 ### Community 322 - "CArchiveDatabaseOut"
-Cohesion: 0.04
-Nodes (37): CFileItem, Crc, CrcDefined, HasStream, IsDir, Size, CArchiveDatabaseOut, ATime (+29 more)
+Cohesion: 0.06
+Nodes (24): CFileItem, Crc, CrcDefined, HasStream, IsDir, Size, CArchiveDatabaseOut, ATime (+16 more)
 
 ### Community 323 - "Z7_COM7F_IMF"
 Cohesion: 0.11
@@ -2148,7 +2190,7 @@ Nodes (32): CHandler::Open2(), CHeader, BlockBits, BlockGroupNr, BlocksPerGroup,
 
 ### Community 325 - "CItem"
 Cohesion: 0.06
-Nodes (26): CHandler::AddFunc(), CalcSum(), CExtension, Data, Type, CItem, Attributes, CRC (+18 more)
+Nodes (24): CalcSum(), CExtension, Data, Type, CItem, Attributes, CRC, Extensions (+16 more)
 
 ### Community 326 - "CArchive"
 Cohesion: 0.05
@@ -2158,25 +2200,25 @@ Nodes (34): CArchive, _are_atime, _are_ctime, _are_Gnu, _are_LongLink, _are_Long
 Cohesion: 0.05
 Nodes (17): CProgressSync, _completedBytes, _cs, _curFiles, _filePath, _filesProgressMode, FinalMessage, _inSize (+9 more)
 
-### Community 328 - "Windows/StdAfx.h"
-Cohesion: 0.04
-Nodes (32): EnablePrivilege(), EnablePrivilege_LockMemory(), Get_LargePages_RiskLevel(), ProcessMessages(), CProcess, GetGuiResources(), GetPriorityClass(), GetQuotedString() (+24 more)
+### Community 328 - "ProcessUtils.h"
+Cohesion: 0.07
+Nodes (28): BigAlloc(), MidAlloc(), GetExitCodeProcess(), GetGuiResources(), GetPriorityClass(), GetTimes(), _MODULEINFO, EntryPoint (+20 more)
 
 ### Community 329 - "Lzma2Enc.c"
 Cohesion: 0.12
-Nodes (21): LimitedSeqInStream_Init(), LimitedSeqInStream_Read(), Lzma2Enc_Create(), Lzma2Enc_Destroy(), Lzma2Enc_Encode2(), Lzma2Enc_EncodeMt1(), Lzma2Enc_FreeOutBufs(), Lzma2Enc_MtCallback_Code() (+13 more)
+Nodes (22): LimitedSeqInStream_Init(), LimitedSeqInStream_Read(), Lzma2Enc_Create(), Lzma2Enc_Destroy(), Lzma2Enc_Encode2(), Lzma2Enc_EncodeMt1(), Lzma2Enc_FreeOutBufs(), Lzma2Enc_MtCallback_Code() (+14 more)
 
 ### Community 330 - "CMatchFinderMt_"
 Cohesion: 0.05
 Nodes (32): CMatchFinderMt_, btBuf, btBufPos, btBufPosLimit, btDummy, btNumAvailBytes, btSync, buffer (+24 more)
 
 ### Community 331 - "CHeader"
-Cohesion: 0.07
-Nodes (24): CHeader, be, BlockSize, BlockSizeLog, CTime, DirTable, Flags, FragTable (+16 more)
+Cohesion: 0.06
+Nodes (28): CHeader, be, BlockSize, BlockSizeLog, CTime, DirTable, Flags, FragTable (+20 more)
 
 ### Community 332 - "MtDec.c"
-Cohesion: 0.13
-Nodes (26): MtDec_CloseThreads(), MtDec_Code(), MtDec_Construct(), MtDec_Destruct(), MtDec_Free(), MtDec_GetCrossBuff(), MtDec_GetError_Spec(), MtDec_Interrupt() (+18 more)
+Cohesion: 0.09
+Nodes (40): MtCoder_Code(), MtCoder_Construct(), MtCoder_Destruct(), MtCoder_Free(), MtCoderThread_CreateAndStart(), MtCoderThread_Destruct(), MtProgressThunk_Progress(), ThreadFunc() (+32 more)
 
 ### Community 333 - "EEnum"
 Cohesion: 0.10
@@ -2191,20 +2233,20 @@ Cohesion: 0.06
 Nodes (24): CAttr, Data, Fork, Fork_defined, ID, Name, CDatabase, ArcFileSize (+16 more)
 
 ### Community 336 - "FileName.cpp"
-Cohesion: 0.10
-Nodes (42): IsVirtualFsFolder(), CompareTwoNames(), GetFsParentPrefixSize(), IsPathSepar(), SplitPathToParts_Smart(), CFileInfo, Name, DoesDirExist_FollowLink() (+34 more)
+Cohesion: 0.12
+Nodes (38): IsVirtualFsFolder(), CAltStreamsFolder::Init(), GetFsParentPrefixSize(), MyMoveFile(), MyMoveFile_with_Progress(), FillLinkData(), FillLinkData_WinLink(), FillLinkData_WslLink() (+30 more)
 
 ### Community 337 - "CAesCoder"
-Cohesion: 0.06
-Nodes (13): CAesCoder, _aes, _codeFunc, _ctrPos, _iv, _keyIsSet, _keySize, _setKeyFunc (+5 more)
+Cohesion: 0.07
+Nodes (10): CAesCoder, _aes, _ctrPos, _iv, _keyIsSet, _keySize, Z7_COM_ADDREF_RELEASE, CAesCtrCoder (+2 more)
 
-### Community 338 - "renderBlock"
-Cohesion: 0.20
-Nodes (19): cellText(), collectReferences(), headingLine(), isDroppedBoilerplate(), isDroppedPlatformLabel(), isDroppedPlatformText(), reduceHeading(), renderAside() (+11 more)
+### Community 338 - "CSection"
+Cohesion: 0.10
+Nodes (16): CFirstHeader, ArcSize, Flags, HeaderSize, CLicenseFile, Name, Offset, Size (+8 more)
 
 ### Community 339 - "GetLastError_noZero_HRESULT"
 Cohesion: 0.05
-Nodes (43): CMultiOutStream(), CMultiOutStream::CloseStream(), CMultiOutStream::CloseStream_and_DeleteFile(), CMultiOutStream::CloseStream_and_FinalRename(), CMultiOutStream::~CMultiOutStream(), CMultiOutStream::CreateNewStream(), CMultiOutStream::CreateStreams_If_Required(), CMultiOutStream::FinalFlush_and_CloseFiles() (+35 more)
+Nodes (42): CMultiOutStream(), CMultiOutStream::CloseStream(), CMultiOutStream::CloseStream_and_DeleteFile(), CMultiOutStream::CloseStream_and_FinalRename(), CMultiOutStream::~CMultiOutStream(), CMultiOutStream::CreateNewStream(), CMultiOutStream::CreateStreams_If_Required(), CMultiOutStream::FinalFlush_and_CloseFiles() (+34 more)
 
 ### Community 340 - "CCodecInfo"
 Cohesion: 0.12
@@ -2215,8 +2257,8 @@ Cohesion: 0.10
 Nodes (13): CBindInfoEx, CoderMethodIDs, Convert_FolderInfo_to_BindInfo(), CBindInfo, Bonds, Coder_to_Stream, Coders, PackStreams (+5 more)
 
 ### Community 342 - "Z7_COM7F_IMF"
-Cohesion: 0.12
-Nodes (9): CHandler::OpenSeq2(), CHandler::OpenSeq3(), CItem, Buf, HeaderSize, DicSizeToString(), Init(), UpdateArchive() (+1 more)
+Cohesion: 0.05
+Nodes (24): CHandler::Open2(), Size, MslzDec(), CBitReader, NumBits, stream, Val, CHandler::OpenSeq2() (+16 more)
 
 ### Community 343 - "CItem"
 Cohesion: 0.06
@@ -2227,44 +2269,44 @@ Cohesion: 0.07
 Nodes (13): CItemEx, DescriptorWasRead, LocalFullHeaderSize, CLocalItem, Crc, Disk, ExtractVersion, Flags (+5 more)
 
 ### Community 345 - "CStdOutStream"
-Cohesion: 0.11
-Nodes (15): ClosePercentsAndFlush(), Init(), PrintHexId(), PrintLibIndex(), PrintString(), PrintStringRight(), PrintUInt32(), GetPassword() (+7 more)
+Cohesion: 0.10
+Nodes (17): ClosePercentsAndFlush(), Init(), PrintHexId(), PrintLibIndex(), PrintStringRight(), PrintUInt32(), PrintWarningsPaths(), ThrowException_if_Error() (+9 more)
 
 ### Community 346 - "CInfo"
 Cohesion: 0.04
 Nodes (44): CMemUse, IsDefined, IsPercent, Val, ParseMemUse(), CInfo, AltStreams, ArcPath (+36 more)
 
-### Community 347 - "SetLzmaProp"
-Cohesion: 0.29
-Nodes (3): GetLowCharFast(), ParseMatchFinder(), SetLzmaProp()
+### Community 347 - "CData"
+Cohesion: 0.17
+Nodes (6): CData, Keys, SubstTable, Swap(), Z7_COM7F_IMF(), Z7_COM7F_IMF2()
 
 ### Community 348 - "CWrappers.cpp"
 Cohesion: 0.07
 Nodes (16): CByteInBufWrap::Alloc(), CByteInBufWrap::ReadByteFromNewBlock(), CByteOutBufWrap::Flush(), CCompressProgressWrap::Init(), CompressProgress(), CSeekInStreamWrap::Init(), CSeqInStreamWrap::Init(), CSeqOutStreamWrap::Init() (+8 more)
 
 ### Community 349 - "CPartition"
-Cohesion: 0.07
-Nodes (18): FindSignatureInStream(), ReadZeroTail(), CHandler::Open2(), CPartition, Ext, FirstLba, Flags, Id (+10 more)
+Cohesion: 0.09
+Nodes (14): FindSignatureInStream(), ReadZeroTail(), CHandler::Open2(), CPartition, Ext, FirstLba, Flags, Id (+6 more)
 
 ### Community 350 - "Enum"
 Cohesion: 0.11
 Nodes (18): Enum, kAlgo, kDict, kEOS, kFb, kFilter86, kHelp1, kHelp2 (+10 more)
 
 ### Community 351 - "CDecoder"
-Cohesion: 0.04
-Nodes (30): CDecoder, Buffer, _bzDecoder, _codecInStream, _curMethod, _decoderInStream, _deflateDecoder, _filter (+22 more)
+Cohesion: 0.06
+Nodes (22): CDecoder, Buffer, _bzDecoder, _codecInStream, _curMethod, _decoderInStream, _deflateDecoder, _filter (+14 more)
 
-### Community 352 - "ListView.cpp"
-Cohesion: 0.16
+### Community 352 - ".OnMessage"
+Cohesion: 0.29
 Nodes (3): CListView2, _origWindowProc, ListViewSubclassProc()
 
 ### Community 353 - "XzDec.c"
 Cohesion: 0.14
-Nodes (22): Lzma2State_Code2(), Lzma2State_Free(), Lzma2State_ResetOutBuf(), Lzma2State_SetFromMethod(), Lzma2State_SetProps(), MixCoder_Code(), MixCoder_Construct(), MixCoder_Free() (+14 more)
+Nodes (23): Lzma2State_Code2(), Lzma2State_Free(), Lzma2State_Init(), Lzma2State_ResetOutBuf(), Lzma2State_SetFromMethod(), Lzma2State_SetProps(), MixCoder_Code(), MixCoder_Construct() (+15 more)
 
 ### Community 354 - "CreateCoder.cpp"
-Cohesion: 0.10
-Nodes (18): CEncoder::CreateMixerCoder(), SetCoderProps2(), CCreatedCoder, Coder, Coder2, IsExternal, IsFilter, NumStreams (+10 more)
+Cohesion: 0.18
+Nodes (11): CreateCoder_Id(), CreateCoder_Index(), CreateFilter(), CreateHasher(), FindHashMethod(), FindMethod(), FindMethod_Index(), GetHashMethods() (+3 more)
 
 ### Community 355 - "Z7_COM7F_IMF"
 Cohesion: 0.15
@@ -2275,24 +2317,24 @@ Cohesion: 0.06
 Nodes (28): CExtent, len_and_flags, logical_offset, phys_block_num, CHashChunk, hash, hashed_len, lba (+20 more)
 
 ### Community 357 - ".CDatabase"
-Cohesion: 0.04
-Nodes (35): btree_info, fixed, key_count, longest_key, longest_val, node_count, CAttr, Data (+27 more)
+Cohesion: 0.06
+Nodes (19): btree_info, fixed, key_count, longest_key, longest_val, node_count, CAttr, Data (+11 more)
 
 ### Community 358 - "LzmaDec.c"
-Cohesion: 0.21
-Nodes (16): LZMA_DECODE_REAL(), LzmaDec_Allocate(), LzmaDec_AllocateProbs(), LzmaDec_AllocateProbs2(), LzmaDec_DecodeReal2(), LzmaDec_DecodeToBuf(), LzmaDec_Free(), LzmaDec_FreeDict() (+8 more)
+Cohesion: 0.16
+Nodes (19): LZMA_DECODE_REAL(), LzmaDec_Allocate(), LzmaDec_AllocateProbs(), LzmaDec_AllocateProbs2(), LzmaDec_DecodeReal2(), LzmaDec_DecodeToBuf(), LzmaDec_Free(), LzmaDec_FreeDict() (+11 more)
 
 ### Community 359 - "7zArcIn.c"
 Cohesion: 0.19
 Nodes (20): CountDefinedBits(), ReadBitUi32s(), ReadBitVector(), ReadNumber(), ReadPackInfo(), ReadUi32s(), ReadUnpackInfo(), SkipBitUi32s() (+12 more)
 
 ### Community 360 - "LzmaAlone.cpp"
-Cohesion: 0.15
-Nodes (21): AddProp(), Convert_UString_to_AString(), CProgressPrint::ClosePrint(), Error_HRESULT(), GetNumber(), IncorrectCommand(), main(), main2() (+13 more)
+Cohesion: 0.13
+Nodes (23): Lzma86_Decode(), Lzma86_GetUnpackSize(), AddProp(), Convert_UString_to_AString(), CProgressPrint::ClosePrint(), Error_HRESULT(), GetNumber(), IncorrectCommand() (+15 more)
 
-### Community 361 - "WriteStream"
-Cohesion: 0.05
-Nodes (21): CItem, Comment, Crc, ExtraFlags, Flags, HostOS, Name, Size32 (+13 more)
+### Community 361 - "CItem"
+Cohesion: 0.10
+Nodes (15): CItem, Comment, Crc, ExtraFlags, Flags, HostOS, Name, Size32 (+7 more)
 
 ### Community 362 - "CInArchive"
 Cohesion: 0.06
@@ -2304,31 +2346,31 @@ Nodes (12): CFrameHeader, ContentSize, Descriptor, DictionaryId, WindowDescripto
 
 ### Community 364 - "CUpdateOptions"
 Cohesion: 0.05
-Nodes (33): CCodecs, CReleaser, _codecs, CUpdateOptions, AltStreams, ArchivePath, ArcNameMode, Commands (+25 more)
+Nodes (34): CUpdateOptions, AltStreams, ArchivePath, ArcNameMode, Commands, DeleteAfterCompressing, EMailAddress, EMailMode (+26 more)
 
-### Community 365 - "7zAes.cpp"
-Cohesion: 0.03
-Nodes (35): CBase, _cachedKeys, _iv, _ivSize, _key, CBaseCoder, _aesFilter, CDecoder (+27 more)
+### Community 365 - "CKeyInfo"
+Cohesion: 0.08
+Nodes (16): CBase, _cachedKeys, _iv, _ivSize, _key, CBaseCoder, _aesFilter, CKeyInfo (+8 more)
 
 ### Community 366 - "Z7_COM7F_IMF"
-Cohesion: 0.16
-Nodes (5): Z7_COM7F_IMF(), PropVariant_SetFrom_FiTime(), ST_ATIME(), ST_CTIME(), ST_MTIME()
+Cohesion: 0.11
+Nodes (11): ConvertBoolToHRESULT(), COutFileStream::Close(), COutFileStream::GetSize(), GetLastError_HRESULT(), Z7_COM7F_IMF(), FOR_VECTOR(), FiTime_Clear(), PropVariant_SetFrom_FiTime() (+3 more)
 
-### Community 367 - "ArchiveExtractCallback.h"
-Cohesion: 0.04
-Nodes (34): Create_ALWAYS(), Create_ALWAYS_or_Open_ALWAYS(), Create_NEW(), DECLARE_INTERFACE(), GetLength(), Open(), Open_EXISTING(), OpenShared() (+26 more)
+### Community 367 - "FileStreams.h"
+Cohesion: 0.09
+Nodes (17): Create_ALWAYS(), Create_ALWAYS_or_Open_ALWAYS(), Create_NEW(), DECLARE_INTERFACE(), GetLength(), Open(), Open_EXISTING(), OpenShared() (+9 more)
 
 ### Community 368 - "CCoderMT"
 Cohesion: 0.07
 Nodes (17): CThreadDecoder, CCoderMT, EncodeMode, InStreamPointers, InStreams, OutStreamPointers, OutStreams, Result (+9 more)
 
 ### Community 369 - "CInArchive"
-Cohesion: 0.09
+Cohesion: 0.10
 Nodes (18): CHeader, DataSize, ExtraSize, Flags, Type, CInArchive, _buf, _bufPos (+10 more)
 
 ### Community 370 - "CDynHeader"
-Cohesion: 0.08
-Nodes (25): CDynHeader, BlockSizeLog, NumBlocks, ParentId, ParentLocators, ParentName, RelativeNameWasUsed, RelativeParentNameFromLocator (+17 more)
+Cohesion: 0.07
+Nodes (26): CDynHeader, BlockSizeLog, NumBlocks, ParentId, ParentLocators, ParentName, RelativeNameWasUsed, RelativeParentNameFromLocator (+18 more)
 
 ### Community 371 - "CBaseDecoder"
 Cohesion: 0.11
@@ -2336,35 +2378,31 @@ Nodes (6): CBaseDecoder, _bitPos, _stream, _value, CDecoder, _normalValue
 
 ### Community 372 - "7zUpdate.cpp"
 Cohesion: 0.04
-Nodes (62): IsFilterMethod(), AddBcj2Methods(), AddBondForFilter(), CFilterMode, CFilterMode2, Encrypted, GroupIndex, Delta (+54 more)
+Nodes (68): IsFilterMethod(), CFileItem2, ATime, ATimeDefined, Attrib, AttribDefined, CTime, CTimeDefined (+60 more)
 
-### Community 373 - "Z7_COM7F_IMF"
-Cohesion: 0.07
-Nodes (12): Z7_COM7F_IMF(), CApp::VerCtrl(), CFileDataInfo, Data, Info, IsOpen, ConvertPath_to_Ctrl(), CreateComplexDir_for_File() (+4 more)
-
-### Community 374 - "Xxh64.c"
-Cohesion: 0.25
-Nodes (9): Xxh64_Init(), Xxh64_Merge(), Xxh64_Round(), Xxh64_Update(), Xxh64State_Digest(), Xxh64State_Init(), Xxh64State_UpdateBlocks(), Xxh64State_UpdateBlocks_Aligned() (+1 more)
+### Community 374 - "UNUSED_VAR"
+Cohesion: 0.11
+Nodes (14): DllMain(), HandlerRoutine(), UNUSED_VAR(), Xxh64_Init(), Xxh64_Merge(), Xxh64_Round(), Xxh64_Update(), Xxh64State_Digest() (+6 more)
 
 ### Community 375 - "List.cpp"
-Cohesion: 0.11
-Nodes (29): CListFileTimeDef, EAdjustment, kCenter, kLeft, kRight, ErrorInfo_Print(), GetAttribString(), GetItemMTime() (+21 more)
+Cohesion: 0.06
+Nodes (42): CFieldPrinter, Arc, _fields, FilePath, IsDir, LinesString, TechMode, TempAString (+34 more)
 
 ### Community 376 - "ViewSettings.cpp"
-Cohesion: 0.14
+Cohesion: 0.13
 Nodes (20): AddUniqueStringToHeadOfList(), CListMode::Read(), CListMode::Save(), CWindowInfo::Read(), GetPanelPathName(), QueryBuf(), ReadCopyHistory(), ReadFastFolders() (+12 more)
 
 ### Community 377 - "Alloc.c"
-Cohesion: 0.10
-Nodes (33): AlignOffsetAlloc_Alloc(), AlignOffsetAlloc_Free(), BigAlloc(), BigFree(), ConvertUInt64ToHex(), ConvertUInt64ToString(), MidAlloc(), MidFree() (+25 more)
+Cohesion: 0.19
+Nodes (19): AlignOffsetAlloc_Alloc(), AlignOffsetAlloc_Free(), ConvertUInt64ToHex(), ConvertUInt64ToString(), Print(), PrintAddr(), PrintAligned(), PrintDec() (+11 more)
 
 ### Community 378 - "CMyComPtr"
-Cohesion: 0.12
-Nodes (10): CSubStreamInfo, GlobalOffset, LocalPos, Size, Stream, CArc, PhySize, Stream (+2 more)
+Cohesion: 0.10
+Nodes (13): CSubStreamInfo, GlobalOffset, LocalPos, Size, Stream, CArc, PhySize, Stream (+5 more)
 
-### Community 379 - "FileFind.h"
-Cohesion: 0.05
-Nodes (38): CExtractCallbackImp::CreateComplexDirectory(), CExtractCallbackImp::Open_CheckBreak(), CExtractCallbackImp::Open_Finished(), CExtractCallbackImp::Open_SetCompleted(), CExtractCallbackImp::Open_SetTotal(), ConvertBoolToHRESULT(), COutFileStream::Close(), COutFileStream::GetSize() (+30 more)
+### Community 379 - "DeviceIoControlOut"
+Cohesion: 0.15
+Nodes (10): CInFile::CalcDeviceSize(), DeviceIoControlOut(), GetCdRomGeometry(), GetGeometry(), GetGeometryEx(), GetPartitionInfo(), my_DISK_GEOMETRY_EX, Data (+2 more)
 
 ### Community 380 - "CHeader"
 Cohesion: 0.13
@@ -2376,19 +2414,19 @@ Nodes (27): CDirLink, Size, Va, COptHeader, CheckSum, CodeSize, DirItems, DllCha
 
 ### Community 382 - "CUnpacker"
 Cohesion: 0.09
-Nodes (19): COutStreamWithHash(), CTempBuf, _buf, _isOK, _offset, CUnpacker, copyCoder, cryptoDecoder (+11 more)
+Nodes (20): COutStreamWithHash(), CTempBuf, _buf, _isOK, _offset, CUnpacker, copyCoder, cryptoDecoder (+12 more)
 
 ### Community 383 - "CCdInfo"
 Cohesion: 0.09
 Nodes (17): CCdInfo, CdDisk, CommentSize, IsFromEcd64, NumEntries, NumEntries_in_ThisDisk, Offset, Size (+9 more)
 
-### Community 384 - "AgentProxy.cpp"
-Cohesion: 0.09
-Nodes (12): CAgentFolder::GetRealIndex(), Init(), AllocStringAndCopy(), CProxyArc, Are_Changed_LongPaths, Dirs, Files, MemUsage (+4 more)
+### Community 384 - "CProxyArc"
+Cohesion: 0.06
+Nodes (17): HeapSort(), CAgentFolder::GetRealIndex(), CAgentFolder::GetRealIndices(), Init(), AllocStringAndCopy(), CProxyArc, Are_Changed_LongPaths, Dirs (+9 more)
 
 ### Community 385 - "CWindow2"
-Cohesion: 0.07
-Nodes (5): CPanel::OnDestroy(), MyPropertySheet(), MyProperyPageProcedure(), CWindow2, WindowProcedure()
+Cohesion: 0.12
+Nodes (3): CPanel::OnDestroy(), CWindow2, WindowProcedure()
 
 ### Community 386 - "CRawLocn"
 Cohesion: 0.15
@@ -2399,11 +2437,11 @@ Cohesion: 0.12
 Nodes (15): CLogVol, flags, id, IsSupported, Name, Segments, status, CSegment (+7 more)
 
 ### Community 388 - "ParseVersion"
-Cohesion: 0.20
-Nodes (13): AddParamString(), AddToUniqueUStringVector(), CHandler::ParseStringRes(), CStringKeyValue, Key, Value, CTextFile, Buf (+5 more)
+Cohesion: 0.18
+Nodes (15): AddParamString(), AddToUniqueUStringVector(), CHandler::ParseStringRes(), CStringItem, Lang, CStringKeyValue, Key, Value (+7 more)
 
 ### Community 389 - "UString2"
-Cohesion: 0.14
+Cohesion: 0.12
 Nodes (6): CVolumeInfo, FsVerMajor, FsVerMinor, VolName, UString2, _chars
 
 ### Community 390 - "CFormatOptions"
@@ -2411,40 +2449,40 @@ Cohesion: 0.07
 Nodes (23): CContextMenuInfo, Cascaded, ElimDup, Flags, Flags_Def, MenuIcons, WriteZone, CFormatOptions (+15 more)
 
 ### Community 391 - "RegistryUtils.cpp"
-Cohesion: 0.12
-Nodes (21): CEditPage::OnApply(), CLangPage::OnApply(), CFmSettings::Load(), CFmSettings::Save(), GetFlatViewName(), Read7ZipOption(), ReadCuString(), ReadFlatView() (+13 more)
+Cohesion: 0.06
+Nodes (35): CBrowseFilterInfo, Description, Masks, CBrowseInfo, CEditPage::OnApply(), Edit_BrowseForFile(), IsLargePageSupported(), SetMemoryLock() (+27 more)
 
 ### Community 392 - "AgentOut.cpp"
-Cohesion: 0.10
-Nodes (17): CAgent, FOR_VECTOR(), GetArchive(), CAgent::CommentItem(), CAgent::CommonUpdate(), CAgent::CreateFolder(), CAgent::RenameItem(), CAgent::UpdateOneFile() (+9 more)
+Cohesion: 0.08
+Nodes (22): CAgent, CCodecIcons, IconPairs, CIconPair, Ext, IconIndex, FOR_VECTOR(), GetArchive() (+14 more)
 
-### Community 393 - "UInt32"
-Cohesion: 0.17
-Nodes (11): CByteBuffer_WithLang, Lang, CStringItem, Lang, CTableItem, ID, Offset, FindValue() (+3 more)
+### Community 393 - "CSpecState"
+Cohesion: 0.12
+Nodes (10): CSpecState, _blockSize, _crc, _prevByte, _randIndex, _randToGo, _reps, _tPos (+2 more)
 
-### Community 394 - "CMemBlockManagerMt"
-Cohesion: 0.18
-Nodes (5): CMemBlockManagerMt, _criticalSection, Semaphore, CMemLockBlocks, LockMode
+### Community 394 - "MemBlocks.cpp"
+Cohesion: 0.07
+Nodes (15): CMemBlockManager, _blockSize, _data, _headFree, CMemBlockManagerMt, _criticalSection, Semaphore, CMemBlocks (+7 more)
 
-### Community 395 - "ZipRegistry.cpp"
-Cohesion: 0.16
+### Community 395 - "LPCTSTR"
+Cohesion: 0.19
 Nodes (17): CreateMainKey(), GetKeyPath(), GetRegString(), Key_Get_BoolPair(), Key_Get_BoolPair_true(), Key_Get_UInt32(), Key_Set_bool_if_Changed(), Key_Set_BoolPair() (+9 more)
 
-### Community 396 - "GetSystemString"
-Cohesion: 0.07
-Nodes (16): CEventSetEnd, Name, CBrowseInfo, CPanel::TestArchives(), CopyNamesToHGlobal(), CPanel::OnDrag(), CListViewInfo::Read(), CListViewInfo::Save() (+8 more)
+### Community 396 - "COverwriteDialog"
+Cohesion: 0.10
+Nodes (9): COverwriteDialog, DefaultButton_is_NO, NewFileInfo, OldFileInfo, ShowExtraButtons, Z7_override, CStatic, GetIcon() (+1 more)
 
 ### Community 397 - "CCoder"
 Cohesion: 0.09
 Nodes (10): CCoder, _decoderC, _decoderT, DictSize, _inBitStream, _outWindow, _symbolC, _symbolT (+2 more)
 
-### Community 398 - "Xz_ReadBackward"
-Cohesion: 0.09
-Nodes (14): SecToRead_CreateVTable(), Xz_Construct(), Xz_Free(), XzCheck_Final(), XzCheck_Init(), XzFlags_GetCheckSize(), LookInStream_SeekRead_ForArc(), Xz_GetPackSize() (+6 more)
+### Community 398 - "XzIn.c"
+Cohesion: 0.12
+Nodes (14): Xz_Construct(), Xz_Free(), LookInStream_SeekRead_ForArc(), Xz_GetPackSize(), Xz_GetUnpackSize(), Xz_ParseIndex(), Xz_ReadBackward(), Xz_ReadHeader() (+6 more)
 
-### Community 399 - "Extract"
-Cohesion: 0.04
-Nodes (15): Z7_COM7F_IMF(), Z7_COM7F_IMF(), Z7_COM7F_IMF(), CensorNode_CheckPath(), CensorNode_CheckPath2(), DecompressArchive(), Extract(), Find_FileName_InSortedVector() (+7 more)
+### Community 399 - "Z7_COM7F_IMF"
+Cohesion: 0.05
+Nodes (8): CZipDecoder::Decode(), Init(), CDecoder::ReadTables(), CProxyItem, DirIndex, Index, if(), Z7_COM7F_IMF()
 
 ### Community 400 - "CItem"
 Cohesion: 0.07
@@ -2462,9 +2500,9 @@ Nodes (23): CSubStreamInfo, Size, Stream, CVols, BaseName, DisableVolsSearch, ec
 Cohesion: 0.10
 Nodes (9): CInBufferBase, _buf, _bufBase, _bufLim, _bufSize, NumExtraBytes, _processedSize, _stream (+1 more)
 
-### Community 404 - "CThreadArchiveOpen"
-Cohesion: 0.14
-Nodes (9): CThreadArchiveOpen, ArcFormat, Folder, FolderManager, InStream, OpenCallbackProgress, OpenCallbackSpec, Path (+1 more)
+### Community 404 - "FileFolderPluginOpen.cpp"
+Cohesion: 0.07
+Nodes (21): CArcLevelInfo, Error, ErrorFlags, ErrorType, Path, Type, CArcLevelsInfo, Levels (+13 more)
 
 ### Community 405 - "CBaseCoder"
 Cohesion: 0.12
@@ -2475,27 +2513,33 @@ Cohesion: 0.12
 Nodes (21): CUpdateCallbackAgent::CheckBreak(), CUpdateCallbackAgent::CryptoGetTextPassword(), CUpdateCallbackAgent::CryptoGetTextPassword2(), CUpdateCallbackAgent::GetStream(), CUpdateCallbackAgent::OpenFileError(), CUpdateCallbackAgent::ReadingFileError(), CUpdateCallbackAgent::ReportExtractResult(), CUpdateCallbackAgent::ReportUpdateOperation() (+13 more)
 
 ### Community 407 - "Blake2s.c"
-Cohesion: 0.20
-Nodes (14): Blake2s_Compress(), Blake2s_Compress_V128_Way1(), Blake2sp_Compress2(), Blake2sp_Compress2_AVX2_Way2(), Blake2sp_Compress2_V128_Fast(), Blake2sp_Compress2_V128_Way1(), Blake2sp_Compress2_V128_Way2(), Blake2sp_Final() (+6 more)
+Cohesion: 0.12
+Nodes (21): Blake2s_Compress(), Blake2s_Compress_V128_Way1(), Blake2sp_Compress2(), Blake2sp_Compress2_AVX2_Way2(), Blake2sp_Compress2_V128_Fast(), Blake2sp_Compress2_V128_Way1(), Blake2sp_Compress2_V128_Way2(), Blake2sp_Final() (+13 more)
 
-### Community 408 - "MyString.cpp"
-Cohesion: 0.03
-Nodes (39): Find_Apple_FS_Ext(), Len, CHandler::FindTargetItem_for_SymLink(), CHandler::GetPath(), ChangeSeparatorsInName(), AddString(), CHandler::Open2(), CHandler::SkipTo() (+31 more)
+### Community 408 - ".IsEmpty"
+Cohesion: 0.04
+Nodes (25): AddErrorMessage(), Z7_COM7F_IMF(), IMP_IInArchive_ArcProps
+
+Z7_COM7F_IMF(), CInArchive::PrintSectionBegin(), Z7_COM7F_IMF(), IMP_IInArchive_ArcProps
+
+Z7_COM7F_IMF(), IMP_IInArchive_ArcProps
+
+Z7_COM7F_IMF(), IsEmptyGuid() (+17 more)
 
 ### Community 409 - "CItem"
-Cohesion: 0.05
-Nodes (35): CFirstHeader, ArcSize, Flags, HeaderSize, CItem, Attrib, Attrib_Defined, CompressedSize (+27 more)
+Cohesion: 0.09
+Nodes (19): CItem, Attrib, Attrib_Defined, CompressedSize, CompressedSize_Defined, DictionarySize, EstimatedSize, EstimatedSize_Defined (+11 more)
 
-### Community 410 - "Common.h"
-Cohesion: 0.04
-Nodes (7): Z7_COM7F_IMF(), GetCRC(), GetSize(), SetFullSize(), SetStream(), Z7_COM7F_IMF(), GetCRC()
+### Community 410 - "EEnum"
+Cohesion: 0.11
+Nodes (16): CArcCommand, CommandType, EEnum, kAdd, kBenchmark, kDelete, kExtract, kExtractFull (+8 more)
 
-### Community 411 - "Rar5Aes.cpp"
-Cohesion: 0.08
-Nodes (17): CDecoder::CalcKey_and_CheckPassword(), CDecoder::Hmac_Convert_32Bytes(), CDecoder::Hmac_Convert_Crc32(), CDecoder::SetDecoderProps(), CDecoder::SetPassword(), CKey, _needCalc, _numIterationsLog (+9 more)
+### Community 411 - "CKey"
+Cohesion: 0.12
+Nodes (11): CDecoder::CalcKey_and_CheckPassword(), CKey, _needCalc, _numIterationsLog, _password, _salt, CKeyBase, _check_Calced32 (+3 more)
 
 ### Community 412 - "CThreadExtracting"
-Cohesion: 0.08
+Cohesion: 0.07
 Nodes (18): CExtractOptions, StdInMode, StdOutMode, TestMode, YesToAll, CThreadExtracting, ArchivePaths, ArchivePathsFull (+10 more)
 
 ### Community 413 - "CMyComPtr2"
@@ -2503,8 +2547,8 @@ Cohesion: 0.09
 Nodes (9): CDecoder, _buf, _lzfseDecoder, _tableBuf, _zlibDecoder, CMyComPtr2, CMyComPtr2_Create, _p (+1 more)
 
 ### Community 414 - "CrcCalc"
-Cohesion: 0.15
-Nodes (8): CrcCalc(), CrcUpdate(), Z7_CRC_UPDATE_T1_FUNC_NAME(), Z7_FASTCALL(), z7_GetFunc_CrcUpdate(), Z7_COM7F_IMF(), Z7_COM7F_IMF(), CCrcHasher::SetFunctions()
+Cohesion: 0.07
+Nodes (21): CrcCalc(), CrcUpdate(), void(), Z7_CRC_UPDATE_T1_FUNC_NAME(), Z7_FASTCALL(), z7_GetFunc_CrcUpdate(), ShufBytes_128(), ShufBytes_256() (+13 more)
 
 ### Community 415 - "CImageList"
 Cohesion: 0.10
@@ -2515,64 +2559,68 @@ Cohesion: 0.13
 Nodes (11): Get_AString_From_UString(), GetDevice(), GetPropString(), GetTime(), GetUser(), Z7_COM7F_IMF(), GetDevice(), GetTime() (+3 more)
 
 ### Community 417 - "MyWindows.cpp"
-Cohesion: 0.11
-Nodes (18): FatTimeToProp(), VhdTimeToFileTime(), MyCompareTime(), AllocateForBSTR(), CompareFileTime(), FileTimeToLocalFileTime(), FileTimeToSystemTime(), FreeForBSTR() (+10 more)
+Cohesion: 0.26
+Nodes (10): AllocateForBSTR(), FreeForBSTR(), SysAllocString(), SysAllocStringByteLen(), SysAllocStringLen(), SysFreeString(), SysStringByteLen(), SysStringLen() (+2 more)
 
-### Community 418 - "CSingleMethodProps"
-Cohesion: 0.17
-Nodes (8): CCommonMethodProps, _memAvail, _memUsage_Compress, _memUsage_Decompress, _memUsage_WasSet, CSingleMethodProps, _level, Calc_From_Val_Percents_Less100()
+### Community 418 - "LONG_PTR"
+Cohesion: 0.18
+Nodes (5): GetLongPtr(), GetUserDataLongPtr(), SetLongPtr(), SetLongPtrW(), SetUserDataLongPtr()
 
 ### Community 419 - "CDatabase"
-Cohesion: 0.06
-Nodes (37): AreEqualNames(), CDatabase, Callback_Cur, Fat, FatSize, HeadersError, IsArc, Items (+29 more)
+Cohesion: 0.08
+Nodes (21): CDatabase, Callback_Cur, Fat, FatSize, HeadersError, IsArc, Items, MainSubfile (+13 more)
 
-### Community 420 - "CBootInitialEntry"
-Cohesion: 0.07
-Nodes (24): CBootInitialEntry, Bootable, BootMediaType, LoadRBA, LoadSegment, SectorCount, SystemType, VendorSpec (+16 more)
+### Community 420 - "CDateTime"
+Cohesion: 0.11
+Nodes (16): CBootRecordDescriptor, BootId, BootSystemId, BootSystemUse, CBootValidationEntry, Id, PlatformId, CDateTime (+8 more)
 
 ### Community 421 - "CVolumeDescriptor"
 Cohesion: 0.07
 Nodes (27): CVolumeDescriptor, AbstractFileId, ApplicationId, ApplicationUse, BibFileId, CopyrightFileId, CTime, DataPreparerId (+19 more)
 
 ### Community 422 - "CMessagesDialog"
-Cohesion: 0.14
-Nodes (4): CMessagesDialog, _messageList, Messages, Z7_override
+Cohesion: 0.12
+Nodes (5): CMessagesDialog, _messageList, Messages, Z7_override, CPanel::OnDrag()
 
 ### Community 423 - "ExtractCallback.cpp"
-Cohesion: 0.12
-Nodes (22): AddNewLineString(), CExtractCallbackImp::Add_ArchiveName_Error(), CExtractCallbackImp::AddError_Message(), CExtractCallbackImp::AddError_Message_ShowArcPath(), CExtractCallbackImp::BeforeOpen(), CExtractCallbackImp::ExtractResult(), CExtractCallbackImp::Init(), CExtractCallbackImp::MessageError() (+14 more)
+Cohesion: 0.06
+Nodes (25): AddNewLineString(), CExtractCallbackImp::Add_ArchiveName_Error(), CExtractCallbackImp::AddError_Message(), CExtractCallbackImp::AddError_Message_ShowArcPath(), CExtractCallbackImp::BeforeOpen(), CExtractCallbackImp::ExtractResult(), CExtractCallbackImp::Init(), CExtractCallbackImp::MessageError() (+17 more)
 
 ### Community 424 - "CDecoder"
-Cohesion: 0.07
-Nodes (23): CDecoder, m_LenSlot, m_Literals, m_PosSlot, m_Selector, _numDictBits, _overWin, _win (+15 more)
+Cohesion: 0.08
+Nodes (17): CDecoder, m_LenSlot, m_Literals, m_PosSlot, m_Selector, _numDictBits, _overWin, _win (+9 more)
 
 ### Community 426 - "CBaseThreadInfo"
-Cohesion: 0.07
-Nodes (23): CBaseThreadInfo, Callback, CallbackRes, Thread, CBenchSyncCommon, ExitMode, StartEvent, CBenchThreadsFlusher (+15 more)
+Cohesion: 0.06
+Nodes (31): CBaseRandomGenerator, A1, A2, Salt, CBaseThreadInfo, Callback, CallbackRes, Thread (+23 more)
 
 ### Community 427 - "Z7_COM7F_IMF"
 Cohesion: 0.09
 Nodes (11): C_integrity_meta_phys, Hash, HashSize, im_flags, im_hash_type, CDatabase::GetSize(), CHandler::FindHashIndex_for_Item(), GetAttrIndex() (+3 more)
 
-### Community 428 - "Z7_COM7F_IMF"
-Cohesion: 0.12
-Nodes (10): Ppmd7_Alloc(), Ppmd7_Construct(), Ppmd7_Free(), CDecoder, CDecoder::~CDecoder(), Z7_COM7F_IMF(), CEncoder::CEncoder(), CDecoder::CDecoder() (+2 more)
+### Community 428 - "Ppmd7_Alloc"
+Cohesion: 0.16
+Nodes (10): Ppmd7_Alloc(), Ppmd7_Construct(), Ppmd7_Free(), Ppmd7a_RangeDec_Init(), CDecoder, CDecoder::~CDecoder(), CEncoder::CEncoder(), CDecoder::CDecoder() (+2 more)
 
 ### Community 429 - "CDatabase"
 Cohesion: 0.10
 Nodes (15): CDatabase, ByteBuf, Fat, Header, InStream, Items, LfnBuf, NumCurUsedBytes (+7 more)
 
 ### Community 430 - "CDatabase"
-Cohesion: 0.06
-Nodes (27): CDatabase, ByteBuf, EmptyString, Header, InStream, Items, _lostFolderIndex_Deleted, _lostFolderIndex_Normal (+19 more)
+Cohesion: 0.08
+Nodes (21): CDatabase, ByteBuf, EmptyString, Header, InStream, Items, _lostFolderIndex_Deleted, _lostFolderIndex_Normal (+13 more)
+
+### Community 431 - "7zFolderInStream.h"
+Cohesion: 0.12
+Nodes (9): AddFt(), CFolderInStream::AddFileInfo(), CFolderInStream::ClearFileInfo(), CFolderInStream::Init(), CFolderInStream::OpenStream(), FILETIME_Clear(), FILETIME_IsZero(), FILETIME_To_UInt64() (+1 more)
 
 ### Community 432 - "LzfseDecoder.cpp"
 Cohesion: 0.18
 Nodes (12): BitStream_Pull(), CDecoder::CodeReal(), CDecoder::DecodeLzfse(), CDecoder::DecodeLzvn(), CDecoder::DecodeUncompressed(), CDecoder::GetUInt32(), CountZeroBits(), FseDecodeExtra() (+4 more)
 
-### Community 433 - "DllGetClassObject"
-Cohesion: 0.14
-Nodes (10): CShellExtClassFactory::CreateInstance(), CShellExtClassFactory::LockServer(), DllCanUnloadNow(), DllGetClassObject(), DllMain(), DllRegisterServer(), DllUnregisterServer(), RegisterServer() (+2 more)
+### Community 433 - "DllExportsExplorer.cpp"
+Cohesion: 0.08
+Nodes (13): CShellExtClassFactory, CShellExtClassFactory::CreateInstance(), CShellExtClassFactory::LockServer(), DllCanUnloadNow(), DllGetClassObject(), DllMain(), DllRegisterServer(), DllUnregisterServer() (+5 more)
 
 ### Community 434 - "CCoder"
 Cohesion: 0.08
@@ -2580,23 +2628,23 @@ Nodes (15): CCoder, Coder2, Finish, NumStreams, PackSizePointers, PackSizes, Unp
 
 ### Community 435 - "Far.cpp"
 Cohesion: 0.15
-Nodes (20): ClosePlugin(), Configure(), COpenArchiveCallback::ShowMessage(), COptions, Enabled, DeleteFiles(), ExitFAR(), FreeFindData() (+12 more)
+Nodes (20): ClosePlugin(), Configure(), COptions, Enabled, DeleteFiles(), ExitFAR(), FreeFindData(), GetFiles() (+12 more)
 
 ### Community 436 - "CIn"
-Cohesion: 0.15
-Nodes (5): CheckBreak2(), WasEscPressed(), CBase, m_Object, CIn
+Cohesion: 0.17
+Nodes (4): WasEscPressed(), CBase, m_Object, CIn
 
 ### Community 437 - "CCompressionMethodMode"
 Cohesion: 0.08
-Nodes (19): CBond2, InCoder, OutCoder, OutStream, CCompressionMethodMode, Bonds, DefaultMethod_was_Inserted, Filter_was_Inserted (+11 more)
+Nodes (20): CBond2, InCoder, OutCoder, OutStream, CCompressionMethodMode, Bonds, DefaultMethod_was_Inserted, Filter_was_Inserted (+12 more)
 
 ### Community 438 - "PanelSort.cpp"
-Cohesion: 0.12
+Cohesion: 0.15
 Nodes (10): CompareFileNames_ForFolderList(), CompareFileNames_Le16(), CompareItems(), CompareItems2(), CPanel::OnColumnClick(), CPanel::SortItemsWithPropID(), GetExtensionPtr(), CReparseShortInfo (+2 more)
 
-### Community 439 - "InitLocalPrivileges"
-Cohesion: 0.20
-Nodes (6): CArchiveExtractCallback::CArchiveExtractCallback(), InitLocalPrivileges(), CDirItems::CDirItems(), CArchiveUpdateCallback::CArchiveUpdateCallback(), CAccessToken, _handle
+### Community 439 - "BoolToBOOL"
+Cohesion: 0.10
+Nodes (5): CTrackbar, CAccessToken, _handle, BoolToBOOL(), GetSystemMenu()
 
 ### Community 440 - "CStreamBinder"
 Cohesion: 0.10
@@ -2604,7 +2652,7 @@ Nodes (10): CStreamBinder, _buf, _bufSize, _canRead_Event, _canWrite_Semaphore, 
 
 ### Community 441 - "Z7_COM7F_IMF"
 Cohesion: 0.11
-Nodes (7): CDecoder::CodeResume(), CDecoder::CodeSpec(), CDecoder::CreateInputBuffer(), CDecoder::ReadFromInputStream(), CDecoder::SetOutStreamSizeResume(), SResToHRESULT(), Z7_COM7F_IMF()
+Nodes (7): CDecoder::CDecoder(), CDecoder::CodeResume(), CDecoder::CodeSpec(), CDecoder::ReadFromInputStream(), CDecoder::SetOutStreamSizeResume(), SResToHRESULT(), Z7_COM7F_IMF()
 
 ### Community 442 - "Rar3Decoder.cpp"
 Cohesion: 0.15
@@ -2614,29 +2662,33 @@ Nodes (14): CDecoder::CodeReal(), CDecoder::DecodeLZ(), CDecoder::DecodePPM(), C
 Cohesion: 0.14
 Nodes (10): CConfigProp, IsVector, Name, Val, Vector, CPropVal, IsNumber, Number (+2 more)
 
-### Community 444 - "CPasswordDialog"
-Cohesion: 0.10
-Nodes (12): CEditDialog, _edit, Text, Title, Z7_override, CPasswordDialog, CPasswordDialog::OnOK(), Password (+4 more)
+### Community 444 - "CUpdateCallbackGUI2"
+Cohesion: 0.04
+Nodes (28): CEditDialog, _edit, Text, Title, Z7_override, CPasswordDialog, CPasswordDialog::OnOK(), Password (+20 more)
 
-### Community 446 - "ExtractGroupCommand"
-Cohesion: 0.20
+### Community 445 - "CUInt32DefVector"
+Cohesion: 0.11
+Nodes (6): CUInt32DefVector, Defs, Vals, CUInt64DefVector, Defs, Vals
+
+### Community 446 - "CompressCall2.cpp"
+Cohesion: 0.23
 Nodes (9): CalcChecksum(), CompressFiles(), ErrorLangMessage(), ErrorMessage(), ErrorMessageHRESULT(), ExtractArchives(), ExtractGroupCommand(), TestArchives() (+1 more)
 
 ### Community 447 - "WRes"
-Cohesion: 0.12
-Nodes (14): ManualResetEvent_Create(), ManualResetEvent_CreateNotSignaled(), CBaseEvent(), CBaseEvent_WFMO, _manual_reset, _state, CBaseHandle_WFMO, CManualResetEvent (+6 more)
+Cohesion: 0.08
+Nodes (19): ManualResetEvent_Create(), ManualResetEvent_CreateNotSignaled(), CExitEventLauncher, _exitEvent, _needExit, _numActiveThreads, _threads, CBaseEvent() (+11 more)
 
 ### Community 448 - "Rar3Vm.cpp"
 Cohesion: 0.18
 Nodes (19): AudioDecode(), COperand, Base, Data, Type, CVm::ExecuteCode(), CVm::ExecuteStandardFilter(), CVm::GetOperand() (+11 more)
 
-### Community 449 - "CAlignedBuffer"
+### Community 449 - "z7_AlignedAlloc"
 Cohesion: 0.10
-Nodes (12): z7_AlignedFree(), CHandler::CHandler(), CDecoder::CDecoder(), CDecoder::CDecoder(), CAlignedBuffer, CAlignedBuffer1, _data, _data (+4 more)
+Nodes (13): z7_AlignedAlloc(), z7_AlignedFree(), CHandler::CHandler(), CDecoder::CDecoder(), CDecoder::CDecoder(), CAlignedBuffer, CAlignedBuffer1, _data (+5 more)
 
 ### Community 450 - "Ppmd7.c"
-Cohesion: 0.31
-Nodes (16): Ppmd7_AllocUnits(), Ppmd7_AllocUnitsRare(), Ppmd7_CreateSuccessors(), Ppmd7_GlueFreeBlocks(), Ppmd7_Init(), Ppmd7_InsertNode(), Ppmd7_NextContext(), Ppmd7_RemoveNode() (+8 more)
+Cohesion: 0.25
+Nodes (19): Ppmd7_AllocUnits(), Ppmd7_AllocUnitsRare(), Ppmd7_CreateSuccessors(), Ppmd7_GlueFreeBlocks(), Ppmd7_Init(), Ppmd7_InsertNode(), Ppmd7_MakeEscFreq(), Ppmd7_NextContext() (+11 more)
 
 ### Community 451 - "CDirRecord"
 Cohesion: 0.11
@@ -2647,12 +2699,12 @@ Cohesion: 0.09
 Nodes (10): CInArcInfo, DataCRC, EncryptVersion, EndFlags, EndOfArchive_was_Read, EndPos, FileSize, Flags (+2 more)
 
 ### Community 453 - "CHeader"
-Cohesion: 0.07
-Nodes (21): IsOldVersion, CHeader, BootIndex, ChunkSize, ChunkSizeBits, Flags, Guid, IntegrityResource (+13 more)
+Cohesion: 0.06
+Nodes (24): CHeader, BootIndex, ChunkSize, ChunkSizeBits, Flags, Guid, IntegrityResource, _isNewVersion (+16 more)
 
 ### Community 454 - "COneMethodInfo"
-Cohesion: 0.09
-Nodes (14): CAddCommon::CalcStreamCRC(), CAddCommon::Compress(), CAddCommon::Set_Pre_CompressionResult(), CCompressingResult, CRC, DescriptorMode, ExtractVersion, LzmaEos (+6 more)
+Cohesion: 0.06
+Nodes (22): C_Id_Name_pair, Id, Name, CHandler::SetHeaderMethod(), CHandler::SetMainMethod(), COutHandler::SetSolidFromString(), GetTime(), ParseBond() (+14 more)
 
 ### Community 455 - "EEnum"
 Cohesion: 0.14
@@ -2662,69 +2714,69 @@ Nodes (14): EEnum, kAbsPaths, kAll, kAsk, kCurPaths, kFullPaths, kNone, kNoPaths
 Cohesion: 0.09
 Nodes (10): CCipher, Key0, Key1, Key2, KeyMem0, KeyMem1, KeyMem2, CDecoder::Init_BeforeDecode() (+2 more)
 
-### Community 457 - "CReparseAttr"
-Cohesion: 0.11
-Nodes (14): ConvertNtReparseToString(), GetSymLink(), CReparseAttr, ErrorCode, Flags, HeaderError, MinorError, PrintName (+6 more)
+### Community 457 - "Z7_COM7F_IMF"
+Cohesion: 0.04
+Nodes (37): CLinkInfo, isRelative, isWindowsPath, LinkPath, LinkType, ELinkType, k_LinkType_HardLink, k_LinkType_Junction (+29 more)
 
-### Community 458 - "CBenchProps"
-Cohesion: 0.08
-Nodes (21): CBaseRandomGenerator, A1, A2, Salt, CBenchMethod, DecComplexCompr, DecComplexUnc, DictBits (+13 more)
+### Community 458 - "CCodecInfoUser"
+Cohesion: 0.10
+Nodes (17): CCodecInfoUser, DecoderIsAssigned, EncoderIsAssigned, IsFilter, IsFilter_Assigned, Name, NumStreams, CCodecs::Get_CodecsInfoUser_Vector() (+9 more)
 
 ### Community 459 - "COpenCallbackConsole"
-Cohesion: 0.14
-Nodes (13): CheckBreak2(), COpenCallbackConsole, MultiArcMode, COpenCallbackConsole::Open_CheckBreak(), COpenCallbackConsole::Open_CryptoGetTextPassword(), COpenCallbackConsole::Open_Finished(), COpenCallbackConsole::Open_SetCompleted(), COpenCallbackConsole::Open_SetTotal() (+5 more)
+Cohesion: 0.12
+Nodes (15): CCtrlHandlerSetter, Z7_final(), CheckBreak2(), COpenCallbackConsole, MultiArcMode, COpenCallbackConsole::Open_CheckBreak(), COpenCallbackConsole::Open_CryptoGetTextPassword(), COpenCallbackConsole::Open_Finished() (+7 more)
 
-### Community 460 - "CProgressBox"
-Cohesion: 0.06
-Nodes (28): CExtractCallbackImp::Init(), CPercentPrinterState, Command, Completed, FileName, Files, FilesTotal, Total (+20 more)
+### Community 460 - "ConvertUInt64ToString"
+Cohesion: 0.05
+Nodes (42): CHashCallbackConsole::PrintProperty(), CExtractCallbackImp::Init(), CPercentPrinterState, Command, Completed, FileName, Files, FilesTotal (+34 more)
 
 ### Community 461 - "CHeader"
-Cohesion: 0.09
-Nodes (15): CHeader, algo, capacity, descriptorOffset, descriptorSize, flags, gdOffset, grainSize (+7 more)
+Cohesion: 0.12
+Nodes (11): CHeader, algo, capacity, descriptorOffset, descriptorSize, flags, gdOffset, grainSize (+3 more)
 
 ### Community 462 - "CInfo"
 Cohesion: 0.07
 Nodes (26): CInfo, AltStreams, ArcPaths, ArcType, ElimDup, EncryptHeaders, Formats, ForRemovableOnly (+18 more)
 
-### Community 463 - "CPlugin"
-Cohesion: 0.02
-Nodes (59): dup_utf8(), prop_display_name(), prop_display_string(), qz_list_entry(), qz_list_open(), CInArchive::ConvertToUnicode(), FindZipMethod(), IsSimpleAsciiString() (+51 more)
+### Community 463 - "CompressFiles"
+Cohesion: 0.11
+Nodes (11): SetStringProp(), IsThere_ReadOnlyArc(), ShowSysErrorMessage(), CPlugin::DeleteFiles(), CPlugin::ExtractFiles(), CPlugin::GetFiles(), CompressFiles(), CPlugin::CreateFolder() (+3 more)
 
 ### Community 464 - "Panel.cpp"
-Cohesion: 0.05
-Nodes (25): ListView_GetSelected(), CMyComboBoxEdit, _origWindowProc, _panel, CMyListView::OnMessage(), ComboBoxEditSubclassProc(), CPanel::FindDir_InOperatedList(), CPanel::GetParent() (+17 more)
+Cohesion: 0.07
+Nodes (23): CMyListView::OnMessage(), ComboBoxEditSubclassProc(), CPanel::FindDir_InOperatedList(), CPanel::GetDriveOrNetworkPrefix(), CPanel::GetFolderTypeID(), CPanel::GetFsPath(), CPanel::GetParent(), CPanel::IsHashFolder() (+15 more)
 
 ### Community 465 - "Sha512.c"
-Cohesion: 0.11
-Nodes (11): EXCEPTION_EXECUTE_HANDLER(), Sha512_Final(), Sha512_Init(), Sha512_InitState(), Sha512_SetFunction(), Sha512_Update(), Sha512_UpdateBlocks(), Sha512_UpdateBlocks_HW() (+3 more)
+Cohesion: 0.09
+Nodes (10): EXCEPTION_EXECUTE_HANDLER(), Sha512_Final(), Sha512_Init(), Sha512_InitState(), Sha512_SetFunction(), Sha512_Update(), HandlerRoutine(), Sha() (+2 more)
 
 ### Community 466 - "CDecoder"
 Cohesion: 0.08
 Nodes (18): CDecoder, deltaRepProbs, _deltaReps, deltaRepStates, lzRepProbs, lzRepStates, m_DeltaDecoder, m_LenDecoder (+10 more)
 
-### Community 467 - "System.cpp"
-Cohesion: 0.21
-Nodes (3): Get_File_OPEN_MAX_Reduced_for_3_tasks(), GetNumberOfProcessors(), GetRamSize()
+### Community 467 - "MyMin"
+Cohesion: 0.15
+Nodes (9): SetRestriction, Z7_COM7F_IMF(), CPanel::ChangeWindowSize(), CPanel::OnLeftClick(), CPanel::OnShiftSelectMessage(), MyMax(), MyMin(), Get_File_OPEN_MAX_Reduced_for_3_tasks() (+1 more)
 
-### Community 468 - "InStream_SeekSet"
+### Community 468 - "WriteStream"
 Cohesion: 0.05
-Nodes (27): Z7_COM7F_IMF(), AddNameToString(), CHandler::Open2(), CheckSum(), CHandler::ReadData(), CHandler::ExtractNode(), CHandler::SeekAndRead(), CHandler::Open2() (+19 more)
+Nodes (22): CheckSum(), IsArc_Ihex(), Parse(), Z7_COM7F_IMF(), CHandler::Open2(), CInArchive::FillRefs(), CInArchive::Open2(), InStream_AtBegin_GetSize() (+14 more)
 
-### Community 469 - "CData"
-Cohesion: 0.12
-Nodes (11): CData, Data, PackPos, UnpackPos, CFrag, Size, StartBlock, CHandler::GetPackSize() (+3 more)
+### Community 469 - "Plugin.cpp"
+Cohesion: 0.22
+Nodes (12): AddPropertyString(), CompareFileNames_ForFolderList(), ConvertSizeToString(), CopyStrLimited(), CPlugin::CPlugin(), FindPropNameID(), GetHex_A_minus10(), GetNameOfProp() (+4 more)
 
 ### Community 470 - "CItemEx"
-Cohesion: 0.08
-Nodes (23): CItemEx, EncodingCharacts, HeaderError, HeaderPos, HeaderSize, IsSignedChecksum, LongLink_WasUsed, LongLink_WasUsed_2 (+15 more)
+Cohesion: 0.06
+Nodes (26): CEncodingCharacts, IsAscii, UtfCheck, CItemEx, EncodingCharacts, HeaderError, HeaderPos, HeaderSize (+18 more)
 
-### Community 471 - "CItem"
-Cohesion: 0.17
-Nodes (9): CHandler::ClearRefs(), CHandler::ParseDir(), CItem, Name, Node, ParentNode, SymLinkItemIndex, Type (+1 more)
+### Community 471 - "CMenuPage"
+Cohesion: 0.11
+Nodes (10): CMenuPage, _cascaded_Changed, _elimDup_Changed, _flags_Changed, _initMode, _listView, _menuIcons_Changed, _writeZone_Changed (+2 more)
 
 ### Community 472 - "CSystemPage"
-Cohesion: 0.07
-Nodes (25): CExtDatabase, Exts, CExtPlugins, Ext, Plugins, CPluginToIcon, IconIndex, IconPath (+17 more)
+Cohesion: 0.08
+Nodes (20): CExtDatabase, Exts, CExtPlugins, Ext, Plugins, CPluginToIcon, IconIndex, IconPath (+12 more)
 
 ### Community 473 - "CBitDecoder"
 Cohesion: 0.08
@@ -2732,15 +2784,15 @@ Nodes (15): CBitDecoder, _bitPos, Stream, _value, CByteIn, BitDecoder, IByteIn_o
 
 ### Community 474 - "7zStream.c"
 Cohesion: 0.17
-Nodes (15): LookInStream_LookRead(), LookInStream_Read(), LookInStream_Read2(), LookInStream_SeekTo(), LookToRead2_CreateVTable(), LookToRead2_Look_Exact(), LookToRead2_Look_Lookahead(), LookToRead2_Read() (+7 more)
+Nodes (15): LookInStream_LookRead(), LookInStream_Read(), LookInStream_Read2(), LookInStream_SeekTo(), LookToRead2_Look_Exact(), LookToRead2_Look_Lookahead(), LookToRead2_Read(), LookToRead2_Seek() (+7 more)
 
 ### Community 475 - "CFolderHistory"
-Cohesion: 0.10
+Cohesion: 0.11
 Nodes (9): CAppState, FastFolders, FolderHistory, CFastFolders, _criticalSection, Strings, CFolderHistory, _criticalSection (+1 more)
 
-### Community 476 - "HashGUI.cpp"
-Cohesion: 0.10
-Nodes (25): AddSizePair(), CThreadExtracting::ProcessWasFinished_GuiVirt(), AddErrorMessage(), AddHashBundleRes(), AddHashResString(), AddHashString(), AddSizeValuePair(), CHashCallbackGUI (+17 more)
+### Community 476 - "FileManager/StdAfx.h"
+Cohesion: 0.02
+Nodes (73): CAboutDialog, CAboutDialog::OnHelp(), Z7_override, NumberToString(), AddLangString(), CIDLangPair, ControlID, LangID (+65 more)
 
 ### Community 477 - "CConfigItem"
 Cohesion: 0.24
@@ -2756,7 +2808,7 @@ Nodes (6): Md5_Final(), Md5_Init(), Md5_Update(), Md5_UpdateBlocks(), Md5(), Z7_
 
 ### Community 480 - "CExtractDialog"
 Cohesion: 0.12
-Nodes (10): CExtractDialog, ArcPath, DirPath, ElimDup, OverwriteMode, OverwriteMode_Force, PathMode, PathMode_Force (+2 more)
+Nodes (9): CExtractDialog, ArcPath, DirPath, ElimDup, OverwriteMode, OverwriteMode_Force, PathMode, PathMode_Force (+1 more)
 
 ### Community 481 - "CNode"
 Cohesion: 0.09
@@ -2767,76 +2819,76 @@ Cohesion: 0.15
 Nodes (10): CPhyVol, Name, pe_count, pe_start, CVolGroup, _extentSizeBits, _id, _logVols (+2 more)
 
 ### Community 483 - "CSection"
-Cohesion: 0.12
-Nodes (15): CSection, Align, Flags, IsDummy, Name, Pa, PSize, SegmentIndex (+7 more)
+Cohesion: 0.09
+Nodes (18): CHandler::Open2(), CSection, Align, Flags, IsDummy, Name, Pa, PSize (+10 more)
 
 ### Community 484 - "CLead"
 Cohesion: 0.09
 Nodes (17): CEntry, Count, Offset, Tag, Type, CLead, Cpu, Major (+9 more)
 
 ### Community 485 - "TarIn.cpp"
-Cohesion: 0.19
-Nodes (10): IsArc_Tar(), IsBufNonZero(), MyStrNCpy(), OctalToNumber(), OctalToNumber32(), ParseInt64(), ParseInt64_MTime(), ParsePaxTime() (+2 more)
+Cohesion: 0.21
+Nodes (9): IsArc_Tar(), IsBufNonZero(), MyStrNCpy(), OctalToNumber(), OctalToNumber32(), ParseInt64(), ParseInt64_MTime(), ParseSize() (+1 more)
 
 ### Community 486 - "CPaxInfo"
 Cohesion: 0.09
-Nodes (21): CPaxInfo, DoubleTagError, GID, GID_Defined, Group, Group_Defined, Link, Link_Defined (+13 more)
+Nodes (22): CPaxInfo, DoubleTagError, GID, GID_Defined, Group, Group_Defined, Link, Link_Defined (+14 more)
 
 ### Community 487 - "CResource"
-Cohesion: 0.10
-Nodes (8): CheckName_and_Fix_in_Meta(), CResource, Flags, KeepSolid, Offset, PackSize, SolidIndex, UnpackSize
+Cohesion: 0.12
+Nodes (7): CResource, Flags, KeepSolid, Offset, PackSize, SolidIndex, UnpackSize
 
 ### Community 488 - "CUpdateItem"
 Cohesion: 0.09
 Nodes (19): CUpdateItem, Attrib, Comment, IndexInArc, IndexInClient, IsDir, IsUtf8, Name (+11 more)
 
 ### Community 489 - "CExternalCodecs"
-Cohesion: 0.09
-Nodes (15): CCodecInfoEx, DecoderIsAssigned, EncoderIsAssigned, Id, IsFilter, Name, NumStreams, CExternalCodecs (+7 more)
+Cohesion: 0.06
+Nodes (21): CCodecInfoEx, DecoderIsAssigned, EncoderIsAssigned, Id, IsFilter, Name, NumStreams, CCreatedCoder (+13 more)
 
-### Community 490 - "BZip2Encoder.cpp"
-Cohesion: 0.23
-Nodes (4): CEncoder::ReadRleBlock(), CEncoder::WriteByte(), CEncoder::WriteBytes(), MFThread()
+### Community 490 - ".EncodeBlock"
+Cohesion: 0.33
+Nodes (3): CEncoder::ReadRleBlock(), CEncoder::WriteByte(), CEncoder::WriteBytes()
 
 ### Community 491 - "CFilter"
-Cohesion: 0.08
+Cohesion: 0.09
 Nodes (18): CFilter, CFilter2, CurrentChannel, m_ChannelDelta, m_Filters, ByteCount, D1, D2 (+10 more)
 
 ### Community 492 - "CVolumeName"
-Cohesion: 0.20
-Nodes (6): CVolumeName, _after, _before, _changed, _needChangeForNext, IsDigit()
+Cohesion: 0.29
+Nodes (5): CVolumeName, _after, _before, _changed, _needChangeForNext
 
-### Community 493 - "CProgressThreadVirt"
-Cohesion: 0.06
-Nodes (21): CMyBuffer, _data, CPreAllocOutFile, File, _preAllocSize, Written, CThreadCombine, InputDirPrefix (+13 more)
+### Community 493 - "PanelOperations.cpp"
+Cohesion: 0.04
+Nodes (42): CPanel::CorrectFsPath(), CPanel::CreateFolder(), CPanel::DeleteItems(), CPanel::OnBeginLabelEdit(), CPanel::OnEndLabelEdit(), CThreadFolderOperations, FolderOperations, Index (+34 more)
 
 ### Community 494 - "CThreadInfo"
-Cohesion: 0.10
+Cohesion: 0.09
 Nodes (19): CEncoder, CEncoder::Free(), CThreadInfo, Codes, Encoder, Freqs, Lens, m_Block (+11 more)
 
 ### Community 495 - "CFieldInfo"
-Cohesion: 0.22
-Nodes (9): CFieldInfo, IsRawProp, NameA, NameU, PrefixSpacesWidth, PropID, TextAdjustment, TitleAdjustment (+1 more)
+Cohesion: 0.09
+Nodes (24): CFieldInfo, IsRawProp, NameA, NameU, PrefixSpacesWidth, PropID, TextAdjustment, TitleAdjustment (+16 more)
 
 ### Community 496 - "SysIconUtils.cpp"
 Cohesion: 0.15
 Nodes (9): C_SHGetFileInfo_Init, f_SHGetFileInfoW, CExtToIconMap::GetIconIndex(), FindInSorted_Attrib(), FindInSorted_Ext(), My_SHGetFileInfoW(), Shell_GetFileInfo_SysIconIndex_for_Path(), Shell_GetFileInfo_SysIconIndex_for_Path_attrib_iconIndexRef() (+1 more)
 
 ### Community 497 - "CompressCall.cpp"
-Cohesion: 0.09
-Nodes (19): AddLagePagesSwitch(), Benchmark(), CalcChecksum(), Call7zGui(), CompressFiles(), CRandNameGenerator, _random, CreateMap() (+11 more)
+Cohesion: 0.10
+Nodes (23): AddLagePagesSwitch(), Benchmark(), CalcChecksum(), Call7zGui(), CompressFiles(), CRandNameGenerator, _random, CreateMap() (+15 more)
 
 ### Community 498 - "Lzma2Dec_DecodeToDic"
-Cohesion: 0.27
-Nodes (11): Lzma2Dec_Allocate(), Lzma2Dec_AllocateProbs(), Lzma2Dec_DecodeToBuf(), Lzma2Dec_DecodeToDic(), Lzma2Dec_GetOldProps(), Lzma2Dec_Init(), Lzma2Dec_Parse(), Lzma2Dec_UpdateState() (+3 more)
+Cohesion: 0.18
+Nodes (13): AlignOffsetAlloc_CreateVTable(), Lzma2Dec_Allocate(), Lzma2Dec_AllocateProbs(), Lzma2Dec_DecodeToBuf(), Lzma2Dec_DecodeToDic(), Lzma2Dec_GetOldProps(), Lzma2Dec_Init(), Lzma2Dec_Parse() (+5 more)
 
 ### Community 499 - "7zDec.c"
 Cohesion: 0.23
 Nodes (10): CheckSupportedFolder(), IS_MAIN_METHOD(), IS_SUPPORTED_CODER(), ReadByte(), SzAr_DecodeFolder(), SzDecodeCopy(), SzDecodeLzma(), SzDecodeLzma2() (+2 more)
 
-### Community 500 - "OutMemStream.h"
-Cohesion: 0.15
-Nodes (5): GetPos(), ReleaseOutStream(), SetOutStream(), SetSeqOutStream(), StopWriting()
+### Community 500 - "CPrimeVol"
+Cohesion: 0.13
+Nodes (13): CDString128, Data, CDString32, Data, CPrimeVol, ApplicationId, ImplId, MaximumVolumeSequenceNumber (+5 more)
 
 ### Community 501 - "EState"
 Cohesion: 0.15
@@ -2850,57 +2902,65 @@ Nodes (7): MyRealloc(), CInOutTempBuffer, _bufs, _numBufs, _numFilled, _size, CB
 Cohesion: 0.10
 Nodes (13): CFolder, DataStart, MethodMajor, MethodMinor, NumDataBlocks, CItem, Attributes, Flags (+5 more)
 
-### Community 504 - "Z7_COM7F_IMF"
-Cohesion: 0.07
-Nodes (14): CHandler::Open2(), CHeader, be, Crc, Flags, Name, NumBlocks, NumFiles (+6 more)
+### Community 504 - "CHeader"
+Cohesion: 0.08
+Nodes (23): CHandler::GetPackSize(), CHandler::Open2(), CHeader, be, Crc, Flags, Name, NumBlocks (+15 more)
 
-### Community 507 - "CWimXml"
-Cohesion: 0.17
-Nodes (7): CWimXml, Data, FileName, Images, IsEncrypted, VolIndex, Xml
+### Community 505 - "CDirItemsStat"
+Cohesion: 0.12
+Nodes (11): CDirItemsStat, CDirItemsStat2, Anti_NumAltStreams, Anti_NumDirs, Anti_NumFiles, AltStreamsSize, FilesSize, NumAltStreams (+3 more)
+
+### Community 506 - "Z7_COM7F_IMF"
+Cohesion: 0.09
+Nodes (3): CheckBreak2(), CUpdateCallback100Imp::MoveArc_UpdateStatus(), Z7_COM7F_IMF()
+
+### Community 507 - "CImage"
+Cohesion: 0.09
+Nodes (17): CImage, Meta, NumEmptyRootItems, NumItems, RootName, RootNameBuf, SecurOffsets, StartItem (+9 more)
 
 ### Community 508 - "CDecoder"
 Cohesion: 0.14
 Nodes (4): CDecoder, _bitPos, _stream, _value
 
-### Community 509 - "CCopyDialog"
-Cohesion: 0.15
-Nodes (8): CCopyDialog, Info, _path, Static, Strings, Title, Value, Z7_override
+### Community 509 - ".ProcessVirt"
+Cohesion: 0.16
+Nodes (6): CMyBuffer, _data, CPreAllocOutFile, File, _preAllocSize, Written
 
 ### Community 510 - "TimeUtils.cpp"
-Cohesion: 0.15
-Nodes (20): CMultiOutStream::SetMTime_Final(), FOR_VECTOR(), Compare_FiTime(), DosTime_To_FileTime(), FileTime_To_DosTime(), FILETIME_To_timespec(), FileTime_To_UnixTime(), FileTime_To_UnixTime64() (+12 more)
-
-### Community 511 - ".MoveArc_UpdateStatus"
 Cohesion: 0.18
-Nodes (3): CUpdateCallbackGUI::MoveArc_Finish(), CUpdateCallbackGUI::MoveArc_Progress(), CUpdateCallbackGUI::MoveArc_Start()
+Nodes (18): CMultiOutStream::SetMTime_Final(), Compare_FiTime(), DosTime_To_FileTime(), FileTime_To_DosTime(), FILETIME_To_timespec(), FileTime_To_UnixTime(), FileTime_To_UnixTime64(), FileTime_To_UnixTime64_and_Quantums() (+10 more)
 
-### Community 512 - "CSplitDialog"
-Cohesion: 0.15
-Nodes (7): CSplitDialog, FilePath, Path, _pathCombo, _volumeCombo, VolumeSizes, Z7_override
+### Community 511 - "FSE_DecodeHeader"
+Cohesion: 0.21
+Nodes (9): CopyLiterals(), FSE_Decode_SeqTable(), FSE_DecodeHeader(), FSE_Generate(), GetHighestSetBit_32_nonzero_big(), Huf_Build(), Huf_DecodeTable(), Huf_Decompress_1stream() (+1 more)
+
+### Community 512 - "CRangeDecoder"
+Cohesion: 0.25
+Nodes (6): CRangeDecoder, _bitOffset, _buf, _bufLim, Low, Range
 
 ### Community 513 - "CParseItem"
 Cohesion: 0.10
 Nodes (19): CHandler::AddItem(), CParseItem, ArcType, Comment, Extension, FileTime, FileTime_Defined, FormatIndex (+11 more)
 
-### Community 514 - "CPropertyPage"
-Cohesion: 0.02
-Nodes (46): CAboutDialog::OnHelp(), CBrowseDialog2::OnHelp(), CEditPage, _ctrls, _initMode, Z7_override, CFoldersPage, _initMode (+38 more)
+### Community 514 - "CFoldersPage"
+Cohesion: 0.13
+Nodes (8): CFoldersPage, _initMode, m_WorkDirInfo, m_WorkPath, _needSave, CFoldersPage::OnApply(), CFoldersPage::OnInit(), Z7_override
 
 ### Community 515 - "CBuffer"
-Cohesion: 0.06
-Nodes (17): CSolid, Chunks, ChunkSizeBits, FirstSmallStream, Method, SolidOffset, StreamIndex, UnpackSize (+9 more)
+Cohesion: 0.14
+Nodes (6): CBuffer, _items, _size, CSmallObjArray, _items, operator==()
 
 ### Community 516 - "CProcessAffinity"
-Cohesion: 0.12
-Nodes (12): CCpuGroups, GroupSizes, NumThreadsTotal, CountAffinity(), CProcessAffinity, Groups, IsGroupMode, numSysThreads (+4 more)
+Cohesion: 0.09
+Nodes (13): CCpuGroups, GroupSizes, NumThreadsTotal, CountAffinity(), CProcessAffinity, Groups, IsGroupMode, numSysThreads (+5 more)
 
 ### Community 517 - "CMsbfEncoderTemp"
-Cohesion: 0.15
+Cohesion: 0.16
 Nodes (5): CMsbfEncoderTemp, _bitPos, _buf, _buf_base, _curByte
 
 ### Community 518 - "CArcInfo"
-Cohesion: 0.06
-Nodes (28): CreateArchiver(), FindFormatCalssId(), GetHandlerProperty(), GetHandlerProperty2(), GetIsArc(), GetNumberOfFormats(), RegisterArc(), SetPropGUID() (+20 more)
+Cohesion: 0.08
+Nodes (23): CreateArchiver(), FindFormatCalssId(), GetHandlerProperty(), GetHandlerProperty2(), GetIsArc(), GetNumberOfFormats(), RegisterArc(), SetPropGUID() (+15 more)
 
 ### Community 519 - "CDelta"
 Cohesion: 0.11
@@ -2911,8 +2971,8 @@ Cohesion: 0.10
 Nodes (12): CItem, CItem2, BufSpec, NumChunks, Props, RefBuf, SameSubTypes, SubType (+4 more)
 
 ### Community 521 - "CArchInfo"
-Cohesion: 0.10
-Nodes (13): CArchInfo, CabinetNumber, Flags, NextArc, NumFiles, NumFolders, PerCabinet_AreaSize, PerDataBlock_AreaSize (+5 more)
+Cohesion: 0.09
+Nodes (16): CArchInfo, CabinetNumber, Flags, NextArc, NumFiles, NumFolders, PerCabinet_AreaSize, PerDataBlock_AreaSize (+8 more)
 
 ### Community 522 - "CMixItem"
 Cohesion: 0.29
@@ -2922,49 +2982,49 @@ Nodes (5): CMixItem, ResourceIndex, SectionIndex, StringIndex, VersionIndex
 Cohesion: 0.10
 Nodes (16): CMidBuf, Data, _size, CUnpacker, copyCoder, lzmsDecoder, lzxDecoder, MemUsage (+8 more)
 
-### Community 524 - "CArcItem"
-Cohesion: 0.08
-Nodes (14): CArcItem, Censored, IndexInServer, IsAltStream, IsDir, MTime, Name, Size (+6 more)
+### Community 524 - "CArcTime"
+Cohesion: 0.11
+Nodes (5): CArcTime, Def, FT, Ns100, Prec
 
 ### Community 525 - "CPercentPrinter"
 Cohesion: 0.08
 Nodes (21): ClosePercents_for_so(), CloseScanning(), CPercentPrinter, DisablePrint, MaxLen, NeedFlush, _prevTick, _printedPercents (+13 more)
 
 ### Community 526 - "PanelDrag.cpp"
-Cohesion: 0.03
-Nodes (86): CCmdLangPair, CmdId_and_Flags, LangId, CDataObject, CDataObject::EnumFormatEtc(), CDataObject::GetData(), CDataObject::GetDataHere(), CDataObject_GetTransfer (+78 more)
+Cohesion: 0.07
+Nodes (33): CCmdLangPair, CmdId_and_Flags, LangId, CDataObject, CDataObject::EnumFormatEtc(), CDataObject::GetData(), CDataObject::GetDataHere(), CDataObject::QueryGetData() (+25 more)
 
-### Community 527 - "CHandler::Decompress"
-Cohesion: 0.18
-Nodes (7): ZstdDec_Create(), ZstdDecState_Clear(), CHandler::Decompress(), LzoDecode(), GetInputProcessedSize(), CDecoder::GetFinishResult(), CDecoder::Prepare()
+### Community 527 - "GetUpdatePairInfoList"
+Cohesion: 0.12
+Nodes (9): SortFileNames(), CUpdatePair, ArcIndex, DirIndex, HostIndex, State, GetUpdatePairInfoList(), MyCompareTime() (+1 more)
 
 ### Community 528 - "EEnum"
 Cohesion: 0.17
 Nodes (12): EEnum, kAMIGA, kAPPLE_GS, kAtari_ST, kMac, kMSDOS, kNext, kOS_2 (+4 more)
 
-### Community 529 - "MyCompare"
-Cohesion: 0.17
-Nodes (7): CompareFiles(), CompareItems(), CompareUpdateItems(), CompareIDs(), GetExtensionPtr(), Z7_COM7F_IMF2(), MyCompare()
+### Community 529 - "CArchivePath"
+Cohesion: 0.13
+Nodes (13): CArchivePath, BaseExtension, Name, OriginalPath, Prefix, Temp, TempPostfix, TempPrefix (+5 more)
 
 ### Community 530 - "CDecoder"
 Cohesion: 0.11
 Nodes (9): CDecoder, MainDecodeSRes, MainDecodeSRes_wasUsed, _memUsage, _numThreads, Stat, _tryMt, xz (+1 more)
 
 ### Community 531 - "RarHandler.h"
-Cohesion: 0.13
-Nodes (12): CHandler, CRefItem, ItemIndex, NumItems, VolumeIndex, CHostOS, kHostBeOS, kHostMacOS (+4 more)
+Cohesion: 0.25
+Nodes (5): CHandler, CRefItem, ItemIndex, NumItems, VolumeIndex
 
 ### Community 532 - "AvbVBMetaImageHeader"
-Cohesion: 0.04
-Nodes (50): AvbDescriptor, Size, Tag, AvbHashtreeDescriptor, data_block_size, dm_verity_version, fec_num_roots, fec_offset (+42 more)
+Cohesion: 0.10
+Nodes (20): AvbVBMetaImageHeader, algorithm_type, authentication_data_block_size, auxiliary_data_block_size, descriptors_offset, descriptors_size, flags, hash_offset (+12 more)
 
 ### Community 533 - "CItem"
-Cohesion: 0.07
-Nodes (17): CItem, ADate, Attrib, Cluster, CTime, CTime2, DosName, Flags (+9 more)
-
-### Community 534 - "NtfsHandler.cpp"
 Cohesion: 0.12
-Nodes (11): CExtent, Phy, Virt, CMftRef, Val, CompareAttr(), DataParseExtents(), Get64() (+3 more)
+Nodes (13): CItem, ADate, Attrib, Cluster, CTime, CTime2, DosName, Flags (+5 more)
+
+### Community 534 - ".GetStream"
+Cohesion: 0.17
+Nodes (8): CExtent, Phy, Virt, CompareAttr(), DataParseExtents(), GetCuSize(), InitAndSeek(), SeekToPhys()
 
 ### Community 535 - "CUpdateItem"
 Cohesion: 0.10
@@ -2974,53 +3034,53 @@ Nodes (18): CUpdateItem, DeviceMajor, DeviceMajor_Defined, DeviceMinor, DeviceMi
 Cohesion: 0.32
 Nodes (7): CDecoder::AddVmCode(), CMemBitDecoder, _bitPos, _bitSize, _data, CProgram::ReadProgram(), DecodeArg()
 
-### Community 537 - "CBitByteDecoder"
-Cohesion: 0.20
-Nodes (5): CBitByteDecoder, _size, CBitDecoder, _bitOffset, _buf
+### Community 537 - "LzxDecoder.cpp"
+Cohesion: 0.12
+Nodes (13): CBitByteDecoder, _size, CBitDecoder, _bitOffset, _buf, CodeLz(), CopyLzMatch(), CStat (+5 more)
 
 ### Community 538 - "Rar1Decoder.cpp"
-Cohesion: 0.17
-Nodes (8): CDecoder::CodeReal(), CDecoder::CopyBlock(), CDecoder::CorrHuff(), CDecoder::DecodeNum(), CDecoder::HuffDecode(), CDecoder::LongLZ(), CDecoder::ReadBits(), CDecoder::ShortLZ()
+Cohesion: 0.15
+Nodes (9): CDecoder::CodeReal(), CDecoder::CopyBlock(), CDecoder::CorrHuff(), CDecoder::DecodeNum(), CDecoder::HuffDecode(), CDecoder::LongLZ(), CDecoder::ReadBits(), CDecoder::ShortLZ() (+1 more)
 
 ### Community 539 - "EFileType"
 Cohesion: 0.18
 Nodes (11): EFileType, kType_BUNDLE, kType_CORE, kType_DSYM, kType_DYLIB, kType_DYLIB_STUB, kType_DYLINKER, kType_EXECUTE (+3 more)
 
-### Community 540 - "CMemDialog"
-Cohesion: 0.10
-Nodes (11): CMemDialog, ArcPath, FilePath, Limit_GB, NeedSave, Remember, Required_GB, ShowRemember (+3 more)
+### Community 540 - ".Hmac"
+Cohesion: 0.17
+Nodes (7): CDecoder::CheckMac(), CDecoder::Init_and_CheckPassword(), CDecoder::ReadHeader(), CEncoder::WriteFooter(), CEncoder::WriteHeader(), CompareArrays(), Z7_COM7F_IMF2()
 
 ### Community 541 - "DecodeBlock"
 Cohesion: 0.12
 Nodes (10): CBlockInfo, PackPos, PackSize, StreamFlags, UnpackPos, Decode(), DecodeBlock(), FindBlock() (+2 more)
 
 ### Community 542 - "CInitDialogItem"
-Cohesion: 0.13
-Nodes (13): CInitDialogItem, DataMessageId, DataString, DefaultButton, Flags, Focus, HistoryName, Selected (+5 more)
+Cohesion: 0.11
+Nodes (14): CInitDialogItem, DataMessageId, DataString, DefaultButton, Flags, Focus, HistoryName, Selected (+6 more)
 
 ### Community 543 - "CZstdDecState"
 Cohesion: 0.11
 Nodes (16): CZstdDecState, disableHash, inBuf, info, inLim, inPos, needWrite_Size, outBuf_fromCaller (+8 more)
 
-### Community 544 - "string"
-Cohesion: 0.03
-Nodes (32): FOR_VECTOR(), IsRAW(), Z7_COM7F_IMF(), ENsisType, k_NsisType_Nsis2, k_NsisType_Nsis3, k_NsisType_Park1, k_NsisType_Park2 (+24 more)
+### Community 544 - "Z7_COM7F_IMF"
+Cohesion: 0.09
+Nodes (8): FOR_VECTOR(), IsRAW(), Z7_COM7F_IMF(), CreateLimitedInStream(), CSeekExtent, Phy, Virt, Z7_COM7F_IMF()
 
-### Community 545 - "ConvertUtcFileTimeToString"
-Cohesion: 0.31
-Nodes (4): ConvertPropVariantToShortString(), ConvertUtcFileTimeToString(), ConvertUtcFileTimeToString2(), if()
+### Community 545 - "Sha1.c"
+Cohesion: 0.24
+Nodes (9): Sha1_Final(), Sha1_GetBlockDigest(), Sha1_Init(), Sha1_InitState(), Sha1_PrepareBlock(), Sha1_SetFunction(), Sha1_Update(), Sha1_UpdateBlocks() (+1 more)
 
-### Community 546 - "CHeader"
+### Community 546 - "LzmaHandler.cpp"
 Cohesion: 0.07
-Nodes (23): SetMethodName(), AddProp32(), CDecoder::Code(), CDecoder::Create(), CHandler::GetMethod(), CHeader, FilterID, LzmaProps (+15 more)
+Nodes (23): AddProp32(), CDecoder::Code(), CDecoder::Create(), CHandler::GetMethod(), CHeader, FilterID, LzmaProps, Size (+15 more)
 
 ### Community 547 - "EBlockType"
 Cohesion: 0.18
 Nodes (11): EBlockType, kArchiveHeader, kAuthenticity, kCommentHeader, kEndOfArchive, kFileHeader, kMarker, kOldAuthenticity (+3 more)
 
-### Community 548 - "CHandler::Open2"
-Cohesion: 0.11
-Nodes (13): ~CHandler(), CalcCheckSum(), Size, CHandler::CloseResources(), CHandler::LoadDebugSections(), CHandler::Open2(), CHandler::OpenResources(), CHandler::ReadString() (+5 more)
+### Community 548 - "UInt32"
+Cohesion: 0.10
+Nodes (18): ~CHandler(), CalcCheckSum(), CByteBuffer_WithLang, Lang, Size, CHandler::CloseResources(), CHandler::LoadDebugSections(), CHandler::Open2() (+10 more)
 
 ### Community 549 - "CVirtFile"
 Cohesion: 0.11
@@ -3030,105 +3090,101 @@ Nodes (16): CVirtFile, AltStreamName, ATime, ATime_Defined, Attrib, Attrib_Defin
 Cohesion: 0.22
 Nodes (7): CSplitterPos, _fullWidth, _pos, _ratio, ExecuteCommand(), SaveWindowInfo(), WndProc()
 
-### Community 551 - "CImage"
-Cohesion: 0.18
-Nodes (10): CImage, Meta, NumEmptyRootItems, NumItems, RootName, RootNameBuf, SecurOffsets, StartItem (+2 more)
+### Community 551 - "AvbHashtreeDescriptor"
+Cohesion: 0.12
+Nodes (16): AvbHashtreeDescriptor, data_block_size, dm_verity_version, fec_num_roots, fec_offset, fec_size, flags, hash_algorithm (+8 more)
 
 ### Community 552 - "Rar2Decoder.cpp"
-Cohesion: 0.11
-Nodes (6): CDecoder::CodeReal(), CDecoder::DecodeLz(), CDecoder::DecodeMm(), CDecoder::ReadBits(), SlotToLen(), Z7_COM7F_IMF()
+Cohesion: 0.14
+Nodes (5): CDecoder::DecodeLz(), CDecoder::DecodeMm(), CDecoder::ReadBits(), SlotToLen(), Z7_COM7F_IMF()
 
 ### Community 553 - "App.tsx"
 Cohesion: 0.08
-Nodes (36): Commands, @tauri-apps/api, @tauri-apps/plugin-os, App(), acceptPassword(), askPassword(), closePasswordGate(), extract() (+28 more)
+Nodes (45): How the code works, Element IDs (DOM debugging), @tauri-apps/api, @tauri-apps/plugin-opener, App(), acceptPassword(), askPassword(), closePasswordGate() (+37 more)
 
 ### Community 554 - "WimIn.cpp"
-Cohesion: 0.18
-Nodes (5): CompareStreamsByPos(), FindHash(), FindId(), GetLog_val_min_dest(), ReadHeader()
+Cohesion: 0.13
+Nodes (7): AllocateAndCopyName(), CheckName_and_Fix_in_Meta(), CompareStreamsByPos(), FindHash(), FindId(), GetLog_val_min_dest(), ReadHeader()
 
-### Community 555 - "CUserTime"
-Cohesion: 0.20
-Nodes (6): CUserTime, Prev, Prev_Tick, Sum, UseTick, GetTime64()
+### Community 555 - "NsisIn.h"
+Cohesion: 0.17
+Nodes (12): ENsisType, k_NsisType_Nsis2, k_NsisType_Nsis3, k_NsisType_Park1, k_NsisType_Park2, k_NsisType_Park3, GetPosOfNonSolidItem(), GetPosOfSolidItem() (+4 more)
 
-### Community 556 - "CPanel::CreateShellContextMenu"
-Cohesion: 0.22
-Nodes (5): CFolderPidls, items, parent, CPanel::CreateShellContextMenu(), ShellFolder_ParseDisplayName()
+### Community 556 - "CLogVol"
+Cohesion: 0.12
+Nodes (15): CLogVol, BlockSize, DomainId, FileSetLocation, FileSets, Id, ImplId, PartitionMaps (+7 more)
 
 ### Community 557 - "CUpdateOptions"
 Cohesion: 0.11
 Nodes (15): CTimeOptions, NumDigitsMax, RemoveZeroMode, EPaxTimeRemoveZeroMode, k_PaxTimeMode_DontRemoveZero, k_PaxTimeMode_RemoveZero_Always, k_PaxTimeMode_RemoveZero_if_PureSecondOnly, CUpdateOptions (+7 more)
 
 ### Community 558 - "CabIn.cpp"
-Cohesion: 0.22
+Cohesion: 0.19
 Nodes (8): CInArchive, ErrorInNames, HeaderError, _inBuffer, IsArc, _tempBuf, UnexpectedEnd, CUnexpectedEndException
 
 ### Community 559 - "CAttr"
 Cohesion: 0.12
 Nodes (12): CAttr, AllocatedSize, CompressionUnit, Data, HighVcn, InitializedSize, LowVcn, Name (+4 more)
 
-### Community 560 - "CLocator"
+### Community 560 - "CCryptoInfo"
 Cohesion: 0.12
-Nodes (12): CInArcInfo::CLocator::Parse(), CInArcInfo::CMetadata::Parse(), CLinkInfo, Flags, NameLen, NameOffset, Type, CLocator (+4 more)
+Nodes (11): CCryptoInfo, Algo, Cnt, Flags, CInArcInfo::CMetadata::Parse(), CLinkInfo, Flags, NameLen (+3 more)
 
 ### Community 561 - "Byte"
 Cohesion: 0.24
 Nodes (7): CheckHexRecord(), CheckOctRecord(), GetChecksum(), IsArc_Cpio(), ReadHex(), ReadOct11(), ReadOct6()
 
 ### Community 562 - "UdfIn.cpp"
+Cohesion: 0.07
+Nodes (33): AddComment_Align(), AddComment_DString32(), AddComment_PropName(), AddComment_RegId(), AddComment_RegId_Domain(), AddComment_RegId_Impl(), AddComment_RegId_UdfId(), AddComment_UInt32() (+25 more)
+
+### Community 563 - "LangString"
 Cohesion: 0.02
-Nodes (133): AddComment_Align(), AddComment_DString32(), AddComment_PropName(), AddComment_RegId(), AddComment_RegId_Domain(), AddComment_RegId_Impl(), AddComment_RegId_UdfId(), AddComment_UInt32() (+125 more)
+Nodes (87): StartProgressDialog(), CAboutDialog::OnInit(), CBrowseDialog2::OnInit(), CBrowseDialog::OnInit(), FOR_VECTOR(), CComboDialog, _comboBox, CComboDialog::OnInit() (+79 more)
 
-### Community 563 - "CModalDialog"
-Cohesion: 0.06
-Nodes (49): CAboutDialog::OnInit(), CBrowseDialog2::OnInit(), CBrowseDialog::OnInit(), FOR_VECTOR(), CComboDialog::OnInit(), CComboDialog::OnOK(), CCopyDialog::OnInit(), CCopyDialog::OnOK() (+41 more)
-
-### Community 564 - "UNUSED_VAR"
-Cohesion: 0.15
-Nodes (6): DllMain(), HandlerRoutine(), UNUSED_VAR(), CDecoder::CDecoder(), InitForMulti(), operator delete()
+### Community 564 - "Z7_COM7F_IMF"
+Cohesion: 0.13
+Nodes (5): Ppmd8_Init_RangeDec(), Ppmd8_RD_Decode(), Ppmd8_Flush_RangeEnc(), Ppmd8_RangeEnc_Encode(), Z7_COM7F_IMF()
 
 ### Community 565 - "CodecExports.cpp"
 Cohesion: 0.05
 Nodes (36): CreateCoder(), CreateCoder2(), CreateCoderMain(), CreateDecoder(), CreateEncoder(), CreateHasher(), CreateHasher2(), FindCodecClassId() (+28 more)
+
+### Community 566 - "CCoder"
+Cohesion: 0.17
+Nodes (5): CCoder, _inBitStream, _outWindow, CCoderReleaser, _coder
 
 ### Community 567 - "EStandardFilter"
 Cohesion: 0.18
 Nodes (11): CStandardFilterSignature, CRC, Length, Type, EStandardFilter, SF_AUDIO, SF_DELTA, SF_E8 (+3 more)
 
 ### Community 568 - "PropIDUtils.cpp"
-Cohesion: 0.24
-Nodes (15): AddHexToString(), CheckAcl(), CheckNtSecure(), CheckSid(), ConvertNtSecureToString(), CSecID2Name, n, sz (+7 more)
+Cohesion: 0.15
+Nodes (21): AddHexToString(), CheckAcl(), CheckNtSecure(), CheckSid(), ConvertNtSecureToString(), ConvertPosixAttribToString(), ConvertPropertyToShortString2(), ConvertPropertyToString2() (+13 more)
 
 ### Community 569 - "RegistryContextMenu.cpp"
-Cohesion: 0.27
-Nodes (7): CheckContextMenuHandler(), CheckHandlerCommon(), Get_ContextMenuHandler_KeyName(), MyCreateKey(), MyRegistry_DeleteKey(), MyRegistry_DeleteKey_HKCR(), SetContextMenuHandler()
+Cohesion: 0.21
+Nodes (8): CheckContextMenuHandler(), CheckHandlerCommon(), Get_ContextMenuHandler_KeyName(), MyCreateKey(), MyRegistry_DeleteKey(), MyRegistry_DeleteKey_HKCR(), SetContextMenuHandler(), CMenuPage::OnApply()
 
-### Community 570 - "CModifiedExtInfo"
-Cohesion: 0.13
-Nodes (10): CShellExtInfo, IconIndex, IconPath, ProgramKey, CModifiedExtInfo, ImageIndex, OldState, Other (+2 more)
-
-### Community 571 - "RegistryAssociations.cpp"
-Cohesion: 0.55
-Nodes (5): AddShellExtensionInfo(), DeleteShellExtensionInfo(), GetExtKeyPath(), GetExtProgramKeyName(), GetFullKeyPath()
+### Community 570 - "RegistryAssociations.cpp"
+Cohesion: 0.14
+Nodes (15): AddShellExtensionInfo(), CShellExtInfo, IconIndex, IconPath, ProgramKey, DeleteShellExtensionInfo(), GetExtKeyPath(), GetExtProgramKeyName() (+7 more)
 
 ### Community 572 - "CPropVariant"
-Cohesion: 0.04
-Nodes (36): SetHostOS(), SetTime(), SetUnicodeString(), Z7_COM7F_IMF(), IMP_IInArchive_ArcProps
+Cohesion: 0.07
+Nodes (20): SetHostOS(), SetTime(), SetUnicodeString(), Z7_COM7F_IMF(), UnixTimeToProp(), TimeToProp(), SetTime(), Z7_COM7F_IMF() (+12 more)
 
-Z7_COM7F_IMF(), IMP_IInArchive_ArcProps_NO_Table
-
-Z7_COM7F_IMF(), UnixTimeToProp(), Z7_COM7F_IMF() (+28 more)
-
-### Community 573 - ".SetOperation_Base"
+### Community 573 - "appInfo.ts"
 Cohesion: 0.24
-Nodes (7): CUpdateCallbackGUI::GetStream(), CUpdateCallbackGUI::OpenResult(), CUpdateCallbackGUI::ReportUpdateOperation(), CUpdateCallbackGUI::ShowDeleteFile(), CUpdateCallbackGUI::StartArchive(), CUpdateCallbackGUI::StartOpenArchive(), CUpdateCallbackGUI::WriteSfx()
+Nodes (10): @tauri-apps/plugin-os, openAbout(), info, APP_FALLBACK_VERSION, APP_NAME, AppInfo, buildValue(), friendlyArch() (+2 more)
 
 ### Community 574 - "window-chrome.md"
 Cohesion: 0.19
 Nodes (9): set_decorations / set_title_bar_style async race, Rules for parallel macOS/Linux development, Steady state per-OS window settings, Steady state (what each OS gets today), What broke (2026-10-04, commit `644f03b`), What broke in 644f03b, Why Overlay alone still failed (the async race), Window chrome: Linux + macOS in parallel (+1 more)
 
-### Community 575 - "CThreadFolderOperations"
-Cohesion: 0.11
-Nodes (12): CThreadFolderOperations, FolderOperations, Index, Indices, Name, OpType, UpdateCallback, UpdateCallbackSpec (+4 more)
+### Community 575 - "7zExtract.cpp"
+Cohesion: 0.22
+Nodes (8): CFolderOutStream::CloseFile(), CFolderOutStream::CloseFile_and_SetResult(), CFolderOutStream::FlushCorrupted(), CFolderOutStream::Init(), CFolderOutStream::OpenFile(), CFolderOutStream::ProcessEmptyFiles(), WasWritingFinished(), Z7_COM7F_IMF()
 
 ### Community 576 - "Net.cpp"
 Cohesion: 0.23
@@ -3142,45 +3198,45 @@ Nodes (4): CBitmEncoder, _bitPos, _curByte, _stream
 Cohesion: 0.15
 Nodes (11): CDatabaseEx, StartGlobalFolderIndex, Stream, CMvDatabaseEx, FolderStartFileIndex, Items, Volumes, CMvItem (+3 more)
 
-### Community 579 - "CramfsHandler.cpp"
-Cohesion: 0.30
-Nodes (12): CHandler::GetPackSize(), CItem, Offset, Parent, GetMode(), GetNameLen(), GetNumBlocks(), GetOffset() (+4 more)
-
-### Community 580 - ".ParseRec"
-Cohesion: 0.15
-Nodes (9): CFileNameAttr, Name, NameType, ParentDirRef, Get16(), Get32(), GetLog(), GetString() (+1 more)
+### Community 580 - "NtfsHandler.cpp"
+Cohesion: 0.16
+Nodes (13): CSiAttr, ATime, Attrib, CTime, MTime, SecurityId, ThisRecMTime, Get16() (+5 more)
 
 ### Community 581 - "CPanelCopyThread"
 Cohesion: 0.06
-Nodes (20): CPanelCopyThread, CopyFrom_Paths, ExtractCallback, ExtractCallbackSpec, FolderOperations, Hash, Indices, NeedShowRes (+12 more)
+Nodes (24): CPanel::CopyFrom(), CPanel::CopyFromNoAsk(), CPanel::CopyTo(), CPanel::Get_ZoneId_Stream_from_ParentFolders(), CPanelCopyThread, CopyFrom_Paths, ExtractCallback, ExtractCallbackSpec (+16 more)
 
 ### Community 583 - "CBlockPackData"
 Cohesion: 0.24
 Nodes (3): CBlockPackData, _buf, _size
 
-### Community 584 - "ZipUpdate.cpp"
-Cohesion: 0.14
-Nodes (9): AddAesExtra(), CCacheOutStream(), Copy_From_UpdateItem_To_ItemOut(), CreateEvents(), group(), SetFileHeader(), SetItemInfoFromCompressingResult(), SetOptions() (+1 more)
+### Community 584 - "OutStreamWithSha1.h"
+Cohesion: 0.18
+Nodes (6): GetSize(), Init(), InitSha1(), SetStream(), Sha(), Z7_COM7F_IMF()
 
 ### Community 585 - "Shell.cpp"
-Cohesion: 0.06
-Nodes (23): CPanel::EditCopy(), CClipboard, m_Open, ClipboardSetData(), ClipboardSetText(), CComInitializer, CStgMedium, CGlobal (+15 more)
+Cohesion: 0.10
+Nodes (15): CComInitializer, CStgMedium, BrowseCallbackProc(), BrowseCallbackProc2(), BrowseForFolder(), CFileAttribs, FirstDirIndex, DataObject_GetData_FILE_ATTRS() (+7 more)
 
 ### Community 586 - "Z7_COM7F_IMF"
 Cohesion: 0.04
-Nodes (29): CMessagePathException::CMessagePathException(), IsDotsName(), Add_LF(), Add_OptSpace_String(), AddDefaultMethod(), AddHashResultLine(), CHashPair, Escape (+21 more)
+Nodes (35): Add_OptSpace_String(), AddDigests(), CHashBundle::SetMethods(), CHashBundle::Update(), CHashMidBuf, _data, CHashPair, Escape (+27 more)
 
 ### Community 587 - "CBitlEncoder"
 Cohesion: 0.15
 Nodes (4): CBitlEncoder, _bitPos, _curByte, _stream
 
-### Community 589 - "CLinkDialog"
-Cohesion: 0.07
-Nodes (15): End, CLinkDialog, AnotherPath, CurDirPrefix, FilePath, _pathFromCombo, _pathToCombo, Z7_override (+7 more)
+### Community 588 - "CBitDecoder"
+Cohesion: 0.17
+Nodes (5): CBitDecoder, _bitPos, _buf, GetNumPosSlots(), x86_Filter()
 
-### Community 590 - "fs2us"
-Cohesion: 0.04
-Nodes (26): CDirItems::AddSecurityItem(), CExtractScanConsole::ScanError(), PrintWarningsPaths(), ThrowException_if_Error(), WarningsCheck(), CErrorPathCodes, Codes, Paths (+18 more)
+### Community 589 - "LinkDialog.cpp"
+Cohesion: 0.13
+Nodes (8): CApp::Link(), CLinkDialog, AnotherPath, CurDirPrefix, FilePath, _pathFromCombo, _pathToCombo, Z7_override
+
+### Community 590 - "CDirEnumerator"
+Cohesion: 0.08
+Nodes (14): CDirEnumerator, BasePrefix, BasePrefix_for_Open, EnterToDirs, Enumerators, FilePaths, Index, Prefixes (+6 more)
 
 ### Community 591 - "CProgressSync"
 Cohesion: 0.13
@@ -3190,21 +3246,21 @@ Nodes (6): CProgressSync, _completed, _cs, _paused, _stopped, _total
 Cohesion: 0.15
 Nodes (5): CMyComBSTR, m_str, CMyComBSTR_Wipe, CMyUnknownImp, _m_RefCount
 
-### Community 594 - "HRESULT"
-Cohesion: 0.24
-Nodes (6): CHandler::FillFileBlocks2(), CHandler::GetPackSize(), CHandler::GetStream_Node(), CheckProgress(), CheckProgress2(), StartSeek()
+### Community 594 - "Z7_COM7F_IMF"
+Cohesion: 0.15
+Nodes (4): CopyAndTrim(), FatStringToUnicode(), GetVolName(), Z7_COM7F_IMF()
 
 ### Community 595 - "CLangPage"
 Cohesion: 0.11
 Nodes (13): CLangInfo, Comments, ExtraLines, MissingLines, Name, NumLines, CLangPage, _langCombo (+5 more)
 
 ### Community 596 - "LzmaUtil.c"
-Cohesion: 0.39
-Nodes (9): Convert_unsigned_To_str(), main(), Print(), Print_unsigned(), PrintError(), PrintError_WRes(), PrintErrorNumber(), PrintHelp() (+1 more)
+Cohesion: 0.23
+Nodes (11): FileOutStream_CreateVTable(), FileSeqInStream_CreateVTable(), Convert_unsigned_To_str(), main(), Print(), Print_unsigned(), PrintError(), PrintError_WRes() (+3 more)
 
-### Community 597 - "CZipDecoder::Decode"
-Cohesion: 0.10
-Nodes (8): CZipDecoder::Decode(), Init(), Z7_COM7F_IMF(), CDecoder::ReadTables(), CProxyItem, DirIndex, Index, if()
+### Community 597 - "CFileSet"
+Cohesion: 0.14
+Nodes (14): CFileSet, AbstractId, CopyrightId, DomainId, FileSetDescNumber, FileSetNumber, Id, LogicalVolumeId (+6 more)
 
 ### Community 598 - "CDecoder256"
 Cohesion: 0.18
@@ -3212,15 +3268,15 @@ Nodes (7): CDecoder, CDecoder256, CDecoder7b, _lens, CDecoderBase, _limits, _pos
 
 ### Community 599 - "CThreadExtracting"
 Cohesion: 0.14
-Nodes (10): CThreadExtracting, ArchiveLink, Codecs, DestFolder, ErrorMessage, ExtractCallback, ExtractCallbackSpec, FileName (+2 more)
+Nodes (9): CThreadExtracting, ArchiveLink, Codecs, DestFolder, ErrorMessage, ExtractCallback, ExtractCallbackSpec, FileName (+1 more)
 
 ### Community 600 - "Z7_COM7F_IMF"
 Cohesion: 0.14
 Nodes (4): Size, Init(), ReleaseStream(), Z7_COM7F_IMF()
 
-### Community 602 - "CInBuffer"
-Cohesion: 0.13
-Nodes (6): CHandler::Open2(), Size, MslzDec(), Read16(), Read32(), CInBuffer
+### Community 602 - "FilterCoder.cpp"
+Cohesion: 0.21
+Nodes (7): CAlignedMidBuffer, _buf, CFilterCoder::Alloc(), CFilterCoder::Flush2(), CFilterCoder::Init_and_Alloc(), CFilterCoder::Init_NoSubFilterInit(), InitSpecVars()
 
 ### Community 603 - "ThemeSwitch.tsx"
 Cohesion: 0.27
@@ -3235,7 +3291,7 @@ Cohesion: 0.14
 Nodes (9): CKeyInfo, KeySizeMode, Password, PwdVerifComputed, Salt, EKeySizeMode, kKeySizeMode_AES128, kKeySizeMode_AES192 (+1 more)
 
 ### Community 606 - "7zProperties.cpp"
-Cohesion: 0.17
+Cohesion: 0.18
 Nodes (9): CHandler::FillPopIDs(), CopyOneItem(), CPropMap, FilePropID, StatPropID, vt, InsertToHead(), RemoveOneItem() (+1 more)
 
 ### Community 607 - "CEcd"
@@ -3248,15 +3304,15 @@ Nodes (6): CExtTime, Extra, Val, ExtTimeToProp(), StringToProp(), Z7_COM7F_IMF()
 
 ### Community 609 - "Z7_COM7F_IMF"
 Cohesion: 0.08
-Nodes (12): CHandler::AddLangPrefix(), CResItem, Enabled, Header, HeaderSize, ID, Lang, Offset (+4 more)
+Nodes (13): CHandler::AddLangPrefix(), CheckItem(), CResItem, Enabled, Header, HeaderSize, ID, Lang (+5 more)
 
 ### Community 610 - "CPaxTime"
 Cohesion: 0.13
 Nodes (9): CPaxTime, Ns, NumDigits, Sec, CPaxTimes, ATime, CTime, MTime (+1 more)
 
-### Community 611 - "OutMemStream.cpp"
-Cohesion: 0.20
-Nodes (3): COutMemStream::DetachData(), COutMemStream::WriteToRealStream(), Z7_COM7F_IMF()
+### Community 611 - "CMtCompressProgressMixer"
+Cohesion: 0.14
+Nodes (7): CMtCompressProgressMixer, CriticalSection, InSizes, OutSizes, _progress, TotalInSize, TotalOutSize
 
 ### Community 612 - "CImageInfo"
 Cohesion: 0.12
@@ -3266,41 +3322,41 @@ Nodes (12): CImageInfo, CTime, CTimeDefined, DirCount, FileCount, Index, IndexDe
 Cohesion: 0.12
 Nodes (12): CInArchiveInfo, Base, CdWasRead, Comment, FileEndPos, FinishPos, FirstItemRelatOffset, IsSpanMode (+4 more)
 
-### Community 614 - "CSpecState"
-Cohesion: 0.08
-Nodes (22): CBlock, Crc, Crc_Defined, NextCrc, PackPos, Props, Res, StopScout (+14 more)
+### Community 614 - "CBlock"
+Cohesion: 0.13
+Nodes (13): CBlock, Crc, Crc_Defined, NextCrc, PackPos, Props, Res, StopScout (+5 more)
 
 ### Community 615 - "CTables"
-Cohesion: 0.20
-Nodes (9): CLevels, distLevels, litLenLevels, CTables, BlockSizeRes, m_Pos, StaticMode, StoreMode (+1 more)
+Cohesion: 0.12
+Nodes (10): CLevels, distLevels, litLenLevels, CTables, BlockSizeRes, m_Pos, StaticMode, StoreMode (+2 more)
 
 ### Community 616 - "EEnum"
-Cohesion: 0.20
+Cohesion: 0.22
 Nodes (9): EEnum, kAutoRenameAll, kEof, kError, kNo, kNoAll, kQuit, kYes (+1 more)
 
 ### Community 617 - "CVm"
-Cohesion: 0.15
-Nodes (13): CDecoder::ExecuteFilter(), CBlockRef, Offset, Size, CProgram, IsSupported, StaticData, CProgramInitState (+5 more)
+Cohesion: 0.12
+Nodes (15): Z7_CRC_NUM_TABLES_USE(), CDecoder::ExecuteFilter(), CBlockRef, Offset, Size, CProgram, IsSupported, StaticData (+7 more)
 
 ### Community 619 - "CExtractOptionsBase"
-Cohesion: 0.13
-Nodes (13): CExtractOptionsBase, ElimDup, ExcludeDirItems, ExcludeFileItems, HashDir, NtOptions, OutDirMode, OutputDir (+5 more)
+Cohesion: 0.11
+Nodes (17): CExtractOptionsBase, ElimDup, ExcludeDirItems, ExcludeFileItems, HashDir, NtOptions, OutDirMode, OutputDir (+9 more)
 
-### Community 620 - "Sha1Prepare"
-Cohesion: 0.22
-Nodes (7): CPU_IsSupported_SHA(), CPU_IsSupported_SHA1(), CPU_IsSupported_SHA2(), Sha1Prepare(), Sha256Prepare(), CSha1Prepare, CSha256Prepare
+### Community 620 - "CSettingsPage"
+Cohesion: 0.14
+Nodes (6): CSettingsPage, _initMode, _largePages_wasChanged, _memx_wasChanged, _wasChanged, Z7_override
 
 ### Community 621 - "CCopyToOptions"
-Cohesion: 0.08
-Nodes (22): CVirtFileSystem(), CCopyToOptions, folder, hashMethods, includeAltStreams, moveMode, NeedRegistryZone, replaceAltStreamChars (+14 more)
+Cohesion: 0.12
+Nodes (14): CVirtFileSystem(), CCopyToOptions, folder, hashMethods, includeAltStreams, moveMode, NeedRegistryZone, replaceAltStreamChars (+6 more)
 
 ### Community 622 - "apfs_hash_type_t"
 Cohesion: 0.22
 Nodes (9): apfs_hash_type_t, APFS_HASH_DEFAULT, APFS_HASH_INVALID, APFS_HASH_MAX, APFS_HASH_MIN, APFS_HASH_SHA256, APFS_HASH_SHA384, APFS_HASH_SHA512 (+1 more)
 
-### Community 623 - ".OpenFileFolderPlugin"
-Cohesion: 0.08
-Nodes (10): CFfpOpen, Encrypted, ErrorMessage, Folder, Library, Password, SplitNameToPureNameAndExtension(), NWindows::NDLL::CLibrary() (+2 more)
+### Community 623 - "CLibrary"
+Cohesion: 0.27
+Nodes (3): NWindows::NDLL::CLibrary(), CLibrary, _module
 
 ### Community 624 - "CInArchive"
 Cohesion: 0.22
@@ -3311,64 +3367,64 @@ Cohesion: 0.22
 Nodes (9): EArcType, k_Type_Aaf, k_Type_Common, k_Type_Doc, k_Type_Msi, k_Type_Msm, k_Type_Msp, k_Type_Ppt (+1 more)
 
 ### Community 626 - "CDatabase"
-Cohesion: 0.13
-Nodes (8): CDatabase, ArcInfo, Folders, Items, StartPosition, CInArcInfo, FileHeadersOffset, Size
-
-### Community 627 - "LzxDecoder.cpp"
-Cohesion: 0.23
-Nodes (8): CodeLz(), CopyLzMatch(), CStat, PrintStat(), PrintVal(), ReadBits(), ReadTable(), x86_Filter4()
-
-### Community 628 - "ZlibEncoder.h"
 Cohesion: 0.22
-Nodes (3): GetAdler(), GetInputProcessedSize(), GetSize()
+Nodes (5): CDatabase, ArcInfo, Folders, Items, StartPosition
 
-### Community 629 - "CFolderLink"
-Cohesion: 0.04
-Nodes (43): CFolderLink, IsVirtual, Library, ParentFolder, ParentFolderPath, Password, UsePassword, VirtualPath (+35 more)
+### Community 627 - "CBool1"
+Cohesion: 0.16
+Nodes (7): AddText_from_Bool1(), AddText_from_BoolPair(), CBool1, Supported, Val, Combine_Two_BoolPairs(), Set_Final_BoolPairs()
+
+### Community 628 - "CBootInitialEntry"
+Cohesion: 0.17
+Nodes (8): CBootInitialEntry, Bootable, BootMediaType, LoadRBA, LoadSegment, SectorCount, SystemType, VendorSpec
+
+### Community 629 - "PanelItemOpen.cpp"
+Cohesion: 0.03
+Nodes (51): MyFormatNew(), CTempFileInfo, FileIndex, FileInfo, FilePath, FolderPath, NeedDelete, RelPath (+43 more)
 
 ### Community 630 - "CResourceBase"
 Cohesion: 0.12
 Nodes (14): CResource, Comment, LocalName, Provider, RemoteName, CResourceBase, CommentIsDefined, DisplayType (+6 more)
 
 ### Community 631 - "CSection"
-Cohesion: 0.14
+Cohesion: 0.13
 Nodes (12): CSection, ExtractSize, Flags, IsAdditionalSection, IsDebug, IsRealSect, Name, Pa (+4 more)
 
 ### Community 632 - "CChunk"
 Cohesion: 0.13
 Nodes (10): CChunk, Fill, PhyOffset, VirtBlock, CHeader, BlockSize, chunk_hdr_sz, file_hdr_sz (+2 more)
 
-### Community 633 - "CEncodingCharacts"
-Cohesion: 0.25
-Nodes (3): CEncodingCharacts, IsAscii, UtfCheck
+### Community 633 - "CDynLimBuf"
+Cohesion: 0.17
+Nodes (9): Add_Hex(), CInArchive::AddRegRoot(), FlagsToString2(), CDynLimBuf, _chars, _error, _pos, _size (+1 more)
 
 ### Community 634 - "CHeader"
-Cohesion: 0.20
+Cohesion: 0.18
 Nodes (8): CHeader, ClusterSizeLog, MftCluster, MftRecordSizeLog, NumClusters, NumSectors, SectorSizeLog, SerialNumber
 
-### Community 635 - "CProxyFile2"
-Cohesion: 0.17
-Nodes (10): CProxyFile2, AltDirIndex, DirIndex, Ignore, IsAltStream, IsAux, Name, NameLen (+2 more)
+### Community 635 - "MyMessages.cpp"
+Cohesion: 0.27
+Nodes (7): CZipContextMenu::InvokeCommandCommon(), Get7zFmPath(), ShowErrorMessage(), ShowErrorMessageDWORD(), ShowErrorMessageHwndRes(), ShowErrorMessageRes(), ShowLastErrorMessage()
 
-### Community 636 - "renderInlineNode"
-Cohesion: 0.29
-Nodes (8): imageLabel(), renderHigLink(), renderImage(), renderInlineNode(), renderLink(), renderReference(), resolveAnchor(), wrapInline()
+### Community 636 - "Z7_COM7F_IMF"
+Cohesion: 0.15
+Nodes (3): CheckBreak2(), SetExtractErrorMessage(), Z7_COM7F_IMF()
 
 ### Community 637 - "Z7_COM7F_IMF"
 Cohesion: 0.19
 Nodes (3): CopyStream(), CopyStream_ExactSize(), Z7_COM7F_IMF()
 
-### Community 638 - "CProbEntry"
-Cohesion: 0.36
-Nodes (3): CProbEntry, Hist, Prob
+### Community 638 - "CRangeDecoder"
+Cohesion: 0.18
+Nodes (7): CProbEntry, Hist, Prob, CRangeDecoder, code, cur, range
 
 ### Community 639 - "CExtractNtOptions"
 Cohesion: 0.13
 Nodes (13): CExtractNtOptions, AltStreams, ExtractOwner, HardLinks, MemLimit, NtSecurity, OpenShareForWrite, PreAllocateOutFile (+5 more)
 
-### Community 640 - "CAgentFolder::CommonUpdateOperation"
-Cohesion: 0.15
-Nodes (9): CTailOutStream, AGENT_OP, AGENT_OP_Comment, AGENT_OP_CopyFromFile, AGENT_OP_CreateFolder, AGENT_OP_Delete, AGENT_OP_Rename, AGENT_OP_Uni (+1 more)
+### Community 640 - "AGENT_OP"
+Cohesion: 0.29
+Nodes (7): AGENT_OP, AGENT_OP_Comment, AGENT_OP_CopyFromFile, AGENT_OP_CreateFolder, AGENT_OP_Delete, AGENT_OP_Rename, AGENT_OP_Uni
 
 ### Community 642 - "LvmHandler.cpp"
 Cohesion: 0.39
@@ -3379,44 +3435,48 @@ Cohesion: 0.13
 Nodes (12): CDriveInfo, ClusterSize, DriveSize, DriveType, FileSystemName, FreeSpace, FullSystemName, IsPhysicalDrive (+4 more)
 
 ### Community 644 - "Z7_COM7F_IMF2"
-Cohesion: 0.16
-Nodes (5): CK(), Sha3_Final(), Sha3_Init(), Sha(), Z7_COM7F_IMF2()
+Cohesion: 0.22
+Nodes (4): Sha3_Final(), Sha3_Init(), Sha(), Z7_COM7F_IMF2()
 
-### Community 645 - "CLang"
-Cohesion: 0.16
-Nodes (5): CLang, Comments, _ids, _offsets, _text
+### Community 645 - "CLangPage::OnInit"
+Cohesion: 0.09
+Nodes (12): AddVectorToString(), AddVectorToString2(), CLangPage::OnInit(), NativeLangString(), CLang, Comments, _ids, _offsets (+4 more)
 
 ### Community 646 - "CBitmapInfoHeader"
 Cohesion: 0.25
 Nodes (7): CBitmapInfoHeader, BitCount, Compression, Planes, SizeImage, XSize, YSize
 
-### Community 647 - "CMemBlockManager"
-Cohesion: 0.29
-Nodes (4): CMemBlockManager, _blockSize, _data, _headFree
+### Community 647 - "MyProperyPageProcedure"
+Cohesion: 0.15
+Nodes (6): CPageInfo, ID, Page, Title, MyPropertySheet(), MyProperyPageProcedure()
 
 ### Community 648 - "CSignatureFinder"
 Cohesion: 0.15
 Nodes (11): CSignatureFinder, _alignSize, Buf, _bufUseCapacity, _headerSize, Pos, Processed, SearchLimit (+3 more)
 
-### Community 649 - "7zCrc.h"
-Cohesion: 0.04
-Nodes (28): Xz_GetUnpackSize(), Xzs_Construct(), Xzs_GetNumBlocks(), Xzs_GetUnpackSize(), AreBindInfoExEqual(), AreBondsEqual(), AreCodersEqual(), CEncoder::SetFolder() (+20 more)
+### Community 649 - "ICoder.h"
+Cohesion: 0.02
+Nodes (41): AreBindInfoExEqual(), AreBondsEqual(), AreCodersEqual(), CEncoder::SetFolder(), CMtEncMultiProgress::Init(), Z7_COM7F_IMF(), CHandler, GetCRC() (+33 more)
 
-### Community 651 - "CEncProps"
-Cohesion: 0.25
-Nodes (5): CEncProps, MemSizeMB, Order, ReduceSize, Restor
+### Community 650 - "CompareFileTime"
+Cohesion: 0.23
+Nodes (6): FatTimeToProp(), CompareFileTime(), FileTimeToLocalFileTime(), FileTimeToSystemTime(), LocalFileTimeToFileTime(), TIME_GetBias()
 
-### Community 652 - "Main2"
-Cohesion: 0.08
-Nodes (19): LoadSecurityDlls(), My_SetDefaultDllDirectories(), ErrorMessage(), GetDllVersion(), IsLargePageSupported(), Set_SymLink_Supported(), Set_Wow64(), SetMemoryLock() (+11 more)
+### Community 651 - "CNsis_CtlColors"
+Cohesion: 0.17
+Nodes (11): Add_SignedInt(), CInArchive::GetVarIndex(), CInArchive::GetVarIndexFinished(), CNsis_CtlColors, bkb, bkb_hi32, bkc, bkmode (+3 more)
+
+### Community 652 - "FM.cpp"
+Cohesion: 0.05
+Nodes (31): z7_LargePage_Set(), My_SetDefaultDllDirectories(), CreateObject(), SetCaseSensitive(), SetCodecs(), SetLargePageMode(), SetLargePageMode2(), CAgent::ReadItems() (+23 more)
 
 ### Community 653 - "CObjectVector"
-Cohesion: 0.09
-Nodes (13): GetQuotedString(), GetQuotedString2(), AddProp_bool(), AddProp_BoolPair(), AddProp_Size(), AddProp_UInt32(), AddProp_UString(), ParseProp() (+5 more)
+Cohesion: 0.07
+Nodes (25): CUpdateCallbackGUI, AddProp_bool(), AddProp_BoolPair(), AddProp_Size(), AddProp_UInt32(), AddProp_UString(), CThreadUpdating, cmdArcPath (+17 more)
 
-### Community 654 - "CButtonInfo"
-Cohesion: 0.25
-Nodes (6): CButtonInfo, Bitmap2ResID, BitmapResID, CommandID, StringResID, SetButtonText()
+### Community 654 - "CRenamePair"
+Cohesion: 0.18
+Nodes (10): AddRenamePair(), CRenamePair, NewName, OldName, RecursedType, WildcardParsing, EEnum, kNonRecursed (+2 more)
 
 ### Community 655 - "Motion"
 Cohesion: 0.29
@@ -3427,16 +3487,16 @@ Cohesion: 0.18
 Nodes (5): CCoder::BuildHuff(), CHuffmanDecoder, _limits, _poses, _symbols
 
 ### Community 657 - "CHuffDecoder"
-Cohesion: 0.32
-Nodes (4): CHuffDecoder, Freqs, NumSyms, RebuildRem
+Cohesion: 0.22
+Nodes (5): Huffman_Generate(), CHuffDecoder, Freqs, NumSyms, RebuildRem
 
-### Community 658 - "ArchiveCommandLine.cpp"
-Cohesion: 0.02
-Nodes (93): ParseArchiveCommand(), CArcCmdLineParser, Parse1Log, parser, CArcCommand, CommandType, EEnum, kAdd (+85 more)
+### Community 658 - "CActionSet"
+Cohesion: 0.09
+Nodes (20): CActionSet, StateActions, EEnum, kCompress, kCompressAsAnti, kCopy, kIgnore, kNewInArchive (+12 more)
 
-### Community 659 - "useLanguage"
-Cohesion: 0.10
-Nodes (19): Contribute a translation (PR in ~10 minutes), How the code works, Notes for translators, QuarkZip translations (i18n), Shipped languages, AlgoId, ALGOS, ChecksumDialog() (+11 more)
+### Community 659 - "TitleBar.tsx"
+Cohesion: 0.28
+Nodes (5): ArchiveTitle(), ArchiveTitleThemed(), TitleBar(), stopDrag(), TitleBarProps
 
 ### Community 660 - "tauri.conf.json"
 Cohesion: 0.10
@@ -3446,53 +3506,53 @@ Nodes (20): app, security, windows, build, beforeBuildCommand, beforeDevCommand,
 Cohesion: 0.18
 Nodes (17): ListingData, entry_paths(), enumerate(), fixtures(), should_extract_a_folder_prefix_and_single_files(), should_extract_a_folder_with_a_trailing_slash(), should_extract_everything_and_restore_contents(), should_fail_the_test_on_corrupt_data() (+9 more)
 
-### Community 662 - "CParsedMethods"
-Cohesion: 0.29
-Nodes (4): CParsedMethods, IDs, Lzma2Prop, LzmaDic
+### Community 662 - "CFolderLink"
+Cohesion: 0.17
+Nodes (9): CFolderLink, IsVirtual, Library, ParentFolder, ParentFolderPath, Password, UsePassword, VirtualPath (+1 more)
 
-### Community 663 - "CHmac"
-Cohesion: 0.07
-Nodes (10): Crc64GenerateTable(), Crc64Update(), CHmac, _sha, _sha2, Pbkdf2Hmac(), CNewException, operator new() (+2 more)
+### Community 663 - "7zAes.cpp"
+Cohesion: 0.04
+Nodes (15): CDecoder, CEncoder, CHmac, _sha, _sha2, Pbkdf2Hmac(), CDecoder, CDecoder::Hmac_Convert_Crc32() (+7 more)
 
-### Community 664 - "ConvertPropertyToShortString2"
-Cohesion: 0.36
-Nodes (6): ConvertPosixAttribToString(), ConvertPropertyToShortString2(), ConvertPropertyToString2(), ConvertWinAttribToString(), CPanel::Refresh_StatusBar(), ConvertUInt32ToHex8Digits()
+### Community 664 - "CPropColumn"
+Cohesion: 0.17
+Nodes (8): CPropColumn, ID, IsRawProp, IsVisible, Name, Order, Type, Width
 
 ### Community 665 - "CGroupDescriptor"
-Cohesion: 0.15
-Nodes (13): CGroupDescriptor, BlockBitmap, BlockBitmap_Checksum, Checksum, DirCount, ExcludeBitmap, Flags, InodeBitmap (+5 more)
+Cohesion: 0.11
+Nodes (17): CExtentTreeHeader, Depth, MaxEntries, NumEntries, CGroupDescriptor, BlockBitmap, BlockBitmap_Checksum, Checksum (+9 more)
 
-### Community 666 - "CSwitchForm"
-Cohesion: 0.15
-Nodes (8): CSwitchForm, Key, MinLen, Multi, PostCharSet, Type, IsItSwitchChar(), SplitCommandLine()
+### Community 666 - "CParser"
+Cohesion: 0.07
+Nodes (23): CArcCmdLineParser, Parse1Log, parser, SetStreamMode(), CParser, ErrorLine, ErrorMessage, NonSwitchStrings (+15 more)
 
-### Community 667 - "Byte"
-Cohesion: 0.16
-Nodes (12): AddSkipExtents(), CExtent, IsInited, PhyStart, VirtBlock, CExtentIndexNode, PhyLeaf, VirtBlock (+4 more)
+### Community 667 - "ExtHandler.cpp"
+Cohesion: 0.07
+Nodes (33): AddSkipExtents(), CExtent, IsInited, Len, PhyStart, VirtBlock, CExtentIndexNode, PhyLeaf (+25 more)
 
-### Community 668 - "CCrcInfo"
-Cohesion: 0.08
-Nodes (20): Calc(), CBenchRandomGenerator, CCrcInfo, CCrcInfo_Base, Buffer, CheckSum_Res, CreateLocalBuf, Data (+12 more)
+### Community 668 - "CItem"
+Cohesion: 0.18
+Nodes (10): CItem, CTime, LeftDid, Level, MTime, Name, RightDid, Sid (+2 more)
 
 ### Community 669 - "CItem"
 Cohesion: 0.17
 Nodes (8): CItem, Attrib, MemInMB, Name, Order, Restor, Time, Ver
 
-### Community 670 - "CExtentInfo"
+### Community 670 - "CSection"
 Cohesion: 0.18
-Nodes (10): CExtentInfo, Access, FileName, NumSectors, StartSector, Type, GetNextNumber(), GetNextWord() (+2 more)
+Nodes (11): CSection, AddrAlign, EntSize, Flags, Info, Link, Name, Offset (+3 more)
 
 ### Community 671 - "CItem"
-Cohesion: 0.11
-Nodes (11): AllocateAndCopyName(), CItem, DirLevel, ImageIndex, IndexInSorted, IsAltStream, IsDir, IsDir_NonReparse (+3 more)
+Cohesion: 0.15
+Nodes (10): CItem, DirLevel, ImageIndex, IndexInSorted, IsAltStream, IsDir, IsDir_NonReparse, Offset (+2 more)
 
-### Community 672 - "CCompressionMethodMode"
-Cohesion: 0.17
-Nodes (10): CBaseProps, AesKeyMode, IsAesMode, CCompressionMethodMode, DataSizeReduce, DataSizeReduce_Defined, Force_SeqOutMode, MethodSequence (+2 more)
-
-### Community 673 - "CMultiMethodProps"
+### Community 672 - "CPartition"
 Cohesion: 0.18
-Nodes (7): CMultiMethodProps, _analysisLevel, _autoFilter, _crcSize, _filterMethod, _level, _methods
+Nodes (10): CPartition, AccessType, ContentsId, Flags, ImplId, IsMetadata, Len, Map (+2 more)
+
+### Community 673 - "CBitDecoder"
+Cohesion: 0.20
+Nodes (5): CBitDecoder, _buf, _lim, _numBits, _value
 
 ### Community 674 - "CAnalysis"
 Cohesion: 0.18
@@ -3515,56 +3575,48 @@ Cohesion: 0.29
 Nodes (7): EEnum, kFatalError, kMemoryError, kSuccess, kUserBreak, kUserError, kWarning
 
 ### Community 679 - "CStdInStream"
-Cohesion: 0.25
+Cohesion: 0.24
 Nodes (3): CStdInStream, CodePage, _stream
 
 ### Community 680 - "CMtf8Decoder"
 Cohesion: 0.20
 Nodes (4): CMtf8Decoder, Buf, CMtf8Encoder, Buf
 
-### Community 681 - ".IsEmpty"
-Cohesion: 0.03
-Nodes (69): Z7_COM7F_IMF(), CHandler::ParseName(), GetReducedName(), CHandler::AddResNameToString(), CHandler::TarStringToUnicode(), CHandler::AddCommentString(), PrintHex(), CreateArchiveName() (+61 more)
+### Community 681 - "UString"
+Cohesion: 0.02
+Nodes (163): Z7_COM7F_IMF(), Z7_COM7F_IMF(), MsiName_To_FileName(), GetOsPath(), GetOsPath_Remove_TailSlash(), NormalizeSlashes_in_FileName_for_OsPath(), ReplaceToWinSlashes(), WinPathToOsPath() (+155 more)
 
 ### Community 682 - "EEnum"
 Cohesion: 0.29
 Nodes (7): EEnum, kAutoRename, kCancel, kNo, kNoToAll, kYes, kYesToAll
 
-### Community 683 - "CBitReader"
-Cohesion: 0.22
-Nodes (6): CBitReader, NumBits, stream, Val, IsArc_Swf(), IsArc_Swfc()
+### Community 683 - "CPanel::InitColumns"
+Cohesion: 0.24
+Nodes (5): CPropColumns, CPanel::InitColumns(), CPanel::RefreshListCtrl_SaveFocused(), CPanel::SaveListViewInfo(), CPanel::ShowColumnsContextMenu()
 
 ### Community 684 - "Aes.c"
-Cohesion: 0.29
-Nodes (10): Aes_Decode(), Aes_Encode(), Aes_SetKey_Dec(), Aes_SetKey_Enc(), AesCbc_Decode(), AesCbc_Encode(), AesCbc_Init(), AesCtr_Code() (+2 more)
+Cohesion: 0.41
+Nodes (8): Aes_Decode(), Aes_Encode(), Aes_SetKey_Dec(), Aes_SetKey_Enc(), AesCbc_Decode(), AesCbc_Encode(), AesCbc_Init(), AesCtr_Code()
 
 ### Community 685 - "Z7_COM7F_IMF"
 Cohesion: 0.29
 Nodes (3): CheckBreak2(), GetPassword(), Z7_COM7F_IMF()
 
-### Community 686 - "Ppmd7z_DecodeSymbol"
-Cohesion: 0.18
-Nodes (4): Ppmd7z_DecodeSymbol(), Ppmd7z_RangeDec_Init(), Ppmd7z_RD_Decode(), CDecoder::CodeSpec()
-
 ### Community 688 - "EEnum"
 Cohesion: 0.29
 Nodes (7): EEnum, kError, kFileWasChanged, kFileWasNotChanged, kInterruptedByUser, kOpenError, kSuccess
-
-### Community 689 - "BrowseForFolder"
-Cohesion: 0.15
-Nodes (5): BrowseCallbackProc(), BrowseCallbackProc2(), BrowseForFolder(), CItemIDList, m_Object
 
 ### Community 690 - "CVolHeader"
 Cohesion: 0.17
 Nodes (9): CVolHeader, BlockSizeLog, CTime, Is_Hsfx_ver5, MTime, NumBlocks, NumFiles, NumFolders (+1 more)
 
 ### Community 691 - "CHash"
-Cohesion: 0.11
-Nodes (13): Blake2sp_Init(), Blake2sp_InitState(), Blake2sp_SetFunction(), Blake2sp_Update(), CBlake2spHasher(), CHash, _blakeOffset, _buf (+5 more)
+Cohesion: 0.21
+Nodes (5): CHash, _blakeOffset, _buf, _calcCRC, _crc
 
 ### Community 692 - "CMftRec"
-Cohesion: 0.12
-Nodes (11): CMftRec, BaseMftRef, DataAttrs, FileNames, Flags, Magic, MyItemIndex, MyNumNameLinks (+3 more)
+Cohesion: 0.07
+Nodes (17): CFileNameAttr, Name, NameType, ParentDirRef, CMftRec, BaseMftRef, DataAttrs, FileNames (+9 more)
 
 ### Community 694 - "CStreamFileProps"
 Cohesion: 0.17
@@ -3578,13 +3630,21 @@ Nodes (7): EEnum, kAutoRename, kCancel, kNo, kNoToAll, kYes, kYesToAll
 Cohesion: 0.23
 Nodes (4): CDynamicBuffer, _items, _pos, _size
 
-### Community 697 - "MyLoadString"
-Cohesion: 0.57
-Nodes (3): MyLoadString(), MyLoadString2(), MyLoadStringA()
+### Community 697 - "CArcItem"
+Cohesion: 0.20
+Nodes (9): CArcItem, Censored, IndexInServer, IsAltStream, IsDir, MTime, Name, Size (+1 more)
 
 ### Community 698 - "7zBuf2.c"
 Cohesion: 0.39
 Nodes (4): DynBuf_Construct(), DynBuf_Free(), DynBuf_SeekToBeg(), DynBuf_Write()
+
+### Community 699 - "CSelectedState"
+Cohesion: 0.20
+Nodes (8): CSelectedState, CalledFromTimer, FocusedItem, FocusedName, FocusedName_Defined, SelectedNames, SelectFocused, CPanel::SaveSelectedState()
+
+### Community 700 - "Page"
+Cohesion: 0.22
+Nodes (8): Page, Calendar, Customers, Invoices, Jobs, Quotes, Settings, Today
 
 ### Community 701 - "AvbDescriptorTag"
 Cohesion: 0.33
@@ -3594,17 +3654,17 @@ Nodes (6): AvbDescriptorTag, AVB_DESCRIPTOR_TAG_CHAIN_PARTITION, AVB_DESCRIPTOR_
 Cohesion: 0.33
 Nodes (6): EType, k_Type_BinBe, k_Type_BinLe, k_Type_Hex, k_Type_HexCrc, k_Type_Oct
 
-### Community 703 - "CExtentTreeHeader"
-Cohesion: 0.33
-Nodes (4): CExtentTreeHeader, Depth, MaxEntries, NumEntries
+### Community 703 - "Final"
+Cohesion: 0.22
+Nodes (4): Crc64Update(), Final(), Z7_COM7F_IMF2(), Z7_COM7F_IMF2()
 
 ### Community 704 - "CItem"
 Cohesion: 0.22
 Nodes (7): BlocksToBytes(), CItem, Flags, Name_Type, NumBlocks, StartBlock, GetItem_ExtractInfo()
 
 ### Community 706 - "CDir"
-Cohesion: 0.14
-Nodes (9): CHandler::GetPath(), CDir, Parent, _subItems, CRef, Dir, Index, NumExtents (+1 more)
+Cohesion: 0.17
+Nodes (8): CDir, Parent, _subItems, CRef, Dir, Index, NumExtents, TotalSize
 
 ### Community 707 - "CRarTime"
 Cohesion: 0.22
@@ -3614,49 +3674,49 @@ Nodes (6): CItem::IsDir(), ReadTime(), CRarTime, DosTime, LowSecond, SubTime
 Cohesion: 0.20
 Nodes (10): CMy_VS_FIXEDFILEINFO, Flags, FlagsMask, OS, ProductVersionLS, ProductVersionMS, Subtype, Type (+2 more)
 
-### Community 709 - "CHandlerTimeOptions"
-Cohesion: 0.29
-Nodes (5): CHandlerTimeOptions, Prec, Write_ATime, Write_CTime, Write_MTime
+### Community 710 - "CArcHeader"
+Cohesion: 0.22
+Nodes (8): CArcHeader, ArchiveSize, Comment, CTime, HostOS, MTime, Name, SecurSize
 
-### Community 710 - "CMemBlocks"
-Cohesion: 0.33
-Nodes (3): CMemBlocks, Blocks, TotalSize
+### Community 711 - "CFooter"
+Cohesion: 0.22
+Nodes (8): CFooter, original_image_size, reserved, vbmeta_offset, vbmeta_size, version_major, version_minor, GetItem_ExtractInfo()
 
-### Community 711 - "CStreamInfo"
-Cohesion: 0.20
-Nodes (7): CStreamInfo, Hash, Id, PartNumber, RefCount, Resource, IsEmptySha1_32()
-
-### Community 712 - "CCoderReleaser"
-Cohesion: 0.33
-Nodes (3): CCoderReleaser, _coder, NeedFlush
+### Community 712 - "Z7_COM7F_IMF"
+Cohesion: 0.22
+Nodes (4): Size, GetFileTimeFromMem(), IsLargeStream(), Z7_COM7F_IMF()
 
 ### Community 713 - "CFinishArchiveStat"
-Cohesion: 0.33
-Nodes (5): CFinishArchiveStat, IsMultiVolMode, NumVolumes, OutArcFileSize, CUpdateCallbackGUI::FinishArchive()
+Cohesion: 0.40
+Nodes (4): CFinishArchiveStat, IsMultiVolMode, NumVolumes, OutArcFileSize
 
-### Community 714 - "GetFolderPath"
-Cohesion: 0.33
-Nodes (4): CPanel::LoadFullPath(), CPanel::SetNewFolder(), GetFolderPath(), CPanel::CheckBeforeUpdate()
+### Community 714 - "PanelFolderChange.cpp"
+Cohesion: 0.09
+Nodes (8): CPanel::LoadFullPath(), CPanel::OnNotifyComboBox(), CPanel::OnNotifyComboBoxEndEdit(), CPanel::OnNotifyComboBoxEnter(), CPanel::SetNewFolder(), Find_FileExtension_DotPos_in_path(), GetFolderPath(), GetRealIconIndex_for_DirPath()
 
-### Community 715 - "EEnum"
-Cohesion: 0.15
-Nodes (14): AddCommandLineWildcardToCensor(), AddNameToCensor(), CArchiveCommand, CommandType, EEnum, kFullExtract, kList, kNonRecursed (+6 more)
+### Community 715 - "Z7_COM7F_IMF"
+Cohesion: 0.25
+Nodes (4): CHandler::InitAndSeek(), GetPackSize(), ThereIsDynamic(), Z7_COM7F_IMF()
 
-### Community 717 - "CHashOptions"
-Cohesion: 0.20
-Nodes (8): CHashOptions, AltStreamsMode, Methods, OpenShareForWrite, PathMode, PreserveATime, StdInMode, SymLinks
+### Community 717 - "CLocator"
+Cohesion: 0.25
+Nodes (5): CInArcInfo::CLocator::Parse(), CLocator, Flags, QuickOpen, Recovery
 
-### Community 718 - "CHashOptionsLocal"
-Cohesion: 0.22
-Nodes (5): CHashOptionsLocal, HashMode_Dirs, HashMode_OnlyHash, HashMode_Tag, HashMode_Zero
+### Community 718 - "CHashOptions"
+Cohesion: 0.10
+Nodes (13): CHashOptions, AltStreamsMode, Methods, OpenShareForWrite, PathMode, PreserveATime, StdInMode, SymLinks (+5 more)
+
+### Community 719 - "InStream_SeekSet"
+Cohesion: 0.16
+Nodes (10): Z7_COM7F_IMF(), InitAndSeek(), Seek2(), Seek2(), InitAndSeek(), Seek2(), InitAndSeek(), SeekToPhys() (+2 more)
 
 ### Community 720 - "EType"
 Cohesion: 0.40
 Nodes (5): EType, kType_ALib, kType_Ar, kType_Deb, kType_Lib
 
-### Community 721 - "CEncoder::SetCoderProp"
-Cohesion: 0.18
-Nodes (6): CEncoder::SetCheckSize(), CEncoder::SetCoderProp(), CMethodNamePair, Id, Name, FilterIdFromName()
+### Community 721 - "IsString1PrefixedByString2_NoCase_Ascii"
+Cohesion: 0.13
+Nodes (8): FOR_VECTOR(), CEncoder::SetCheckSize(), CEncoder::SetCoderProp(), CMethodNamePair, Id, Name, FilterIdFromName(), IsString1PrefixedByString2_NoCase_Ascii()
 
 ### Community 722 - "EErrorType"
 Cohesion: 0.40
@@ -3674,9 +3734,9 @@ Nodes (5): CEncProps, Affinity, BlockSizeMult, NumPasses, NumThreadGroups
 Cohesion: 0.40
 Nodes (5): EErrorType, k_ErrorType_Corrupted, k_ErrorType_DecryptionError, k_ErrorType_OK, k_ErrorType_UnexpectedEnd
 
-### Community 726 - "WinMain"
-Cohesion: 0.36
-Nodes (8): WinMain(), FindTextConfigItem(), GetIDString(), GetTextConfig(), GetTextConfigValue(), IsDelimitChar(), SkipSpaces(), WaitNextLine()
+### Community 726 - "TextConfig.cpp"
+Cohesion: 0.44
+Nodes (7): FindTextConfigItem(), GetIDString(), GetTextConfig(), GetTextConfigValue(), IsDelimitChar(), SkipSpaces(), WaitNextLine()
 
 ### Community 727 - "EGuidType"
 Cohesion: 0.40
@@ -3686,9 +3746,9 @@ Nodes (5): EGuidType, k_GuidType_Creat, k_GuidType_Link, k_GuidType_Modif, k_Gui
 Cohesion: 0.29
 Nodes (4): CWriteBufferLoc, _data, _dataBase, _dataLim
 
-### Community 729 - "WinMain2"
-Cohesion: 0.40
-Nodes (3): ErrorMessageForHRESULT(), GetDllVersion(), WinMain2()
+### Community 729 - "CSolid"
+Cohesion: 0.22
+Nodes (8): CSolid, Chunks, ChunkSizeBits, FirstSmallStream, Method, SolidOffset, StreamIndex, UnpackSize
 
 ### Community 731 - "CCommand"
 Cohesion: 0.40
@@ -3698,25 +3758,21 @@ Nodes (5): CCommand, ByteMode, Op1, Op2, OpCode
 Cohesion: 0.20
 Nodes (5): CMtSem, CS, Head, Indexes, Semaphore
 
-### Community 733 - "CHandler::Open2"
+### Community 733 - "CHandler::OpenDir"
 Cohesion: 0.11
-Nodes (12): CHandler::GetPath(), CHandler::Open2(), CHandler::OpenDir(), CHandler::ReadData(), CHandler::ReadMetadataBlock(), CHandler::ReadMetadataBlock2(), CItem, Node (+4 more)
+Nodes (12): CFrag, Size, StartBlock, CHandler::GetPath(), CHandler::OpenDir(), CItem, Node, Parent (+4 more)
 
 ### Community 734 - "EOpType"
 Cohesion: 0.40
 Nodes (5): EOpType, OP_TYPE_INT, OP_TYPE_NONE, OP_TYPE_REG, OP_TYPE_REGMEM
 
-### Community 735 - "CScreenRestorer"
-Cohesion: 0.40
-Nodes (3): CScreenRestorer, m_HANDLE, m_Saved
+### Community 735 - "CDecoder"
+Cohesion: 0.22
+Nodes (5): CDecoder, _numMaxBits, _parents, _stack, _suffixes
 
 ### Community 736 - "github"
 Cohesion: 0.17
 Nodes (12): enabled, headers, oauth, type, url, Authorization, mcp, github (+4 more)
-
-### Community 737 - "FilterType"
-Cohesion: 0.40
-Nodes (5): FilterType, FILTER_ARM, FILTER_DELTA, FILTER_E8, FILTER_E8E9
 
 ### Community 738 - "Next"
 Cohesion: 0.25
@@ -3726,9 +3782,9 @@ Nodes (4): CEnum, _handle, _handleAllocated, CEnum::NextW()
 Cohesion: 0.29
 Nodes (6): Best practices, Cloud DVR, EPG experience, Live-viewing apps, Platform considerations, Related guidelines
 
-### Community 740 - "CProxyFile"
-Cohesion: 0.40
-Nodes (4): CProxyFile, Name, NameLen, NeedDeleteName
+### Community 740 - "CFfpOpen"
+Cohesion: 0.22
+Nodes (6): CFfpOpen, Encrypted, ErrorMessage, Folder, Library, Password
 
 ### Community 741 - "EEnum"
 Cohesion: 0.40
@@ -3738,13 +3794,9 @@ Nodes (5): EEnum, kChar, kMinus, kSimple, kString
 Cohesion: 0.50
 Nodes (4): EErrorType, k_ErrorType_Corrupted, k_ErrorType_OK, k_ErrorType_UnexpectedEnd
 
-### Community 744 - "StringConvert.cpp"
-Cohesion: 0.33
-Nodes (8): Init_ForceToUTF8(), ShowCopyrightAndHelp(), ShowProgInfo(), GetLocale(), Is_Default_Basic_Locale(), IsNativeUTF8(), MY_SetLocale(), Set_ForceToUTF8()
-
-### Community 745 - "LoadGlobalCodecs"
-Cohesion: 0.28
-Nodes (7): CAgent::ReadItems(), CAgentFolder, CAgentFolder::BindToAltStreams_Internal(), CAgentFolder::BindToFolder_Internal(), FreeGlobalCodecs(), LoadGlobalCodecs(), Codecs_AddHashArcHandler()
+### Community 745 - "7zAlloc.c"
+Cohesion: 0.50
+Nodes (6): Print_Alloc(), Print_Free(), SzAlloc(), SzAllocTemp(), SzFree(), SzFreeTemp()
 
 ### Community 746 - "CRecordingDateTime"
 Cohesion: 0.22
@@ -3762,29 +3814,33 @@ Nodes (11): CDebugEntry, Flags, Pa, Size, Time, Type, Va, Ver (+3 more)
 Cohesion: 0.25
 Nodes (6): CItem, Name, ParentId, ParentItemIndex, RefIndex, Val
 
-### Community 751 - "CTag"
-Cohesion: 0.50
-Nodes (3): CTag, Buf, Type
+### Community 750 - "CExtendedInfo"
+Cohesion: 0.32
+Nodes (4): CExtendedInfo, CrcError, Size, Size
+
+### Community 751 - "CHandler::Open2"
+Cohesion: 0.25
+Nodes (5): AddNameToString(), AvbPropertyDescriptor, key_num_bytes, value_num_bytes, CHandler::Open2()
 
 ### Community 752 - "CEncProps"
 Cohesion: 0.10
 Nodes (14): CCodeValue, Len, Pos, CEncProps, algo, btMode, fb, Level (+6 more)
 
-### Community 753 - "CDirPathSortPair"
-Cohesion: 0.40
-Nodes (3): CDirPathSortPair, Index, Len
+### Community 753 - "Byte"
+Cohesion: 0.25
+Nodes (3): AvbDescriptor, Size, Tag
 
 ### Community 754 - "EErrorType"
 Cohesion: 0.50
 Nodes (4): EErrorType, k_ErrorType_Corrupted, k_ErrorType_OK, k_ErrorType_UnexpectedEnd
 
-### Community 755 - "CDecompressStat"
-Cohesion: 0.22
-Nodes (8): CDecompressStat, AltStreams_UnpackSize, NumAltStreams, NumArchives, NumFiles, NumFolders, PackSize, UnpackSize
+### Community 755 - "Extract"
+Cohesion: 0.09
+Nodes (15): Z7_COM7F_IMF(), Z7_COM7F_IMF(), Z7_COM7F_IMF(), CDecompressStat, AltStreams_UnpackSize, NumAltStreams, NumArchives, NumFiles (+7 more)
 
-### Community 756 - "enum_BuildMode"
-Cohesion: 0.50
-Nodes (4): enum_BuildMode, k_BuildMode_Full, k_BuildMode_Full_or_Empty, k_BuildMode_Partial
+### Community 756 - "UInt32"
+Cohesion: 0.25
+Nodes (3): CHandler::GetSectionName(), Size, Z7_COM7F_IMF()
 
 ### Community 757 - "E_CheckCrcMode"
 Cohesion: 0.50
@@ -3798,9 +3854,9 @@ Nodes (8): Commits — Conventional Commits v1.0.0, Contributing to QuarkZip, Ex
 Cohesion: 0.16
 Nodes (10): CMap32, Nodes, CNode, IsLeaf, Key, Keys, Len, Values (+2 more)
 
-### Community 760 - "EEnum"
-Cohesion: 0.50
-Nodes (4): EEnum, k_AddArcName, k_Direct, k_ReplaceAsterisk
+### Community 760 - "IsPark"
+Cohesion: 0.25
+Nodes (8): AddString(), CInArchive::GetCmd(), CInArchive::GetFormatDescription(), CInArchive::GetNsisString_Unicode(), CInArchive::GetNsisString_Unicode_Raw(), CInArchive::GetNumSupportedCommands(), CInArchive::GetNumUsedVars(), IsPark()
 
 ### Community 761 - "CPpmd8_Context_"
 Cohesion: 0.25
@@ -3810,41 +3866,45 @@ Nodes (6): CPpmd8_Context_, Flags, NumStats, Suffix, Union2, Union4
 Cohesion: 0.50
 Nodes (4): EExtState, kExtState_7Zip, kExtState_Clear, kExtState_Other
 
-### Community 768 - "CSiAttr"
-Cohesion: 0.22
-Nodes (7): CSiAttr, ATime, Attrib, CTime, MTime, SecurityId, ThisRecMTime
+### Community 765 - "ExtractCallbackSfx.cpp"
+Cohesion: 0.36
+Nodes (5): CExtractCallbackImp::CreateComplexDirectory(), CExtractCallbackImp::Open_CheckBreak(), CExtractCallbackImp::Open_Finished(), CExtractCallbackImp::Open_SetCompleted(), CExtractCallbackImp::Open_SetTotal()
+
+### Community 766 - "CEditPage"
+Cohesion: 0.25
+Nodes (4): CEditPage, _ctrls, _initMode, Z7_override
+
+### Community 768 - "Game controls"
+Cohesion: 0.29
+Nodes (7): Change log, Game controls, Keyboards, Physical controllers, Platform considerations, Related guidelines, Touch controls
 
 ### Community 769 - "BwtSort.c"
-Cohesion: 0.62
+Cohesion: 0.50
 Nodes (4): BlockSort(), HeapSortRef(), SetGroupSize(), SortGroup()
 
-### Community 770 - ".EncodeBlock3"
-Cohesion: 0.18
-Nodes (3): CEncoder::CodeReal(), CEncoder::Create(), CThreadInfo::ThreadFunc()
+### Community 770 - "BZip2Encoder.cpp"
+Cohesion: 0.16
+Nodes (5): CEncoder::CodeReal(), CEncoder::Create(), CThreadInfo::Create(), CThreadInfo::ThreadFunc(), MFThread()
 
 ### Community 771 - "AvbHashtreeDescriptorFlags"
 Cohesion: 0.67
 Nodes (3): AvbHashtreeDescriptorFlags, AVB_HASHTREE_DESCRIPTOR_FLAGS_CHECK_AT_MOST_ONCE, AVB_HASHTREE_DESCRIPTOR_FLAGS_DO_NOT_USE_AB
 
-### Community 772 - "FileLink.cpp"
-Cohesion: 0.20
-Nodes (13): CreatePrefixDirOfFile(), CReparseAttr::Parse(), CReparseShortInfo::Parse(), DeleteReparseData(), FillLinkData_WslLink(), GetReparseData(), GetString(), IsLinkPrefix() (+5 more)
+### Community 772 - "Windows/StdAfx.h"
+Cohesion: 0.06
+Nodes (11): CReparseAttr::Parse(), CReparseShortInfo::Parse(), GetString(), WriteString(), EnablePrivilege(), EnablePrivilege_LockMemory(), Get_LargePages_RiskLevel(), ProcessMessages() (+3 more)
 
 ### Community 773 - "CFileInfo"
 Cohesion: 0.29
 Nodes (6): CFileInfo, Name, Size, SizeIsDefined, Time, TimeIsDefined
 
-### Community 775 - "EHostOS"
-Cohesion: 0.67
-Nodes (3): EHostOS, kHost_Unix, kHost_Windows
+### Community 775 - "Onboarding"
+Cohesion: 0.29
+Nodes (7): Additional content, Additional requests, Best practices, Change log, Onboarding, Platform considerations, Related guidelines
 
 ### Community 777 - "CItem"
 Cohesion: 0.25
 Nodes (7): CItem, IsSupported, LogVol, Name, PhyVol, Pos, Size
-
-### Community 778 - "Ppmd7_MakeEscFreq"
-Cohesion: 0.18
-Nodes (4): Ppmd7_MakeEscFreq(), Ppmd7a_DecodeSymbol(), Ppmd7a_RangeDec_Init(), Ppmd7a_RD_Decode()
 
 ### Community 779 - "CItem"
 Cohesion: 0.25
@@ -3854,41 +3914,81 @@ Nodes (7): CItem, Align, Offset, Size, SubType, Type, GetItem_ExtractInfo()
 Cohesion: 0.25
 Nodes (7): CFinishHeader, AdditionalStartBlockSize, ArchiveStartOffset, CStartHeader, NextHeaderCRC, NextHeaderOffset, NextHeaderSize
 
-### Community 782 - "CCryptoInfo"
+### Community 781 - "Ppmd8_Alloc"
+Cohesion: 0.38
+Nodes (5): Ppmd8_Alloc(), Ppmd8_Construct(), Ppmd8_Free(), CDecoder::CDecoder(), CEncoder::~CEncoder()
+
+### Community 782 - "CSolidGroup"
 Cohesion: 0.29
-Nodes (4): CCryptoInfo, Algo, Cnt, Flags
+Nodes (6): CFolderRepack, FolderIndex, NumCopyFiles, CSolidGroup, folderRefs, Indices
 
 ### Community 783 - "CTempBuffer"
 Cohesion: 0.25
 Nodes (5): CTempBuffer, Buffer, IsNonZeroTail, StringSize, StringSize_IsConfirmed
 
-### Community 784 - "CFileInfoStrings"
-Cohesion: 0.67
-Nodes (3): CFileInfoStrings, Size, Time
+### Community 784 - "CBondsChecks"
+Cohesion: 0.38
+Nodes (4): BoolVector_Fill_False(), CBondsChecks, BindInfo, _coderUsed
+
+### Community 785 - "Byte"
+Cohesion: 0.33
+Nodes (3): Get16(), Get32(), Get64()
+
+### Community 786 - "CSegment"
+Cohesion: 0.29
+Nodes (6): CSegment, Flags, Offset, Type, Va, VSize
 
 ### Community 787 - "CNode"
-Cohesion: 0.13
-Nodes (16): CNode, FileSize, Frag, Gid, Mode, Offset, StartBlock, Type (+8 more)
+Cohesion: 0.09
+Nodes (20): CData, Data, PackPos, UnpackPos, CHandler::GetPackSize(), CHandler::Open2(), CHandler::ReadData(), CHandler::ReadMetadataBlock() (+12 more)
 
-### Community 788 - "CArcLevelInfo"
-Cohesion: 0.25
-Nodes (8): CArcLevelInfo, Error, ErrorFlags, ErrorType, Path, Type, CArcLevelsInfo, Levels
-
-### Community 794 - "CItem2"
-Cohesion: 0.33
-Nodes (5): CItem2, Characts, MainIndex, Name, Parent
-
-### Community 795 - "CExitEventLauncher"
+### Community 788 - "CItem"
 Cohesion: 0.29
-Nodes (5): CExitEventLauncher, _exitEvent, _needExit, _numActiveThreads, _threads
+Nodes (6): CItem, DataIndex, NameIndex, ParentFolder, ParentHost, RecIndex
+
+### Community 789 - "CHostOS"
+Cohesion: 0.29
+Nodes (7): CHostOS, kHostBeOS, kHostMacOS, kHostMSDOS, kHostOS2, kHostUnix, kHostWin32
+
+### Community 790 - "EIcbFileType"
+Cohesion: 0.29
+Nodes (7): EIcbFileType, ICB_FILE_TYPE_DIR, ICB_FILE_TYPE_FILE, ICB_FILE_TYPE_METADATA, ICB_FILE_TYPE_METADATA_BITMAP, ICB_FILE_TYPE_METADATA_MIRROR, ICB_FILE_TYPE_REAL_TIME_FILE
+
+### Community 793 - "CMarker"
+Cohesion: 0.29
+Nodes (4): CMarker, NumSectors, SpecSize, Type
+
+### Community 794 - "CFilter"
+Cohesion: 0.29
+Nodes (5): CFilter, Channels, Size, Start, Type
+
+### Community 795 - "CKeyInfo"
+Cohesion: 0.29
+Nodes (4): CKeyInfo, KeySize, MasterKey, GetPadSize()
 
 ### Community 797 - "CPpmd7_Context_"
 Cohesion: 0.29
 Nodes (5): CPpmd7_Context_, NumStats, Suffix, Union2, Union4
 
+### Community 798 - "E_Program_ISA"
+Cohesion: 0.29
+Nodes (7): E_Program_ISA, k_Program_ISA_arm32, k_Program_ISA_arm64, k_Program_ISA_armt, k_Program_ISA_ia64, k_Program_ISA_x64, k_Program_ISA_x86
+
 ### Community 799 - "CDirItem"
 Cohesion: 0.29
 Nodes (6): CDirItem, FolderStat_Defined, NumFiles, NumFolders, Parent, GetFullPath()
+
+### Community 800 - "Enum_DragTargetMode"
+Cohesion: 0.29
+Nodes (7): Enum_DragTargetMode, k_DragTargetMode_Drop_Begin, k_DragTargetMode_Drop_End, k_DragTargetMode_Enter, k_DragTargetMode_Leave, k_DragTargetMode_None, k_DragTargetMode_Over
+
+### Community 801 - "Managing notifications"
+Cohesion: 0.33
+Nodes (6): Best practices, Integrating with Focus, Managing notifications, Platform considerations, Related guidelines, Sending marketing notifications
+
+### Community 802 - "egui app (`egui-app/`) — develop-branch scaffold"
+Cohesion: 0.33
+Nodes (5): Deliberate v1 gaps (next milestones), egui app (`egui-app/`) — develop-branch scaffold, macOS notes, Run, Structure
 
 ### Community 804 - "CRleEncoder"
 Cohesion: 0.29
@@ -3902,37 +4002,53 @@ Nodes (6): CLinkFile, crcOK, Data, Index, NumLinks, Res
 Cohesion: 0.29
 Nodes (5): CBlock, CRC, Flags, HeadSize, Type
 
-### Community 807 - "CBitDecoder"
-Cohesion: 0.33
-Nodes (3): CBitDecoder, _bitPos, _buf
-
 ### Community 808 - "CSortedIndex"
 Cohesion: 0.29
 Nodes (3): AddUniqHash(), CSortedIndex, Vectors
 
-### Community 811 - "CRangeDecoder"
+### Community 810 - "CStatProp"
 Cohesion: 0.33
-Nodes (4): CRangeDecoder, code, cur, range
+Nodes (4): CStatProp, Name, PropID, vt
+
+### Community 811 - "EEnum"
+Cohesion: 0.33
+Nodes (6): EEnum, k1ns, kDOS, kNotDefined, kUnix, kWindows
+
+### Community 812 - "EPx"
+Cohesion: 0.33
+Nodes (6): EPx, k_Px_Group, k_Px_Links, k_Px_Mode, k_Px_SerialNumber, k_Px_User
 
 ### Community 815 - "CProgressFinalMessage"
 Cohesion: 0.29
 Nodes (6): CProgressFinalMessage, ErrorMessage, OkMessage, CProgressMessageBoxPair, Message, Title
 
-### Community 820 - "IArchive.h"
-Cohesion: 0.02
-Nodes (43): CHandler, Init(), CStatProp, Name, PropID, vt, EEnum, k1ns (+35 more)
+### Community 820 - "Common.h"
+Cohesion: 0.03
+Nodes (18): Z7_COM7F_IMF(), Init(), GetCRC(), CRef2, Fs, Ref, Vol, CProgressVirt() (+10 more)
 
-### Community 823 - "CRefItem"
+### Community 821 - "CArchiveExtractCallback_Closer"
+Cohesion: 0.47
+Nodes (3): CArchiveExtractCallback, CArchiveExtractCallback_Closer, _ref
+
+### Community 822 - "CTempFiles"
 Cohesion: 0.40
-Nodes (5): CRefItem, Item, Last, Link, Parent
+Nodes (3): CTempFiles, NeedDeleteFiles, Paths
+
+### Community 823 - "Rar5Handler.h"
+Cohesion: 0.20
+Nodes (9): CHandler, CRefItem, Item, Last, Link, Parent, EHostOS, kHost_Unix (+1 more)
 
 ### Community 824 - "CProcessedFileInfo"
 Cohesion: 0.33
 Nodes (4): CProcessedFileInfo, Attributes, IsDir, MTime
 
 ### Community 826 - "Code"
-Cohesion: 0.10
-Nodes (8): Z7_COM7F_IMF(), Z7_COM7F_IMF(), Z7_COM7F_IMF(), Code, Z7_COM7F_IMF(), Z7_COM7F_IMF(), Z7_COM7F_IMF(), Z7_COM7F_IMF()
+Cohesion: 0.07
+Nodes (8): Z7_COM7F_IMF(), Z7_COM7F_IMF(), Z7_COM7F_IMF(), Z7_COM7F_IMF(), Code, Z7_COM7F_IMF(), Z7_COM7F_IMF(), Z7_COM7F_IMF()
+
+### Community 827 - "Enum_CmdId"
+Cohesion: 0.33
+Nodes (6): Enum_CmdId, k_AddToArc, k_Cancel, k_Copy_Base, k_Copy_ToArc, k_None
 
 ### Community 829 - "CVKeyPropIDPair"
 Cohesion: 0.33
@@ -3942,9 +4058,25 @@ Nodes (4): CVKeyPropIDPair, PropID, VKey, FindVKeyPropIDPair()
 Cohesion: 0.40
 Nodes (4): Background tag reading, In-app tag reading, NFC, Platform considerations
 
-### Community 833 - ".Create"
-Cohesion: 0.15
-Nodes (6): AddButton(), CreateToolbar(), COpenResult, ArchiveIsOpened, Encrypted, ErrorMessage
+### Community 831 - "Enum_FolderType"
+Cohesion: 0.33
+Nodes (6): Enum_FolderType, k_FolderType_AltStreams, k_FolderType_Archive, k_FolderType_Fs, k_FolderType_None, k_FolderType_Unknown
+
+### Community 832 - "QuarkZip translations (i18n)"
+Cohesion: 0.40
+Nodes (4): Contribute a translation (PR in ~10 minutes), Notes for translators, QuarkZip translations (i18n), Shipped languages
+
+### Community 833 - "App.cpp"
+Cohesion: 0.04
+Nodes (30): AddButton(), AddPropValueToSum(), AddSizeValue(), AddUniqueStringToHead(), AddValuePair1(), AddValuePair2(), CButtonInfo, Bitmap2ResID (+22 more)
+
+### Community 835 - "CMyComboBoxEdit"
+Cohesion: 0.40
+Nodes (3): CMyComboBoxEdit, _origWindowProc, _panel
+
+### Community 836 - "installSingleClickGuard"
+Cohesion: 0.70
+Nodes (3): installSingleClickGuard(), SINGLE_CLICK_WINDOW_MS, setup()
 
 ### Community 838 - "CBlock"
 Cohesion: 0.40
@@ -3954,21 +4086,21 @@ Nodes (3): CBlock, Data, Offset
 Cohesion: 0.08
 Nodes (12): DllMain(), WinMain(), DllMain(), DllMain(), DllMain(), MyMessages, kOpenItemChanged, kRefresh_HeaderComboBox (+4 more)
 
-### Community 841 - "Z7_COM7F_IMF"
-Cohesion: 0.17
-Nodes (4): Z7_COM7F_IMF(), CVolSeqName, ChangedPart, UnchangedPart
+### Community 841 - "IsAbsolutePath"
+Cohesion: 0.50
+Nodes (3): CInArchive::SetItemName(), IsAbsolutePath(), IsDrivePath()
 
 ### Community 843 - "CBZip2Crc"
-Cohesion: 0.14
-Nodes (6): CBZip2CombinedCrc, _value, CBZip2Crc, Table, _value, Z7_COM7F_IMF2()
+Cohesion: 0.12
+Nodes (7): CBZip2CombinedCrc, _value, CBZip2Crc, Table, _value, CBZip2CrcTableInit, Z7_COM7F_IMF2()
 
 ### Community 844 - "PeHandler.cpp"
-Cohesion: 0.16
-Nodes (14): CheckPeOffset(), CompareWStrStrings(), CopyToUString(), CopyToUString_ByLen16(), CVersionBlock, IsTextValue, StrSize, TotalLen (+6 more)
+Cohesion: 0.21
+Nodes (11): CompareWStrStrings(), CopyToUString(), CopyToUString_ByLen16(), Get_Utf16Str_Len_InBytes(), Get_Utf16Str_Len_InBytes_AllowNonZeroTail(), GetImageSize(), GetName(), IsArc_Pe() (+3 more)
 
-### Community 848 - "CIDLangPair"
-Cohesion: 0.50
-Nodes (3): CIDLangPair, ControlID, LangID
+### Community 846 - "CVersionBlock"
+Cohesion: 0.40
+Nodes (5): CVersionBlock, IsTextValue, StrSize, TotalLen, ValueLen
 
 ### Community 849 - "CCoderReleaser"
 Cohesion: 0.50
@@ -3978,6 +4110,14 @@ Nodes (3): CCoderReleaser, m_Coder, NeedFlush
 Cohesion: 0.40
 Nodes (5): CBenchHash, CheckSum, Complex, Name, Weight
 
+### Community 852 - "CArchiveItemProperty"
+Cohesion: 0.40
+Nodes (4): CArchiveItemProperty, ID, Name, Type
+
+### Community 853 - "CAltStream"
+Cohesion: 0.40
+Nodes (5): CAltStream, Name, PackSize, PackSize_Defined, Size
+
 ### Community 856 - "Column views"
 Cohesion: 0.50
 Nodes (4): Best practices, Column views, Platform considerations, Related guidelines
@@ -3985,6 +4125,10 @@ Nodes (4): Best practices, Column views, Platform considerations, Related guidel
 ### Community 858 - "Distribution (macOS arm64 only, for now)"
 Cohesion: 0.50
 Nodes (3): Distribution (macOS arm64 only, for now), Permissions, Signing (no paid Apple Developer account)
+
+### Community 860 - "CTempItem"
+Cohesion: 0.50
+Nodes (4): CTempItem, Offset, StartBlock, Type
 
 ### Community 862 - "Outline views"
 Cohesion: 0.50
@@ -3998,45 +4142,41 @@ Nodes (3): COtherArc, DiskName, FileName
 Cohesion: 0.50
 Nodes (4): CAppleName, AppleName, Ext, IsFs
 
-### Community 865 - "CPaxExtra"
-Cohesion: 0.40
-Nodes (3): CPaxExtra, RawLines, RecordPath
-
 ### Community 867 - "CMethodNamePair"
 Cohesion: 0.50
 Nodes (3): CMethodNamePair, Id, Name
 
-### Community 868 - "CUpdateOptions"
+### Community 868 - "CPanel::Create"
 Cohesion: 0.50
-Nodes (4): CUpdateOptions, Write_ATime, Write_CTime, Write_MTime
+Nodes (3): CPanelCallback(), CPanel::Create(), DECLARE_INTERFACE()
 
 ### Community 874 - "Status bars"
 Cohesion: 0.67
 Nodes (3): Best practices, Platform considerations, Status bars
 
 ### Community 880 - "MyFree"
-Cohesion: 0.12
-Nodes (10): MyAlloc(), MyFree(), Lzma86_Encode(), CInOutTempBuffer::CInOutTempBuffer(), CByteDynBuffer::Free(), CDecoder::CDecoder(), CGrowBuf, _items (+2 more)
+Cohesion: 0.13
+Nodes (10): MyAlloc(), MyFree(), Lzma86_Encode(), CInOutTempBuffer::CInOutTempBuffer(), CByteDynBuffer::Free(), CDecoder::CreateInputBuffer(), CGrowBuf, _items (+2 more)
 
 ## Knowledge Gaps
-- **5397 isolated node(s):** `@tauri-apps/plugin-shell`, `@tauri-apps/cli`, `@types/react`, `@types/react-dom`, `@vitest/coverage-istanbul` (+5392 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 10556 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **100 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **5411 isolated node(s):** `quarkzip-egui`, `Today`, `Calendar`, `Jobs`, `Customers` (+5406 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 10612 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **113 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `UInt64` connect `UInt64` to `CSplitDialog`, `bridge.cpp`, `CParseItem`, `CBuffer`, `CUnpacker`, `CArcItem`, `CPercentPrinter`, `PanelDrag.cpp`, `CHandler::Decompress`, `MyCompare`, `CMixer`, `CDecoder`, `AvbVBMetaImageHeader`, `NtfsHandler.cpp`, `CUpdateItem`, `BZip2Decoder.cpp`, `HashCalc.cpp`, `Rar1Decoder.cpp`, `DecodeBlock`, `CZstdDecState`, `string`, `7zHandlerOut.cpp`, `CHandlerImg`, `CHeader`, `CExtent`, `CVirtFile`, `Rar2Decoder.cpp`, `WimIn.cpp`, `CUserTime`, `CabIn.cpp`, `CAttr`, `CLocator`, `Byte`, `UdfIn.cpp`, `HashCalc`, `UString`, `CPropVariant`, `.SetOperation_Base`, `CBitmEncoder`, `AString`, `COpenType`, `CpuArch.h`, `CCompressDialog`, `FileFind.cpp`, `Bench.cpp`, `CBitlEncoder`, `CInArchiveInfo`, `Z7_COM7F_IMF`, `fs2us`, `CProgressSync`, `CBenchProgressSync`, `BenchmarkDialog.cpp`, `HRESULT`, `CMethodProps`, `CZipDecoder::Decode`, `CDecoder256`, `Z7_COM7F_IMF`, `7zProperties.cpp`, `CImageInfo`, `CInArchiveInfo`, `CSpecState`, `CInArchive`, `CDatabase`, `ZlibEncoder.h`, `CFolderLink`, `CChunk`, `CHeader`, `Z7_COM7F_IMF`, `CProbEntry`, `CExtractNtOptions`, `.GetNextItem`, `CDriveInfo`, `CSignatureFinder`, `7zCrc.h`, `CObjectVector`, `ArchiveCommandLine.cpp`, `CParsedMethods`, `CHmac`, `CGroupDescriptor`, `Byte`, `CCrcInfo`, `CExtentInfo`, `CCompressionMethodMode`, `CFileInfo`, `.IsEmpty`, `DeflateDecoder.cpp`, `CVolHeader`, `CMftRec`, `CStreamFileProps`, `Decode`, `CItem`, `CDir`, `CHandler::Open2`, `CMemBlocks`, `CFinishArchiveStat`, `Seek2`, `CFile`, `COutHandler`, `ListArchives`, `CEncProps`, `CProgressDialog`, `CCoder::CodeReal`, `CCoder`, `CXmlItem`, `CHandler::Open2`, `FileIO.cpp`, `FString`, `7zIn.cpp`, `BrowseDialog2.cpp`, `CGroup`, `.Ptr`, `Z7_COM7F_IMF`, `Z7_COM7F_IMF`, `CCachedInStream`, `LangString`, `CArc`, `CDecoder`, `CoderMixer2.cpp`, `CApfs`, `CItem`, `NsisIn.cpp`, `CFreqBench`, `XzEnc.c`, `CDecompressStat`, `UpdateCallbackConsole.cpp`, `Z7_COM7F_IMF`, `COutArchive`, `CItem`, `RINOK`, `Event_Set`, `CBitDecoder`, `ZipIn.cpp`, `CSiAttr`, `HfsHandler.cpp`, `CItem`, `7zMain.c`, `CItem`, `.EncodeBlock3`, `CFileInfo`, `BrowseDialog.cpp`, `COutArchive`, `CHeader`, `CNode`, `7zHandler.cpp`, `7zipInstall.c`, `CStartHeader`, `CItem`, `GetLastError`, `LzmaEnc.c`, `CPartition`, `CItem`, `OutStreamWithSha1.h`, `CCryptoInfo`, `CItem`, `CNode`, `COutBuffer`, `FSFolderCopy.cpp`, `CRecordVector`, `CProgressDialog`, `LoadCodecs.cpp`, `CUpdateOptions`, `CArc`, `CDirItem`, `CInArchive`, `Lzma2DecMt.c`, `CFolders`, `CBase`, `Z7_COM7F_IMF`, `CDatabase`, `LPCTSTR`, `CInArcInfo`, `HashCon.cpp`, `PanelItems.cpp`, `CItem`, `CLzxInfo`, `CHeader`, `ExtractCallbackConsole.cpp`, `UpdateCallbackGUI.cpp`, `Z7_COM7F_IMF`, `CInArchive`, `_len`, `CProxyDir`, `ChmIn.cpp`, `CItem`, `Agent.cpp`, `CProxyArc2`, `Lzma86_Decode`, `CArchiveDatabaseOut`, `CHeader`, `CItem`, `CArchive`, `CProgressSync`, `Lzma2Enc.c`, `Z7_COM7F_IMF`, `CHeader`, `MtDec.c`, `CVol`, `CDatabase`, `CUpdateCallbackGUI2`, `GetLastError_noZero_HRESULT`, `Z7_COM7F_IMF`, `CItem`, `CLocalItem`, `CStdOutStream`, `CInfo`, `CWrappers.cpp`, `CPartition`, `CDecoder`, `XzDec.c`, `CreateCoder.cpp`, `j_file_extent_val`, `.CDatabase`, `7zArcIn.c`, `LzmaAlone.cpp`, `CInArchive`, `Z7_COM7F_IMF`, `CUpdateOptions`, `ArchiveExtractCallback.h`, `CInArchive`, `CDynHeader`, `CBaseDecoder`, `7zUpdate.cpp`, `Z7_COM7F_IMF`, `Xxh64.c`, `Seek2`, `List.cpp`, `Alloc.c`, `CMyComPtr`, `FileFind.h`, `COptHeader`, `CUnpacker`, `CCdInfo`, `AgentProxy.cpp`, `CRawLocn`, `CLogVol`, `CCoder`, `Xz_ReadBackward`, `Extract`, `CItem`, `CVols`, `CInBufferBase`, `BoolToInt`, `Common.h`, `Rar5Aes.cpp`, `CSingleMethodProps`, `CDatabase`, `ExtractCallback.cpp`, `.CodeReal`, `CBaseThreadInfo`, `Z7_COM7F_IMF`, `CDatabase`, `CDatabase`, `LzfseDecoder.cpp`, `CCoder`, `CCompressionMethodMode`, `CStreamBinder`, `Z7_COM7F_IMF`, `CConfigProp`, `Z7_COM7F_IMF`, `CInArcInfo`, `CHeader`, `COneMethodInfo`, `CBenchProps`, `COpenCallbackConsole`, `CProgressBox`, `CHeader`, `CPlugin`, `Sha512.c`, `CDecoder`, `InStream_SeekSet`, `CData`, `CItemEx`, `CBitDecoder`, `7zStream.c`, `HashGUI.cpp`, `CConfigItem`, `CItem`, `CNode`, `CVolGroup`, `CSection`, `CLead`, `TarIn.cpp`, `CPaxInfo`, `CResource`, `CUpdateItem`, `CProgressThreadVirt`, `CThreadInfo`, `CompressCall.cpp`, `7zDec.c`, `OutMemStream.h`, `CInOutTempBuffer`, `CItem`, `CWimXml`, `CDecoder`, `TimeUtils.cpp`, `.MoveArc_UpdateStatus`?**
-  _High betweenness centrality (0.247) - this node is a cross-community bridge._
+- **Why does `UInt64` connect `UInt64` to `bridge.cpp`, `CParseItem`, `CUnpacker`, `CArcTime`, `CPercentPrinter`, `CMixer`, `CDecoder`, `AvbVBMetaImageHeader`, `.GetStream`, `CUpdateItem`, `BZip2Decoder.cpp`, `Rar1Decoder.cpp`, `DecodeBlock`, `CompressDialog.cpp`, `CZstdDecState`, `Z7_COM7F_IMF`, `ArchiveCommandLine.cpp`, `CHandlerImg`, `LzmaHandler.cpp`, `CExtent`, `CVirtFile`, `AvbHashtreeDescriptor`, `WimIn.cpp`, `NsisIn.h`, `CabIn.cpp`, `CAttr`, `CCryptoInfo`, `Byte`, `UdfIn.cpp`, `LangString`, `CCoder`, `CBenchInfo`, `CPropVariant`, `CBitmEncoder`, `AString`, `COpenType`, `NtfsHandler.cpp`, `CpuArch.h`, `OutStreamWithSha1.h`, `CCompressDialog`, `Bench.cpp`, `CBitlEncoder`, `CDbEx`, `Z7_COM7F_IMF`, `fs2us`, `CProgressSync`, `BenchmarkDialog.cpp`, `CMethodProps`, `CDecoder256`, `Z7_COM7F_IMF`, `7zProperties.cpp`, `CMtCompressProgressMixer`, `CImageInfo`, `CInArchiveInfo`, `CBlock`, `CTables`, `CInArchive`, `CDatabase`, `CBootInitialEntry`, `CChunk`, `CHeader`, `Z7_COM7F_IMF`, `CRangeDecoder`, `CExtractNtOptions`, `.GetNextItem`, `CDriveInfo`, `CSignatureFinder`, `ICoder.h`, `CObjectVector`, `CCodecs`, `CGroupDescriptor`, `ExtHandler.cpp`, `CItem`, `CSection`, `CTargetTransferInfo`, `CFileInfo`, `UString`, `DeflateDecoder.cpp`, `CVolHeader`, `CMftRec`, `CStreamFileProps`, `CArcItem`, `Z7_COM7F_IMF`, `CInArchive::ReadEntries`, `CItem`, `Final`, `CItem`, `CDir`, `CFile`, `CFooter`, `Z7_COM7F_IMF`, `CFinishArchiveStat`, `Z7_COM7F_IMF`, `CCallbackConsoleBase`, `CLocator`, `InStream_SeekSet`, `CFile`, `COutHandler`, `CEncProps`, `CProgressDialog`, `CSolid`, `CCoder::CodeReal`, `CCoder`, `CXmlItem`, `CHandler::OpenDir`, `FileIO.cpp`, `FString`, `7zIn.cpp`, `BrowseDialog2.cpp`, `CGroup`, `CMultiMethodProps`, `Z7_COM7F_IMF`, `Z7_COM7F_IMF`, `StreamObjects.cpp`, `PanelMenu.cpp`, `CArc`, `CDecoder`, `CoderMixer2.cpp`, `CApfs`, `CItem`, `CExtendedInfo`, `CHandler::Open2`, `Byte`, `XzEnc.c`, `CCachedInStream`, `CFreqBench`, `Extract`, `Z7_COM7F_IMF`, `UpdateCallbackConsole.cpp`, `COutArchive`, `CItem`, `RINOK`, `ExtractCallbackSfx.cpp`, `CBitDecoder`, `ZipIn.cpp`, `HfsHandler.cpp`, `CItem`, `7zMain.c`, `CItem`, `BZip2Encoder.cpp`, `CFileInfo`, `BrowseDialog.cpp`, `COutArchive`, `CHeader`, `CNode`, `CHandler::SetMethodToProp`, `7zipInstall.c`, `CStartHeader`, `CItem`, `GetLastError`, `LzmaEnc.c`, `Byte`, `CSegment`, `CPartition`, `CItem`, `CItem`, `CNode`, `COutBuffer`, `ZipStrong.cpp`, `CMarker`, `CFilter`, `CProgressDialog`, `LoadCodecs.cpp`, `CUpdateOptions`, `CArc`, `Z7_COM7F_IMF`, `CInArchive`, `Lzma2DecMt.c`, `CHandler::Open2`, `Sha256_Update`, `CFolders`, `CBase`, `CDirItem`, `CDatabase`, `ZstdDec.c`, `Z7_COM7F_IMF`, `CInArcInfo`, `HashCon.cpp`, `PanelItems.cpp`, `CItem`, `CKey`, `CDatabase`, `CHeader`, `ExtractCallbackConsole.cpp`, `UpdateCallbackGUI.cpp`, `Z7_COM7F_IMF`, `CInArchive`, `.Add_UInt32`, `CProxyDir`, `ChmIn.cpp`, `UefiHandler.cpp`, `MyCompare`, `CProxyArc2`, `App.cpp`, `CArchiveDatabaseOut`, `CHeader`, `CEncoder::CreateMixerCoder`, `CItem`, `CArchive`, `CProgressSync`, `Lzma2Enc.c`, `CHeader`, `MtDec.c`, `CVol`, `CDatabase`, `GetLastError_noZero_HRESULT`, `CAltStream`, `Z7_COM7F_IMF`, `CItem`, `CLocalItem`, `CStdOutStream`, `CInfo`, `CWrappers.cpp`, `CPartition`, `FSFolderCopy.cpp`, `CDecoder`, `XzDec.c`, `j_file_extent_val`, `.CDatabase`, `LzmaDec.c`, `7zArcIn.c`, `LzmaAlone.cpp`, `CInArchive`, `Z7_COM7F_IMF`, `CUpdateOptions`, `Z7_COM7F_IMF`, `FileStreams.h`, `CInArchive`, `CDynHeader`, `CBaseDecoder`, `7zUpdate.cpp`, `UNUSED_VAR`, `List.cpp`, `Alloc.c`, `CMyComPtr`, `COptHeader`, `CUnpacker`, `CCdInfo`, `CProxyArc`, `CRawLocn`, `CLogVol`, `MemBlocks.cpp`, `CCoder`, `XzIn.c`, `Z7_COM7F_IMF`, `CItem`, `CVols`, `CInBufferBase`, `BoolToInt`, `.IsEmpty`, `CDatabase`, `ExtractCallback.cpp`, `.CodeReal`, `CBaseThreadInfo`, `Z7_COM7F_IMF`, `CDatabase`, `CDatabase`, `7zFolderInStream.h`, `LzfseDecoder.cpp`, `CCoder`, `CCompressionMethodMode`, `CStreamBinder`, `Z7_COM7F_IMF`, `CConfigProp`, `CUpdateCallbackGUI2`, `CUInt32DefVector`, `CInArcInfo`, `COneMethodInfo`, `COpenCallbackConsole`, `ConvertUInt64ToString`, `CHeader`, `CDecoder`, `WriteStream`, `Plugin.cpp`, `CItemEx`, `CBitDecoder`, `7zStream.c`, `FileManager/StdAfx.h`, `CConfigItem`, `CItem`, `CNode`, `CVolGroup`, `CSection`, `CLead`, `TarIn.cpp`, `CPaxInfo`, `CResource`, `CUpdateItem`, `PanelOperations.cpp`, `CThreadInfo`, `7zDec.c`, `CInOutTempBuffer`, `CItem`, `CDirItemsStat`, `CImage`, `CDecoder`, `.ProcessVirt`, `TimeUtils.cpp`?**
+  _High betweenness centrality (0.279) - this node is a cross-community bridge._
 - **Are the 7 inferred relationships involving `UString` (e.g. with `CAboutDialog::OnInit()` and `Edit_BrowseForFile()`) actually correct?**
   _`UString` has 7 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `@tauri-apps/plugin-shell`, `@tauri-apps/cli`, `@types/react` to the rest of the system?**
-  _5397 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `quarkzip-egui`, `Today`, `Calendar` to the rest of the system?**
+  _5411 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `scripts` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._
-- **Why does `UString` connect `UString` to `CSplitDialog`, `CParseItem`, `CPropertyPage`, `CArcItem`, `CPercentPrinter`, `MyCompare`, `CItem`, `COptionsDialog`, `HashCalc.cpp`, `CMemDialog`, `AddSwitchWildcardsToCensor`, `7zHandlerOut.cpp`, `CHandler::Open2`, `CVirtFile`, `CImage`, `CPanel::CreateShellContextMenu`, `UdfIn.cpp`, `CModalDialog`, `HashCalc`, `RegistryContextMenu.cpp`, `CModifiedExtInfo`, `RegistryAssociations.cpp`, `CPropVariant`, `CThreadFolderOperations`, `Net.cpp`, `AString`, `CPanelCopyThread`, `StringConvert.h`, `CCompressDialog`, `Shell.cpp`, `Bench.cpp`, `Z7_COM7F_IMF`, `CLinkDialog`, `fs2us`, `FileDir.cpp`, `CBenchProgressSync`, `BenchmarkDialog.cpp`, `CChildProcesses`, `CLangPage`, `CMethodProps`, `CThreadExtracting`, `Z7_COM7F_IMF`, `CImageInfo`, `CExtractOptionsBase`, `CCopyToOptions`, `.OpenFileFolderPlugin`, `CFolderLink`, `CDriveInfo`, `Main2`, `CObjectVector`, `CButtonInfo`, `ArchiveCommandLine.cpp`, `ConvertPropertyToShortString2`, `CSwitchForm`, `CFileInfo`, `CStdInStream`, `.IsEmpty`, `Z7_COM7F_IMF`, `UInt64`, `BrowseForFolder`, `MyLoadString`, `CDir`, `CDialog`, `GetFolderPath`, `EEnum`, `CFieldPrinter`, `.SendMsg`, `CHashOptionsLocal`, `ListArchives`, `WinMain`, `CProgressDialog`, `CApp`, `FString`, `BrowseDialog2.cpp`, `.Ptr`, `Wildcard.cpp`, `Z7_COM7F_IMF`, `LangString`, `CArc`, `CApfs`, `ShowDialog`, `CWindow`, `UpdateCallbackConsole.cpp`, `RINOK`, `HfsHandler.cpp`, `FileLink.cpp`, `CFileInfo`, `BrowseDialog.cpp`, `PanelItems.cpp`, `CNode`, `CUpdateCallbackGUI2`, `FSFolderCopy.cpp`, `CItem`, `CArcLevelInfo`, `CArcCmdLineOptions`, `ContextMenu.cpp`, `CProgressDialog`, `CArcInfoEx`, `LoadCodecs.cpp`, `CUpdateOptions`, `CLinkInfo`, `LPCTSTR`, `CProgressFinalMessage`, `ExtractCallbackConsole.cpp`, `CInArchive`, `_len`, `Client7z.cpp`, `ChmIn.cpp`, `CItem`, `Agent.cpp`, `SetComplexString`, `EnumDirItems.cpp`, `PanelMenu.cpp`, `.Create`, `CArchiveDatabaseOut`, `Z7_COM7F_IMF`, `CProgressSync`, `Windows/StdAfx.h`, `Z7_COM7F_IMF`, `PeHandler.cpp`, `CVol`, `CDatabase`, `FileName.cpp`, `CStdOutStream`, `CInfo`, `LzmaAlone.cpp`, `CUpdateOptions`, `ArchiveExtractCallback.h`, `CDynHeader`, `7zUpdate.cpp`, `List.cpp`, `ViewSettings.cpp`, `AgentProxy.cpp`, `CWindow2`, `ParseVersion`, `CFormatOptions`, `RegistryUtils.cpp`, `AgentOut.cpp`, `ZipRegistry.cpp`, `GetSystemString`, `Extract`, `CItem`, `CVols`, `CThreadArchiveOpen`, `MyString.cpp`, `CItem`, `CThreadExtracting`, `UpdateArchive`, `CDatabase`, `ExtractCallback.cpp`, `CCompressionMethodMode`, `PanelSort.cpp`, `CPasswordDialog`, `ExtractGroupCommand`, `COneMethodInfo`, `CReparseAttr`, `CProgressBox`, `CInfo`, `CPlugin`, `Panel.cpp`, `CSystemPage`, `CFolderHistory`, `HashGUI.cpp`, `CExtractDialog`, `CVolumeName`, `CFieldInfo`, `CompressCall.cpp`, `CWimXml`, `CCopyDialog`?**
-  _High betweenness centrality (0.106) - this node is a cross-community bridge._
+- **Why does `UString` connect `UString` to `bridge.cpp`, `CParseItem`, `CPercentPrinter`, `GetUpdatePairInfoList`, `CArchivePath`, `COptionsDialog`, `CompressDialog.cpp`, `ArchiveCommandLine.cpp`, `UInt32`, `CVirtFile`, `CLogVol`, `UdfIn.cpp`, `LangString`, `PropIDUtils.cpp`, `RegistryContextMenu.cpp`, `TextPairs.cpp`, `RegistryAssociations.cpp`, `Net.cpp`, `COpenType`, `AString`, `CPanelCopyThread`, `MyCom.h`, `CCompressDialog`, `Shell.cpp`, `Bench.cpp`, `Z7_COM7F_IMF`, `LinkDialog.cpp`, `CDirEnumerator`, `CCommandMapItem`, `BenchmarkDialog.cpp`, `Z7_COM7F_IMF`, `CLangPage`, `CMethodProps`, `CThreadExtracting`, `Z7_COM7F_IMF`, `CImageInfo`, `CExtractOptionsBase`, `CCopyToOptions`, `CBool1`, `PanelItemOpen.cpp`, `MyMessages.cpp`, `CDriveInfo`, `CLangPage::OnInit`, `MyProperyPageProcedure`, `FM.cpp`, `CObjectVector`, `CRenamePair`, `CCodecs`, `CFolderLink`, `CPropColumn`, `CParser`, `CFileInfo`, `CStdInStream`, `Z7_COM7F_IMF`, `UInt64`, `CArcItem`, `Z7_COM7F_IMF`, `CSelectedState`, `CDir`, `CPlugin`, `PanelFolderChange.cpp`, `CCallbackConsoleBase`, `.SendMsg`, `CHashOptions`, `TextConfig.cpp`, `CProgressDialog`, `CApp`, `fs2us`, `FString`, `FileIO.cpp`, `BrowseDialog2.cpp`, `CMultiMethodProps`, `CFfpOpen`, `Z7_COM7F_IMF`, `Wildcard.cpp`, `Main.cpp`, `PanelMenu.cpp`, `CArc`, `CApfs`, `.FormatChanged`, `Extract`, `CWindow`, `RINOK`, `HfsHandler.cpp`, `Windows/StdAfx.h`, `CUpdateErrorInfo`, `CFileInfo`, `BrowseDialog.cpp`, `PanelItems.cpp`, `CNode`, `FSFolderCopy.cpp`, `CItem`, `CArcCmdLineOptions`, `CProgressDialog`, `CArcInfoEx`, `LoadCodecs.cpp`, `CUpdateOptions`, `CPostLink`, `CFolders`, `CKey`, `CProgressFinalMessage`, `ExtractCallbackConsole.cpp`, `CInArchive`, `.Add_UInt32`, `Client7z.cpp`, `ChmIn.cpp`, `UefiHandler.cpp`, `MyCompare`, `SetComplexString`, `EnumDirItems.cpp`, `CMenu`, `App.cpp`, `CArchiveDatabaseOut`, `Z7_COM7F_IMF`, `CProgressSync`, `PeHandler.cpp`, `CVol`, `CDatabase`, `FileName.cpp`, `CAltStream`, `CStdOutStream`, `CInfo`, `CPanel::Create`, `LzmaAlone.cpp`, `CUpdateOptions`, `CDynHeader`, `7zUpdate.cpp`, `List.cpp`, `ViewSettings.cpp`, `CProxyArc`, `ParseVersion`, `CFormatOptions`, `RegistryUtils.cpp`, `AgentOut.cpp`, `LPCTSTR`, `CItem`, `CVols`, `FileFolderPluginOpen.cpp`, `.IsEmpty`, `CItem`, `CThreadExtracting`, `UpdateArchive`, `ExtractCallback.cpp`, `CCompressionMethodMode`, `PanelSort.cpp`, `CUpdateCallbackGUI2`, `CompressCall2.cpp`, `COneMethodInfo`, `Z7_COM7F_IMF`, `ConvertUInt64ToString`, `CInfo`, `CompressFiles`, `Panel.cpp`, `MyMin`, `Plugin.cpp`, `CSystemPage`, `CFolderHistory`, `FileManager/StdAfx.h`, `CExtractDialog`, `CVolumeName`, `PanelOperations.cpp`, `CFieldInfo`, `CompressCall.cpp`, `CPrimeVol`, `CImage`?**
+  _High betweenness centrality (0.121) - this node is a cross-community bridge._
 - **Are the 434 inferred relationships involving `RINOK()` (e.g. with `ReadBitUi32s()` and `ReadPackInfo()`) actually correct?**
   _`RINOK()` has 434 INFERRED edges - model-reasoned connections that need verification._
 - **Should `bridge.cpp` be split into smaller, more focused modules?**
-  _Cohesion score 0.04117063492063492 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.0406885758998435 - nodes in this community are weakly interconnected._

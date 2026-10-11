@@ -8116,5 +8116,47 @@
     "seen": 1791721295.6247349,
     "ast_hash": "64cba11bb3a4587647d1d38d14c2ac3c",
     "semantic_hash": ""
+  },
+  "egui-app/Cargo.toml": {
+    "mtime": 1791721965.3105032,
+    "seen": 1791722439.136451,
+    "ast_hash": "bd7aff54b568de0cf3869e8cee70c0b2",
+    "semantic_hash": ""
+  },
+  "egui-app/src/app.rs": {
+    "mtime": 1791722406.8855567,
+    "seen": 1791722439.136451,
+    "ast_hash": "d8d96d8d2d90e60a4575d74adb4bf3af",
+    "semantic_hash": ""
+  },
+  "egui-app/src/data.rs": {
+    "mtime": 1791722411.8302228,
+    "seen": 1791722439.1364522,
+    "ast_hash": "e682035d5373ae41cd3a812d7fe2beeb",
+    "semantic_hash": ""
+  },
+  "egui-app/src/main.rs": {
+    "mtime": 1791722318.7438328,
+    "seen": 1791722439.1364532,
+    "ast_hash": "0359aaa58a92c3e70ad459927f1e15a0",
+    "semantic_hash": ""
+  },
+  "egui-app/src/tokens.rs": {
+    "mtime": 1791722403.9387352,
+    "seen": 1791722439.1364532,
+    "ast_hash": "c2544e88417fdbe57f179d6ef92d3583",
+    "semantic_hash": ""
+  },
+  "egui-app/src/widgets.rs": {
+    "mtime": 1791722347.450617,
+    "seen": 1791722439.1364539,
+    "ast_hash": "1614515a582ccc8d17656094d34e9c3d",
+    "semantic_hash": ""
+  },
+  "docs/egui-app.md": {
+    "mtime": 1791722415.9724545,
+    "seen": 1791722439.1370828,
+    "ast_hash": "81846c89a7d616d60fcdcf4a0989f319",
+    "semantic_hash": ""
   }
 }
