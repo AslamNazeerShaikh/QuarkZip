@@ -1,4 +1,5 @@
-"""Gate for the macOS-native QuarkZip palette (see docs/color-system.md).
+"""
+Gate for the macOS-native QuarkZip palette (see docs/color-system.md).
 
 Checks every text pair (body, muted, status pills, CTA fills incl. hover)
 at AA 4.5. Micro-label faint pairs are reported, not gated (restricted use).
@@ -6,6 +7,7 @@ Dark CTA pairs are Apple-parity exceptions (white on brights, user decision
 2026-10-08 — yellow keeps black): reported, not gated.
 Usage: python3 scripts/contrast-check.py (exit nonzero on any AA fail).
 """
+
 import sys
 
 
@@ -102,7 +104,10 @@ for label, fg, bg in DARK_CTA_EXCEPTIONS:
     print(f"INFO  {ratio(fg, bg):5.2f}:1  dark {label} ({fg} on {bg})")
 
 print("--- faint (micro-labels only, documented, not gated) ---")
-for mode, faint, bg in (("light", "#6e6e73", "#ececec"), ("dark", "#98989f", "#1e1e1e")):
+for mode, faint, bg in (
+    ("light", "#6e6e73", "#ececec"),
+    ("dark", "#98989f", "#1e1e1e"),
+):
     print(f"INFO  {ratio(faint, bg):5.2f}:1  {mode} faint on bg")
 
 sys.exit(1 if failures else 0)
