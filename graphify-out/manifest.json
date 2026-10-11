@@ -1,14 +1,8 @@
 {
   ".opencode/opencode.json": {
-    "mtime": 1791363126.5101962,
-    "seen": 1791363209.011128,
-    "ast_hash": "91ad711e9882a8bbfcd03a9ddf4ed458",
-    "semantic_hash": ""
-  },
-  ".opencode/plugins/graphify.js": {
-    "mtime": 1791055299.3124192,
-    "seen": 1791140710.6148858,
-    "ast_hash": "3d25514c4906ef9b2434652ff590651a",
+    "mtime": 1791721261.1999187,
+    "seen": 1791721295.6241002,
+    "ast_hash": "9d921db9b79a08d4f82b54494de4e335",
     "semantic_hash": ""
   },
   ".vscode/extensions.json": {
@@ -102,9 +96,9 @@
     "semantic_hash": ""
   },
   ".opencode/README.md": {
-    "mtime": 1791363186.7095335,
-    "seen": 1791363209.011235,
-    "ast_hash": "63908336f9429650f21e4217786c9131",
+    "mtime": 1791721277.1753213,
+    "seen": 1791721295.6247199,
+    "ast_hash": "e469e6670eaf39e8803863dd03152916",
     "semantic_hash": ""
   },
   ".opencode/agents/code-reviewer.md": {
@@ -177,60 +171,6 @@
     "mtime": 1791293985.5890243,
     "seen": 1791294105.802374,
     "ast_hash": "ff048dfb4e9ff3794e1e51dbcfaf2266",
-    "semantic_hash": ""
-  },
-  ".opencode/skills/graphify/SKILL.md": {
-    "mtime": 1791293985.6664352,
-    "seen": 1791294105.8023748,
-    "ast_hash": "55dc8513c3d05658c1cbd5f0f1385f46",
-    "semantic_hash": ""
-  },
-  ".opencode/skills/graphify/references/add-watch.md": {
-    "mtime": 1791293985.608008,
-    "seen": 1791294105.8023748,
-    "ast_hash": "2b5fa3940c7f9f18a9417b85872b6044",
-    "semantic_hash": ""
-  },
-  ".opencode/skills/graphify/references/exports.md": {
-    "mtime": 1791293985.6131399,
-    "seen": 1791294105.8023748,
-    "ast_hash": "b9f48fc49551b3fdbd458a93e3ccadc0",
-    "semantic_hash": ""
-  },
-  ".opencode/skills/graphify/references/extraction-spec.md": {
-    "mtime": 1791055299.3132408,
-    "seen": 1791140710.614918,
-    "ast_hash": "42fef56a01698118f7fd722acdadea34",
-    "semantic_hash": ""
-  },
-  ".opencode/skills/graphify/references/github-and-merge.md": {
-    "mtime": 1791293985.616429,
-    "seen": 1791294105.802376,
-    "ast_hash": "cc5805806709f8a762f85f5e1854323d",
-    "semantic_hash": ""
-  },
-  ".opencode/skills/graphify/references/hooks.md": {
-    "mtime": 1791055299.3132408,
-    "seen": 1791140710.614919,
-    "ast_hash": "3f545db6ce646650bb9de588f5512a27",
-    "semantic_hash": ""
-  },
-  ".opencode/skills/graphify/references/query.md": {
-    "mtime": 1791293985.6257625,
-    "seen": 1791294105.802377,
-    "ast_hash": "5ff84a5b4846dcc15b7b002d12d52891",
-    "semantic_hash": ""
-  },
-  ".opencode/skills/graphify/references/transcribe.md": {
-    "mtime": 1791293985.6282835,
-    "seen": 1791294105.802377,
-    "ast_hash": "59c9d76a7995fca690b73acce12dca2c",
-    "semantic_hash": ""
-  },
-  ".opencode/skills/graphify/references/update.md": {
-    "mtime": 1791293985.6313548,
-    "seen": 1791294105.802377,
-    "ast_hash": "9615378bcc758124e7a0586af8e9dd40",
     "semantic_hash": ""
   },
   ".opencode/skills/tauri-development.md": {
@@ -1074,9 +1014,9 @@
     "semantic_hash": ""
   },
   "scripts/contrast-check.py": {
-    "mtime": 1791400024.3648503,
-    "seen": 1791400091.268331,
-    "ast_hash": "0d4b407eb2a02c06ceb7bcec7bb529e1",
+    "mtime": 1791701245.8780954,
+    "seen": 1791721295.624119,
+    "ast_hash": "f7bb3ebd01384ba29bd64baf43092f2a",
     "semantic_hash": ""
   },
   "skills-lock.json": {
@@ -1878,9 +1818,9 @@
     "semantic_hash": ""
   },
   "docs/macos-native.md": {
-    "mtime": 1791572465.3869581,
-    "seen": 1791572700.504857,
-    "ast_hash": "b78d2191d587d4208b20744a30a70ef7",
+    "mtime": 1791721272.8289323,
+    "seen": 1791721295.624736,
+    "ast_hash": "de009f284d8c5ab6529db15d141b1b89",
     "semantic_hash": ""
   },
   "src/lib/extractFolder.test.ts": {
@@ -8169,6 +8109,12 @@
     "mtime": 1791566889.4488063,
     "seen": 1791572700.504338,
     "ast_hash": "bbb2aa1e942e5cbb9fa92d4c339a9cbf",
+    "semantic_hash": ""
+  },
+  "docs/gui-framework-pick.md": {
+    "mtime": 1791720948.0709887,
+    "seen": 1791721295.6247349,
+    "ast_hash": "64cba11bb3a4587647d1d38d14c2ac3c",
     "semantic_hash": ""
   }
 }
