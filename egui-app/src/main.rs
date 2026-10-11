@@ -1,13 +1,28 @@
-//! QuarkZip egui entry: transparent macOS viewport, traffic lights kept,
-//! content under a clear titlebar strip, translucency via token alphas.
+//! QuarkZip egui entry: the Tauri app's archive manager UI in pure Rust.
 //!
-//! Real vibrancy blur (`NSVisualEffectView`) is unreachable from pure egui —
-//! the translucency here is alpha compositing over the desktop, strongest on
-//! the sidebar, faintest on cards so text stays crisp.
+//! The 7-Zip engine is shared by path (`archive`, `sevenzip` — the same
+//! sources the Tauri backend compiles); only the Tauri command layer is
+//! re-expressed as threads + channels in `engine`. Window: 800×675,
+//! transparent, traffic lights floating over a 92px title strip.
+
+#[path = "../../src-tauri/src/archive.rs"]
+#[allow(dead_code)]
+mod archive;
+#[path = "../../src-tauri/src/sevenzip.rs"]
+#[allow(dead_code)]
+mod sevenzip;
 
 mod app;
-mod data;
-mod tokens;
+mod dialogs;
+mod engine;
+mod file_kind;
+mod fmt;
+mod i18n;
+mod overview;
+mod prefs;
+mod selection;
+mod theme;
+mod tree;
 mod widgets;
 
 use eframe::egui;
@@ -16,9 +31,9 @@ fn main() -> eframe::Result<()> {
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
             .with_title("QuarkZip")
-            .with_app_id("com.quarkzip.egui")
-            .with_inner_size([1440.0, 900.0])
-            .with_min_inner_size([1200.0, 720.0])
+            .with_app_id("com.quarkzip.app")
+            .with_inner_size([800.0, 675.0])
+            .with_min_inner_size([720.0, 560.0])
             .with_decorations(true)
             .with_transparent(true)
             .with_fullsize_content_view(true)
@@ -33,6 +48,6 @@ fn main() -> eframe::Result<()> {
     eframe::run_native(
         "QuarkZip",
         options,
-        Box::new(|cc| Ok(Box::new(app::CrmApp::new(&cc.egui_ctx)) as Box<dyn eframe::App>)),
+        Box::new(|cc| Ok(Box::new(app::QuarkApp::new(&cc.egui_ctx)) as Box<dyn eframe::App>)),
     )
 }

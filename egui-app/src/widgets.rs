@@ -1,47 +1,206 @@
-//! Reusable primitives — every screen composes these, no one-off styles.
-//!
-//! Names mirror `UiPrompt.md` §COMPONENT ARCHITECTURE:
-//! StatusPill, Avatar, SegmentedControl, SearchField, SummaryCard,
-//! Button, IconButton, Tag, TextArea (via [`multiline`]), FormField.
+//! Shared primitives: buttons, cards, pills, progress, skeletons, dialog
+//! shell, painted glyphs. One look everywhere (h-9 chrome, 9–10px radii,
+//! native arrow cursor, press-scale left to egui's click response).
 
-use crate::data::Kpi;
-use crate::tokens;
+use crate::theme::QzTheme;
 use eframe::egui;
 
-/// Page title + quiet meta sub-line (middle-dot separators per spec §10).
-pub fn page_header(ui: &mut egui::Ui, title: &str, sub: &str) {
-    ui.label(
-        egui::RichText::new(title)
-            .size(tokens::T_TITLE)
-            .strong()
-            .color(tokens::TEXT),
-    );
-    ui.add_space(4.0);
-    ui.label(
-        egui::RichText::new(sub)
-            .size(tokens::T_SECONDARY)
-            .color(tokens::SECONDARY),
-    );
+/// Mix `hue` over `base` (the `.qz-tint-*` 14–16% shells).
+pub fn tint(base: egui::Color32, hue: egui::Color32, pct: f32) -> egui::Color32 {
+    let m = (pct.clamp(0.0, 1.0) * 255.0) as u8;
+    egui::Color32::from_rgba_unmultiplied(
+        ((hue.r() as u16 * m as u16 + base.r() as u16 * (255 - m as u16)) / 255) as u8,
+        ((hue.g() as u16 * m as u16 + base.g() as u16 * (255 - m as u16)) / 255) as u8,
+        ((hue.b() as u16 * m as u16 + base.b() as u16 * (255 - m as u16)) / 255) as u8,
+        base.a(),
+    )
 }
 
-/// 11–12px uppercase letter-spaced section label. (egui has no tracking,
-/// so casing alone carries the style.)
-pub fn section_label(ui: &mut egui::Ui, text: &str) {
-    ui.label(
-        egui::RichText::new(text.to_uppercase())
-            .size(tokens::T_META)
-            .strong()
-            .color(tokens::MUTED),
-    );
+pub fn card_frame(t: &QzTheme) -> egui::Frame {
+    egui::Frame {
+        fill: t.surface,
+        stroke: egui::Stroke::new(1.0, t.border),
+        corner_radius: egui::CornerRadius::same(13),
+        ..Default::default()
+    }
 }
 
-/// Status pill: 999px radius, 6px dot + text, color + text (never color alone).
+/// Translucent chrome shell (title strip, footer shells, menus, headers).
+pub fn bar_frame(t: &QzTheme) -> egui::Frame {
+    egui::Frame {
+        fill: t.bar_bg,
+        stroke: egui::Stroke::new(1.0, t.border),
+        corner_radius: egui::CornerRadius::same(10),
+        inner_margin: egui::Margin::same(4),
+        ..Default::default()
+    }
+}
+
+pub fn dialog_frame(t: &QzTheme) -> egui::Frame {
+    egui::Frame {
+        fill: t.bar_bg,
+        stroke: egui::Stroke::new(1.0, t.border),
+        corner_radius: egui::CornerRadius::same(16),
+        inner_margin: egui::Margin::same(24),
+        shadow: egui::Shadow {
+            offset: [0, 20],
+            blur: 60,
+            spread: 0,
+            color: if t.dark {
+                egui::Color32::from_black_alpha(128)
+            } else {
+                egui::Color32::from_black_alpha(30)
+            },
+        },
+        ..Default::default()
+    }
+}
+
+fn btn_base(text: &str, t: &QzTheme) -> egui::RichText {
+    egui::RichText::new(text).size(13.0).color(t.text)
+}
+
+/// Primary CTA (accent fill, on-primary label, h-9).
+pub fn primary_button(ui: &mut egui::Ui, text: &str, t: &QzTheme) -> egui::Response {
+    ui.add(
+        egui::Button::new(
+            egui::RichText::new(text)
+                .size(13.0)
+                .color(t.on_primary)
+                .strong(),
+        )
+        .fill(t.primary)
+        .stroke(egui::Stroke::NONE)
+        .corner_radius(egui::CornerRadius::same(9))
+        .min_size(egui::vec2(0.0, 36.0)),
+    )
+}
+
+/// Secondary outline button (h-9).
+pub fn secondary_button(ui: &mut egui::Ui, text: &str, t: &QzTheme) -> egui::Response {
+    ui.add(
+        egui::Button::new(btn_base(text, t).strong())
+            .fill(t.surface)
+            .stroke(egui::Stroke::new(1.0, t.border))
+            .corner_radius(egui::CornerRadius::same(9))
+            .min_size(egui::vec2(0.0, 36.0)),
+    )
+}
+
+/// Success-tinted shell (Extract All): green tint fill, body-text label.
+pub fn success_button(ui: &mut egui::Ui, text: &str, t: &QzTheme) -> egui::Response {
+    ui.add(
+        egui::Button::new(btn_base(text, t).strong())
+            .fill(tint(t.bar_bg, t.extract, 0.14))
+            .stroke(egui::Stroke::new(1.0, t.border))
+            .corner_radius(egui::CornerRadius::same(9))
+            .min_size(egui::vec2(0.0, 36.0)),
+    )
+}
+
+/// Warning-tinted shell (Cancel buttons).
+pub fn warning_button(ui: &mut egui::Ui, text: &str, t: &QzTheme) -> egui::Response {
+    ui.add(
+        egui::Button::new(btn_base(text, t).strong())
+            .fill(tint(t.bar_bg, t.warning, 0.14))
+            .stroke(egui::Stroke::new(1.0, t.border))
+            .corner_radius(egui::CornerRadius::same(9))
+            .min_size(egui::vec2(0.0, 36.0)),
+    )
+}
+
+/// h-9 tinted shell (Open / footer buttons): tinted fill, body label.
+pub fn tint_button(
+    ui: &mut egui::Ui,
+    text: &str,
+    t: &QzTheme,
+    hue: egui::Color32,
+) -> egui::Response {
+    ui.add(
+        egui::Button::new(btn_base(text, t))
+            .fill(tint(t.bar_bg, hue, 0.15))
+            .stroke(egui::Stroke::new(1.0, t.border))
+            .corner_radius(egui::CornerRadius::same(10))
+            .min_size(egui::vec2(0.0, 36.0)),
+    )
+}
+
+/// 28px icon button inside an h-9 shell (Test/Checksum/Theme/Language/About).
+pub fn shell_icon_button(ui: &mut egui::Ui, _t: &QzTheme) -> egui::Response {
+    ui.add(
+        egui::Button::new("")
+            .fill(egui::Color32::TRANSPARENT)
+            .stroke(egui::Stroke::NONE)
+            .corner_radius(egui::CornerRadius::same(8))
+            .min_size(egui::vec2(28.0, 28.0)),
+    )
+}
+
+/// Square checkbox with drawn check/dash (tri-state, no font glyphs).
+pub fn checkbox_box(
+    ui: &mut egui::Ui,
+    state: crate::selection::NodeState,
+    t: &QzTheme,
+) -> egui::Response {
+    use crate::selection::NodeState as S;
+    let (rect, resp) = ui.allocate_exact_size(egui::vec2(20.0, 20.0), egui::Sense::click());
+    let box_rect = egui::Rect::from_center_size(rect.center(), egui::vec2(15.0, 15.0));
+    let p = ui.painter_at(rect);
+    let (fill, stroke) = match state {
+        S::Unchecked => (egui::Color32::TRANSPARENT, egui::Stroke::new(1.0, t.border)),
+        _ => (t.primary, egui::Stroke::NONE),
+    };
+    p.rect_filled(box_rect, 4.0, fill);
+    p.rect_stroke(box_rect, 4.0, stroke, egui::StrokeKind::Inside);
+    let c = box_rect.center();
+    match state {
+        S::Checked => {
+            let s = egui::Stroke::new(2.0, t.on_primary);
+            p.line_segment([c + egui::vec2(-4.5, 0.0), c + egui::vec2(-1.0, 3.5)], s);
+            p.line_segment([c + egui::vec2(-1.0, 3.5), c + egui::vec2(4.5, -3.5)], s);
+        }
+        S::Mixed => {
+            p.line_segment(
+                [c + egui::vec2(-4.0, 0.0), c + egui::vec2(4.0, 0.0)],
+                egui::Stroke::new(2.0, t.on_primary),
+            );
+        }
+        S::Unchecked => {}
+    }
+    if resp.hovered() {
+        p.rect_stroke(
+            box_rect,
+            4.0,
+            egui::Stroke::new(1.0, t.muted),
+            egui::StrokeKind::Inside,
+        );
+    }
+    resp
+}
+
+/// Single-line text input (h-9 chrome).
+pub fn text_input(
+    ui: &mut egui::Ui,
+    value: &mut String,
+    hint: &str,
+    t: &QzTheme,
+    width: f32,
+) -> egui::Response {
+    ui.add_sized(
+        egui::vec2(width, 36.0),
+        egui::TextEdit::singleline(value)
+            .hint_text(egui::RichText::new(hint).size(13.0).color(t.faint))
+            .margin(egui::Margin::symmetric(12, 8)),
+    )
+}
+
+/// Status pill: dot + 12px semibold text on a tinted rounded fill.
 pub fn pill(
     ui: &mut egui::Ui,
+    text: &str,
     dot: egui::Color32,
     bg: egui::Color32,
     fg: egui::Color32,
-    text: &str,
 ) {
     egui::Frame {
         fill: bg,
@@ -52,433 +211,219 @@ pub fn pill(
     .show(ui, |ui| {
         ui.horizontal(|ui| {
             ui.spacing_mut().item_spacing = egui::vec2(6.0, 0.0);
-            // Painted dot (bundled fonts have no reliable ● glyph).
-            let (dot_rect, _) =
-                ui.allocate_exact_size(egui::vec2(10.0, 10.0), egui::Sense::hover());
-            ui.painter().circle_filled(dot_rect.center(), 3.5, dot);
-            ui.label(
-                egui::RichText::new(text)
-                    .size(tokens::T_PILL)
-                    .strong()
-                    .color(fg),
-            );
+            let (r, _) = ui.allocate_exact_size(egui::vec2(10.0, 10.0), egui::Sense::hover());
+            ui.painter().circle_filled(r.center(), 3.5, dot);
+            ui.label(egui::RichText::new(text).size(12.0).strong().color(fg));
         });
     });
 }
 
-/// 32px circular initials avatar on a deterministic muted background.
-pub fn avatar(ui: &mut egui::Ui, initials: &str, bg: egui::Color32) {
-    egui::Frame {
-        fill: bg,
-        corner_radius: egui::CornerRadius::same(tokens::R_AVATAR),
-        ..Default::default()
-    }
-    .show(ui, |ui| {
-        ui.allocate_ui_with_layout(
-            egui::vec2(32.0, 32.0),
-            egui::Layout::centered_and_justified(egui::Direction::TopDown),
-            |ui| {
-                ui.label(
-                    egui::RichText::new(initials)
-                        .size(tokens::T_PILL)
-                        .strong()
-                        .color(tokens::WHITE),
-                );
-            },
-        );
-    });
-}
-
-/// Sidebar nav row: soft neutral fill when active, never a color block.
-/// Quiet gray count or a red money pill on the right.
-pub fn nav_item(
-    ui: &mut egui::Ui,
-    active: bool,
-    label: &str,
-    quiet_count: Option<&str>,
-    alert_count: Option<&str>,
-) -> egui::Response {
-    let btn = egui::Button::new(
-        egui::RichText::new(label)
-            .size(tokens::T_BODY)
-            .color(tokens::TEXT)
-            .strong(),
-    )
-    .fill(if active {
-        tokens::NAV_ACTIVE
-    } else {
-        tokens::TRANSPARENT
-    })
-    .stroke(egui::Stroke::NONE)
-    .corner_radius(egui::CornerRadius::same(tokens::R_NAV))
-    .min_size(egui::vec2(0.0, tokens::NAV_H))
-    .frame(true);
-    ui.horizontal(|ui| {
-        ui.spacing_mut().item_spacing = egui::vec2(8.0, 0.0);
-        let badge_w = if alert_count.is_some() { 36.0 } else { 0.0 };
-        let resp = ui.add_sized(
-            egui::vec2((ui.available_width() - badge_w).max(80.0), tokens::NAV_H),
-            btn,
-        );
-        if let Some(n) = alert_count {
-            egui::Frame {
-                fill: tokens::DANGER,
-                corner_radius: egui::CornerRadius::same(10),
-                inner_margin: egui::Margin::symmetric(8, 4),
-                ..Default::default()
-            }
-            .show(ui, |ui| {
-                ui.label(
-                    egui::RichText::new(n)
-                        .size(tokens::T_PILL)
-                        .strong()
-                        .color(tokens::WHITE),
-                );
-            });
-        } else if let Some(n) = quiet_count {
-            ui.label(
-                egui::RichText::new(n)
-                    .size(tokens::T_SECONDARY)
-                    .color(tokens::MUTED),
-            );
-        }
-        resp
-    })
-    .inner
-}
-
-/// Solid green primary CTA (h38–42, 8–10px radius, medium white label).
-pub fn primary_button(ui: &mut egui::Ui, text: &str) -> egui::Response {
-    ui.add(
-        egui::Button::new(
-            egui::RichText::new(text)
-                .size(tokens::T_BODY)
-                .color(tokens::WHITE)
-                .strong(),
-        )
-        .fill(tokens::CTA_GREEN)
-        .stroke(egui::Stroke::NONE)
-        .corner_radius(egui::CornerRadius::same(tokens::R_INPUT))
-        .min_size(egui::vec2(0.0, tokens::BTN_H)),
-    )
-}
-
-/// White secondary button with a 1px warm border.
-pub fn outline_button(ui: &mut egui::Ui, text: &str) -> egui::Response {
-    ui.add(
-        egui::Button::new(
-            egui::RichText::new(text)
-                .size(tokens::T_BODY)
-                .color(tokens::TEXT)
-                .strong(),
-        )
-        .fill(tokens::CARD)
-        .stroke(tokens::border())
-        .corner_radius(egui::CornerRadius::same(tokens::R_INPUT))
-        .min_size(egui::vec2(0.0, tokens::BTN_H)),
-    )
-}
-
-/// Quiet destructive / tertiary action: text only, never a red button.
-pub fn text_button(ui: &mut egui::Ui, text: &str) -> egui::Response {
-    ui.add(
-        egui::Button::new(
-            egui::RichText::new(text)
-                .size(tokens::T_BODY)
-                .color(tokens::TEXT),
-        )
-        .fill(tokens::TRANSPARENT)
-        .stroke(egui::Stroke::NONE)
-        .frame(false)
-        .min_size(egui::vec2(0.0, tokens::BTN_H)),
-    )
-}
-
-/// Full-width 40px search input with hint text.
-pub fn search_field(ui: &mut egui::Ui, text: &mut String, hint: &str) {
-    ui.add_sized(
-        egui::vec2(ui.available_width(), tokens::NAV_H),
-        egui::TextEdit::singleline(text)
-            .hint_text(
-                egui::RichText::new(hint)
-                    .size(tokens::T_BODY)
-                    .color(tokens::MUTED),
-            )
-            .margin(egui::Margin::symmetric(12, 8)),
-    );
-}
-
-/// 42px labeled input (label above, 8px gap per spec §9.10).
-pub fn field(ui: &mut egui::Ui, label: &str, text: &mut String, hint: &str) {
+/// Micro label: 11px uppercase, letter-spaced feel via casing, faint.
+pub fn micro_label(ui: &mut egui::Ui, text: &str, t: &QzTheme) {
     ui.label(
-        egui::RichText::new(label)
-            .size(tokens::T_SECONDARY)
+        egui::RichText::new(text.to_uppercase())
+            .size(11.0)
             .strong()
-            .color(tokens::TEXT),
-    );
-    ui.add_space(8.0);
-    ui.add_sized(
-        egui::vec2(ui.available_width(), tokens::INPUT_H),
-        egui::TextEdit::singleline(text)
-            .hint_text(
-                egui::RichText::new(hint)
-                    .size(tokens::T_BODY)
-                    .color(tokens::MUTED),
-            )
-            .margin(egui::Margin::symmetric(12, 8)),
+            .color(t.faint),
     );
 }
 
-/// Multi-line notes area (~90px, same chrome as inputs).
-pub fn multiline(ui: &mut egui::Ui, text: &mut String, hint: &str) {
-    ui.add_sized(
-        egui::vec2(ui.available_width(), 90.0),
-        egui::TextEdit::multiline(text)
-            .hint_text(
-                egui::RichText::new(hint)
-                    .size(tokens::T_BODY)
-                    .color(tokens::MUTED),
-            )
-            .margin(egui::Margin::symmetric(12, 8)),
+/// Determinate progress bar (h-2 track + primary fill + pct caption).
+pub fn progress_bar(ui: &mut egui::Ui, frac: f32, caption: &str, t: &QzTheme) {
+    let w = ui.available_width();
+    let (rect, _) = ui.allocate_exact_size(egui::vec2(w, 8.0), egui::Sense::hover());
+    let p = ui.painter_at(rect);
+    p.rect_filled(rect, 4.0, t.surface2);
+    let fill = egui::Rect::from_min_size(
+        rect.min,
+        egui::vec2(rect.width() * frac.clamp(0.0, 1.0), 8.0),
+    );
+    if fill.width() > 0.5 {
+        p.rect_filled(fill, 4.0, t.primary);
+    }
+    ui.add_space(4.0);
+    ui.label(egui::RichText::new(caption).size(12.0).color(t.faint));
+}
+
+/// Indeterminate bar: a chunk sliding across the track (time-driven;
+/// callers repaint while busy).
+pub fn indeterminate_bar(ui: &mut egui::Ui, t: &QzTheme, now: f64) {
+    let now = now as f32;
+    let w = ui.available_width();
+    let (rect, _) = ui.allocate_exact_size(egui::vec2(w, 8.0), egui::Sense::hover());
+    let p = ui.painter_at(rect);
+    p.rect_filled(rect, 4.0, t.surface2);
+    let chunk = rect.width() * 0.25;
+    let span = rect.width() + chunk;
+    let x = rect.min.x - chunk + ((now * span / 1.2) % span);
+    p.rect_filled(
+        egui::Rect::from_min_size(egui::pos2(x, rect.min.y), egui::vec2(chunk, 8.0)),
+        4.0,
+        t.primary,
     );
 }
 
-/// KPI summary card: label / big value / sub-line, no icons or charts.
-pub fn kpi_card(ui: &mut egui::Ui, kpi: &Kpi) {
-    egui::Frame {
-        fill: tokens::CARD,
-        stroke: tokens::border(),
-        corner_radius: egui::CornerRadius::same(tokens::R_CARD),
-        inner_margin: egui::Margin::same(20),
-        ..Default::default()
-    }
-    .show(ui, |ui| {
-        ui.set_width(ui.available_width());
-        ui.label(
-            egui::RichText::new(kpi.label)
-                .size(tokens::T_SECONDARY)
-                .color(tokens::SECONDARY),
-        );
-        ui.add_space(6.0);
-        ui.label(
-            egui::RichText::new(kpi.value)
-                .size(tokens::T_KPI)
-                .strong()
-                .color(if kpi.alert {
-                    tokens::DANGER
-                } else {
-                    tokens::TEXT
-                }),
-        );
-        ui.add_space(4.0);
-        ui.label(
-            egui::RichText::new(kpi.sub)
-                .size(tokens::T_SECONDARY)
-                .color(tokens::MUTED),
-        );
-    });
-}
-
-/// Segmented single-select (van / crew / customer type): joined soft
-/// container, selected segment white. N≤3 only — longer lists use ComboBox.
-pub fn segmented(ui: &mut egui::Ui, options: &[&str], selected: &mut usize) {
-    egui::Frame {
-        fill: tokens::SOFT_FILL,
-        corner_radius: egui::CornerRadius::same(tokens::R_NAV),
-        inner_margin: egui::Margin::same(4),
-        ..Default::default()
-    }
-    .show(ui, |ui| {
-        ui.horizontal(|ui| {
-            ui.spacing_mut().item_spacing = egui::vec2(4.0, 0.0);
-            for (i, opt) in options.iter().enumerate() {
-                let on = *selected == i;
-                if ui
-                    .add(
-                        egui::Button::new(
-                            egui::RichText::new(*opt)
-                                .size(tokens::T_BODY)
-                                .color(tokens::TEXT)
-                                .strong(),
-                        )
-                        .fill(if on {
-                            tokens::WHITE
-                        } else {
-                            tokens::TRANSPARENT
-                        })
-                        .stroke(if on {
-                            tokens::border()
-                        } else {
-                            egui::Stroke::NONE
-                        })
-                        .corner_radius(egui::CornerRadius::same(6))
-                        .min_size(egui::vec2(0.0, 32.0)),
-                    )
-                    .clicked()
-                {
-                    *selected = i;
-                }
-            }
-        });
-    });
-}
-
-/// Toggle pill tag (multi-select, default off).
-pub fn tag(ui: &mut egui::Ui, text: &str, on: bool) -> egui::Response {
-    ui.add(
-        egui::Button::new(
-            egui::RichText::new(text)
-                .size(tokens::T_SECONDARY)
-                .color(if on {
-                    tokens::DARK_GREEN_TEXT
-                } else {
-                    tokens::TEXT
-                })
-                .strong(),
-        )
-        .fill(if on {
-            tokens::LIGHT_GREEN
-        } else {
-            tokens::TRANSPARENT
-        })
-        .stroke(tokens::border())
-        .corner_radius(egui::CornerRadius::same(tokens::R_PILL))
-        .min_size(egui::vec2(0.0, 30.0)),
-    )
-}
-
-/// Numbered stop circle, tinted by van color.
-pub fn stop_circle(ui: &mut egui::Ui, n: u32, bg: egui::Color32, fg: egui::Color32) {
-    egui::Frame {
-        fill: bg,
-        corner_radius: egui::CornerRadius::same(14),
-        ..Default::default()
-    }
-    .show(ui, |ui| {
-        ui.allocate_ui_with_layout(
-            egui::vec2(28.0, 28.0),
-            egui::Layout::centered_and_justified(egui::Direction::TopDown),
-            |ui| {
-                ui.label(
-                    egui::RichText::new(n.to_string())
-                        .size(tokens::T_SECONDARY)
-                        .strong()
-                        .color(fg),
-                );
-            },
-        );
-    });
-}
-
-/// Horizontal 4-node status stepper: Booked — In progress — Done — Paid.
-pub fn stepper(ui: &mut egui::Ui, current: usize) {
-    const STEPS: [&str; 4] = ["Booked", "In progress", "Done", "Paid"];
+/// Skeleton shimmer row: static theme-aware bars (the shimmer animates in
+/// the web build; here loading already repaints every frame).
+pub fn skeleton_bars(ui: &mut egui::Ui, t: &QzTheme, widths: &[f32]) {
     ui.horizontal(|ui| {
         ui.spacing_mut().item_spacing = egui::vec2(8.0, 0.0);
-        for (i, step) in STEPS.iter().enumerate() {
-            let done = i < current;
-            let here = i == current;
-            // Geometric nodes (no ✓/●/○ glyphs in bundled fonts).
-            if done {
-                egui::Frame {
-                    fill: tokens::CTA_GREEN,
-                    corner_radius: egui::CornerRadius::same(10),
-                    ..Default::default()
-                }
-                .show(ui, |ui| {
-                    ui.allocate_ui_with_layout(
-                        egui::vec2(20.0, 20.0),
-                        egui::Layout::centered_and_justified(egui::Direction::TopDown),
-                        |_| {},
-                    );
-                });
-            } else if here {
-                egui::Frame {
-                    fill: tokens::LIGHT_GREEN,
-                    stroke: egui::Stroke::new(2.0, tokens::CTA_GREEN),
-                    corner_radius: egui::CornerRadius::same(10),
-                    ..Default::default()
-                }
-                .show(ui, |ui| {
-                    ui.allocate_ui_with_layout(
-                        egui::vec2(20.0, 20.0),
-                        egui::Layout::centered_and_justified(egui::Direction::TopDown),
-                        |ui| {
-                            let (r, _) =
-                                ui.allocate_exact_size(egui::vec2(8.0, 8.0), egui::Sense::hover());
-                            ui.painter()
-                                .circle_filled(r.center(), 3.0, tokens::CTA_GREEN);
-                        },
-                    );
-                });
-            } else {
-                egui::Frame {
-                    fill: tokens::TRANSPARENT,
-                    stroke: tokens::border(),
-                    corner_radius: egui::CornerRadius::same(10),
-                    ..Default::default()
-                }
-                .show(ui, |ui| {
-                    ui.allocate_ui_with_layout(
-                        egui::vec2(20.0, 20.0),
-                        egui::Layout::centered_and_justified(egui::Direction::TopDown),
-                        |_| {},
-                    );
-                });
-            }
-            ui.label(
-                egui::RichText::new(*step)
-                    .size(tokens::T_BODY)
-                    .strong()
-                    .color(if done || here {
-                        tokens::TEXT
-                    } else {
-                        tokens::MUTED
-                    }),
-            );
-            if i < STEPS.len() - 1 {
-                ui.label(egui::RichText::new("──").size(10.0).color(if done {
-                    tokens::CTA_GREEN
-                } else {
-                    tokens::BORDER
-                }));
-            }
+        for w in widths {
+            let (r, _) = ui.allocate_exact_size(egui::vec2(*w, 12.0), egui::Sense::hover());
+            ui.painter().rect_filled(r, 6.0, t.surface2);
         }
     });
 }
 
-/// Empty state per spec §13: centered icon + gray text + outline action.
-pub fn empty_state(ui: &mut egui::Ui, title: &str, hint: &str, action: &str) -> egui::Response {
-    ui.vertical_centered(|ui| {
-        ui.add_space(60.0);
-        egui::Frame {
-            fill: tokens::TRANSPARENT,
-            stroke: tokens::border(),
-            corner_radius: egui::CornerRadius::same(24),
-            ..Default::default()
-        }
-        .show(ui, |ui| {
-            ui.allocate_ui_with_layout(
-                egui::vec2(48.0, 48.0),
-                egui::Layout::centered_and_justified(egui::Direction::TopDown),
-                |_| {},
-            );
+/// Painted check mark (dialog success icons).
+pub fn paint_check(p: &egui::Painter, rect: egui::Rect, color: egui::Color32) {
+    let c = rect.center();
+    let s = egui::Stroke::new(2.5, color);
+    p.line_segment([c + egui::vec2(-7.0, 0.5), c + egui::vec2(-1.5, 5.5)], s);
+    p.line_segment([c + egui::vec2(-1.5, 5.5), c + egui::vec2(7.0, -5.5)], s);
+}
+
+/// Painted cross (dialog failure icons).
+pub fn paint_cross(p: &egui::Painter, rect: egui::Rect, color: egui::Color32) {
+    let c = rect.center();
+    let s = egui::Stroke::new(2.5, color);
+    p.line_segment([c + egui::vec2(-5.5, -5.5), c + egui::vec2(5.5, 5.5)], s);
+    p.line_segment([c + egui::vec2(-5.5, 5.5), c + egui::vec2(5.5, -5.5)], s);
+}
+
+/// Painted download arrow (extract icon).
+pub fn paint_download(p: &egui::Painter, rect: egui::Rect, color: egui::Color32) {
+    let c = rect.center();
+    let s = egui::Stroke::new(2.5, color);
+    p.line_segment([c + egui::vec2(0.0, -7.0), c + egui::vec2(0.0, 5.0)], s);
+    p.line_segment([c + egui::vec2(-5.0, 0.5), c + egui::vec2(0.0, 5.5)], s);
+    p.line_segment([c + egui::vec2(5.0, 0.5), c + egui::vec2(0.0, 5.5)], s);
+    p.line_segment([c + egui::vec2(-7.0, 8.0), c + egui::vec2(7.0, 8.0)], s);
+}
+
+/// Painted folder mark (load dialog icon).
+pub fn paint_folder(p: &egui::Painter, rect: egui::Rect, color: egui::Color32) {
+    let r = egui::Rect::from_center_size(rect.center(), egui::vec2(20.0, 14.0));
+    let s = egui::Stroke::new(2.0, color);
+    p.rect_stroke(r, 2.0, s, egui::StrokeKind::Inside);
+    p.line_segment(
+        [
+            egui::pos2(r.min.x, r.min.y),
+            egui::pos2(r.min.x + 7.0, r.min.y - 4.0),
+        ],
+        s,
+    );
+    p.line_segment(
+        [
+            egui::pos2(r.min.x + 7.0, r.min.y - 4.0),
+            egui::pos2(r.min.x + 13.0, r.min.y - 4.0),
+        ],
+        s,
+    );
+    p.line_segment(
+        [
+            egui::pos2(r.min.x + 13.0, r.min.y - 4.0),
+            egui::pos2(r.min.x + 13.0, r.min.y),
+        ],
+        s,
+    );
+}
+
+/// Painted lock (password icon): squared shackle + body.
+pub fn paint_lock(p: &egui::Painter, rect: egui::Rect, color: egui::Color32) {
+    let c = rect.center();
+    let s = egui::Stroke::new(2.0, color);
+    let body = egui::Rect::from_center_size(c + egui::vec2(0.0, 4.0), egui::vec2(14.0, 11.0));
+    p.rect_stroke(body, 2.0, s, egui::StrokeKind::Inside);
+    p.line_segment(
+        [
+            egui::pos2(c.x - 5.0, body.min.y),
+            egui::pos2(c.x - 5.0, c.y - 4.0),
+        ],
+        s,
+    );
+    p.line_segment(
+        [
+            egui::pos2(c.x + 5.0, body.min.y),
+            egui::pos2(c.x + 5.0, c.y - 4.0),
+        ],
+        s,
+    );
+    p.line_segment(
+        [
+            egui::pos2(c.x - 5.0, c.y - 4.0),
+            egui::pos2(c.x + 5.0, c.y - 4.0),
+        ],
+        s,
+    );
+}
+
+/// Painted shield (test/permission icon).
+pub fn paint_shield(p: &egui::Painter, rect: egui::Rect, color: egui::Color32) {
+    let c = rect.center();
+    let s = egui::Stroke::new(2.0, color);
+    let pts = [
+        c + egui::vec2(-7.0, -6.0),
+        c + egui::vec2(7.0, -6.0),
+        c + egui::vec2(7.0, 1.0),
+        c + egui::vec2(0.0, 8.0),
+        c + egui::vec2(-7.0, 1.0),
+    ];
+    for i in 0..pts.len() {
+        p.line_segment([pts[i], pts[(i + 1) % pts.len()]], s);
+    }
+}
+
+/// Centered dialog icon disc (48px, tinted fill, painted glyph).
+pub fn dialog_icon(
+    ui: &mut egui::Ui,
+    bg: egui::Color32,
+    paint: impl FnOnce(&egui::Painter, egui::Rect),
+) {
+    ui.horizontal(|ui| {
+        ui.add_space((ui.available_width() - 48.0).max(0.0) / 2.0);
+        let (r, _) = ui.allocate_exact_size(egui::vec2(48.0, 48.0), egui::Sense::hover());
+        ui.painter().circle_filled(r.center(), 24.0, bg);
+        paint(ui.painter(), r);
+    });
+}
+
+/// Frosted dialog veil: bright wash over the app in light, dark wash in
+/// dark (the blur has no egui equivalent — alpha only, same opacities).
+/// Returns early when closed so callers stay flat.
+pub fn veil(ctx: &egui::Context, t: &QzTheme) {
+    let wash = if t.dark {
+        egui::Color32::from_black_alpha(115)
+    } else {
+        egui::Color32::from_white_alpha(115)
+    };
+    egui::Area::new(egui::Id::new("qz-veil"))
+        .order(egui::Order::Middle)
+        .fixed_pos(egui::pos2(0.0, 0.0))
+        .show(ctx, |ui| {
+            let r = ctx.viewport_rect();
+            ui.allocate_rect(r, egui::Sense::click());
+            ui.painter().rect_filled(r, 0.0, wash);
         });
-        ui.add_space(8.0);
-        ui.label(
-            egui::RichText::new(title)
-                .size(tokens::T_BODY)
-                .strong()
-                .color(tokens::SECONDARY),
-        );
-        ui.add_space(4.0);
-        ui.label(
-            egui::RichText::new(hint)
-                .size(tokens::T_SECONDARY)
-                .color(tokens::MUTED),
-        );
-        ui.add_space(16.0);
-        outline_button(ui, action)
-    })
-    .inner
+}
+
+/// Dialog card window: 448 wide, centered, big soft shadow.
+pub fn dialog_card<R>(
+    ctx: &egui::Context,
+    id: &str,
+    t: &QzTheme,
+    add_contents: impl FnOnce(&mut egui::Ui) -> R,
+) -> R {
+    egui::Window::new(id)
+        .title_bar(false)
+        .resizable(false)
+        .collapsible(false)
+        .anchor(egui::Align2::CENTER_CENTER, egui::vec2(0.0, 0.0))
+        .frame(dialog_frame(t))
+        .show(ctx, |ui| {
+            ui.set_width(400.0);
+            add_contents(ui)
+        })
+        .and_then(|resp| resp.inner)
+        .expect("dialog card")
 }

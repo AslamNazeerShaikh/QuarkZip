@@ -1,9 +1,10 @@
-# egui app (`egui-app/`) — develop-branch scaffold
+# egui app (`egui-app/`) — QuarkZip in pure Rust
 
-First egui milestone: the compact CRM visual foundation from
-`CollegeAdmissionManagementSystem/docs/ReferenceUi`
-(`Reference-UI-Analysis.md` + `UiPrompt.md`), rebuilt as a pure-Rust
-egui/eframe app with a macOS-native transparent window.
+The Tauri app's archive manager UI (`src/`, React) ported to egui/eframe on
+`develop`, running the **same in-process 7-Zip engine**: `archive.rs` +
+`sevenzip.rs` are shared by path from `src-tauri/src/` (never forked) and
+the vendored `vendor/7zip` + bridge compile here via `build.rs`. Only the
+Tauri command layer is re-expressed as threads + channels (`engine.rs`).
 
 ## Run
 
@@ -12,39 +13,28 @@ cd egui-app
 cargo run --release
 ```
 
-(release: wgpu shader compile stutters less; dev profile sets `opt-level = 1`
-as a halfway house.)
-
 ## Structure
 
-| File             | Role                                                                                                                                                                 |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/main.rs`    | Transparent viewport: decorations on (traffic lights kept), titlebar hidden, fullsize content view, shadow, background-drag, drag-and-drop                           |
-| `src/tokens.rs`  | Single design-token set: warm neutrals + alpha per surface (sidebar most translucent, cards near-opaque), 8px grid, radius ladder, type scale, base `Visuals`        |
-| `src/data.rs`    | Mock domain (KPIs, van schedule, table groups, avatar colors). Shapes mirror the analysis doc so real data drops in without touching views                           |
-| `src/widgets.rs` | Shared primitives: pill, avatar, nav item, buttons, search, KPI card, segmented, tag, stop circle, stepper, empty state                                              |
-| `src/app.rs`     | AppShell (300px sidebar, ⌘K search, badges, BUSINESS section, footer meta) + Today dashboard + Jobs table + detail drawer + Settings + New-job / New-customer modals |
+| File               | Ports                                                                                                                                                                    |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `src/main.rs`      | 800×675 transparent viewport, traffic lights over a 92px strip, drag-and-drop                                                                                            |
+| `src/app.rs`       | `App.tsx`: open flow, extract/test/checksum/password/permission state machines, titlebar, footer, worker polling                                                         |
+| `src/tree.rs`      | `ArchiveTree.tsx`: virtualized `show_rows`, 10k worker-thread chunks, per-folder pager, prefix-collapse selection, keyboard + typeahead, skeletons, counts, index column |
+| `src/overview.rs`  | `ArchiveOverview.tsx`: empty CTA card, 16-cell metadata grid, More/Less, centered action row, inline theme/language controls                                             |
+| `src/dialogs.rs`   | Load / Extract / Done+Reveal / About / Test / Checksum / Password / Permission                                                                                           |
+| `src/engine.rs`    | `src-tauri/src/lib.rs` flows: list/extract/test workers, sync checksum (same digest crates), rfd pickers, `open -R` reveal                                               |
+| `src/theme.rs`     | `src/index.css`: light/dark × 8 accents, persisted with lang + collapse in `~/.config/quarkzip-egui.json`                                                                |
+| `src/i18n.rs`      | EN/HI tables (155 keys, unit-pinned parity) + `{name}` interpolation                                                                                                     |
+| `src/fmt.rs`       | `format.ts`: IEC sizes, locale counts (Hindi: Devanagari + Indian grouping), engine stamps as local wall time                                                            |
+| `src/file_kind.rs` | `fileKind.ts`: extension table, filename-only extensions                                                                                                                 |
+| `src/selection.rs` | `treeSelection.ts`: prefix-collapse set, split-on-uncheck, guides algorithm (pinned)                                                                                     |
+| `src/widgets.rs`   | Buttons/cards/pills/progress/skeletons/dialog shell + painted glyphs (guides, chevrons, checks, folder, lock, shield — no icon font)                                     |
+| `src/prefs.rs`     | JSON prefs (theme/accent/lang/collapsed)                                                                                                                                 |
 
-## macOS notes
+## Deliberate v1 gaps
 
-- Traffic-light strip: sidebar and pages reserve `TITLEBAR_PAD` (30px) at
-  the top; content flows under the clear titlebar via fullsize content view.
-- Real vibrancy blur (`NSVisualEffectView`) is unreachable from pure egui —
-  translucency is alpha compositing, strongest on the sidebar. If(enough
-  users ask, a `cocoa`/`objc2` blur view behind a more transparent frame is
-  the escape hatch.
-- Glyph discipline: only Latin-1 punctuation (£ · – ×) as text; dots,
-  checks, and circles are painted shapes (bundled fonts lack ●/✓/○).
-
-## Deliberate v1 gaps (next milestones)
-
-1. Inter font bundling (closest open metric match to SF Pro; needs TTFs).
-2. Lucide-style line icons (`egui-phosphor` or custom paths) — nav, section
-   labels, and empty states are text-only today.
-3. Route-map placeholder → real canvas drawing.
-4. Real model layer: replace `data.rs` mocks; per-row Save actually saves.
-5. Archive-domain wiring: reuse `src-tauri` 7-Zip core (facts/children
-   logic) behind a core lib crate; virtualize the table with
-   `ScrollArea::show_rows` for 10M-entry listings.
-6. Keyboard: Esc closes overlays, ⌘K focuses search, focus trap in modals.
-7. `egui_kittest` headless UI pins (Playwright dies with the DOM).
+1. Inter font (egui default; CJK needs bundled Noto).
+2. No blur behind translucent chrome/dialog veils (alpha only — egui has no backdrop-filter).
+3. Chunk counts rescan per folder open (upstream memoizes per listing).
+4. No kittest pins yet (Playwright dies with the DOM).
+5. Accent dots lack sliding indicator; theme/language expand inline, not in popups.
