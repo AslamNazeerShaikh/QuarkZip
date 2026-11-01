@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 import QuarkZipKit
 
@@ -44,6 +45,13 @@ struct RootView: View {
             guard !handledLaunchArgument else { return }
             handledLaunchArgument = true
             model.openLaunchArgumentIfNeeded()
+        }
+        .onOpenURL { url in
+            model.open(url)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .quarkZipOpenArchive)) { note in
+            guard let url = note.object as? URL else { return }
+            model.open(url)
         }
     }
 

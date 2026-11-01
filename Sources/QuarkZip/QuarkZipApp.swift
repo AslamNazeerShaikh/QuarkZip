@@ -120,4 +120,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             NSApp.terminate(nil)
         }
     }
+
+    func application(_ application: NSApplication, open urls: [URL]) {
+        for url in urls {
+            NotificationCenter.default.post(name: .quarkZipOpenArchive, object: url)
+        }
+    }
+}
+
+extension Notification.Name {
+    static let quarkZipOpenArchive = Notification.Name("QuarkZipOpenArchive")
 }
