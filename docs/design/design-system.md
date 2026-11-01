@@ -59,10 +59,11 @@ IEC units, where 1 KiB = 1,024 bytes.
 Both sidebars share the same width range and default, resize natively, and
 both render over the system pane material for the full height — no custom
 `.bar` behind either pane, so transparency matches exactly. The inspector
-toggles with one gentle-spring animation on `showInspector`; toolbar items
-stay mounted (disabled when there is no archive) so opening an archive or
-expanding a pane never relayouts the chrome or flashes the center. The
-middle list keeps fixed columns and only the flexible Name column resizes.
+uses the native pane animation with no custom transaction over the
+content; toolbar items stay mounted (disabled when there is no archive)
+so opening an archive or expanding a pane never relayouts the chrome.
+The middle list keeps fixed columns and only the flexible Name column
+resizes.
 
 ## Color
 
@@ -221,11 +222,11 @@ Header and filter controls are system `Button`, `Menu`, `Picker`, and
   (28 compact, 32 comfortable, comfortable by default) keep columns
   aligned; selection is a 20 percent accent fill with a 40 percent border,
   so primary text and method pills stay readable in light and dark.
-- The list renders a 500-row window and appends the next 500 as the user
-  reaches the bottom, so a 1M-entry folder scrolls without diffing 1M
-  views. Filtering, searching, and sorting run off the main actor; only
-  the newest generation publishes. Status totals are cached, never
-  re-scanned per frame.
+- The list renders a 500-row window with an explicit "Show more"
+  footer, so a 1M-entry folder scrolls without diffing 1M views and pane
+  resizes never trigger spurious loads. Filtering, searching, and sorting
+  run off the main actor; only the newest generation publishes. Status
+  totals are cached, never re-scanned per frame.
 - Rows are value-typed and `Equatable` (`QZEntryRowView` + `.equatable()`),
   so selection changes and keystrokes re-render only affected rows.
   Dates reuse one cached `DateFormatter` per locale/time zone/style
