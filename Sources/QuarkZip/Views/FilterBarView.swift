@@ -16,7 +16,7 @@ struct FilterBarView: View {
                 .frame(width: 1, height: 20)
                 .padding(.horizontal, QZTheme.Space.xxs)
 
-            ScrollView(.horizontal, showsIndicators: false) {
+            ScrollView(.horizontal, showsIndicators: true) {
                 HStack(spacing: QZTheme.Space.xs) {
                     QZFilterChip(
                         title: "All",
