@@ -152,6 +152,21 @@ As a user, the dense workspace is readable and behaves like a Mac app.
 - Large Items is no longer styled as danger red.
 - The welcome CTA no longer relies on white text over the accent fill.
 
+### [x] M1-00b App icon and window contract
+
+As a user, the app has a recognizable Mac icon and the workspace cannot be
+resized into a broken layout.
+
+- A layered Icon Composer file with coral background, white archive tray,
+  and mint glass cards.
+- No text, letters, SF Symbols, or 7-Zip marks.
+- Review sheet shows default, dark, tinted, clear, 32 pt, and 16 pt.
+- `Assets.car` and `AppIcon.icns` ship in the bundle; Info.plist names the
+  icon.
+- Initial content size 1360 x 800.
+- Content minimum 1200 x 720 and maximum 1680 x 1050, clamped to the screen.
+- SwiftUI and `WindowSizing` both enforce the range.
+
 ### [ ] M1-01 Nested folders and history
 ### [ ] M1-02 Sidebar recents and favorites
 ### [x] M1-03 Inspector and archive properties

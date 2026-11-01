@@ -39,12 +39,13 @@ Three panes, all resizable through native split behavior.
 
 | Area | Size |
 | --- | --- |
-| Minimum window | 1120 x 640 |
-| Default window | 1360 x 820 |
+| Minimum window | 1200 x 720 |
+| Default window | 1360 x 800 |
 | Sidebar | 230 min and ideal, 310 max |
 | Header | 68 |
 | Filter bar | 44 |
 | Table row | 24 compact, 30 comfortable |
+| Maximum window | 1680 x 1050, clamped to the screen |
 | Inspector | 310 ideal, 280 to 380 |
 | Status bar | 26 |
 
@@ -243,6 +244,8 @@ No looping animation except indeterminate progress.
 
 ## Snapshot review
 
+The window uses `WindowSizing` to set `contentMinSize` and `contentMaxSize`,
+so the sidebar, table, and inspector cannot be resized into a broken layout.
 `Scripts/snapshot.sh` renders welcome, browser, details, and Settings in
 light and dark. Every UI change is reviewed on all eight images. The
 window is inactive in offscreen renders, so the selection fill looks gray;
@@ -255,4 +258,4 @@ The 2026-11-01 review accepted the recommended options from
 color dot, system accent and appearance, a calm sidebar with category dots,
 SF Pro default, and damped motion with a full Reduce Motion path. The
 remaining P1 and P2 items are sortable table headings, sidebar size support,
-a layered app icon, and optional zebra rows.
+and optional zebra rows.

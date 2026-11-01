@@ -34,9 +34,12 @@ Sources/QuarkZipKit/     pure Swift core: models, rules, services. No SwiftUI.
 Sources/QuarkZip/        SwiftUI app, views, design tokens, snapshot mode
 Tests/QuarkZipKitTests/  Swift Testing unit tests
 Tests/QZEngineTests/     integration tests against real archives
+Icon/AppIcon.icon/       Icon Composer source: box.svg, cards.svg, icon.json
+Icon/AppIcon.svg         standalone vector preview
 vendor/7zip/             upstream 7-Zip 26.05, pinned, never edited
 docs/                    product, architecture, design, decisions, stories
 Scripts/                 build, test, coverage, snapshot
+tools/                   icon compile and review
 .opencode/               agents, commands, skills, MCP config
 ```
 

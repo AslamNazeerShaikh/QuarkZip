@@ -85,7 +85,9 @@ Goal: the details people tell friends about.
 - [ ] Default handler opt-in for zip and 7z.
 - [ ] Menu bar extra for jobs.
 - [ ] Shortcuts actions and URL scheme.
-- [ ] App icon, onboarding, About with engine credits.
+- [x] App icon
+- [ ] Onboarding
+- [x] About with engine credits
 - [ ] Localization scaffolding and right-to-left audit.
 - [ ] Performance pass: Instruments, memory, energy.
 - [ ] Accessibility audit with VoiceOver.

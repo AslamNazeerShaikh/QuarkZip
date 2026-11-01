@@ -23,6 +23,8 @@ Start here, then read only what the task needs.
 
 - [Design system](design/design-system.md) - tokens, type, spacing, motion,
   components, accessibility.
+- [App icon](design/app-icon.md) - Icon Composer source, grid, palette, and
+  review sheet.
 - [Legacy rules review](design/legacy-rules-review.md) - audit of the two old
   design documents, measured contrast, HIG comparison, and the accepted
   decisions.

@@ -342,7 +342,7 @@ Recommended options are first.
 | D7 | Table rows | A. Separators now, AppKit zebra later |
 | D8 | Motion | A. Damped springs plus full Reduce Motion |
 | D9 | Contrast policy | A. 4.5:1 for small text, 7:1 target for secondary |
-| D10 | App icon | A. Layered Icon Composer icon, still to build in P2 |
+| D10 | App icon | A. Layered Icon Composer icon, implemented |
 
 ## Recommended borrow list
 
@@ -385,8 +385,8 @@ Do not take:
    table headings, column persistence, menu commands.
 4. **P1 motion:** one damped motion set with Reduce Motion and Increase
    Contrast paths.
-5. **P2 identity:** layered Icon Composer app icon, optional zebra rows,
-   final typography pass.
+5. **P2 identity:** optional zebra rows and the final typography pass. The
+   layered Icon Composer app icon and window range are done.
 
 ## Outcome
 
@@ -409,12 +409,17 @@ Implemented from this review:
 - `Scripts/contrast-check.sh` is now part of `verify`. It checks primary,
   secondary, and faint text on card, window, and inspector backgrounds, plus
   primary text on every category and method tint, in light and dark.
+- The app icon is a layered Icon Composer file: a coral automatic gradient,
+  a white open archive tray, and two glass cards with a mint front card. The
+  review sheet covers default, dark, tinted, clear, 32 pt, and 16 pt.
+- The window has a 1360 x 800 initial size, a 1200 x 720 content minimum, and
+  a 1680 x 1050 maximum clamped to the screen. `WindowSizing` sets both the
+  content and frame limits.
 
 Still open, deliberately:
 
 - Sortable table headings and persisted column widths.
 - Sidebar icon-size preference support.
-- A layered Icon Composer app icon.
 - Optional zebra rows through an AppKit table bridge.
 - Increase Contrast-specific badge borders and soft-tint variants.
 
