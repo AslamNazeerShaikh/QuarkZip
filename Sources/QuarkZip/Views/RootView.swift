@@ -75,6 +75,7 @@ struct RootView: View {
         }
         .background(QZTheme.Palette.background)
         .animation(baseAnimation, value: model.error)
+        .animation(gentleAnimation, value: model.showInspector)
         .inspector(isPresented: inspectorBinding) {
             InspectorView()
                 .inspectorColumnWidth(
@@ -82,7 +83,6 @@ struct RootView: View {
                     ideal: QZTheme.Size.pane,
                     max: QZTheme.Size.paneMax
                 )
-                .background(.bar)
         }
     }
 
@@ -138,23 +138,21 @@ struct RootView: View {
             }
             .help("About QuarkZip")
 
-            if model.hasArchive {
-                Button {
-                    withAnimation(gentleAnimation) {
-                        model.showInspector.toggle()
-                    }
-                } label: {
-                    Label("Inspector", systemImage: "sidebar.right")
-                }
-                .help("Show or hide the inspector (⌥⌘I)")
-
-                Button {
-                    model.revealInFinder()
-                } label: {
-                    Label("Reveal", systemImage: "folder.badge.magnifyingglass")
-                }
-                .help("Reveal the archive in Finder")
+            Button {
+                model.showInspector.toggle()
+            } label: {
+                Label("Inspector", systemImage: "sidebar.right")
             }
+            .help("Show or hide the inspector (⌥⌘I)")
+            .disabled(!model.hasArchive)
+
+            Button {
+                model.revealInFinder()
+            } label: {
+                Label("Reveal", systemImage: "magnifyingglass")
+            }
+            .help("Reveal the archive in Finder")
+            .disabled(!model.hasArchive)
         }
     }
 }

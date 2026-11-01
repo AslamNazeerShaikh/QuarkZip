@@ -35,6 +35,14 @@ struct QuarkZipApp: App {
 
         check("engine version", SevenZipArchiveService.engineVersion == "7-Zip 26.05")
 
+        let missingSymbols = QZAppSymbols.all.filter {
+            NSImage(systemSymbolName: $0, accessibilityDescription: nil) == nil
+        }
+        check("sf symbols resolve", missingSymbols.isEmpty)
+        for symbol in missingSymbols {
+            print("FAIL detail: missing symbol \(symbol)")
+        }
+
         do {
             let snapshot = try SevenZipArchiveService.openSynchronously(
                 url: URL(fileURLWithPath: path), password: nil)
