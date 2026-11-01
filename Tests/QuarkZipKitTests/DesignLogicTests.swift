@@ -36,6 +36,14 @@ struct EntryCategoryTests {
             #expect(!category.outlineSymbolName.isEmpty)
         }
     }
+
+    @Test func everyCategoryHasAUniqueEmoji() {
+        let emojis = EntryCategory.allCases.map(\.emoji)
+        #expect(Set(emojis).count == EntryCategory.allCases.count)
+        for emoji in emojis {
+            #expect(!emoji.isEmpty)
+        }
+    }
 }
 
 @Suite("EntryFilter")

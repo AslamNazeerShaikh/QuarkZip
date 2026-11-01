@@ -26,6 +26,20 @@ public enum EntryCategory: String, CaseIterable, Sendable, Hashable {
         }
     }
 
+    /// One unique emoji per bucket. Shown only when the emoji setting is on.
+    public var emoji: String {
+        switch self {
+        case .folder: return "📁"
+        case .document: return "📄"
+        case .image: return "🖼️"
+        case .video: return "🎬"
+        case .audio: return "🎵"
+        case .archive: return "📦"
+        case .code: return "💻"
+        case .other: return "📃"
+        }
+    }
+
     /// Filled form for tiles, sidebar emphasis, and selected states.
     public var symbolName: String { filledSymbolName }
 
