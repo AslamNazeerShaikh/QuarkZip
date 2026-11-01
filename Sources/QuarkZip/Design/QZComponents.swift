@@ -1,0 +1,210 @@
+import SwiftUI
+import QuarkZipKit
+import UniformTypeIdentifiers
+
+/// Centered empty state with one primary action and an optional secondary.
+struct QZEmptyState<Actions: View>: View {
+    let symbol: String
+    let title: String
+    let message: String
+    @ViewBuilder var actions: Actions
+
+    var body: some View {
+        VStack(spacing: QZTheme.Space.l) {
+            Image(systemName: symbol)
+                .font(.system(size: 44, weight: .light))
+                .foregroundStyle(QZTheme.Palette.accent)
+                .accessibilityHidden(true)
+            VStack(spacing: QZTheme.Space.s) {
+                Text(title)
+                    .font(QZTheme.Typography.title)
+                    .foregroundStyle(QZTheme.Palette.primary)
+                Text(message)
+                    .font(QZTheme.Typography.body)
+                    .foregroundStyle(QZTheme.Palette.secondary)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: 380)
+            }
+            actions
+                .padding(.top, QZTheme.Space.xs)
+        }
+        .padding(QZTheme.Space.xxxl)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+/// A large drop target used on the welcome page and while dragging over the
+/// browser. The pulse runs once on enter, never in a loop.
+struct QZDropZone: View {
+    var isTargeted: Bool
+    let action: () -> Void
+
+    @State private var pulse = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        Button(action: action) {
+            VStack(spacing: QZTheme.Space.m) {
+                Image(systemName: "arrow.down.doc")
+                    .font(.system(size: 34, weight: .light))
+                    .foregroundStyle(QZTheme.Palette.accent)
+                Text("Drop an archive here")
+                    .font(QZTheme.Typography.heading)
+                    .foregroundStyle(QZTheme.Palette.primary)
+                Text("or press ⌘O to choose one")
+                    .font(QZTheme.Typography.callout)
+                    .foregroundStyle(QZTheme.Palette.secondary)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, QZTheme.Space.xxxl)
+            .background(
+                RoundedRectangle(cornerRadius: QZTheme.Radius.panel)
+                    .fill(isTargeted
+                          ? QZTheme.Palette.accent.opacity(0.10)
+                          : QZTheme.Palette.surface)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: QZTheme.Radius.panel)
+                    .strokeBorder(
+                        isTargeted ? QZTheme.Palette.accent : QZTheme.Palette.separator,
+                        style: StrokeStyle(lineWidth: isTargeted ? 2 : 1,
+                                           dash: isTargeted ? [] : [6, 4])
+                    )
+            )
+            .scaleEffect(pulse ? 1.01 : 1)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Drop an archive here, or open the file chooser")
+        .onChange(of: isTargeted) { _, targeted in
+            guard targeted, !reduceMotion else { return }
+            withAnimation(QZTheme.Motion.standard) { pulse = true }
+            withAnimation(QZTheme.Motion.gentle.delay(0.18)) { pulse = false }
+        }
+    }
+}
+
+/// Path segments above the entry list.
+struct QZBreadcrumb: View {
+    let archiveName: String
+    let segments: [ArchivePath]
+    let onRoot: () -> Void
+    let onSelect: (ArchivePath) -> Void
+
+    var body: some View {
+        HStack(spacing: QZTheme.Space.xs) {
+            Button(action: onRoot) {
+                Label(archiveName, systemImage: "archivebox")
+                    .font(QZTheme.Typography.callout)
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(segments.isEmpty ? QZTheme.Palette.primary : QZTheme.Palette.secondary)
+
+            ForEach(segments, id: \.self) { segment in
+                Image(systemName: "chevron.compact.right")
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundStyle(QZTheme.Palette.tertiary)
+                    .accessibilityHidden(true)
+                Button(segment.name) { onSelect(segment) }
+                    .buttonStyle(.plain)
+                    .font(QZTheme.Typography.callout)
+                    .foregroundStyle(segment == segments.last
+                                     ? QZTheme.Palette.primary
+                                     : QZTheme.Palette.secondary)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, QZTheme.Space.l)
+        .padding(.vertical, QZTheme.Space.s)
+        .background(.bar)
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .fill(QZTheme.Palette.separator)
+                .frame(height: 1)
+        }
+    }
+}
+
+/// Bottom status line.
+struct QZStatusBar: View {
+    let text: String
+    let selectionCount: Int
+    let isLoading: Bool
+
+    var body: some View {
+        HStack(spacing: QZTheme.Space.m) {
+            if isLoading {
+                ProgressView()
+                    .controlSize(.small)
+            }
+            Text(text)
+                .font(QZTheme.Typography.caption)
+                .foregroundStyle(QZTheme.Palette.secondary)
+            Spacer()
+            if selectionCount > 0 {
+                Text("\(selectionCount) selected")
+                    .font(QZTheme.Typography.caption)
+                    .foregroundStyle(QZTheme.Palette.secondary)
+                    .monospacedDigit()
+            }
+        }
+        .padding(.horizontal, QZTheme.Space.l)
+        .frame(height: QZTheme.Size.statusBar)
+        .background(.bar)
+        .overlay(alignment: .top) {
+            Rectangle()
+                .fill(QZTheme.Palette.separator)
+                .frame(height: 1)
+        }
+    }
+}
+
+/// Inline, dismissible error above the content.
+struct QZErrorBanner: View {
+    let error: ArchiveError
+    let onDismiss: () -> Void
+
+    var body: some View {
+        HStack(alignment: .top, spacing: QZTheme.Space.s) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundStyle(QZTheme.Palette.warning)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: QZTheme.Space.xxs) {
+                Text(error.message)
+                    .font(QZTheme.Typography.body)
+                if let detail = error.detail, !detail.isEmpty {
+                    Text(detail)
+                        .font(QZTheme.Typography.caption)
+                        .foregroundStyle(QZTheme.Palette.secondary)
+                        .textSelection(.enabled)
+                }
+            }
+            Spacer(minLength: QZTheme.Space.s)
+            Button("Dismiss", action: onDismiss)
+                .buttonStyle(.plain)
+                .font(QZTheme.Typography.caption)
+                .foregroundStyle(QZTheme.Palette.secondary)
+        }
+        .padding(QZTheme.Space.m)
+        .background(QZTheme.Palette.warning.opacity(0.10))
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .fill(QZTheme.Palette.warning.opacity(0.35))
+                .frame(height: 1)
+        }
+    }
+}
+
+/// Small format or state tag.
+struct QZTag: View {
+    let text: String
+    var tint: Color = QZTheme.Palette.secondary
+
+    var body: some View {
+        Text(text)
+            .font(QZTheme.Typography.caption.weight(.medium))
+            .foregroundStyle(tint)
+            .padding(.horizontal, QZTheme.Space.s)
+            .padding(.vertical, QZTheme.Space.xxs)
+            .background(tint.opacity(0.12), in: Capsule())
+    }
+}
