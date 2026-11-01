@@ -1,9 +1,60 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-  <g transform="rotate(-8 470 440)">
-    <rect x="326" y="286" width="268" height="300" rx="34" fill="#FFFFFF"/>
+  <defs>
+    <linearGradient id="purple" x1="345" y1="238" x2="637" y2="538" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A978FF"/>
+      <stop offset="0.45" stop-color="#7C4DFF"/>
+      <stop offset="1" stop-color="#5B21E8"/>
+    </linearGradient>
+    <linearGradient id="red" x1="292" y1="312" x2="694" y2="592" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF6A80"/>
+      <stop offset="0.46" stop-color="#FF4D6D"/>
+      <stop offset="1" stop-color="#FF7A3D"/>
+    </linearGradient>
+    <linearGradient id="yellow" x1="352" y1="390" x2="688" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFE35A"/>
+      <stop offset="0.5" stop-color="#FFD21F"/>
+      <stop offset="1" stop-color="#FF9F0A"/>
+    </linearGradient>
+    <linearGradient id="whiteFade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.64"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="leftFade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.48"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="purpleClip"><rect x="345" y="238" width="292" height="310" rx="36"/></clipPath>
+    <clipPath id="redClip"><rect x="292" y="312" width="402" height="290" rx="36"/></clipPath>
+    <clipPath id="yellowClip"><rect x="352" y="390" width="336" height="250" rx="36"/></clipPath>
+  </defs>
+
+  <g transform="rotate(8 491 388)">
+    <rect x="350" y="248" width="292" height="310" rx="36" fill="#3D0E91" opacity="0.16"/>
+    <g clip-path="url(#purpleClip)">
+      <rect x="345" y="238" width="292" height="310" rx="36" fill="url(#purple)"/>
+      <rect x="345" y="238" width="292" height="52" fill="url(#whiteFade)"/>
+      <rect x="347" y="240" width="288" height="6" rx="3" fill="#FFFFFF" opacity="0.64"/>
+      <rect x="345" y="238" width="12" height="310" fill="url(#leftFade)"/>
+    </g>
   </g>
-  <g transform="rotate(-2 512 400)">
-    <path fill="#8CFFD6" d="M420 240H612L644 272V520C644 540 628 556 608 556H420C400 556 384 540 384 520V276C384 256 400 240 420 240Z"/>
-    <path fill="#E6FFF7" d="M612 240L644 272H612Z"/>
+
+  <g transform="rotate(7 493 452)">
+    <rect x="297" y="322" width="402" height="290" rx="36" fill="#B3123A" opacity="0.16"/>
+    <g clip-path="url(#redClip)">
+      <rect x="292" y="312" width="402" height="290" rx="36" fill="url(#red)"/>
+      <rect x="292" y="312" width="402" height="50" fill="url(#whiteFade)"/>
+      <rect x="294" y="314" width="398" height="6" rx="3" fill="#FFFFFF" opacity="0.64"/>
+      <rect x="292" y="312" width="12" height="290" fill="url(#leftFade)"/>
+    </g>
+  </g>
+
+  <g transform="rotate(4 520 510)">
+    <rect x="357" y="400" width="336" height="250" rx="36" fill="#B35D00" opacity="0.15"/>
+    <g clip-path="url(#yellowClip)">
+      <rect x="352" y="390" width="336" height="250" rx="36" fill="url(#yellow)"/>
+      <rect x="352" y="390" width="336" height="48" fill="url(#whiteFade)"/>
+      <rect x="354" y="392" width="332" height="6" rx="3" fill="#FFFFFF" opacity="0.64"/>
+      <rect x="352" y="390" width="12" height="250" fill="url(#leftFade)"/>
+    </g>
   </g>
 </svg>

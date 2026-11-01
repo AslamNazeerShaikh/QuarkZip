@@ -157,8 +157,8 @@ As a user, the dense workspace is readable and behaves like a Mac app.
 As a user, the app has a recognizable Mac icon and the workspace cannot be
 resized into a broken layout.
 
-- A layered Icon Composer file with coral background, white archive tray,
-  and mint glass cards.
+- A layered Icon Composer file with a pale cyan-to-pink glass tile, a
+  blue-violet archive tray, violet/coral/gold cards, and a gold sparkle.
 - No text, letters, SF Symbols, or 7-Zip marks.
 - Review sheet shows default, dark, tinted, clear, 32 pt, and 16 pt.
 - `Assets.car` and `AppIcon.icns` ship in the bundle; Info.plist names the

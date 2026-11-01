@@ -409,9 +409,10 @@ Implemented from this review:
 - `Scripts/contrast-check.sh` is now part of `verify`. It checks primary,
   secondary, and faint text on card, window, and inspector backgrounds, plus
   primary text on every category and method tint, in light and dark.
-- The app icon is a layered Icon Composer file: a coral automatic gradient,
-  a white open archive tray, and two glass cards with a mint front card. The
-  review sheet covers default, dark, tinted, clear, 32 pt, and 16 pt.
+- The app icon is a layered Icon Composer file: a pale cyan-to-pink glass
+  tile, a blue-violet archive tray, three fanned jewel cards (violet, coral,
+  gold), and a gold sparkle. The review sheet covers default, dark, tinted,
+  clear, 32 pt, and 16 pt.
 - The window has a 1360 x 800 initial size, a 1200 x 720 content minimum, and
   a 1680 x 1050 maximum clamped to the screen. `WindowSizing` sets both the
   content and frame limits.
