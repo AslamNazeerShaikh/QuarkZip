@@ -231,6 +231,10 @@ Header and filter controls are system `Button`, `Menu`, `Picker`, and
   so selection changes and keystrokes re-render only affected rows.
   Dates reuse one cached `DateFormatter` per locale/time zone/style
   (20k dates: ~1.04 s uncached, ~0.01 s cached, release build).
+- Archive-wide totals, top-5 largest, and method ranking compute once
+  per open in `ArchiveFacts` (one pass, no full sort) off the main actor;
+  the header and inspector read the cached facts, so expanding the
+  inspector never scans or sorts entries on the animation path.
 - Empty states name the active filter and offer the reset path.
 - Status bar shows the current view, not the whole archive; while
   windowing it reads "500 of 84,102 entries".

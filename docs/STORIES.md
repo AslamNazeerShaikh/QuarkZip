@@ -202,10 +202,10 @@ icons always render, and huge archives scroll and select instantly.
 - Every SF Symbol the UI can render is listed in `QZAppSymbols` and the
   `--selftest` gate fails if any name stops resolving (this caught the
   missing Reveal icon, now `magnifyingglass`).
-- The list renders a 500-row window with an explicit "Show more"
-  footer, rows are `Equatable` value views, dates reuse a cached
-  formatter, and filter/sort/counts run off the main actor with only the
-  newest generation publishing.
+- Archive-wide totals, top-5 largest, and method ranking compute once
+  per open in `ArchiveFacts` (one pass, no full sort) off the main actor;
+  the header and inspector read the cached facts, so expanding the
+  inspector never scans or sorts entries on the animation path.
 - Selection is a 20 percent accent fill with a 40 percent border; primary
   text and method pills stay readable in light and dark.
 - `verify.sh` passes, snapshots were reviewed in light and dark.
