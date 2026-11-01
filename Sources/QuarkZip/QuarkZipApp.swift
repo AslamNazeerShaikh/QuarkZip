@@ -92,14 +92,6 @@ struct QuarkZipApp: App {
             }
 
             CommandGroup(after: .sidebar) {
-                Button(model.showInspector ? "Hide Inspector" : "Show Inspector") {
-                    model.showInspector.toggle()
-                }
-                .keyboardShortcut("i", modifiers: [.command, .option])
-                .disabled(!model.hasArchive)
-
-                Divider()
-
                 Button("Copy Entry Path") {
                     model.copySelectedPaths()
                 }

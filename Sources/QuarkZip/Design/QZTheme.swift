@@ -34,12 +34,12 @@ enum QZTheme {
     }
 
     enum Size {
-        static let pane: CGFloat = 264
-        static let paneMin: CGFloat = 220
-        static let paneMax: CGFloat = 320
-        static let minWindowWidth: CGFloat = 1200
+        static let pane: CGFloat = 316
+        static let paneMin: CGFloat = 264
+        static let paneMax: CGFloat = 384
+        static let minWindowWidth: CGFloat = 1304
         static let minWindowHeight: CGFloat = 720
-        static let defaultWindowWidth: CGFloat = 1360
+        static let defaultWindowWidth: CGFloat = 1464
         static let defaultWindowHeight: CGFloat = 800
         static let maxWindowWidth: CGFloat = 1680
         static let maxWindowHeight: CGFloat = 1050

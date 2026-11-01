@@ -86,8 +86,8 @@ struct RootView: View {
     }
 
     private var inspectorBinding: Binding<Bool> {
-        Binding(get: { model.showInspector && model.hasArchive },
-                set: { model.showInspector = $0 })
+        // Both panes are always visible; the inspector appears with the archive.
+        Binding(get: { model.hasArchive }, set: { _ in })
     }
 
     private var aboutBinding: Binding<Bool> {
@@ -132,14 +132,6 @@ struct RootView: View {
                 Label("About QuarkZip", systemImage: "info.circle")
             }
             .help("About QuarkZip")
-
-            Button {
-                model.showInspector.toggle()
-            } label: {
-                Label("Inspector", systemImage: "sidebar.right")
-            }
-            .help("Show or hide the inspector (⌥⌘I)")
-            .disabled(!model.hasArchive)
 
             Button {
                 model.revealInFinder()

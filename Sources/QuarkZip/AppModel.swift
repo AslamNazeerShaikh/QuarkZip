@@ -28,7 +28,6 @@ final class AppModel {
         didSet { scheduleRebuild() }
     }
 
-    var showInspector = true
     var showAbout = false
 
     var sort = EntrySort() {

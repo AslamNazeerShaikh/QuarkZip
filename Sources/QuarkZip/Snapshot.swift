@@ -19,7 +19,7 @@ enum SnapshotRunner {
         )
         try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
 
-        let size = CGSize(width: 1360, height: 800)
+        let size = CGSize(width: 1464, height: 800)
 
         let welcome = AppModel()
         welcome.seedRecentsForSnapshot(SnapshotSample.recentURLs)
