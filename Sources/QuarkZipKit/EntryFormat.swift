@@ -4,10 +4,28 @@ import Foundation
 ///
 /// Every function is pure and takes its locale, time zone, or unit system as
 /// an argument so tests never depend on the machine.
+///
+/// Sizes always use binary IEC units (1 KiB = 1,024 bytes) so a byte count
+/// never depends on Finder's decimal display.
 public enum EntryFormat {
-    /// File size in Finder's decimal units, for example `1.2 MB`.
+    /// File size in binary IEC units, for example `1.5 KiB` or `12.1 KiB`.
     public static func bytes(_ value: UInt64) -> String {
-        value == 0 ? "0 B" : value.formatted(.byteCount(style: .file))
+        if value == 0 { return "0 B" }
+        if value < 1_024 { return "\(value) B" }
+        let units = ["KiB", "MiB", "GiB", "TiB", "PiB", "EiB"]
+        var scaled = Double(value)
+        var unitIndex = -1
+        while scaled >= 1_024 && unitIndex < units.count - 1 {
+            scaled /= 1_024
+            unitIndex += 1
+        }
+        let formatted: String
+        if scaled >= 100 {
+            formatted = String(format: "%.0f", scaled)
+        } else {
+            formatted = String(format: "%.1f", scaled)
+        }
+        return "\(formatted) \(units[unitIndex])"
     }
 
     /// Packed size when known, otherwise an em dash.

@@ -299,6 +299,17 @@ struct ArchiveErrorTests {
 
 @Suite("EntryFormat")
 struct EntryFormatTests {
+    @Test func sizesUseBinaryIECUnits() {
+        #expect(EntryFormat.bytes(0) == "0 B")
+        #expect(EntryFormat.bytes(512) == "512 B")
+        #expect(EntryFormat.bytes(1_024) == "1.0 KiB")
+        #expect(EntryFormat.bytes(1_536) == "1.5 KiB")
+        #expect(EntryFormat.bytes(1_048_576) == "1.0 MiB")
+        #expect(EntryFormat.bytes(1_073_741_824) == "1.0 GiB")
+        #expect(EntryFormat.bytes(123_456_789) == "118 MiB")
+        #expect(EntryFormat.packed(1_024) == "1.0 KiB")
+    }
+
     @Test func sizesAndRatios() {
         #expect(!EntryFormat.bytes(0).isEmpty)
         #expect(EntryFormat.packed(nil) == "—")
