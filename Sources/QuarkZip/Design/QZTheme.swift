@@ -107,6 +107,12 @@ enum QZTheme {
         static let headerBackground = Color(nsColor: .controlBackgroundColor)
         static let filterBackground = Color(nsColor: .controlBackgroundColor)
 
+        /// Cool ambient wash for the dashboard background: barely-there
+        /// blue-gray light from the top. Content text never sits on it
+        /// directly; cards carry their own frosted fill.
+        static let ambientTop = Color(nsColor: .systemBlue).opacity(0.07)
+        static let ambientBottom = Color.clear
+
         static func category(_ category: EntryCategory) -> Color {
             switch category {
             case .folder: return Color(nsColor: .systemBlue)
@@ -136,6 +142,15 @@ enum QZTheme {
             default: return Color(nsColor: .systemRed)
             }
         }
+    }
+
+    enum Elevation {
+        static let cardRadius: CGFloat = 16
+        static let cardY: CGFloat = 8
+        static let cardOpacity: Double = 0.08
+        static let panelRadius: CGFloat = 24
+        static let panelY: CGFloat = 12
+        static let panelOpacity: Double = 0.10
     }
 
     enum Motion {

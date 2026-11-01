@@ -25,7 +25,12 @@ struct WelcomeView: View {
             .frame(maxWidth: 1180, alignment: .leading)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .background(QZTheme.Palette.background)
+        .background {
+            QZTheme.Palette.background
+            LinearGradient(colors: [QZTheme.Palette.ambientTop,
+                                    QZTheme.Palette.ambientBottom],
+                           startPoint: .top, endPoint: .bottom)
+        }
         .dropDestination(for: URL.self) { urls, _ in
             guard let url = urls.first(where: { $0.isFileURL }) else { return false }
             model.open(url)
@@ -77,7 +82,7 @@ struct WelcomeView: View {
     }
 
     private var dropCard: some View {
-        QZCard(padding: 0) {
+        QZGlassCard(padding: 0) {
             VStack(spacing: 0) {
                 VStack(spacing: QZTheme.Space.s) {
                     ZStack {
@@ -153,7 +158,7 @@ struct WelcomeView: View {
     }
 
     private var recentCard: some View {
-        QZCard {
+        QZGlassCard {
             VStack(alignment: .leading, spacing: QZTheme.Space.s) {
                 QZSectionLabel(title: "Recent Archives",
                                trailing: model.recents.isEmpty ? nil : "\(model.recents.count)")
@@ -248,7 +253,7 @@ struct WelcomeView: View {
                                 emoji: String? = nil,
                                 title: String,
                                 text: String) -> some View {
-        QZCard {
+        QZGlassCard {
             HStack(alignment: .top, spacing: QZTheme.Space.m) {
                 if let emoji {
                     QZEmoji(emoji: emoji)

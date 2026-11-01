@@ -112,12 +112,20 @@ struct QZStatCard: View {
         .padding(.horizontal, QZTheme.Space.m)
         .padding(.vertical, QZTheme.Space.s)
         .frame(minWidth: 96, alignment: .leading)
-        .background(QZTheme.Palette.card,
-                    in: RoundedRectangle(cornerRadius: QZTheme.Radius.control, style: .continuous))
+        .background {
+            RoundedRectangle(cornerRadius: QZTheme.Radius.control, style: .continuous)
+                .fill(.ultraThinMaterial)
+            RoundedRectangle(cornerRadius: QZTheme.Radius.control, style: .continuous)
+                .fill(LinearGradient(colors: [.white.opacity(0.14), .clear],
+                                      startPoint: .top, endPoint: .bottom))
+        }
         .overlay {
             RoundedRectangle(cornerRadius: QZTheme.Radius.control, style: .continuous)
-                .strokeBorder(QZTheme.Palette.cardBorder, lineWidth: 0.5)
+                .strokeBorder(.white.opacity(0.22), lineWidth: 0.5)
         }
+        .shadow(color: .black.opacity(QZTheme.Elevation.cardOpacity),
+                radius: QZTheme.Elevation.cardRadius,
+                y: QZTheme.Elevation.cardY)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(label): \(value)")
     }
