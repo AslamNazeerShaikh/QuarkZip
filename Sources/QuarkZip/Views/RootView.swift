@@ -44,6 +44,18 @@ struct RootView: View {
         .toolbar { toolbar }
         .frame(minWidth: QZTheme.Size.minWindowWidth,
                minHeight: QZTheme.Size.minWindowHeight)
+        .background {
+            WindowSizing(
+                minSize: CGSize(width: QZTheme.Size.minWindowWidth,
+                                height: QZTheme.Size.minWindowHeight),
+                maxSize: CGSize(width: QZTheme.Size.maxWindowWidth,
+                                height: QZTheme.Size.maxWindowHeight),
+                defaultSize: CGSize(width: QZTheme.Size.defaultWindowWidth,
+                                    height: QZTheme.Size.defaultWindowHeight)
+            )
+            .frame(width: 0, height: 0)
+            .accessibilityHidden(true)
+        }
         .onAppear {
             guard !handledLaunchArgument else { return }
             handledLaunchArgument = true

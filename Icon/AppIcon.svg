@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">QuarkZip</title>
+  <desc id="desc">Two glass file cards rising from an open archive tray, on a coral sunset tile.</desc>
+
+  <defs>
+    <linearGradient id="bg" x1="120" y1="100" x2="904" y2="924" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF9A5C"/>
+      <stop offset="0.48" stop-color="#FF5F7E"/>
+      <stop offset="1" stop-color="#DF3E90"/>
+    </linearGradient>
+    <radialGradient id="bgLight" cx="0" cy="0" r="1" gradientTransform="translate(330 260) rotate(35) scale(620)">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.38"/>
+      <stop offset="0.62" stop-color="#FFFFFF" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="tray" x1="280" y1="450" x2="744" y2="780" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.55" stop-color="#FFF8FA"/>
+      <stop offset="1" stop-color="#FFE8F1"/>
+    </linearGradient>
+    <linearGradient id="backCard" x1="340" y1="300" x2="600" y2="580" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.78"/>
+      <stop offset="1" stop-color="#FFF0F5" stop-opacity="0.58"/>
+    </linearGradient>
+    <radialGradient id="card" cx="0" cy="0" r="1" gradientTransform="translate(480 300) rotate(58) scale(330)">
+      <stop offset="0" stop-color="#F2FFF9"/>
+      <stop offset="0.48" stop-color="#C9FFE9"/>
+      <stop offset="1" stop-color="#8EF7D2"/>
+    </radialGradient>
+    <radialGradient id="cardGlow" cx="0" cy="0" r="1" gradientTransform="translate(512 430) scale(220)">
+      <stop offset="0" stop-color="#C9FFE9" stop-opacity="0.40"/>
+      <stop offset="1" stop-color="#C9FFE9" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="rim" x1="252" y1="440" x2="252" y2="774" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.9"/>
+      <stop offset="0.5" stop-color="#FFFFFF" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feGaussianBlur stdDeviation="24"/>
+    </filter>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="20"/>
+    </filter>
+    <clipPath id="tile">
+      <rect x="100" y="100" width="824" height="824" rx="185"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#tile)">
+    <rect x="100" y="100" width="824" height="824" fill="url(#bg)"/>
+    <rect x="100" y="100" width="824" height="824" fill="url(#bgLight)"/>
+
+    <ellipse cx="512" cy="786" rx="258" ry="40" fill="#7A0E3F" opacity="0.34" filter="url(#softShadow)"/>
+    <circle cx="512" cy="430" r="220" fill="url(#cardGlow)" filter="url(#glow)"/>
+
+    <g transform="rotate(-8 470 440)">
+      <rect x="326" y="286" width="268" height="300" rx="34" fill="url(#backCard)"/>
+    </g>
+
+    <g transform="rotate(-2 512 400)">
+      <path fill="url(#card)" d="M420 240H612L644 272V520C644 540 628 556 608 556H420C400 556 384 540 384 520V276C384 256 400 240 420 240Z"/>
+      <path fill="#FFFFFF" opacity="0.55" d="M612 240L644 272H612Z"/>
+      <path fill="#FFFFFF" opacity="0.30" d="M420 240H612L644 272H608L576 240Z"/>
+    </g>
+
+    <path fill="url(#tray)" d="M308 470H340V500C340 526 360 548 386 548H638C664 548 684 526 684 500V470H716C746.928 470 772 495.072 772 526V714C772 744.928 746.928 770 716 770H308C277.072 770 252 744.928 252 714V526C252 495.072 277.072 470 308 470Z"/>
+    <path d="M308 470H340V500C340 526 360 548 386 548H638C664 548 684 526 684 500V470H716C746.928 470 772 495.072 772 526V542H252V526C252 495.072 277.072 470 308 470Z" fill="#FFFFFF" opacity="0.32"/>
+    <path d="M264 530V714C264 738.301 283.699 758 308 758H716C740.301 758 760 738.301 760 714V530" fill="none" stroke="url(#rim)" stroke-width="4" opacity="0.75"/>
+    <path d="M340 470V500C340 521.539 353.6 540 370 546" fill="none" stroke="#FFFFFF" stroke-width="3" opacity="0.45"/>
+    <path d="M684 470V500C684 521.539 670.4 540 654 546" fill="none" stroke="#FFFFFF" stroke-width="3" opacity="0.45"/>
+  </g>
+
+  <rect x="100.5" y="100.5" width="823" height="823" rx="184.5" fill="none" stroke="#FFFFFF" stroke-opacity="0.16"/>
+</svg>

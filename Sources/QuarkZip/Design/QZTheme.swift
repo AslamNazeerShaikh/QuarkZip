@@ -29,8 +29,12 @@ enum QZTheme {
 
     enum Size {
         static let sidebar: CGFloat = 230
-        static let minWindowWidth: CGFloat = 1120
-        static let minWindowHeight: CGFloat = 640
+        static let minWindowWidth: CGFloat = 1200
+        static let minWindowHeight: CGFloat = 720
+        static let defaultWindowWidth: CGFloat = 1360
+        static let defaultWindowHeight: CGFloat = 800
+        static let maxWindowWidth: CGFloat = 1680
+        static let maxWindowHeight: CGFloat = 1050
         static let rowCompact: CGFloat = 24
         static let rowComfortable: CGFloat = 30
         static let header: CGFloat = 68

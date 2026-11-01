@@ -1,5 +1,7 @@
 # QuarkZip
 
+<p align="center"><img src="Icon/AppIcon-1024.png" width="128" alt="QuarkZip app icon"></p>
+
 A native macOS archive manager. Browse an archive like a folder, extract what
 you selected, and create new archives without leaving the window. Built with
 Swift 6 and SwiftUI, powered by the 7-Zip engine compiled into the same
@@ -28,8 +30,8 @@ it in a dense, color-coded workspace with category filters, an entry
 inspector, and archive composition. Everything is native SwiftUI. The engine is linked into the app, the Swift
 core is at 100 percent line coverage, and `./Scripts/verify.sh` is green.
 
-Extraction, compression, archive editing, search, and the app icon are the
-next milestones. See [docs/roadmap.md](docs/roadmap.md) and
+Extraction, compression, archive editing, and deeper search are the next
+milestones. See [docs/roadmap.md](docs/roadmap.md) and
 [docs/STORIES.md](docs/STORIES.md).
 
 This is still pre-release software. Do not point it at the only copy of an

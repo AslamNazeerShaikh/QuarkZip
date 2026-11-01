@@ -59,8 +59,10 @@ struct QuarkZipApp: App {
             RootView()
                 .environment(model)
         }
-        .defaultSize(width: 1360, height: 820)
+        .defaultSize(width: QZTheme.Size.defaultWindowWidth,
+                     height: QZTheme.Size.defaultWindowHeight)
         .windowToolbarStyle(.unified)
+        .windowResizability(.contentMinSize)
         .commands {
             CommandGroup(replacing: .newItem) {
                 Button("Open Archive…") {

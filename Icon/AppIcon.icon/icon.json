@@ -1,0 +1,16 @@
+{
+  "fill" : {
+    "automatic-gradient" : "srgb:0.98000,0.33000,0.42000,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        { "glass" : true, "image-name" : "box.svg", "name" : "box" },
+        { "glass" : true, "image-name" : "cards.svg", "name" : "cards", "opacity" : 1.0 }
+      ],
+      "shadow" : { "kind" : "neutral", "opacity" : 0.5 },
+      "translucency" : { "enabled" : true, "value" : 0.25 }
+    }
+  ],
+  "supported-platforms" : { "squares" : [ "macOS" ] }
+}
