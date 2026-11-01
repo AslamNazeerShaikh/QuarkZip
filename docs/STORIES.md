@@ -1,0 +1,162 @@
+# Stories
+
+One story is one vertical slice and one commit. A story is done only when
+every acceptance line is proven by a test, a self-test step, or a named
+snapshot. Check the box when it is merged.
+
+Convention: `M0-03` is milestone 0, story 3. Keep the order.
+
+## M0 - Foundation
+
+### [ ] M0-01 Package builds
+
+As a maintainer, I can build all three targets with one command.
+
+- `swift build` compiles `QZEngine`, `QuarkZipKit`, and `QuarkZip` with zero
+  warnings.
+- `swift test` runs both test targets.
+- `./build.sh` installs `~/Applications/QuarkZip.app` and it launches.
+- `./Scripts/verify.sh` exits 0 on a clean checkout.
+
+### [ ] M0-02 Design tokens
+
+As the designer, I have one source of colors, spacing, type, radii, and
+motion.
+
+- `QZTheme` exposes every token in `docs/design/design-system.md`.
+- Tokens resolve correctly in light, dark, increased contrast, and Reduce
+  Transparency.
+- A unit test asserts no view file contains a literal color, radius, or
+  duration. The check is `Scripts/token-lint.sh`.
+
+### [ ] M0-03 App shell
+
+As a user, I can open the app and understand what it is for.
+
+- One window, minimum 900 x 560, restores size and position.
+- Sidebar: Recents, Favorites, Volumes, with counts.
+- Toolbar: Open, New, Extract, More. Breadcrumb sits under it.
+- Empty state has a drop zone and two actions.
+- Status bar shows "No archive open".
+- Light and dark snapshots exist and were reviewed.
+- Every command has a menu item and a shortcut.
+
+### [ ] M0-04 Engine opens an archive
+
+As the app, I can ask the engine for the entries of a real archive.
+
+- `qz_open` opens 7z, zip, and tar by content.
+- `qz_entry_count` returns the exact count.
+- `qz_entry_at` returns path, size, packed size, modified time, CRC, folder
+  flag, and method.
+- A wrong password returns `QZ_E_PASSWORD`; a corrupt file returns
+  `QZ_E_CORRUPT`.
+- `qz_close` releases everything. 1,000 open/close cycles keep memory flat.
+- Sanitizer run is clean.
+
+### [ ] M0-05 Domain model and tree
+
+As the browser, I have a tested model to render.
+
+- `ArchivePath` rejects absolute paths, `..`, empty components, and NUL.
+- `ArchiveTree` builds folders and children in O(n) from flat entries.
+- Entries with the same name are stable; duplicate paths keep the first and
+  report the rest.
+- Sorting by name, size, packed size, modified, and kind is stable and
+  tested with a table.
+- `PathPolicy` returns `.safe`, `.collision`, or `.unsafe` for every entry in
+  an extraction plan.
+- Line coverage for these files is 100%.
+
+### [ ] M0-06 Browser lists entries
+
+As a user, I see the contents of an archive.
+
+- Opening a 7z with 10,000 entries shows the first 2,000 rows in under
+  150 ms on this Mac.
+- The remaining batches append without losing selection or scroll position.
+- Columns: name, size, packed, ratio, modified, CRC, method.
+- Folders sort before files by default; double-click enters a folder.
+- Command-Up goes to the parent. Breadcrumbs update.
+- The list is virtualized: only visible rows are created.
+- A 100k entry fixture scrolls at 60 fps.
+
+### [ ] M0-07 Typed errors
+
+As a user, I get a sentence I can act on.
+
+- Opening a non-archive shows an inline empty state, not a crash.
+- A wrong password shows the password sheet again with an inline message.
+- A corrupt entry is reported with its path.
+- No error path prints a raw code without a sentence.
+- Error mapping from `QzStatus` to `ArchiveError` is table-tested.
+
+### [ ] M0-08 Self-test and snapshots
+
+As an agent, I can prove the app works without clicking.
+
+- `QuarkZip --selftest` runs against a temp store and prints PASS per check.
+- It exits 0 when every check passes and 1 otherwise.
+- `Scripts/snapshot.sh` writes light and dark PNGs for the welcome page and
+  browser.
+- `Scripts/snapshot.sh` uses sample archives only, never user files.
+
+### [ ] M0-09 Coverage gate
+
+As a maintainer, I cannot merge a coverage drop.
+
+- `Scripts/coverage.sh` measures `QuarkZipKit` with `llvm-cov`.
+- The gate fails under 100% line coverage.
+- The report is written to `coverage/summary.txt` and printed.
+- The engine baseline is recorded in `docs/testing.md` and may only go up.
+
+### [ ] M0-10 Icon and About
+
+As a user, the app looks finished in the Dock.
+
+- `Icon/AppIcon.icon` exists and compiles with `tools/make_icon.sh`.
+- About shows the app version, engine version, credits, and license.
+- The 7-Zip name is credited, never used as the product name.
+- The icon is reviewed in light, dark, tinted, and clear.
+
+## M1 - Browse
+
+### [ ] M1-01 Nested folders and history
+### [ ] M1-02 Sidebar recents and favorites
+### [ ] M1-03 Inspector and archive properties
+### [ ] M1-04 Search and filter
+### [ ] M1-05 Nested archive sessions
+### [ ] M1-06 Quick Look preview
+### [ ] M1-07 Password sheet and Keychain
+### [ ] M1-08 Multiple windows and drag to open
+
+## M2 - Extract
+
+### [ ] M2-01 Extract selection with plan sheet
+### [ ] M2-02 Collision policy
+### [ ] M2-03 Progress, ETA, cancel, per-file report
+### [ ] M2-04 Drag out with file promises
+### [ ] M2-05 Path safety suite
+### [ ] M2-06 Job queue and history
+
+## M3 - Create and edit
+
+### [ ] M3-01 Compress sheet with presets
+### [ ] M3-02 Advanced compression options
+### [ ] M3-03 Encryption and volumes
+### [ ] M3-04 Update, add, delete, rename in archive
+### [ ] M3-05 Test archive and checksums
+
+## M4 - Delight
+
+### [ ] M4-01 Command palette
+### [ ] M4-02 Finder Quick Actions and Services
+### [ ] M4-03 Menu bar jobs
+### [ ] M4-04 Shortcuts and URL scheme
+### [ ] M4-05 Accessibility and localization audit
+
+## M5 - Ship
+
+### [ ] M5-01 Signing, notarization, DMG
+### [ ] M5-02 Edge-case matrix
+### [ ] M5-03 Release notes and 1.0
