@@ -7,6 +7,7 @@ struct QuarkZipApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var model = AppModel()
     @AppStorage("appearance") private var appearance: AppearanceMode = .system
+    @AppStorage("accent") private var accent: AccentChoice = .blue
 
     init() {
         if let status = Self.runSelfTestIfRequested() {
@@ -60,8 +61,9 @@ struct QuarkZipApp: App {
             RootView()
                 .environment(model)
                 .preferredColorScheme(appearance.colorScheme)
+                .tint(accent.color)
         }
-        .defaultSize(width: 1180, height: 720)
+        .defaultSize(width: 1360, height: 820)
         .windowToolbarStyle(.unified)
         .commands {
             CommandGroup(replacing: .newItem) {
@@ -77,26 +79,33 @@ struct QuarkZipApp: App {
                 .disabled(!model.hasArchive)
             }
 
+            CommandGroup(after: .sidebar) {
+                Button(model.showInspector ? "Hide Inspector" : "Show Inspector") {
+                    model.showInspector.toggle()
+                }
+                .keyboardShortcut("i", modifiers: [.command, .option])
+                .disabled(!model.hasArchive)
+
+                Divider()
+
+                Button("Copy Entry Path") {
+                    model.copySelectedPaths()
+                }
+                .keyboardShortcut("c", modifiers: [.command, .option])
+                .disabled(model.selection.isEmpty)
+
+                Button("Copy Entry Name") {
+                    model.copySelectedNames()
+                }
+                .disabled(model.selection.isEmpty)
+            }
+
             CommandMenu("Archive") {
                 Button("Go to Parent Folder") {
                     model.goUp()
                 }
                 .keyboardShortcut(.upArrow, modifiers: .command)
                 .disabled(!model.hasArchive || model.currentFolder.isRoot)
-
-                Divider()
-
-                Button("Extract Selection…") {
-                    // Milestone 2.
-                }
-                .keyboardShortcut("e", modifiers: [.command, .shift])
-                .disabled(true)
-
-                Button("Test Archive…") {
-                    // Milestone 3.
-                }
-                .keyboardShortcut("t", modifiers: [.command, .shift])
-                .disabled(true)
 
                 Divider()
 

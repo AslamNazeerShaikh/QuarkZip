@@ -27,6 +27,8 @@ enum AppearanceMode: String, CaseIterable, Identifiable {
 
 struct SettingsView: View {
     @AppStorage("appearance") private var appearance: AppearanceMode = .system
+    @AppStorage("accent") private var accent: AccentChoice = .blue
+    @AppStorage("density") private var density: QZDensity = .compact
 
     var body: some View {
         TabView {
@@ -38,11 +40,53 @@ struct SettingsView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+
+                    LabeledContent("Accent") {
+                        HStack(spacing: QZTheme.Space.s) {
+                            ForEach(AccentChoice.allCases) { choice in
+                                Button {
+                                    accent = choice
+                                } label: {
+                                    Circle()
+                                        .fill(choice.color)
+                                        .frame(width: 18, height: 18)
+                                        .overlay {
+                                            Circle()
+                                                .strokeBorder(.white.opacity(0.55), lineWidth: 0.5)
+                                        }
+                                        .overlay {
+                                            Circle()
+                                                .strokeBorder(QZTheme.Palette.primary.opacity(0.8),
+                                                              lineWidth: accent == choice ? 2 : 0)
+                                                .padding(-3)
+                                        }
+                                }
+                                .buttonStyle(.plain)
+                                .help(choice.title)
+                                .accessibilityLabel("\(choice.title) accent")
+                                .accessibilityAddTraits(accent == choice ? .isSelected : [])
+                            }
+                        }
+                    }
                 }
-                Section("Extraction") {
-                    Text("Extraction options arrive with milestone 2.")
-                        .font(QZTheme.Typography.callout)
+
+                Section("Density") {
+                    Picker("Row Density", selection: $density) {
+                        ForEach(QZDensity.allCases) { option in
+                            Text(option.title).tag(option)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    Text("Compact fits more entries on screen. Comfortable adds breathing room.")
+                        .font(QZTheme.Typography.caption)
                         .foregroundStyle(QZTheme.Palette.secondary)
+                }
+
+                Section("File Types") {
+                    Text("Categories and methods use a fixed color palette in light and dark. The accent color only changes controls and selection.")
+                        .font(QZTheme.Typography.caption)
+                        .foregroundStyle(QZTheme.Palette.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
             .formStyle(.grouped)
@@ -64,7 +108,7 @@ struct SettingsView: View {
             .formStyle(.grouped)
             .tabItem { Label("About", systemImage: "info.circle") }
         }
-        .frame(width: 480, height: 300)
+        .frame(width: 500, height: 430)
     }
 }
 

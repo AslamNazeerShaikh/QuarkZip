@@ -7,7 +7,6 @@ struct RootView: View {
     @State private var handledLaunchArgument = false
 
     var body: some View {
-        @Bindable var model = model
         NavigationSplitView {
             SidebarView()
                 .navigationSplitViewColumnWidth(
@@ -31,7 +30,9 @@ struct RootView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 QZStatusBar(text: model.statusText,
                             selectionCount: model.selection.count,
-                            isLoading: model.isLoading)
+                            isLoading: model.isLoading,
+                            filter: model.filterSummary,
+                            engine: SevenZipArchiveService.engineVersion)
             }
             .background(QZTheme.Palette.background)
             .animation(QZTheme.Motion.standard, value: model.error)
@@ -57,7 +58,6 @@ struct RootView: View {
 
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
-        @Bindable var model = model
         ToolbarItemGroup(placement: .navigation) {
             Button {
                 model.goUp()
@@ -77,18 +77,12 @@ struct RootView: View {
 
         ToolbarItemGroup(placement: .primaryAction) {
             if model.hasArchive {
-                TextField("Search", text: $model.searchText)
-                    .textFieldStyle(.roundedBorder)
-                    .frame(width: 180)
-                    .help("Filter this folder")
-
                 Button {
-                    // Extraction lands in milestone 2.
+                    model.showInspector.toggle()
                 } label: {
-                    Label("Extract", systemImage: "arrow.up.doc")
+                    Label("Inspector", systemImage: "sidebar.right")
                 }
-                .disabled(true)
-                .help("Extract the selection (⌘⇧E)")
+                .help("Show or hide the inspector (⌥⌘I)")
 
                 Button {
                     model.revealInFinder()

@@ -24,6 +24,12 @@ final class AppModel {
         didSet { rebuildDisplayed() }
     }
 
+    var filter: EntryFilter = .all {
+        didSet { rebuildDisplayed() }
+    }
+
+    var showInspector = true
+
     var sort = EntrySort() {
         didSet { rebuildDisplayed() }
     }
@@ -36,6 +42,10 @@ final class AppModel {
         }
     }
 
+    private(set) var baseEntries: [ArchiveEntry] = []
+    private(set) var filterCounts: [EntryFilter: Int] = [:]
+    private var entriesByID: [EntryID: ArchiveEntry] = [:]
+
     private let service: any ArchiveService
 
     init(service: any ArchiveService = SevenZipArchiveService()) {
@@ -47,11 +57,18 @@ final class AppModel {
     var title: String { snapshot?.displayName ?? "QuarkZip" }
 
     var statusText: String {
-        guard let snapshot else { return "No archive open" }
-        let files = snapshot.fileCount
-        let folders = snapshot.folderCount
-        let size = EntryFormat.bytes(snapshot.totalUncompressedSize)
-        return "\(files) files, \(folders) folders  ·  \(size)"
+        guard snapshot != nil else { return "No archive open" }
+        let files = displayed.lazy.filter { $0.kind == .file }.count
+        let folders = displayed.lazy.filter { $0.kind == .folder }.count
+        let bytes = displayed.reduce(UInt64(0)) { $0 &+ $1.size }
+        var parts: [String] = []
+        parts.append(displayed.count == baseEntries.count
+                     ? "\(displayed.count) entries"
+                     : "\(displayed.count) of \(baseEntries.count) entries")
+        if files > 0 { parts.append("\(files) files") }
+        if folders > 0 { parts.append("\(folders) folders") }
+        parts.append(EntryFormat.bytes(bytes))
+        return parts.joined(separator: "  ·  ")
     }
 
     var breadcrumbs: [ArchivePath] {
@@ -66,9 +83,27 @@ final class AppModel {
     }
 
     var selectedEntries: [ArchiveEntry] {
-        guard let snapshot else { return [] }
-        let lookup = Dictionary(uniqueKeysWithValues: snapshot.entries.map { ($0.id, $0) })
-        return selection.compactMap { lookup[$0] }
+        selection.compactMap { entriesByID[$0] }
+    }
+
+    var selectedEntry: ArchiveEntry? {
+        selection.count == 1 ? selectedEntries.first : nil
+    }
+
+    var selectedBytes: UInt64 {
+        selectedEntries.reduce(0) { $0 &+ $1.size }
+    }
+
+    var selectedEncryptedCount: Int {
+        selectedEntries.lazy.filter(\.isEncrypted).count
+    }
+
+    var filterSummary: String? {
+        filter == .all ? nil : filter.title
+    }
+
+    var archivePath: String {
+        snapshot?.url.deletingLastPathComponent().path(percentEncoded: false) ?? ""
     }
 
     // MARK: - Intents
@@ -96,12 +131,51 @@ final class AppModel {
         error = nil
     }
 
+    func clearFilters() {
+        filter = .all
+        searchText = ""
+    }
+
+    func selectAllDisplayed() {
+        selection = Set(displayed.map(\.id))
+    }
+
+    func copySelectedPaths() {
+        let text = selectedEntries.map(\.path.description).joined(separator: "\n")
+        guard !text.isEmpty else { return }
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(text, forType: .string)
+    }
+
+    func copySelectedNames() {
+        let text = selectedEntries.map(\.name).joined(separator: "\n")
+        guard !text.isEmpty else { return }
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(text, forType: .string)
+    }
+
+    func copyArchivePath() {
+        guard let snapshot else { return }
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(snapshot.url.path(percentEncoded: false), forType: .string)
+    }
+
+    /// Used by snapshot mode to show a populated sidebar.
+    func seedRecentsForSnapshot(_ urls: [URL]) {
+        recents = urls
+    }
+
     /// Used by snapshot mode and previews to show a known archive without I/O.
     func applySnapshot(_ snapshot: ArchiveSnapshot) {
         self.snapshot = snapshot
+        entriesByID = Dictionary(uniqueKeysWithValues: snapshot.entries.map { ($0.id, $0) })
         currentFolder = .root
         selection = []
         searchText = ""
+        filter = .all
         rebuildDisplayed()
     }
 
@@ -121,9 +195,11 @@ final class AppModel {
             do {
                 let opened = try await service.open(url: url, password: nil)
                 snapshot = opened
+                entriesByID = Dictionary(uniqueKeysWithValues: opened.entries.map { ($0.id, $0) })
                 currentFolder = .root
                 selection = []
                 searchText = ""
+                filter = .all
                 remember(url)
                 rebuildDisplayed()
             } catch let archiveError as ArchiveError {
@@ -138,9 +214,13 @@ final class AppModel {
 
     func closeArchive() {
         snapshot = nil
+        entriesByID = [:]
         displayed = []
+        baseEntries = []
+        filterCounts = [:]
         selection = []
         searchText = ""
+        filter = .all
         currentFolder = .root
         error = nil
     }
@@ -173,9 +253,15 @@ final class AppModel {
     private func rebuildDisplayed() {
         guard let snapshot else {
             displayed = []
+            baseEntries = []
+            filterCounts = [:]
             return
         }
-        var list = snapshot.tree.children(of: currentFolder)
+        let base = snapshot.tree.children(of: currentFolder)
+        baseEntries = base
+        filterCounts = Self.makeFilterCounts(base)
+
+        var list = base.filter { filter.matches($0) }
         if !searchText.isEmpty {
             list = list.filter {
                 $0.path.description.localizedCaseInsensitiveContains(searchText)
@@ -184,5 +270,17 @@ final class AppModel {
         displayed = sort.sorted(list)
         let valid = Set(displayed.map(\.id))
         selection.formIntersection(valid)
+    }
+
+    private static func makeFilterCounts(_ entries: [ArchiveEntry]) -> [EntryFilter: Int] {
+        var counts: [EntryFilter: Int] = [.all: entries.count, .folders: 0, .encrypted: 0, .large: 0]
+        for entry in entries {
+            let category = EntryCategory.of(entry)
+            counts[.category(category), default: 0] += 1
+            if entry.kind == .folder { counts[.folders, default: 0] += 1 }
+            if entry.isEncrypted { counts[.encrypted, default: 0] += 1 }
+            if EntryFilter.large.matches(entry) { counts[.large, default: 0] += 1 }
+        }
+        return counts
     }
 }

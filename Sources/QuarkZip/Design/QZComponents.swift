@@ -49,7 +49,7 @@ struct QZDropZone: View {
                     .font(.system(size: 34, weight: .light))
                     .foregroundStyle(QZTheme.Palette.accent)
                 Text("Drop an archive here")
-                    .font(QZTheme.Typography.heading)
+                    .font(QZTheme.Typography.headline)
                     .foregroundStyle(QZTheme.Palette.primary)
                 Text("or press ⌘O to choose one")
                     .font(QZTheme.Typography.callout)
@@ -61,7 +61,7 @@ struct QZDropZone: View {
                 RoundedRectangle(cornerRadius: QZTheme.Radius.panel)
                     .fill(isTargeted
                           ? QZTheme.Palette.accent.opacity(0.10)
-                          : QZTheme.Palette.surface)
+                          : QZTheme.Palette.card)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: QZTheme.Radius.panel)
@@ -93,11 +93,13 @@ struct QZBreadcrumb: View {
     var body: some View {
         HStack(spacing: QZTheme.Space.xs) {
             Button(action: onRoot) {
-                Label(archiveName, systemImage: "archivebox")
-                    .font(QZTheme.Typography.callout)
+                Image(systemName: "archivebox")
+                    .font(.system(size: 11, weight: .semibold))
             }
             .buttonStyle(.plain)
-            .foregroundStyle(segments.isEmpty ? QZTheme.Palette.primary : QZTheme.Palette.secondary)
+            .foregroundStyle(QZTheme.Palette.secondary)
+            .help(archiveName)
+            .accessibilityLabel("Archive root")
 
             ForEach(segments, id: \.self) { segment in
                 Image(systemName: "chevron.compact.right")
@@ -129,27 +131,38 @@ struct QZStatusBar: View {
     let text: String
     let selectionCount: Int
     let isLoading: Bool
+    var filter: String?
+    var engine: String?
 
     var body: some View {
-        HStack(spacing: QZTheme.Space.m) {
+        HStack(spacing: QZTheme.Space.s) {
             if isLoading {
                 ProgressView()
-                    .controlSize(.small)
+                    .controlSize(.mini)
             }
             Text(text)
                 .font(QZTheme.Typography.caption)
                 .foregroundStyle(QZTheme.Palette.secondary)
+            if let filter {
+                QZBadge(text: filter, tint: QZTheme.Palette.accent, symbol: "line.3.horizontal.decrease")
+            }
             Spacer()
             if selectionCount > 0 {
                 Text("\(selectionCount) selected")
-                    .font(QZTheme.Typography.caption)
-                    .foregroundStyle(QZTheme.Palette.secondary)
+                    .font(QZTheme.Typography.caption.weight(.medium))
+                    .foregroundStyle(QZTheme.Palette.accent)
                     .monospacedDigit()
+            }
+            if let engine {
+                Text(engine)
+                    .font(QZTheme.Typography.micro)
+                    .foregroundStyle(QZTheme.Palette.tertiary)
+                    .padding(.leading, QZTheme.Space.xs)
             }
         }
         .padding(.horizontal, QZTheme.Space.l)
         .frame(height: QZTheme.Size.statusBar)
-        .background(.bar)
+        .background(QZTheme.Palette.headerBackground)
         .overlay(alignment: .top) {
             Rectangle()
                 .fill(QZTheme.Palette.separator)
