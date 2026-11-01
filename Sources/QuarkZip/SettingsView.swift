@@ -14,9 +14,9 @@ struct SettingsView: View {
 }
 
 struct GeneralSettingsView: View {
-    @AppStorage("density") private var density: QZDensity = .compact
+    @AppStorage("density") private var density: QZDensity = .comfortable
     @AppStorage("appearance") private var appearance: QZAppearance = .system
-    @AppStorage("showEmoji") private var showEmoji = true
+    @AppStorage("showEmoji") private var showEmoji = false
 
     var body: some View {
         Form {

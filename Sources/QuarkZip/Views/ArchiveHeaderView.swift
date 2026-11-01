@@ -4,7 +4,7 @@ import SwiftUI
 /// CRM-style record header: identity on the left, colored KPIs on the right.
 struct ArchiveHeaderView: View {
     @Environment(AppModel.self) private var model
-    @AppStorage("showEmoji") private var showEmoji = true
+    @AppStorage("showEmoji") private var showEmoji = false
 
     var body: some View {
         if let snapshot = model.snapshot {

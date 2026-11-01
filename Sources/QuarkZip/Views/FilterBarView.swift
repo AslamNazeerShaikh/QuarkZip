@@ -4,7 +4,7 @@ import SwiftUI
 /// Dense filter strip: search, category chips, sort, density.
 struct FilterBarView: View {
     @Environment(AppModel.self) private var model
-    @AppStorage("density") private var density: QZDensity = .compact
+    @AppStorage("density") private var density: QZDensity = .comfortable
 
     var body: some View {
         @Bindable var model = model

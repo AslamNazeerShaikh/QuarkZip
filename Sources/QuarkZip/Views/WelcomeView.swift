@@ -5,7 +5,7 @@ import UniformTypeIdentifiers
 struct WelcomeView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @AppStorage("showEmoji") private var showEmoji = true
+    @AppStorage("showEmoji") private var showEmoji = false
     @State private var isTargeted = false
 
     var body: some View {

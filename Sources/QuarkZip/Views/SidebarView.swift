@@ -4,7 +4,7 @@ import SwiftUI
 
 struct SidebarView: View {
     @Environment(AppModel.self) private var model
-    @AppStorage("showEmoji") private var showEmoji = true
+    @AppStorage("showEmoji") private var showEmoji = false
 
     private let rowInsets = EdgeInsets(top: 2, leading: 4, bottom: 2, trailing: 4)
 

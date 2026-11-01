@@ -7,7 +7,7 @@ import SwiftUI
 /// which also provides the glass material behind this clear content.
 struct InspectorView: View {
     @Environment(AppModel.self) private var model
-    @AppStorage("showEmoji") private var showEmoji = true
+    @AppStorage("showEmoji") private var showEmoji = false
 
     var body: some View {
         ScrollView {

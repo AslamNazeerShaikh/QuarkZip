@@ -4,7 +4,7 @@ import SwiftUI
 /// The About sheet. One place for version, engine, license, and credits.
 struct QZAboutView: View {
     @Environment(AppModel.self) private var model
-    @AppStorage("showEmoji") private var showEmoji = true
+    @AppStorage("showEmoji") private var showEmoji = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: QZTheme.Space.l) {
