@@ -74,6 +74,20 @@ struct EngineStatusMappingTests {
         }
     }
 
+    @Test func dropsPackedSizeAndCRCForFolders() throws {
+        try "empty".withCString { path in
+            var raw = QzEntry()
+            raw.path = path
+            raw.is_dir = 1
+            raw.packed_size = 512
+            raw.packed_size_defined = 1
+            raw.crc = 0x1234
+            let entry = try SevenZipArchiveService.makeEntry(raw, index: 0)
+            #expect(entry.packedSize == nil)
+            #expect(entry.crc == nil)
+        }
+    }
+
     @Test func rejectsARawEntryWithoutAPath() {
         #expect(throws: ArchiveError.self) {
             _ = try SevenZipArchiveService.makeEntry(QzEntry(), index: 0)

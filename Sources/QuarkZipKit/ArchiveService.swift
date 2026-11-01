@@ -26,6 +26,13 @@ public struct ArchiveSnapshot: Sendable {
         entries.lazy.filter { $0.kind == .file }.count
     }
 
+    /// Some containers, like tar, never compress their payload. Showing a
+    /// packed size and ratio there is noise, and often above 100 percent.
+    public var showsCompressionMetrics: Bool {
+        guard let formatName else { return true }
+        return formatName.lowercased() != "tar"
+    }
+
     public var folderCount: Int { tree.folders.count }
 
     public var totalUncompressedSize: UInt64 {

@@ -39,7 +39,9 @@ struct BrowserView: View {
                     .width(min: 72, ideal: 92)
 
                     TableColumn("Packed") { entry in
-                        Text(EntryFormat.packed(entry.packedSize))
+                        Text(model.snapshot?.showsCompressionMetrics == true
+                             ? EntryFormat.packed(entry.packedSize)
+                             : "—")
                             .font(QZTheme.Typography.metric)
                             .foregroundStyle(QZTheme.Palette.secondary)
                             .frame(maxWidth: .infinity, alignment: .trailing)
@@ -47,7 +49,9 @@ struct BrowserView: View {
                     .width(min: 72, ideal: 92)
 
                     TableColumn("Ratio") { entry in
-                        Text(EntryFormat.ratio(entry.compressionRatio))
+                        Text(EntryFormat.ratio(model.snapshot?.showsCompressionMetrics == true
+                                               ? entry.compressionRatio
+                                               : nil))
                             .font(QZTheme.Typography.metric)
                             .foregroundStyle(QZTheme.Palette.tertiary)
                             .frame(maxWidth: .infinity, alignment: .trailing)
@@ -72,7 +76,7 @@ struct BrowserView: View {
                     }
                     .width(min: 70, ideal: 100)
                 }
-                .tableStyle(.inset)
+                .tableStyle(InsetTableStyle(alternatesRowBackgrounds: false))
                 .environment(\.defaultMinListRowHeight, QZTheme.Size.row)
                 .onKeyPress(.return) {
                     openSelection()

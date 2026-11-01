@@ -345,4 +345,11 @@ struct ArchiveSnapshotTests {
         #expect(snapshot.totalUncompressedSize == 15)
         #expect(snapshot.tree.children(of: .root).count == 2)
     }
+
+    @Test func compressionMetricsFollowTheContainer() {
+        let url = URL(fileURLWithPath: "/tmp/test.bin")
+        #expect(ArchiveSnapshot(url: url, formatName: nil, archiveSize: 0, entries: []).showsCompressionMetrics)
+        #expect(ArchiveSnapshot(url: url, formatName: "7z", archiveSize: 0, entries: []).showsCompressionMetrics)
+        #expect(!ArchiveSnapshot(url: url, formatName: "TAR", archiveSize: 0, entries: []).showsCompressionMetrics)
+    }
 }
