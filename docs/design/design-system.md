@@ -2,6 +2,12 @@
 
 Status: implemented in `Sources/QuarkZip/Design/` and the browser views.
 
+> Legacy audit: the two earlier design documents were compared against this
+> system, the implementation, and the current HIG in
+> [legacy-rules-review.md](legacy-rules-review.md). The contrast, accent,
+> appearance, sidebar-color, and badge-text decisions are pending. Do not
+> start the next visual pass until those are chosen.
+
 ## Direction
 
 A CRM-grade archive workspace in Mac clothes.
