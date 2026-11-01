@@ -26,16 +26,33 @@ public enum EntryCategory: String, CaseIterable, Sendable, Hashable {
         }
     }
 
-    public var symbolName: String {
+    /// Filled form for tiles, sidebar emphasis, and selected states.
+    public var symbolName: String { filledSymbolName }
+
+    public var filledSymbolName: String {
         switch self {
         case .folder: return "folder.fill"
         case .document: return "doc.text.fill"
         case .image: return "photo.fill"
         case .video: return "film.fill"
-        case .audio: return "waveform"
+        case .audio: return "waveform.circle.fill"
         case .archive: return "archivebox.fill"
         case .code: return "chevron.left.forwardslash.chevron.right"
         case .other: return "doc.fill"
+        }
+    }
+
+    /// Outline form for dense rows, where a fill reads too heavy at 10 to 12 pt.
+    public var outlineSymbolName: String {
+        switch self {
+        case .folder: return "folder"
+        case .document: return "doc.text"
+        case .image: return "photo"
+        case .video: return "film"
+        case .audio: return "waveform"
+        case .archive: return "archivebox"
+        case .code: return "chevron.left.forwardslash.chevron.right"
+        case .other: return "doc"
         }
     }
 

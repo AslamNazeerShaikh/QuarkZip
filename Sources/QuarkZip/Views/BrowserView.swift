@@ -60,7 +60,7 @@ struct BrowserView: View {
                     TableColumn("Modified") { entry in
                         Text(EntryFormat.shortDate(entry.modified))
                             .font(QZTheme.Typography.caption)
-                            .foregroundStyle(QZTheme.Palette.secondary)
+                            .foregroundStyle(QZTheme.Palette.textSecondary)
                     }
                     .width(min: 76, ideal: 96)
 
@@ -72,7 +72,8 @@ struct BrowserView: View {
                     TableColumn("") { entry in
                         if entry.isEncrypted {
                             Image(systemName: "lock.fill")
-                                .font(.system(size: 9, weight: .semibold))
+                                .font(.system(size: 10, weight: .medium))
+                                .accessibilityHidden(true)
                                 .foregroundStyle(QZTheme.Palette.warning)
                                 .help("Encrypted entry")
                         }
@@ -142,8 +143,9 @@ struct BrowserView: View {
     private func nameCell(_ entry: ArchiveEntry) -> some View {
         let category = EntryCategory.of(entry)
         return HStack(spacing: QZTheme.Space.xs + 2) {
-            Image(systemName: category.symbolName)
-                .font(.system(size: 10, weight: .semibold))
+            Image(systemName: category.outlineSymbolName)
+                .font(.system(size: 12, weight: .medium))
+                .accessibilityHidden(true)
                 .foregroundStyle(QZTheme.Palette.category(category))
                 .frame(width: 14)
             Text(entry.name)
@@ -182,7 +184,7 @@ struct BrowserView: View {
                 .frame(width: 6, height: 6)
             Text(category.displayName)
                 .font(QZTheme.Typography.badge)
-                .foregroundStyle(QZTheme.Palette.secondary)
+                .foregroundStyle(QZTheme.Palette.textSecondary)
                 .lineLimit(1)
             Spacer(minLength: 0)
         }
@@ -191,7 +193,7 @@ struct BrowserView: View {
     private func metric(_ text: String) -> some View {
         Text(text)
             .font(QZTheme.Typography.metric)
-            .foregroundStyle(QZTheme.Palette.secondary)
+            .foregroundStyle(QZTheme.Palette.textSecondary)
             .frame(maxWidth: .infinity, alignment: .trailing)
     }
 
@@ -217,7 +219,7 @@ struct BrowserView: View {
             } else {
                 Text("—")
                     .font(QZTheme.Typography.caption)
-                    .foregroundStyle(QZTheme.Palette.tertiary)
+                    .foregroundStyle(QZTheme.Palette.textFaint)
             }
         }
     }

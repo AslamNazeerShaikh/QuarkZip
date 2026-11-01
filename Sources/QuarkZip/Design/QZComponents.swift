@@ -21,7 +21,7 @@ struct QZEmptyState<Actions: View>: View {
                     .foregroundStyle(QZTheme.Palette.primary)
                 Text(message)
                     .font(QZTheme.Typography.body)
-                    .foregroundStyle(QZTheme.Palette.secondary)
+                    .foregroundStyle(QZTheme.Palette.textSecondary)
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: 380)
             }
@@ -53,7 +53,7 @@ struct QZDropZone: View {
                     .foregroundStyle(QZTheme.Palette.primary)
                 Text("or press ⌘O to choose one")
                     .font(QZTheme.Typography.callout)
-                    .foregroundStyle(QZTheme.Palette.secondary)
+                    .foregroundStyle(QZTheme.Palette.textSecondary)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, QZTheme.Space.xxxl)
@@ -77,8 +77,8 @@ struct QZDropZone: View {
         .accessibilityLabel("Drop an archive here, or open the file chooser")
         .onChange(of: isTargeted) { _, targeted in
             guard targeted, !reduceMotion else { return }
-            withAnimation(QZTheme.Motion.standard) { pulse = true }
-            withAnimation(QZTheme.Motion.gentle.delay(0.18)) { pulse = false }
+            withAnimation(QZMotion.animation(QZTheme.Motion.standard, reduceMotion: reduceMotion)) { pulse = true }
+            withAnimation(QZMotion.animation(QZTheme.Motion.gentle.delay(0.18), reduceMotion: reduceMotion)) { pulse = false }
         }
     }
 }
@@ -97,14 +97,14 @@ struct QZBreadcrumb: View {
                     .font(.system(size: 11, weight: .semibold))
             }
             .buttonStyle(.plain)
-            .foregroundStyle(QZTheme.Palette.secondary)
+            .foregroundStyle(QZTheme.Palette.textSecondary)
             .help(archiveName)
             .accessibilityLabel("Archive root")
 
             ForEach(segments, id: \.self) { segment in
                 Image(systemName: "chevron.compact.right")
                     .font(.system(size: 10, weight: .semibold))
-                    .foregroundStyle(QZTheme.Palette.tertiary)
+                    .foregroundStyle(QZTheme.Palette.textFaint)
                     .accessibilityHidden(true)
                 Button(segment.name) { onSelect(segment) }
                     .buttonStyle(.plain)
@@ -142,7 +142,7 @@ struct QZStatusBar: View {
             }
             Text(text)
                 .font(QZTheme.Typography.caption)
-                .foregroundStyle(QZTheme.Palette.secondary)
+                .foregroundStyle(QZTheme.Palette.textSecondary)
             if let filter {
                 QZBadge(text: filter, tint: QZTheme.Palette.accent, symbol: "line.3.horizontal.decrease")
             }
@@ -150,13 +150,13 @@ struct QZStatusBar: View {
             if selectionCount > 0 {
                 Text("\(selectionCount) selected")
                     .font(QZTheme.Typography.caption.weight(.medium))
-                    .foregroundStyle(QZTheme.Palette.accent)
+                    .foregroundStyle(QZTheme.Palette.primary)
                     .monospacedDigit()
             }
             if let engine {
                 Text(engine)
                     .font(QZTheme.Typography.micro)
-                    .foregroundStyle(QZTheme.Palette.tertiary)
+                    .foregroundStyle(QZTheme.Palette.textFaint)
                     .padding(.leading, QZTheme.Space.xs)
             }
         }
@@ -187,7 +187,7 @@ struct QZErrorBanner: View {
                 if let detail = error.detail, !detail.isEmpty {
                     Text(detail)
                         .font(QZTheme.Typography.caption)
-                        .foregroundStyle(QZTheme.Palette.secondary)
+                        .foregroundStyle(QZTheme.Palette.textSecondary)
                         .textSelection(.enabled)
                 }
             }
@@ -195,7 +195,7 @@ struct QZErrorBanner: View {
             Button("Dismiss", action: onDismiss)
                 .buttonStyle(.plain)
                 .font(QZTheme.Typography.caption)
-                .foregroundStyle(QZTheme.Palette.secondary)
+                .foregroundStyle(QZTheme.Palette.textSecondary)
         }
         .padding(QZTheme.Space.m)
         .background(QZTheme.Palette.warning.opacity(0.10))
@@ -207,17 +207,3 @@ struct QZErrorBanner: View {
     }
 }
 
-/// Small format or state tag.
-struct QZTag: View {
-    let text: String
-    var tint: Color = QZTheme.Palette.secondary
-
-    var body: some View {
-        Text(text)
-            .font(QZTheme.Typography.caption.weight(.medium))
-            .foregroundStyle(tint)
-            .padding(.horizontal, QZTheme.Space.s)
-            .padding(.vertical, QZTheme.Space.xxs)
-            .background(tint.opacity(0.12), in: Capsule())
-    }
-}

@@ -29,7 +29,7 @@ struct ArchiveHeaderView: View {
                     }
                     Text(model.archivePath)
                         .font(QZTheme.Typography.caption)
-                        .foregroundStyle(QZTheme.Palette.tertiary)
+                        .foregroundStyle(QZTheme.Palette.textFaint)
                         .lineLimit(1)
                         .truncationMode(.middle)
                 }

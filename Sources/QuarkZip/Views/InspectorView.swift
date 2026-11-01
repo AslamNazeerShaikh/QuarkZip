@@ -70,7 +70,7 @@ private struct EntryInspectorView: View {
                     QZSectionLabel(title: "Path", trailing: "\(entry.path.components.count) levels")
                     Text(entry.path.description)
                         .font(QZTheme.Typography.metric)
-                        .foregroundStyle(QZTheme.Palette.secondary)
+                        .foregroundStyle(QZTheme.Palette.textSecondary)
                         .textSelection(.enabled)
                         .lineLimit(3)
                         .truncationMode(.middle)
@@ -98,7 +98,7 @@ private struct EntryInspectorView: View {
                             Text("Unpacked \(EntryFormat.bytes(entry.size))")
                         }
                         .font(QZTheme.Typography.caption)
-                        .foregroundStyle(QZTheme.Palette.tertiary)
+                        .foregroundStyle(QZTheme.Palette.textFaint)
                     }
                 }
             }
@@ -163,7 +163,7 @@ private struct SelectionInspectorView: View {
                             .font(QZTheme.Typography.headline)
                         Text(EntryFormat.bytes(model.selectedBytes))
                             .font(QZTheme.Typography.metric)
-                            .foregroundStyle(QZTheme.Palette.secondary)
+                            .foregroundStyle(QZTheme.Palette.textSecondary)
                     }
                     Spacer()
                 }
@@ -196,13 +196,13 @@ private struct SelectionInspectorView: View {
                             Text(EntryFormat.bytes(entry.size))
                                 .font(QZTheme.Typography.micro)
                                 .monospacedDigit()
-                                .foregroundStyle(QZTheme.Palette.tertiary)
+                                .foregroundStyle(QZTheme.Palette.textFaint)
                         }
                     }
                     if model.selection.count > 8 {
                         Text("and \(model.selection.count - 8) more")
                             .font(QZTheme.Typography.micro)
-                            .foregroundStyle(QZTheme.Palette.tertiary)
+                            .foregroundStyle(QZTheme.Palette.textFaint)
                     }
                 }
             }
@@ -296,7 +296,7 @@ private struct ArchiveInspectorView: View {
                             Text(EntryFormat.bytes(entry.size))
                                 .font(QZTheme.Typography.micro)
                                 .monospacedDigit()
-                                .foregroundStyle(QZTheme.Palette.tertiary)
+                                .foregroundStyle(QZTheme.Palette.textFaint)
                         }
                     }
                 }
@@ -313,7 +313,7 @@ private struct ArchiveInspectorView: View {
                                 Text("\(item.count)")
                                     .font(QZTheme.Typography.micro)
                                     .monospacedDigit()
-                                    .foregroundStyle(QZTheme.Palette.tertiary)
+                                    .foregroundStyle(QZTheme.Palette.textFaint)
                             }
                         }
                     }
@@ -329,16 +329,16 @@ private struct ArchiveInspectorView: View {
                 .frame(width: 7, height: 7)
             Text(stat.category.displayName)
                 .font(QZTheme.Typography.caption)
-                .foregroundStyle(QZTheme.Palette.secondary)
+                .foregroundStyle(QZTheme.Palette.textSecondary)
             Spacer()
             Text("\(stat.count)")
                 .font(QZTheme.Typography.micro)
                 .monospacedDigit()
-                .foregroundStyle(QZTheme.Palette.tertiary)
+                .foregroundStyle(QZTheme.Palette.textFaint)
             Text(stat.bytes == 0 ? "—" : EntryFormat.bytes(stat.bytes))
                 .font(QZTheme.Typography.micro)
                 .monospacedDigit()
-                .foregroundStyle(QZTheme.Palette.tertiary)
+                .foregroundStyle(QZTheme.Palette.textFaint)
                 .frame(width: 58, alignment: .trailing)
         }
     }
@@ -379,7 +379,7 @@ private struct QZMiniStat: View {
             Text(label.uppercased())
                 .font(QZTheme.Typography.section)
                 .tracking(0.4)
-                .foregroundStyle(QZTheme.Palette.tertiary)
+                .foregroundStyle(QZTheme.Palette.textFaint)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, QZTheme.Space.s)

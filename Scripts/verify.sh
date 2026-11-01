@@ -27,4 +27,7 @@ echo "==> vendor"
 echo "==> tokens"
 ./Scripts/token-lint.sh
 
+echo "==> contrast"
+./Scripts/contrast-check.sh
+
 echo "verify: PASS"

@@ -4,6 +4,7 @@ import UniformTypeIdentifiers
 
 struct WelcomeView: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var isTargeted = false
 
     var body: some View {
@@ -29,7 +30,9 @@ struct WelcomeView: View {
             model.open(url)
             return true
         } isTargeted: { targeted in
-            withAnimation(QZTheme.Motion.quick) { isTargeted = targeted }
+            withAnimation(QZMotion.animation(QZTheme.Motion.quick, reduceMotion: reduceMotion)) {
+                isTargeted = targeted
+            }
         }
     }
 
@@ -41,7 +44,7 @@ struct WelcomeView: View {
                 .foregroundStyle(QZTheme.Palette.primary)
             Text("Inspect what is inside an archive without unpacking it. Everything runs on this Mac.")
                 .font(QZTheme.Typography.body)
-                .foregroundStyle(QZTheme.Palette.secondary)
+                .foregroundStyle(QZTheme.Palette.textSecondary)
         }
     }
 
@@ -93,7 +96,7 @@ struct WelcomeView: View {
                         .foregroundStyle(QZTheme.Palette.primary)
                     Text("Browse entries, check sizes and methods, and see exactly what is inside.")
                         .font(QZTheme.Typography.callout)
-                        .foregroundStyle(QZTheme.Palette.secondary)
+                        .foregroundStyle(QZTheme.Palette.textSecondary)
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: 380)
                     Button {
@@ -101,7 +104,7 @@ struct WelcomeView: View {
                     } label: {
                         Label("Choose Archive…", systemImage: "folder")
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.bordered)
                     .controlSize(.regular)
                     .padding(.top, QZTheme.Space.xxs)
                 }
@@ -117,7 +120,8 @@ struct WelcomeView: View {
                             style: StrokeStyle(lineWidth: isTargeted ? 2 : 1, dash: isTargeted ? [] : [7, 5])
                         )
                         .padding(QZTheme.Space.s)
-                        .animation(QZTheme.Motion.quick, value: isTargeted)
+                        .animation(QZMotion.animation(QZTheme.Motion.quick, reduceMotion: reduceMotion),
+                                   value: isTargeted)
                 }
 
                 Divider()
@@ -152,13 +156,13 @@ struct WelcomeView: View {
                     VStack(spacing: QZTheme.Space.xs) {
                         Image(systemName: "clock.badge.questionmark")
                             .font(.system(size: 22, weight: .light))
-                            .foregroundStyle(QZTheme.Palette.tertiary)
+                            .foregroundStyle(QZTheme.Palette.textFaint)
                         Text("No archives yet")
                             .font(QZTheme.Typography.bodyStrong)
-                            .foregroundStyle(QZTheme.Palette.secondary)
+                            .foregroundStyle(QZTheme.Palette.textSecondary)
                         Text("Open one and it will appear here.")
                             .font(QZTheme.Typography.caption)
-                            .foregroundStyle(QZTheme.Palette.tertiary)
+                            .foregroundStyle(QZTheme.Palette.textFaint)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, QZTheme.Space.xxl)
@@ -190,7 +194,7 @@ struct WelcomeView: View {
                         .truncationMode(.middle)
                     Text(url.deletingLastPathComponent().path(percentEncoded: false))
                         .font(QZTheme.Typography.micro)
-                        .foregroundStyle(QZTheme.Palette.tertiary)
+                        .foregroundStyle(QZTheme.Palette.textFaint)
                         .lineLimit(1)
                         .truncationMode(.middle)
                 }
@@ -240,7 +244,7 @@ struct WelcomeView: View {
                         .foregroundStyle(QZTheme.Palette.primary)
                     Text(text)
                         .font(QZTheme.Typography.caption)
-                        .foregroundStyle(QZTheme.Palette.secondary)
+                        .foregroundStyle(QZTheme.Palette.textSecondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 0)
@@ -256,16 +260,16 @@ struct WelcomeView: View {
                 .frame(width: 6, height: 6)
             Text("Engine 7-Zip 26.05")
                 .font(QZTheme.Typography.micro)
-                .foregroundStyle(QZTheme.Palette.tertiary)
+                .foregroundStyle(QZTheme.Palette.textFaint)
             Text("·")
-                .foregroundStyle(QZTheme.Palette.tertiary)
+                .foregroundStyle(QZTheme.Palette.textFaint)
             Text("No network access")
                 .font(QZTheme.Typography.micro)
-                .foregroundStyle(QZTheme.Palette.tertiary)
+                .foregroundStyle(QZTheme.Palette.textFaint)
             Spacer()
             Text("LGPL-3.0")
                 .font(QZTheme.Typography.micro)
-                .foregroundStyle(QZTheme.Palette.tertiary)
+                .foregroundStyle(QZTheme.Palette.textFaint)
         }
         .padding(.top, QZTheme.Space.xs)
     }

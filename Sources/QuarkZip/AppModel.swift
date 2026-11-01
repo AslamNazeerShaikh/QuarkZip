@@ -54,7 +54,7 @@ final class AppModel {
 
     var hasArchive: Bool { snapshot != nil }
 
-    var title: String { snapshot?.displayName ?? "QuarkZip" }
+    var title: String { snapshot?.displayName ?? "Workspace" }
 
     var statusText: String {
         guard snapshot != nil else { return "No archive open" }

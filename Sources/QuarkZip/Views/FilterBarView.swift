@@ -53,7 +53,7 @@ struct FilterBarView: View {
                         QZFilterChip(
                             title: "Large",
                             count: model.filterCounts[.large],
-                            tint: QZTheme.Palette.danger,
+                            tint: QZTheme.Palette.accent,
                             isSelected: model.filter == .large
                         ) {
                             model.filter = .large
@@ -88,7 +88,7 @@ struct FilterBarView: View {
         return HStack(spacing: QZTheme.Space.xs) {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 10, weight: .semibold))
-                .foregroundStyle(QZTheme.Palette.tertiary)
+                .foregroundStyle(QZTheme.Palette.textFaint)
             TextField("Search entries", text: $model.searchText)
                 .textFieldStyle(.plain)
                 .font(QZTheme.Typography.callout)
@@ -98,7 +98,7 @@ struct FilterBarView: View {
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .font(.system(size: 10))
-                        .foregroundStyle(QZTheme.Palette.tertiary)
+                        .foregroundStyle(QZTheme.Palette.textFaint)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Clear search")

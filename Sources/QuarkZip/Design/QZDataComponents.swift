@@ -53,20 +53,29 @@ struct QZBadge: View {
     var monospaced = false
 
     var body: some View {
-        HStack(spacing: QZTheme.Space.xxs) {
+        HStack(spacing: 3) {
             if let symbol {
                 Image(systemName: symbol)
                     .font(.system(size: 8, weight: .bold))
+                    .foregroundStyle(tint)
+            } else {
+                Circle()
+                    .fill(tint)
+                    .frame(width: 5, height: 5)
             }
             Text(text)
                 .font(monospaced ? QZTheme.Typography.metric : QZTheme.Typography.badge)
+                .foregroundStyle(QZTheme.Palette.primary)
                 .lineLimit(1)
         }
-        .foregroundStyle(tint)
         .padding(.horizontal, QZTheme.Space.xs + 1)
         .padding(.vertical, 1.5)
         .background(QZTheme.Palette.soft(tint),
                     in: RoundedRectangle(cornerRadius: QZTheme.Radius.badge, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: QZTheme.Radius.badge, style: .continuous)
+                .strokeBorder(QZTheme.Palette.outline(tint), lineWidth: 0.5)
+        }
     }
 }
 
@@ -92,11 +101,11 @@ struct QZStatCard: View {
                     Text(label.uppercased())
                         .font(QZTheme.Typography.section)
                         .tracking(0.5)
-                        .foregroundStyle(QZTheme.Palette.tertiary)
+                        .foregroundStyle(QZTheme.Palette.textFaint)
                     if let detail {
                         Text(detail)
                             .font(QZTheme.Typography.micro)
-                            .foregroundStyle(QZTheme.Palette.tertiary)
+                            .foregroundStyle(QZTheme.Palette.textFaint)
                     }
                 }
             }
@@ -132,15 +141,15 @@ struct QZFilterChip: View {
                     .fill(tint)
                     .frame(width: 6, height: 6)
                 Text(title)
-                    .font(QZTheme.Typography.badge)
+                    .font(.system(size: 10.5, weight: isSelected ? .semibold : .medium))
+                    .foregroundStyle(isSelected ? QZTheme.Palette.primary : QZTheme.Palette.textSecondary)
                 if let count {
                     Text("\(count)")
                         .font(QZTheme.Typography.micro)
                         .monospacedDigit()
-                        .opacity(0.72)
+                        .foregroundStyle(QZTheme.Palette.textFaint)
                 }
             }
-            .foregroundStyle(isSelected ? tint : QZTheme.Palette.secondary)
             .padding(.horizontal, QZTheme.Space.s - 1)
             .frame(height: QZTheme.Size.chip)
             .background {
@@ -177,12 +186,12 @@ struct QZSectionLabel: View {
             Text(title.uppercased())
                 .font(QZTheme.Typography.section)
                 .tracking(0.6)
-                .foregroundStyle(QZTheme.Palette.tertiary)
+                .foregroundStyle(QZTheme.Palette.textFaint)
             Spacer(minLength: 0)
             if let trailing {
                 Text(trailing)
                     .font(QZTheme.Typography.micro)
-                    .foregroundStyle(QZTheme.Palette.tertiary)
+                    .foregroundStyle(QZTheme.Palette.textFaint)
                     .monospacedDigit()
             }
         }
@@ -249,7 +258,7 @@ struct QZInspectorField: View {
         HStack(alignment: .firstTextBaseline, spacing: QZTheme.Space.s) {
             Text(label)
                 .font(QZTheme.Typography.caption)
-                .foregroundStyle(QZTheme.Palette.secondary)
+                .foregroundStyle(QZTheme.Palette.textFaint)
                 .frame(width: 76, alignment: .leading)
             if let tint {
                 Circle()
@@ -273,6 +282,7 @@ struct QZSidebarRow: View {
     let symbol: String
     let title: String
     var tint: Color = QZTheme.Palette.accent
+    var dot: Color?
     var count: Int?
     var isSelected = false
     let action: () -> Void
@@ -282,19 +292,29 @@ struct QZSidebarRow: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: QZTheme.Space.s) {
-                Image(systemName: symbol)
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(tint)
-                    .frame(width: 18)
+                HStack(spacing: 4) {
+                    Image(systemName: symbol)
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(tint)
+                        .accessibilityHidden(true)
+                    if let dot {
+                        Circle()
+                            .fill(dot)
+                            .frame(width: 5, height: 5)
+                            .accessibilityHidden(true)
+                    }
+                }
+                .frame(width: 24, alignment: .leading)
+
                 Text(title)
                     .font(.system(size: 12, weight: isSelected ? .semibold : .regular))
-                    .foregroundStyle(isSelected ? QZTheme.Palette.primary : QZTheme.Palette.secondary)
+                    .foregroundStyle(isSelected ? QZTheme.Palette.primary : QZTheme.Palette.textSecondary)
                     .lineLimit(1)
                 Spacer(minLength: QZTheme.Space.xs)
                 if let count {
                     Text("\(count)")
                         .font(.system(size: 10, weight: .medium, design: .monospaced))
-                        .foregroundStyle(QZTheme.Palette.tertiary)
+                        .foregroundStyle(QZTheme.Palette.textFaint)
                         .padding(.horizontal, 5)
                         .padding(.vertical, 1)
                         .background(QZTheme.Palette.dataTrack, in: Capsule())
@@ -304,7 +324,7 @@ struct QZSidebarRow: View {
             .frame(height: 26)
             .background {
                 RoundedRectangle(cornerRadius: QZTheme.Radius.control, style: .continuous)
-                    .fill(isSelected ? QZTheme.Palette.soft(tint)
+                    .fill(isSelected ? QZTheme.Palette.soft(QZTheme.Palette.accent)
                                      : (hovering ? QZTheme.Palette.hover : .clear))
             }
             .contentShape(Rectangle())
@@ -360,7 +380,7 @@ struct QZSecondaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(QZTheme.Typography.caption.weight(.medium))
-            .foregroundStyle(QZTheme.Palette.secondary)
+            .foregroundStyle(QZTheme.Palette.textSecondary)
             .padding(.horizontal, QZTheme.Space.s)
             .frame(height: 22)
             .background(QZTheme.Palette.card,

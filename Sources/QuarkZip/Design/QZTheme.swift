@@ -43,7 +43,7 @@ enum QZTheme {
     }
 
     enum Typography {
-        static let display = Font.system(size: 26, weight: .bold, design: .rounded)
+        static let display = Font.system(size: 26, weight: .bold)
         static let title = Font.system(size: 22, weight: .semibold)
         static let headline = Font.system(size: 15, weight: .semibold)
         static let body = Font.system(size: 13)
@@ -65,6 +65,15 @@ enum QZTheme {
         static let inspector = Color(nsColor: .underPageBackgroundColor)
         static let separator = Color(nsColor: .separatorColor)
         static let primary = Color(nsColor: .labelColor)
+
+        /// Text hierarchy measured against card and window backgrounds.
+        /// System secondary is 3.95:1 in light and system tertiary is 1.88:1,
+        /// below the HIG 4.5:1 floor for small text.
+        static let textSecondary = Color.primary.opacity(0.70)
+        static let textFaint = Color.primary.opacity(0.56)
+
+        /// Decorative only: icons, separators, disabled glyphs, dashes.
+        /// Never use these for functional text.
         static let secondary = Color(nsColor: .secondaryLabelColor)
         static let tertiary = Color(nsColor: .tertiaryLabelColor)
         static let accent = Color.accentColor
@@ -114,8 +123,9 @@ enum QZTheme {
     enum Motion {
         static let instant = Animation.easeOut(duration: 0.10)
         static let quick = Animation.easeOut(duration: 0.16)
-        static let standard = Animation.spring(response: 0.28, dampingFraction: 0.86)
-        static let gentle = Animation.spring(response: 0.42, dampingFraction: 0.90)
+        static let standard = Animation.spring(response: 0.32, dampingFraction: 0.94)
+        static let gentle = Animation.spring(response: 0.42, dampingFraction: 1.0)
+        static let reduced = Animation.easeOut(duration: 0.12)
     }
 }
 
@@ -141,36 +151,9 @@ enum QZDensity: String, CaseIterable, Identifiable {
     }
 }
 
-/// Accent choices offered in Settings. Category colors stay semantic and do
-/// not follow this choice.
-enum AccentChoice: String, CaseIterable, Identifiable {
-    case blue
-    case indigo
-    case purple
-    case pink
-    case red
-    case orange
-    case green
-    case teal
-    case graphite
-
-    var id: String { rawValue }
-
-    var title: String {
-        rawValue.capitalized
-    }
-
-    var color: Color {
-        switch self {
-        case .blue: return Color(nsColor: .systemBlue)
-        case .indigo: return Color(nsColor: .systemIndigo)
-        case .purple: return Color(nsColor: .systemPurple)
-        case .pink: return Color(nsColor: .systemPink)
-        case .red: return Color(nsColor: .systemRed)
-        case .orange: return Color(nsColor: .systemOrange)
-        case .green: return Color(nsColor: .systemGreen)
-        case .teal: return Color(nsColor: .systemTeal)
-        case .graphite: return Color(nsColor: .systemGray)
-        }
+/// Motion that respects the accessibility setting.
+enum QZMotion {
+    static func animation(_ base: Animation, reduceMotion: Bool) -> Animation {
+        reduceMotion ? QZTheme.Motion.reduced : base
     }
 }

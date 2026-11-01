@@ -6,8 +6,6 @@ import SwiftUI
 struct QuarkZipApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var model = AppModel()
-    @AppStorage("appearance") private var appearance: AppearanceMode = .system
-    @AppStorage("accent") private var accent: AccentChoice = .blue
 
     init() {
         if let status = Self.runSelfTestIfRequested() {
@@ -60,8 +58,6 @@ struct QuarkZipApp: App {
         WindowGroup {
             RootView()
                 .environment(model)
-                .preferredColorScheme(appearance.colorScheme)
-                .tint(accent.color)
         }
         .defaultSize(width: 1360, height: 820)
         .windowToolbarStyle(.unified)

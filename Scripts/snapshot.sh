@@ -17,8 +17,8 @@ QUARKZIP_SNAPSHOT=1 QUARKZIP_SNAPSHOT_DIR="$dir" "$app"
 count=$(find "$dir" -name '*.png' -size +0 | wc -l | tr -d ' ')
 echo "snapshot: $count PNGs in $dir"
 find "$dir" -name '*.png' -size +0 -print
-if [[ "$count" -lt 4 ]]; then
-  echo "snapshot: FAIL, expected at least 4 images" >&2
+if [[ "$count" -lt 8 ]]; then
+  echo "snapshot: FAIL, expected at least 8 images" >&2
   exit 1
 fi
 echo "snapshot: PASS"

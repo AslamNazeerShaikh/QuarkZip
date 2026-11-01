@@ -32,6 +32,8 @@ struct EntryCategoryTests {
         for category in EntryCategory.allCases {
             #expect(!category.displayName.isEmpty)
             #expect(!category.symbolName.isEmpty)
+            #expect(!category.filledSymbolName.isEmpty)
+            #expect(!category.outlineSymbolName.isEmpty)
         }
     }
 }

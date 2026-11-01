@@ -67,6 +67,16 @@ enum SnapshotRunner {
                appearance: .darkAqua,
                to: directory.appendingPathComponent("details-dark.png"))
 
+        let settingsSize = CGSize(width: 500, height: 480)
+        render(AnyView(GeneralSettingsView().frame(width: 500, height: 480)),
+               size: settingsSize,
+               appearance: .aqua,
+               to: directory.appendingPathComponent("settings-light.png"))
+        render(AnyView(GeneralSettingsView().frame(width: 500, height: 480)),
+               size: settingsSize,
+               appearance: .darkAqua,
+               to: directory.appendingPathComponent("settings-dark.png"))
+
         return true
     }
 

@@ -4,6 +4,7 @@ import QuarkZipKit
 
 struct RootView: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var handledLaunchArgument = false
 
     var body: some View {
@@ -35,7 +36,8 @@ struct RootView: View {
                             engine: SevenZipArchiveService.engineVersion)
             }
             .background(QZTheme.Palette.background)
-            .animation(QZTheme.Motion.standard, value: model.error)
+            .animation(QZMotion.animation(QZTheme.Motion.standard, reduceMotion: reduceMotion),
+                       value: model.error)
         }
         .navigationTitle(model.title)
         .navigationSubtitle(model.snapshot?.formatName ?? "")
