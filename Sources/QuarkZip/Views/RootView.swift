@@ -20,6 +20,10 @@ struct RootView: View {
             detailColumn
         }
         .navigationSplitViewStyle(.balanced)
+        // Remove Apple's automatic sidebar toggle: both panes stay open,
+        // there is no collapse path left by button, menu, or dragging
+        // (dividers stop at the 264 minimum).
+        .toolbar(removing: .sidebarToggle)
         .navigationTitle(model.title)
         .navigationSubtitle(model.snapshot?.formatName ?? "")
         .toolbar { toolbar }
