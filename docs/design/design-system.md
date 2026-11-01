@@ -172,7 +172,13 @@ turned off in Settings without moving rows.
 One file per family, every state built: rest, hover, pressed, focused,
 selected, disabled, loading, error where applicable.
 
-- `QZCard` - raised group with a 0.5 pt border.
+- `QZCard` - raised group with a 0.5 pt border. Solid detail surfaces.
+- `QZGlassCard` - frosted dashboard card: ultra-thin material, glossy
+  top highlight, light-catching edge, layered soft shadow. Dashboard
+  surfaces only (welcome cards, header KPIs via the same recipe in
+  `QZStatCard`); rows, lists, and detail cards stay solid in `QZCard`.
+- `QZStatCard` - frosted KPI block with the glass recipe; layout and
+  type unchanged, so every number stays put.
 - `QZIconTile` - tinted rounded square for a category or method.
 - `QZBadge` - primary text, colored dot or colored icon, soft tint, border.
 - `QZStatCard` - colored icon, monospaced primary value, faint uppercase label.

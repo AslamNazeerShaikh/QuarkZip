@@ -191,7 +191,6 @@ all behave the same everywhere.
 - `verify.sh` passes, snapshots were reviewed in light and dark.
 
 ### [x] M1-10 Equal glass, locked-open sidebars, working Reveal, 1M-ready list
-
 As a user, both sidebars look the same, stay open, icons always render,
 and huge archives scroll and select instantly.
 
@@ -208,6 +207,19 @@ and huge archives scroll and select instantly.
   inspector never scans or sorts entries on the animation path.
 - Selection is a 20 percent accent fill with a 40 percent border; primary
   text and method pills stay readable in light and dark.
+- `verify.sh` passes, snapshots were reviewed in light and dark.
+
+### [x] M1-11 Cool glass dashboard
+
+As a user, the dashboard feels like frosted glass over cool blue-gray
+light, with every number and label exactly where it was.
+
+- `QZGlassCard` (ultra-thin material, glossy top highlight, light edge,
+  layered soft shadow) carries welcome cards; `QZStatCard` uses the same
+  recipe for welcome stats and header KPIs. Rows, lists, and detail cards
+  stay solid, so dense text never sits on translucency.
+- A barely-there blue-gray ambient wash lights the welcome background;
+  text tokens are unchanged, so the contrast gate still holds.
 - `verify.sh` passes, snapshots were reviewed in light and dark.
 ### [ ] M1-05 Nested archive sessions
 ### [ ] M1-06 Quick Look preview
