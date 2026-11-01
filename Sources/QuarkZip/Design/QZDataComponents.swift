@@ -3,10 +3,10 @@ import SwiftUI
 
 /// A raised content card used by the header, inspector, and dashboard.
 struct QZCard<Content: View>: View {
-    var padding: CGFloat = QZTheme.Space.m
+    var padding: CGFloat = QZTheme.Space.card
     @ViewBuilder var content: Content
 
-    init(padding: CGFloat = QZTheme.Space.m,
+    init(padding: CGFloat = QZTheme.Space.card,
          @ViewBuilder content: () -> Content) {
         self.padding = padding
         self.content = content()
@@ -68,8 +68,8 @@ struct QZBadge: View {
                 .foregroundStyle(QZTheme.Palette.primary)
                 .lineLimit(1)
         }
-        .padding(.horizontal, QZTheme.Space.xs + 1)
-        .padding(.vertical, 1.5)
+        .padding(.horizontal, QZTheme.Space.s)
+        .padding(.vertical, QZTheme.Space.xs)
         .background(QZTheme.Palette.soft(tint),
                     in: RoundedRectangle(cornerRadius: QZTheme.Radius.badge, style: .continuous))
         .overlay {
@@ -88,11 +88,11 @@ struct QZStatCard: View {
     var detail: String?
 
     var body: some View {
-        HStack(spacing: QZTheme.Space.xs + 2) {
+        HStack(spacing: QZTheme.Space.s) {
             QZIconTile(symbol: symbol, tint: tint, size: 24)
             VStack(alignment: .leading, spacing: 0) {
                 Text(value)
-                    .font(.system(size: 15, weight: .semibold, design: .monospaced))
+                    .font(QZTheme.Typography.statValue)
                     .monospacedDigit()
                     .foregroundStyle(QZTheme.Palette.primary)
                     .lineLimit(1)
@@ -100,7 +100,6 @@ struct QZStatCard: View {
                 HStack(spacing: QZTheme.Space.xxs) {
                     Text(label.uppercased())
                         .font(QZTheme.Typography.section)
-                        .tracking(0.5)
                         .foregroundStyle(QZTheme.Palette.textFaint)
                     if let detail {
                         Text(detail)
@@ -110,13 +109,13 @@ struct QZStatCard: View {
                 }
             }
         }
-        .padding(.horizontal, QZTheme.Space.s)
-        .padding(.vertical, QZTheme.Space.xs + 1)
+        .padding(.horizontal, QZTheme.Space.m)
+        .padding(.vertical, QZTheme.Space.s)
         .frame(minWidth: 96, alignment: .leading)
         .background(QZTheme.Palette.card,
-                    in: RoundedRectangle(cornerRadius: QZTheme.Radius.control + 1, style: .continuous))
+                    in: RoundedRectangle(cornerRadius: QZTheme.Radius.control, style: .continuous))
         .overlay {
-            RoundedRectangle(cornerRadius: QZTheme.Radius.control + 1, style: .continuous)
+            RoundedRectangle(cornerRadius: QZTheme.Radius.control, style: .continuous)
                 .strokeBorder(QZTheme.Palette.cardBorder, lineWidth: 0.5)
         }
         .accessibilityElement(children: .combine)
@@ -141,7 +140,8 @@ struct QZFilterChip: View {
                     .fill(tint)
                     .frame(width: 6, height: 6)
                 Text(title)
-                    .font(.system(size: 10.5, weight: isSelected ? .semibold : .medium))
+                    .font(QZTheme.Typography.badge)
+                    .fontWeight(isSelected ? .semibold : .medium)
                     .foregroundStyle(isSelected ? QZTheme.Palette.primary : QZTheme.Palette.textSecondary)
                 if let count {
                     Text("\(count)")
@@ -150,11 +150,10 @@ struct QZFilterChip: View {
                         .foregroundStyle(QZTheme.Palette.textFaint)
                 }
             }
-            .padding(.horizontal, QZTheme.Space.s - 1)
+            .padding(.horizontal, QZTheme.Space.s)
             .frame(height: QZTheme.Size.chip)
             .background {
-                Capsule()
-                    .fill(background)
+                Capsule().fill(background)
             }
             .overlay {
                 Capsule()
@@ -259,12 +258,12 @@ struct QZInspectorField: View {
             Text(label)
                 .font(QZTheme.Typography.caption)
                 .foregroundStyle(QZTheme.Palette.textFaint)
-                .frame(width: 76, alignment: .leading)
+                .frame(width: 80, alignment: .leading)
             if let tint {
                 Circle()
                     .fill(tint)
                     .frame(width: 6, height: 6)
-                    .alignmentGuide(.firstTextBaseline) { $0[VerticalAlignment.center] + 3 }
+                    .alignmentGuide(.firstTextBaseline) { $0[VerticalAlignment.center] + 4 }
             }
             Text(value)
                 .font(monospaced ? QZTheme.Typography.metric : QZTheme.Typography.bodyStrong)
@@ -277,7 +276,7 @@ struct QZInspectorField: View {
     }
 }
 
-/// Sidebar row with a tinted icon, label, and count.
+/// Sidebar row with a tinted icon, optional emoji, label, and count.
 struct QZSidebarRow: View {
     let symbol: String
     let title: String
@@ -285,6 +284,7 @@ struct QZSidebarRow: View {
     var dot: Color?
     var count: Int?
     var isSelected = false
+    var emoji: String?
     let action: () -> Void
 
     @State private var hovering = false
@@ -292,36 +292,41 @@ struct QZSidebarRow: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: QZTheme.Space.s) {
-                HStack(spacing: 4) {
+                HStack(spacing: QZTheme.Space.xs) {
+                    if let emoji {
+                        QZEmoji(emoji: emoji)
+                    }
                     Image(systemName: symbol)
-                        .font(.system(size: 12, weight: .medium))
+                        .font(QZTheme.Typography.rowIcon)
                         .foregroundStyle(tint)
                         .accessibilityHidden(true)
                     if let dot {
                         Circle()
                             .fill(dot)
-                            .frame(width: 5, height: 5)
+                            .frame(width: 6, height: 6)
                             .accessibilityHidden(true)
                     }
                 }
-                .frame(width: 24, alignment: .leading)
+                .frame(width: emoji == nil ? 24 : 48, alignment: .leading)
 
                 Text(title)
-                    .font(.system(size: 12, weight: isSelected ? .semibold : .regular))
+                    .font(QZTheme.Typography.callout)
+                    .fontWeight(isSelected ? .semibold : .regular)
                     .foregroundStyle(isSelected ? QZTheme.Palette.primary : QZTheme.Palette.textSecondary)
                     .lineLimit(1)
                 Spacer(minLength: QZTheme.Space.xs)
                 if let count {
                     Text("\(count)")
-                        .font(.system(size: 10, weight: .medium, design: .monospaced))
+                        .font(QZTheme.Typography.microMono)
+                        .fontWeight(.medium)
                         .foregroundStyle(QZTheme.Palette.textFaint)
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 1)
+                        .padding(.horizontal, QZTheme.Space.s)
+                        .padding(.vertical, QZTheme.Space.xs)
                         .background(QZTheme.Palette.dataTrack, in: Capsule())
                 }
             }
             .padding(.horizontal, QZTheme.Space.s)
-            .frame(height: 26)
+            .frame(height: QZTheme.Size.rowCompact)
             .background {
                 RoundedRectangle(cornerRadius: QZTheme.Radius.control, style: .continuous)
                     .fill(isSelected ? QZTheme.Palette.soft(QZTheme.Palette.accent)
@@ -381,8 +386,8 @@ struct QZSecondaryButtonStyle: ButtonStyle {
         configuration.label
             .font(QZTheme.Typography.caption.weight(.medium))
             .foregroundStyle(QZTheme.Palette.textSecondary)
-            .padding(.horizontal, QZTheme.Space.s)
-            .frame(height: 22)
+            .padding(.horizontal, QZTheme.Space.m)
+            .frame(height: 24)
             .background(QZTheme.Palette.card,
                         in: RoundedRectangle(cornerRadius: QZTheme.Radius.badge, style: .continuous))
             .overlay {

@@ -5,6 +5,7 @@ import UniformTypeIdentifiers
 struct WelcomeView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @AppStorage("showEmoji") private var showEmoji = true
     @State private var isTargeted = false
 
     var body: some View {
@@ -12,7 +13,7 @@ struct WelcomeView: View {
             VStack(alignment: .leading, spacing: QZTheme.Space.l) {
                 header
                 stats
-                HStack(alignment: .top, spacing: QZTheme.Space.m) {
+                HStack(alignment: .top, spacing: QZTheme.Space.l) {
                     dropCard
                     recentCard
                         .frame(width: 360)
@@ -20,7 +21,7 @@ struct WelcomeView: View {
                 capabilities
                 footer
             }
-            .padding(QZTheme.Space.xxl)
+            .padding(QZTheme.Space.margin)
             .frame(maxWidth: 1180, alignment: .leading)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -37,11 +38,16 @@ struct WelcomeView: View {
     }
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: QZTheme.Space.xxs) {
+        VStack(alignment: .leading, spacing: QZTheme.Space.xs) {
             QZSectionLabel(title: "Workspace")
-            Text("Your archive workspace")
-                .font(QZTheme.Typography.display)
-                .foregroundStyle(QZTheme.Palette.primary)
+            HStack(spacing: QZTheme.Space.s) {
+                if showEmoji {
+                    QZEmoji(emoji: "🗜️", label: "Archive workspace")
+                }
+                Text("Your archive workspace")
+                    .font(QZTheme.Typography.display)
+                    .foregroundStyle(QZTheme.Palette.primary)
+            }
             Text("Inspect what is inside an archive without unpacking it. Everything runs on this Mac.")
                 .font(QZTheme.Typography.body)
                 .foregroundStyle(QZTheme.Palette.textSecondary)
@@ -92,7 +98,7 @@ struct WelcomeView: View {
                             .foregroundStyle(QZTheme.Palette.accent)
                     }
                     Text("Drop an archive to inspect it")
-                        .font(.system(size: 17, weight: .semibold))
+                        .font(QZTheme.Typography.headline)
                         .foregroundStyle(QZTheme.Palette.primary)
                     Text("Browse entries, check sizes and methods, and see exactly what is inside.")
                         .font(QZTheme.Typography.callout)
@@ -147,8 +153,8 @@ struct WelcomeView: View {
     }
 
     private var recentCard: some View {
-        QZCard(padding: QZTheme.Space.s + 2) {
-            VStack(alignment: .leading, spacing: QZTheme.Space.xs) {
+        QZCard {
+            VStack(alignment: .leading, spacing: QZTheme.Space.s) {
                 QZSectionLabel(title: "Recent Archives",
                                trailing: model.recents.isEmpty ? nil : "\(model.recents.count)")
 
@@ -185,8 +191,11 @@ struct WelcomeView: View {
             model.open(url)
         } label: {
             HStack(spacing: QZTheme.Space.s) {
+                if showEmoji {
+                    QZEmoji(emoji: category.emoji, label: category.displayName)
+                }
                 QZIconTile(symbol: category.symbolName, tint: color, size: 26)
-                VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: QZTheme.Space.xxs) {
                     Text(url.lastPathComponent)
                         .font(QZTheme.Typography.body)
                         .foregroundStyle(QZTheme.Palette.primary)
@@ -198,33 +207,36 @@ struct WelcomeView: View {
                         .lineLimit(1)
                         .truncationMode(.middle)
                 }
-                Spacer(minLength: QZTheme.Space.xs)
+                Spacer(minLength: QZTheme.Space.s)
                 QZBadge(text: url.pathExtension.uppercased(), tint: color, monospaced: true)
             }
-            .padding(.horizontal, QZTheme.Space.xs)
-            .padding(.vertical, QZTheme.Space.xs)
+            .padding(.horizontal, QZTheme.Space.s)
+            .padding(.vertical, QZTheme.Space.s)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
     }
 
     private var capabilities: some View {
-        HStack(spacing: QZTheme.Space.m) {
+        HStack(spacing: QZTheme.Space.l) {
             capabilityCard(
                 symbol: "eye.fill",
                 tint: QZTheme.Palette.info,
+                emoji: showEmoji ? "👁️" : nil,
                 title: "Browse without unpacking",
                 text: "Open 7z, zip, tar, and more, then move through the folder tree."
             )
             capabilityCard(
                 symbol: "line.3.horizontal.decrease.circle.fill",
                 tint: QZTheme.Palette.category(.image),
+                emoji: showEmoji ? "🔍" : nil,
                 title: "Filter by what matters",
                 text: "Narrow by file type, encryption, or size. Search the current folder."
             )
             capabilityCard(
                 symbol: "doc.on.doc.fill",
                 tint: QZTheme.Palette.category(.code),
+                emoji: showEmoji ? "📋" : nil,
                 title: "Copy exact paths",
                 text: "Grab in-archive paths for scripts, terminals, and bug reports."
             )
@@ -233,12 +245,16 @@ struct WelcomeView: View {
 
     private func capabilityCard(symbol: String,
                                 tint: Color,
+                                emoji: String? = nil,
                                 title: String,
                                 text: String) -> some View {
-        QZCard(padding: QZTheme.Space.s + 2) {
-            HStack(alignment: .top, spacing: QZTheme.Space.s) {
+        QZCard {
+            HStack(alignment: .top, spacing: QZTheme.Space.m) {
+                if let emoji {
+                    QZEmoji(emoji: emoji)
+                }
                 QZIconTile(symbol: symbol, tint: tint, size: 30)
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: QZTheme.Space.xxs) {
                     Text(title)
                         .font(QZTheme.Typography.bodyStrong)
                         .foregroundStyle(QZTheme.Palette.primary)
@@ -249,7 +265,7 @@ struct WelcomeView: View {
                 }
                 Spacer(minLength: 0)
             }
-            .frame(maxWidth: .infinity, minHeight: 54, alignment: .topLeading)
+            .frame(maxWidth: .infinity, minHeight: 56, alignment: .topLeading)
         }
     }
 

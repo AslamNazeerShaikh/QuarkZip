@@ -9,20 +9,35 @@ struct SettingsView: View {
             AboutSettingsView()
                 .tabItem { Label("About", systemImage: "info.circle") }
         }
-        .frame(width: 500, height: 400)
+        .frame(width: 520, height: 460)
     }
 }
 
 struct GeneralSettingsView: View {
     @AppStorage("density") private var density: QZDensity = .compact
+    @AppStorage("appearance") private var appearance: QZAppearance = .system
+    @AppStorage("showEmoji") private var showEmoji = true
 
     var body: some View {
         Form {
             Section("Appearance") {
-                Text("QuarkZip follows your Mac's appearance and accent color. Category colors stay fixed so file types remain recognizable.")
+                Picker("Theme", selection: $appearance) {
+                    ForEach(QZAppearance.allCases) { option in
+                        Text(option.title).tag(option)
+                    }
+                }
+                .pickerStyle(.segmented)
+                Text("System follows your Mac. Light and Dark override it right away, for this app only.")
                     .font(QZTheme.Typography.caption)
                     .foregroundStyle(QZTheme.Palette.textSecondary)
-                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section("Emoji") {
+                Toggle("Show emoji in lists and sidebars", isOn: $showEmoji)
+                    .font(QZTheme.Typography.body)
+                Text("One fixed emoji per file type, in a 20 point box so rows never shift. Turn it off for a text-only look.")
+                    .font(QZTheme.Typography.caption)
+                    .foregroundStyle(QZTheme.Palette.textSecondary)
             }
 
             Section("Density") {
@@ -38,7 +53,7 @@ struct GeneralSettingsView: View {
             }
 
             Section("File Types") {
-                Text("Categories and methods use a fixed semantic palette. Text stays at full contrast; color appears as a dot, icon, or bar.")
+                Text("Categories and methods use a fixed semantic palette. Text stays at full contrast; color appears as a dot, icon, or bar. Sizes always use binary units, where 1 KiB = 1,024 bytes.")
                     .font(QZTheme.Typography.caption)
                     .foregroundStyle(QZTheme.Palette.textSecondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -59,6 +74,12 @@ struct AboutSettingsView: View {
             Section("Engine credits") {
                 Text("Archive engine by Igor Pavlov and the 7-Zip project. QuarkZip is an independent front end, licensed LGPL-3.0.")
                     .font(QZTheme.Typography.callout)
+                    .foregroundStyle(QZTheme.Palette.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Section("About") {
+                Text("Choose QuarkZip > About QuarkZip in the menu bar, or the info button in the toolbar, for the full About card.")
+                    .font(QZTheme.Typography.caption)
                     .foregroundStyle(QZTheme.Palette.textSecondary)
                     .fixedSize(horizontal: false, vertical: true)
             }

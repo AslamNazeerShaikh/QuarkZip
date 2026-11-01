@@ -13,7 +13,7 @@ struct FilterBarView: View {
 
             Rectangle()
                 .fill(QZTheme.Palette.separator)
-                .frame(width: 1, height: 18)
+                .frame(width: 1, height: 20)
                 .padding(.horizontal, QZTheme.Space.xxs)
 
             ScrollView(.horizontal, showsIndicators: false) {
@@ -105,7 +105,7 @@ struct FilterBarView: View {
             }
         }
         .padding(.horizontal, QZTheme.Space.s)
-        .frame(width: 178, height: 24)
+        .frame(width: 180, height: 24)
         .background(QZTheme.Palette.content,
                     in: RoundedRectangle(cornerRadius: QZTheme.Radius.control, style: .continuous))
         .overlay {

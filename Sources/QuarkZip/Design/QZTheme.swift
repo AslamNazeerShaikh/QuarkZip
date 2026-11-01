@@ -17,6 +17,12 @@ enum QZTheme {
         static let xxxl: CGFloat = 32
         static let huge: CGFloat = 40
         static let giant: CGFloat = 48
+        /// Window and page margin. Equals xl, named for intent.
+        static let margin: CGFloat = 20
+        /// Default card padding. Equals l, named for intent.
+        static let card: CGFloat = 16
+        /// Default group gap inside cards and rails.
+        static let group: CGFloat = 12
     }
 
     enum Radius {
@@ -28,22 +34,24 @@ enum QZTheme {
     }
 
     enum Size {
-        static let sidebar: CGFloat = 230
+        static let pane: CGFloat = 264
+        static let paneMin: CGFloat = 220
+        static let paneMax: CGFloat = 320
         static let minWindowWidth: CGFloat = 1200
         static let minWindowHeight: CGFloat = 720
         static let defaultWindowWidth: CGFloat = 1360
         static let defaultWindowHeight: CGFloat = 800
         static let maxWindowWidth: CGFloat = 1680
         static let maxWindowHeight: CGFloat = 1050
-        static let rowCompact: CGFloat = 24
-        static let rowComfortable: CGFloat = 30
+        static let rowCompact: CGFloat = 28
+        static let rowComfortable: CGFloat = 32
         static let header: CGFloat = 68
         static let filterBar: CGFloat = 44
-        static let statusBar: CGFloat = 26
-        static let inspector: CGFloat = 310
+        static let statusBar: CGFloat = 28
         static let iconTile: CGFloat = 34
         static let iconTileSmall: CGFloat = 22
-        static let chip: CGFloat = 22
+        static let chip: CGFloat = 24
+        static let emojiBox: CGFloat = 20
     }
 
     enum Typography {
@@ -60,6 +68,11 @@ enum QZTheme {
         static let metric = Font.system(size: 12, design: .monospaced)
         static let microMono = Font.system(size: 10, design: .monospaced)
         static let metricLarge = Font.system(size: 18, weight: .semibold, design: .monospaced)
+        static let statValue = Font.system(size: 15, weight: .semibold, design: .monospaced)
+        static let miniValue = Font.system(size: 14, weight: .semibold, design: .monospaced)
+        static let rowIcon = Font.system(size: 12, weight: .medium)
+        static let rowGlyph = Font.system(size: 11, weight: .medium)
+        static let emoji = Font.system(size: 13)
     }
 
     enum Palette {
@@ -87,7 +100,8 @@ enum QZTheme {
         static let info = Color(nsColor: .systemBlue)
 
         static let hover = Color.primary.opacity(0.045)
-        static let selection = Color.accentColor.opacity(0.14)
+        static let selection = Color.accentColor.opacity(0.13)
+        static let selectionBorder = Color.accentColor.opacity(0.28)
         static let dataTrack = Color.primary.opacity(0.08)
         static let cardBorder = Color(nsColor: .separatorColor).opacity(0.55)
         static let headerBackground = Color(nsColor: .controlBackgroundColor)
@@ -151,6 +165,23 @@ enum QZDensity: String, CaseIterable, Identifiable {
         switch self {
         case .compact: return QZTheme.Size.rowCompact
         case .comfortable: return QZTheme.Size.rowComfortable
+        }
+    }
+}
+
+/// Appearance override applied at runtime via preferredColorScheme.
+enum QZAppearance: String, CaseIterable, Identifiable {
+    case system
+    case light
+    case dark
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .system: return "System"
+        case .light: return "Light"
+        case .dark: return "Dark"
         }
     }
 }

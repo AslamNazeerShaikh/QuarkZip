@@ -4,8 +4,9 @@ import SwiftUI
 
 struct SidebarView: View {
     @Environment(AppModel.self) private var model
+    @AppStorage("showEmoji") private var showEmoji = true
 
-    private let rowInsets = EdgeInsets(top: 1, leading: 6, bottom: 1, trailing: 6)
+    private let rowInsets = EdgeInsets(top: 2, leading: 4, bottom: 2, trailing: 4)
 
     var body: some View {
         List {
@@ -13,7 +14,8 @@ struct SidebarView: View {
                 QZSidebarRow(
                     symbol: "square.and.arrow.down",
                     title: "Open Archive…",
-                    tint: QZTheme.Palette.accent
+                    tint: QZTheme.Palette.accent,
+                    emoji: showEmoji ? "📂" : nil
                 ) {
                     model.chooseArchive()
                 }
@@ -23,18 +25,22 @@ struct SidebarView: View {
             if model.hasArchive {
                 Section {
                     filterRow(.all, symbol: "tray.full",
-                              title: "All Entries", tint: QZTheme.Palette.accent)
+                              title: "All Entries", tint: QZTheme.Palette.accent,
+                              emoji: showEmoji ? "📚" : nil)
                     if (model.filterCounts[.folders] ?? 0) > 0 {
                         filterRow(.folders, symbol: "folder",
-                                  title: "Folders", tint: QZTheme.Palette.accent)
+                                  title: "Folders", tint: QZTheme.Palette.accent,
+                                  emoji: showEmoji ? "📁" : nil)
                     }
                     if (model.filterCounts[.encrypted] ?? 0) > 0 {
                         filterRow(.encrypted, symbol: "lock.fill",
-                                  title: "Encrypted", tint: QZTheme.Palette.warning)
+                                  title: "Encrypted", tint: QZTheme.Palette.warning,
+                                  emoji: showEmoji ? "🔒" : nil)
                     }
                     if (model.filterCounts[.large] ?? 0) > 0 {
                         filterRow(.large, symbol: "internaldrive",
-                                  title: "Large Items", tint: QZTheme.Palette.accent)
+                                  title: "Large Items", tint: QZTheme.Palette.accent,
+                                  emoji: showEmoji ? "📦" : nil)
                     }
                 } header: {
                     sidebarHeader("Filters")
@@ -48,7 +54,8 @@ struct SidebarView: View {
                             tint: QZTheme.Palette.accent,
                             dot: QZTheme.Palette.category(category),
                             count: model.filterCounts[.category(category)],
-                            isSelected: model.filter == .category(category)
+                            isSelected: model.filter == .category(category),
+                            emoji: showEmoji ? category.emoji : nil
                         ) {
                             model.filter = .category(category)
                         }
@@ -67,11 +74,13 @@ struct SidebarView: View {
                         .padding(.leading, QZTheme.Space.xs)
                 } else {
                     ForEach(model.recents.prefix(6), id: \.self) { url in
+                        let category = EntryCategory.of(fileName: url.lastPathComponent)
                         QZSidebarRow(
                             symbol: "archivebox",
                             title: url.lastPathComponent,
                             tint: QZTheme.Palette.accent,
-                            dot: QZFormatStyle.color(for: url.pathExtension)
+                            dot: QZFormatStyle.color(for: url.pathExtension),
+                            emoji: showEmoji ? category.emoji : nil
                         ) {
                             model.open(url)
                         }
@@ -84,20 +93,40 @@ struct SidebarView: View {
             }
 
             Section {
-                location("Home", symbol: "house", url: .homeDirectory, tint: QZTheme.Palette.accent)
-                location("Desktop", symbol: "menubar.dock.rectangle", url: .desktopDirectory, tint: QZTheme.Palette.accent)
-                location("Downloads", symbol: "arrow.down.circle", url: .downloadsDirectory, tint: QZTheme.Palette.accent)
+                location("Home", symbol: "house", url: .homeDirectory,
+                         tint: QZTheme.Palette.accent,
+                         emoji: showEmoji ? "🏠" : nil)
+                location("Desktop", symbol: "menubar.dock.rectangle", url: .desktopDirectory,
+                         tint: QZTheme.Palette.accent,
+                         emoji: showEmoji ? "🖥️" : nil)
+                location("Downloads", symbol: "arrow.down.circle", url: .downloadsDirectory,
+                         tint: QZTheme.Palette.accent,
+                         emoji: showEmoji ? "⬇️" : nil)
             } header: {
                 sidebarHeader("Locations")
             }
+
+            Section {
+                QZSidebarRow(
+                    symbol: "info.circle",
+                    title: "About QuarkZip",
+                    tint: QZTheme.Palette.accent,
+                    emoji: showEmoji ? "ℹ️" : nil
+                ) {
+                    model.showAbout = true
+                }
+                .listRowInsets(rowInsets)
+            } header: {
+                sidebarHeader("App")
+            }
         }
         .listStyle(.sidebar)
+        .scrollContentBackground(.hidden)
     }
 
     private func sidebarHeader(_ title: String) -> some View {
         Text(title.uppercased())
             .font(QZTheme.Typography.section)
-            .tracking(0.6)
             .foregroundStyle(QZTheme.Palette.textFaint)
     }
 
@@ -108,13 +137,15 @@ struct SidebarView: View {
     private func filterRow(_ filter: EntryFilter,
                            symbol: String,
                            title: String,
-                           tint: Color) -> some View {
+                           tint: Color,
+                           emoji: String? = nil) -> some View {
         QZSidebarRow(
             symbol: symbol,
             title: title,
             tint: tint,
             count: model.filterCounts[filter],
-            isSelected: model.filter == filter
+            isSelected: model.filter == filter,
+            emoji: emoji
         ) {
             model.filter = filter
         }
@@ -124,8 +155,9 @@ struct SidebarView: View {
     private func location(_ title: String,
                           symbol: String,
                           url: URL,
-                          tint: Color) -> some View {
-        QZSidebarRow(symbol: symbol, title: title, tint: tint) {
+                          tint: Color,
+                          emoji: String? = nil) -> some View {
+        QZSidebarRow(symbol: symbol, title: title, tint: tint, emoji: emoji) {
             model.openPanel(in: url)
         }
         .help("Choose an archive in \(title)")

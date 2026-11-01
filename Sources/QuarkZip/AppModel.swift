@@ -29,6 +29,7 @@ final class AppModel {
     }
 
     var showInspector = true
+    var showAbout = false
 
     var sort = EntrySort() {
         didSet { rebuildDisplayed() }

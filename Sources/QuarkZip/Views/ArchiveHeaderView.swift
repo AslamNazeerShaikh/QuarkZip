@@ -4,6 +4,7 @@ import SwiftUI
 /// CRM-style record header: identity on the left, colored KPIs on the right.
 struct ArchiveHeaderView: View {
     @Environment(AppModel.self) private var model
+    @AppStorage("showEmoji") private var showEmoji = true
 
     var body: some View {
         if let snapshot = model.snapshot {
@@ -12,8 +13,11 @@ struct ArchiveHeaderView: View {
                            tint: QZTheme.Palette.category(.archive),
                            size: 40)
 
-                VStack(alignment: .leading, spacing: 2) {
-                    HStack(spacing: QZTheme.Space.xs) {
+                VStack(alignment: .leading, spacing: QZTheme.Space.xxs) {
+                    HStack(spacing: QZTheme.Space.s) {
+                        if showEmoji {
+                            QZEmoji(emoji: "📦", label: "Archive")
+                        }
                         Text(snapshot.displayName)
                             .font(QZTheme.Typography.headline)
                             .foregroundStyle(QZTheme.Palette.primary)
@@ -36,9 +40,9 @@ struct ArchiveHeaderView: View {
                 .frame(minWidth: 160, alignment: .leading)
                 .layoutPriority(2)
 
-                Spacer(minLength: QZTheme.Space.xs)
+                Spacer(minLength: QZTheme.Space.s)
 
-                HStack(spacing: QZTheme.Space.xs) {
+                HStack(spacing: QZTheme.Space.s) {
                     QZStatCard(label: "Files",
                                value: "\(snapshot.fileCount)",
                                symbol: "doc.on.doc.fill",

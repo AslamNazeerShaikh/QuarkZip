@@ -64,6 +64,12 @@ struct QuarkZipApp: App {
         .windowToolbarStyle(.unified)
         .windowResizability(.contentMinSize)
         .commands {
+            CommandGroup(replacing: .appInfo) {
+                Button("About QuarkZip") {
+                    model.showAbout = true
+                }
+            }
+
             CommandGroup(replacing: .newItem) {
                 Button("Open Archive…") {
                     model.chooseArchive()

@@ -3,16 +3,25 @@ import QuarkZipKit
 import SwiftUI
 
 /// Right rail: entry details, selection summary, or archive overview.
+/// Full vertical height comes from the NavigationSplitView inspector column,
+/// which also provides the glass material behind this clear content.
 struct InspectorView: View {
     @Environment(AppModel.self) private var model
+    @AppStorage("showEmoji") private var showEmoji = true
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: QZTheme.Space.m) {
-                QZSectionLabel(
-                    title: model.selection.isEmpty ? "Archive Overview" : "Inspector",
-                    trailing: model.selection.isEmpty ? nil : "\(model.selection.count) selected"
-                )
+            VStack(alignment: .leading, spacing: QZTheme.Space.l) {
+                HStack(spacing: QZTheme.Space.s) {
+                    if showEmoji {
+                        QZEmoji(emoji: model.selection.isEmpty ? "📦" : "🔍",
+                                label: "Inspector")
+                    }
+                    QZSectionLabel(
+                        title: model.selection.isEmpty ? "Archive Overview" : "Inspector",
+                        trailing: model.selection.isEmpty ? nil : "\(model.selection.count) selected"
+                    )
+                }
 
                 if let entry = model.selectedEntry {
                     EntryInspectorView(entry: entry)
@@ -22,9 +31,9 @@ struct InspectorView: View {
                     ArchiveInspectorView(snapshot: snapshot)
                 }
             }
-            .padding(QZTheme.Space.m)
+            .padding(QZTheme.Space.l)
         }
-        .background(QZTheme.Palette.inspector)
+        .background(.clear)
     }
 }
 
@@ -48,7 +57,7 @@ private struct EntryInspectorView: View {
         VStack(alignment: .leading, spacing: QZTheme.Space.m) {
             HStack(alignment: .top, spacing: QZTheme.Space.s) {
                 QZIconTile(symbol: category.symbolName, tint: color, size: 40)
-                VStack(alignment: .leading, spacing: QZTheme.Space.xxs + 1) {
+                VStack(alignment: .leading, spacing: QZTheme.Space.xxs) {
                     Text(entry.name)
                         .font(QZTheme.Typography.headline)
                         .lineLimit(2)
@@ -88,7 +97,7 @@ private struct EntryInspectorView: View {
             }
 
             if entry.kind == .file, model.snapshot?.showsCompressionMetrics == true {
-                QZCard(padding: QZTheme.Space.s + 2) {
+                QZCard(padding: QZTheme.Space.m) {
                     VStack(alignment: .leading, spacing: QZTheme.Space.xs) {
                         QZSectionLabel(title: "Compression", trailing: EntryFormat.ratio(ratio))
                         QZRatioBar(value: ratio, height: 6)
@@ -103,7 +112,7 @@ private struct EntryInspectorView: View {
                 }
             }
 
-            QZCard(padding: QZTheme.Space.s + 2) {
+            QZCard(padding: QZTheme.Space.m) {
                 VStack(alignment: .leading, spacing: QZTheme.Space.xxs) {
                     QZSectionLabel(title: "Details")
                     QZInspectorField(label: "Type", value: category.displayName, tint: color)
@@ -154,7 +163,7 @@ private struct SelectionInspectorView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: QZTheme.Space.m) {
-            QZCard(padding: QZTheme.Space.s + 2) {
+            QZCard(padding: QZTheme.Space.m) {
                 HStack(spacing: QZTheme.Space.s) {
                     QZIconTile(symbol: "square.stack.3d.up.fill",
                                tint: QZTheme.Palette.accent, size: 36)
@@ -179,7 +188,7 @@ private struct SelectionInspectorView: View {
                 QZMiniStat(label: "Folders", value: "\(model.selectedEntries.lazy.filter { $0.kind == .folder }.count)", tint: QZTheme.Palette.category(.folder))
             }
 
-            QZCard(padding: QZTheme.Space.s + 2) {
+            QZCard(padding: QZTheme.Space.m) {
                 VStack(alignment: .leading, spacing: QZTheme.Space.xs) {
                     QZSectionLabel(title: "Selection")
                     ForEach(Array(model.selectedEntries.prefix(8))) { entry in
@@ -225,7 +234,7 @@ private struct ArchiveInspectorView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: QZTheme.Space.m) {
-            QZCard(padding: QZTheme.Space.s + 2) {
+            QZCard(padding: QZTheme.Space.m) {
                 VStack(alignment: .leading, spacing: QZTheme.Space.xs) {
                     HStack(spacing: QZTheme.Space.xs) {
                         QZIconTile(symbol: "archivebox.fill",
@@ -269,7 +278,7 @@ private struct ArchiveInspectorView: View {
                 QZMiniStat(label: "Encrypted", value: "\(snapshot.encryptedCount)", tint: QZTheme.Palette.warning)
             }
 
-            QZCard(padding: QZTheme.Space.s + 2) {
+            QZCard(padding: QZTheme.Space.m) {
                 VStack(alignment: .leading, spacing: QZTheme.Space.xs) {
                     QZSectionLabel(title: "Composition", trailing: "\(snapshot.categoryStats.count) kinds")
                     QZCompositionBar(stats: snapshot.categoryStats, height: 9)
@@ -279,7 +288,7 @@ private struct ArchiveInspectorView: View {
                 }
             }
 
-            QZCard(padding: QZTheme.Space.s + 2) {
+            QZCard(padding: QZTheme.Space.m) {
                 VStack(alignment: .leading, spacing: QZTheme.Space.xs) {
                     QZSectionLabel(title: "Largest Entries")
                     ForEach(snapshot.largestEntries(limit: 5)) { entry in
@@ -303,7 +312,7 @@ private struct ArchiveInspectorView: View {
             }
 
             if !methods.isEmpty {
-                QZCard(padding: QZTheme.Space.s + 2) {
+                QZCard(padding: QZTheme.Space.m) {
                     VStack(alignment: .leading, spacing: QZTheme.Space.xs) {
                         QZSectionLabel(title: "Methods")
                         ForEach(methods) { item in
@@ -370,20 +379,19 @@ private struct QZMiniStat: View {
     let tint: Color
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: QZTheme.Space.xxs) {
             Text(value)
-                .font(.system(size: 14, weight: .semibold, design: .monospaced))
+                .font(QZTheme.Typography.miniValue)
                 .foregroundStyle(QZTheme.Palette.primary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.65)
             Text(label.uppercased())
                 .font(QZTheme.Typography.section)
-                .tracking(0.4)
                 .foregroundStyle(QZTheme.Palette.textFaint)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, QZTheme.Space.s)
-        .padding(.vertical, QZTheme.Space.xs + 1)
+        .padding(.horizontal, QZTheme.Space.m)
+        .padding(.vertical, QZTheme.Space.s)
         .background(QZTheme.Palette.soft(tint),
                     in: RoundedRectangle(cornerRadius: QZTheme.Radius.control, style: .continuous))
         .overlay {
