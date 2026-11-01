@@ -1,23 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
   <defs>
     <linearGradient id="body" x1="212" y1="520" x2="812" y2="752" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#22C4FF"/>
-      <stop offset="0.34" stop-color="#168CFF"/>
-      <stop offset="0.7" stop-color="#4C5CFF"/>
-      <stop offset="1" stop-color="#8A2BE8"/>
+      <stop offset="0" stop-color="#FFC53D"/>
+      <stop offset="0.34" stop-color="#FF8A3D"/>
+      <stop offset="0.7" stop-color="#F43F5E"/>
+      <stop offset="1" stop-color="#C81E5B"/>
     </linearGradient>
     <linearGradient id="lip" x1="212" y1="498" x2="812" y2="552" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#78F0FF"/>
-      <stop offset="0.42" stop-color="#38B7FF"/>
-      <stop offset="1" stop-color="#7A6BFF"/>
+      <stop offset="0" stop-color="#FFE3B3"/>
+      <stop offset="0.42" stop-color="#FFB37A"/>
+      <stop offset="1" stop-color="#FF7A6B"/>
     </linearGradient>
     <linearGradient id="lipHighlight" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.78"/>
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.82"/>
       <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="bottomShade" x1="0" y1="650" x2="0" y2="752" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#3A0A8F" stop-opacity="0"/>
-      <stop offset="1" stop-color="#3A0A8F" stop-opacity="0.18"/>
+      <stop offset="0" stop-color="#7A1030" stop-opacity="0"/>
+      <stop offset="1" stop-color="#7A1030" stop-opacity="0.20"/>
     </linearGradient>
     <clipPath id="bodyClip">
       <path d="M212 520H812L786 720C782 739 767 752 748 752H276C257 752 242 739 238 720Z"/>
@@ -28,15 +28,15 @@
     <path fill="url(#body)" d="M212 520H812L786 720C782 739 767 752 748 752H276C257 752 242 739 238 720Z"/>
     <rect x="212" y="650" width="600" height="102" fill="url(#bottomShade)"/>
   </g>
-  <rect x="224" y="536" width="576" height="18" rx="9" fill="#161C62" opacity="0.20"/>
-  <rect x="212" y="534" width="600" height="6" rx="3" fill="#0B3CB8" opacity="0.22"/>
-  <rect x="238" y="724" width="548" height="28" rx="14" fill="#4B0FA8" opacity="0.14"/>
-  <path fill="#FFFFFF" opacity="0.10" d="M214 536H232L238 720C239 731 245 741 254 747H238C225 741 217 729 215 711Z"/>
-  <path fill="#FFFFFF" opacity="0.08" d="M810 536H792L786 720C785 731 779 741 770 747H786C799 741 807 729 809 711Z"/>
+  <rect x="224" y="536" width="576" height="18" rx="9" fill="#5E0F2A" opacity="0.20"/>
+  <rect x="212" y="534" width="600" height="6" rx="3" fill="#7A1030" opacity="0.22"/>
+  <rect x="238" y="724" width="548" height="28" rx="14" fill="#7A1030" opacity="0.14"/>
+  <path fill="#FFFFFF" opacity="0.12" d="M214 536H232L238 720C239 731 245 741 254 747H238C225 741 217 729 215 711Z"/>
+  <path fill="#FFFFFF" opacity="0.10" d="M810 536H792L786 720C785 731 779 741 770 747H786C799 741 807 729 809 711Z"/>
 
   <rect x="212" y="502" width="600" height="34" rx="17" fill="url(#lip)"/>
   <rect x="228" y="507" width="568" height="7" rx="3.5" fill="url(#lipHighlight)"/>
-  <rect x="224" y="530" width="576" height="6" rx="3" fill="#FFFFFF" opacity="0.14"/>
+  <rect x="224" y="530" width="576" height="6" rx="3" fill="#FFFFFF" opacity="0.16"/>
 
 
 </svg>

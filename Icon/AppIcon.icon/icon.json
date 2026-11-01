@@ -1,8 +1,8 @@
 {
   "fill" : {
     "linear-gradient" : [
-      "srgb:0.88200,0.97300,1.00000,1.00000",
-      "srgb:0.96100,0.87100,1.00000,1.00000"
+      "srgb:1.00000,0.82000,0.60000,1.00000",
+      "srgb:1.00000,0.56000,0.52000,1.00000"
     ],
     "orientation" : {
       "start" : { "x" : 0.05, "y" : 0.00 },
@@ -15,13 +15,13 @@
         { "glass" : false, "image-name" : "sparkle.svg", "name" : "sparkle" },
         { "glass" : false, "image-name" : "sparkleGlow.svg", "name" : "sparkle glow" },
         { "glass" : false, "image-name" : "handle.svg", "name" : "handle" },
-        { "glass" : false, "image-name" : "box.svg", "name" : "box" },
+        { "glass" : true, "image-name" : "box.svg", "name" : "box" },
         { "glass" : false, "image-name" : "cards.svg", "name" : "cards" },
         { "glass" : false, "image-name" : "boxBack.svg", "name" : "box back" }
       ],
       "shadow" : { "kind" : "neutral", "opacity" : 0.45 },
       "specular" : true,
-      "translucency" : { "enabled" : false, "value" : 0.0 }
+      "translucency" : { "enabled" : true, "value" : 0.35 }
     }
   ],
   "supported-platforms" : { "squares" : [ "macOS" ] }
