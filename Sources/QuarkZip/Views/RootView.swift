@@ -75,7 +75,6 @@ struct RootView: View {
         }
         .background(QZTheme.Palette.background)
         .animation(baseAnimation, value: model.error)
-        .animation(gentleAnimation, value: model.showInspector)
         .inspector(isPresented: inspectorBinding) {
             InspectorView()
                 .inspectorColumnWidth(
@@ -105,10 +104,6 @@ struct RootView: View {
 
     private var baseAnimation: Animation {
         QZMotion.animation(QZTheme.Motion.standard, reduceMotion: reduceMotion)
-    }
-
-    private var gentleAnimation: Animation {
-        QZMotion.animation(QZTheme.Motion.gentle, reduceMotion: reduceMotion)
     }
 
     @ToolbarContentBuilder

@@ -53,11 +53,24 @@ struct BrowserView: View {
                             .listRowBackground(rowBackground(
                                 isSelected: model.selection.contains(entry.id)))
                             .tag(entry.id)
-                            .onAppear {
-                                if entry.id == model.visibleEntries.last?.id {
-                                    model.loadMoreVisible()
+                        }
+
+                        if model.isWindowing {
+                            Button {
+                                model.loadMoreVisible()
+                            } label: {
+                                HStack {
+                                    Spacer(minLength: 0)
+                                    Text("Show more (\(model.displayed.count - model.visibleCount) remaining)")
+                                        .font(QZTheme.Typography.caption)
+                                        .foregroundStyle(QZTheme.Palette.textSecondary)
+                                    Spacer(minLength: 0)
                                 }
                             }
+                            .buttonStyle(.plain)
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
+                            .help("Load the next \(AppModel.pageSize) entries")
                         }
                     }
                     .listStyle(.plain)

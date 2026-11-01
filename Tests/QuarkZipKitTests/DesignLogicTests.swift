@@ -204,4 +204,14 @@ struct ShortDateFormatTests {
         #expect(text.contains("1970"))
         #expect(!text.contains(":"))
     }
+
+    @Test func repeatedDatesReuseTheCachedFormatter() {
+        let date = Date(timeIntervalSince1970: 0)
+        let timeZone = TimeZone(secondsFromGMT: 0) ?? .gmt
+        let locale = Locale(identifier: "en_US_POSIX")
+        #expect(EntryFormat.shortDate(date, timeZone: timeZone, locale: locale)
+            == EntryFormat.shortDate(date, timeZone: timeZone, locale: locale))
+        #expect(EntryFormat.date(date, timeZone: timeZone, locale: locale)
+            == EntryFormat.date(date, timeZone: timeZone, locale: locale))
+    }
 }
