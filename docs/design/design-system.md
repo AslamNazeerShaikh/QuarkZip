@@ -26,7 +26,7 @@ Three panes, all resizable through native split behavior.
 ```text
 ┌────────────┬───────────────────────────────────────────┬──────────────┐
 │ Sidebar    │ Archive header          KPI KPI KPI KPI   │ Inspector    │
-│ 230        ├───────────────────────────────────────────┤ 310          │
+│ 264        ├───────────────────────────────────────────┤ 316          │
 │            │ Search | filter chips | sort | density    │              │
 │ Filters    ├───────────────────────────────────────────┤ Overview or  │
 │ Categories │ Name  Type  Size  Packed  Ratio  Date ... │ entry detail │
@@ -39,14 +39,14 @@ Three panes, all resizable through native split behavior.
 
 | Area | Size |
 | --- | --- |
-| Minimum window | 1200 x 720 |
-| Default window | 1360 x 800 |
-| Sidebar | 220 min, 264 ideal, 320 max |
+| Minimum window | 1304 x 720 |
+| Default window | 1464 x 800 |
+| Sidebar | 264 min, 316 ideal, 384 max |
 | Header | 68 |
 | Filter bar | 44 |
 | List row | 28 compact, 32 comfortable |
 | Maximum window | 1680 x 1050, clamped to the screen |
-| Inspector | 220 min, 264 ideal, 320 max |
+| Inspector | 264 min, 316 ideal, 384 max |
 | Status bar | 28 |
 | Chip | 24 |
 | Emoji box | 20 |
@@ -263,7 +263,7 @@ Calm navigation. Icons follow the system accent, with an optional fixed
 emoji per row in a 20 point box. Category rows carry a small fixed color
 dot. Fixed icon color is reserved for Encrypted (warning). Large Items is
 a filter, not a danger state, so it uses the accent. The sidebar and the
-inspector share the 220 to 320 range with a 264 default, resize natively,
+inspector share the 264 to 384 range with a 316 default, always visible,
 and both render over the system pane material for the full height, so
 their transparency matches.
 

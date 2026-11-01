@@ -181,7 +181,7 @@ all behave the same everywhere.
 - Sizes use binary IEC units (1 KiB = 1,024 bytes) from `EntryFormat`.
 - Spacing and type come from `QZTheme` on a 4 pt grid with unified 20
   margins, 16 card padding, 28/32 rows, and token-only text sizes.
-- Sidebar and inspector share 220/264/320 widths, resize natively, render
+- Sidebar and inspector share 264/316/384 widths, always visible, resize natively, render
   over glass full height, and toggle with the gentle spring.
 - List selection is a soft accent fill with border; primary text and
   method pills stay readable in light and dark.
@@ -190,14 +190,14 @@ all behave the same everywhere.
 - Settings switches System, Light, and Dark at runtime.
 - `verify.sh` passes, snapshots were reviewed in light and dark.
 
-### [x] M1-10 Equal glass, calm sidebars, working Reveal, 1M-ready list
+### [x] M1-10 Equal glass, locked-open sidebars, working Reveal, 1M-ready list
 
-As a user, both sidebars look the same, expanding them never glitches,
-icons always render, and huge archives scroll and select instantly.
+As a user, both sidebars look the same, stay open, icons always render,
+and huge archives scroll and select instantly.
 
 - Both panes render over the system material with no custom tint, so
-  transparency matches; the inspector uses the native pane animation,
-  and toolbar items stay mounted while disabled.
+  transparency matches; both are 20 percent wider (264/316/384) and
+  always visible, so there is no expand animation left to glitch.
 - Comfortable rows and no emoji are the defaults for new installs.
 - Every SF Symbol the UI can render is listed in `QZAppSymbols` and the
   `--selftest` gate fails if any name stops resolving (this caught the
