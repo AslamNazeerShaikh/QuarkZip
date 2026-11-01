@@ -44,11 +44,11 @@ struct ArchiveHeaderView: View {
 
                 HStack(spacing: QZTheme.Space.s) {
                     QZStatCard(label: "Files",
-                               value: "\(snapshot.fileCount)",
+                               value: "\(model.archiveFacts.files)",
                                symbol: "doc.on.doc.fill",
                                tint: QZTheme.Palette.category(.document))
                     QZStatCard(label: "Size",
-                               value: EntryFormat.bytes(snapshot.totalUncompressedSize),
+                               value: EntryFormat.bytes(model.archiveFacts.totalSize),
                                symbol: "internaldrive.fill",
                                tint: QZTheme.Palette.info)
                     QZStatCard(label: "Packed",
@@ -58,9 +58,9 @@ struct ArchiveHeaderView: View {
                                symbol: "arrow.down.right.and.arrow.up.left",
                                tint: QZTheme.Palette.category(.archive))
                     QZStatCard(label: "Ratio",
-                               value: EntryFormat.ratio(snapshot.compressionRatio),
+                               value: EntryFormat.ratio(model.archiveCompressionRatio),
                                symbol: "chart.bar.fill",
-                               tint: QZTheme.Palette.ratio(snapshot.compressionRatio ?? 1))
+                               tint: QZTheme.Palette.ratio(model.archiveCompressionRatio ?? 1))
                 }
             }
             .padding(.horizontal, QZTheme.Space.l)

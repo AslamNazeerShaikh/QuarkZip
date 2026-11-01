@@ -52,6 +52,20 @@ final class AppModel {
     private(set) var displayedFolderCount = 0
     private(set) var displayedBytes: UInt64 = 0
 
+    /// Archive-wide totals computed once per open, off the main actor.
+    /// The header and inspector read these instead of scanning entries
+    /// per frame, so expanding the inspector never hitches.
+    private(set) var archiveFacts: ArchiveFacts = .empty
+
+    /// Packed over unpacked, or nil when the container does not compress
+    /// or the handler reported no packed sizes. Mirrors the guards in
+    /// `ArchiveSnapshot.compressionRatio`.
+    var archiveCompressionRatio: Double? {
+        guard let snapshot, snapshot.showsCompressionMetrics,
+              archiveFacts.totalSize > 0, snapshot.totalPackedSize > 0 else { return nil }
+        return Double(snapshot.totalPackedSize) / Double(archiveFacts.totalSize)
+    }
+
     /// The list renders a window of this many rows and grows it as the user
     /// scrolls, so a 1M-entry folder scrolls without diffing 1M views.
     static let pageSize = 500
@@ -208,6 +222,7 @@ final class AppModel {
         defer { suppressSchedule = false }
         self.snapshot = snapshot
         entriesByID = Dictionary(uniqueKeysWithValues: snapshot.entries.map { ($0.id, $0) })
+        archiveFacts = ArchiveFacts.make(from: snapshot.entries)
         currentFolder = .root
         selection = []
         searchText = ""
@@ -231,12 +246,14 @@ final class AppModel {
         Task {
             do {
                 let opened = try await service.open(url: url, password: nil)
-                let byID = await Task.detached(priority: .userInitiated) {
-                    Dictionary(uniqueKeysWithValues: opened.entries.map { ($0.id, $0) })
+                let index = await Task.detached(priority: .userInitiated) {
+                    (byID: Dictionary(uniqueKeysWithValues: opened.entries.map { ($0.id, $0) }),
+                     facts: ArchiveFacts.make(from: opened.entries))
                 }.value
                 suppressSchedule = true
                 snapshot = opened
-                entriesByID = byID
+                entriesByID = index.byID
+                archiveFacts = index.facts
                 currentFolder = .root
                 selection = []
                 searchText = ""
@@ -261,6 +278,7 @@ final class AppModel {
         defer { suppressSchedule = false }
         snapshot = nil
         entriesByID = [:]
+        archiveFacts = .empty
         displayed = []
         baseEntries = []
         filterCounts = [:]

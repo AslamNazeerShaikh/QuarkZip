@@ -270,11 +270,11 @@ private struct ArchiveInspectorView: View {
                 GridItem(.flexible(), spacing: QZTheme.Space.xs),
                 GridItem(.flexible(), spacing: QZTheme.Space.xs),
             ], spacing: QZTheme.Space.xs) {
-                QZMiniStat(label: "Files", value: "\(snapshot.fileCount)", tint: QZTheme.Palette.category(.document))
-                QZMiniStat(label: "Folders", value: "\(snapshot.folderCount)", tint: QZTheme.Palette.category(.folder))
-                QZMiniStat(label: "Size", value: EntryFormat.bytes(snapshot.totalUncompressedSize), tint: QZTheme.Palette.info)
+                QZMiniStat(label: "Files", value: "\(model.archiveFacts.files)", tint: QZTheme.Palette.category(.document))
+                QZMiniStat(label: "Folders", value: "\(model.archiveFacts.folders)", tint: QZTheme.Palette.category(.folder))
+                QZMiniStat(label: "Size", value: EntryFormat.bytes(model.archiveFacts.totalSize), tint: QZTheme.Palette.info)
                 QZMiniStat(label: "Packed", value: EntryFormat.bytes(snapshot.totalPackedSize), tint: QZTheme.Palette.category(.archive))
-                QZMiniStat(label: "Ratio", value: EntryFormat.ratio(snapshot.compressionRatio), tint: QZTheme.Palette.ratio(snapshot.compressionRatio ?? 1))
+                QZMiniStat(label: "Ratio", value: EntryFormat.ratio(model.archiveCompressionRatio), tint: QZTheme.Palette.ratio(model.archiveCompressionRatio ?? 1))
                 QZMiniStat(label: "Encrypted", value: "\(snapshot.encryptedCount)", tint: QZTheme.Palette.warning)
             }
 
@@ -291,7 +291,7 @@ private struct ArchiveInspectorView: View {
             QZCard(padding: QZTheme.Space.m) {
                 VStack(alignment: .leading, spacing: QZTheme.Space.xs) {
                     QZSectionLabel(title: "Largest Entries")
-                    ForEach(snapshot.largestEntries(limit: 5)) { entry in
+                    ForEach(model.archiveFacts.largest) { entry in
                         HStack(spacing: QZTheme.Space.xs) {
                             Image(systemName: EntryCategory.of(entry).symbolName)
                                 .font(.system(size: 9, weight: .semibold))
@@ -311,11 +311,11 @@ private struct ArchiveInspectorView: View {
                 }
             }
 
-            if !methods.isEmpty {
+            if !model.archiveFacts.methods.isEmpty {
                 QZCard(padding: QZTheme.Space.m) {
                     VStack(alignment: .leading, spacing: QZTheme.Space.xs) {
                         QZSectionLabel(title: "Methods")
-                        ForEach(methods) { item in
+                        ForEach(model.archiveFacts.methods) { item in
                             HStack {
                                 QZBadge(text: item.name, tint: QZMethodStyle.color(for: item.name))
                                 Spacer()
@@ -351,24 +351,6 @@ private struct ArchiveInspectorView: View {
                 .frame(width: 58, alignment: .trailing)
         }
     }
-
-    private var methods: [MethodCount] {
-        var counts: [String: Int] = [:]
-        for entry in snapshot.entries {
-            guard let method = entry.method, !method.isEmpty else { continue }
-            counts[method, default: 0] += 1
-        }
-        return counts
-            .sorted { $0.value > $1.value }
-            .prefix(5)
-            .map { MethodCount(name: $0.key, count: $0.value) }
-    }
-}
-
-private struct MethodCount: Identifiable {
-    let name: String
-    let count: Int
-    var id: String { name }
 }
 
 // MARK: - Small parts
