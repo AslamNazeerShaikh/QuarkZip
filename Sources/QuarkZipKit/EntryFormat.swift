@@ -7,7 +7,7 @@ import Foundation
 public enum EntryFormat {
     /// File size in Finder's decimal units, for example `1.2 MB`.
     public static func bytes(_ value: UInt64) -> String {
-        value.formatted(.byteCount(style: .file))
+        value == 0 ? "0 B" : value.formatted(.byteCount(style: .file))
     }
 
     /// Packed size when known, otherwise an em dash.
@@ -32,6 +32,19 @@ public enum EntryFormat {
     public static func method(_ value: String?) -> String {
         guard let value, !value.isEmpty else { return "—" }
         return value
+    }
+
+    /// A compact date for dense tables, or an em dash when absent.
+    public static func shortDate(_ value: Date?,
+                                 timeZone: TimeZone = .current,
+                                 locale: Locale = .current) -> String {
+        guard let value else { return "—" }
+        let formatter = DateFormatter()
+        formatter.locale = locale
+        formatter.timeZone = timeZone
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter.string(from: value)
     }
 
     /// A short date and time, or an em dash when the entry has none.

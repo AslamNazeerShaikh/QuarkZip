@@ -14,16 +14,16 @@ public struct SevenZipArchiveService: ArchiveService {
     }
 
     public func open(url: URL, password: String?) async throws -> ArchiveSnapshot {
-        try await withCheckedThrowingContinuation { continuation in
+        let snapshot: ArchiveSnapshot = try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.global(qos: .userInitiated).async {
                 do {
-                    let snapshot = try Self.openSynchronously(url: url, password: password)
-                    continuation.resume(returning: snapshot)
+                    continuation.resume(returning: try Self.openSynchronously(url: url, password: password))
                 } catch {
                     continuation.resume(throwing: error)
                 }
             }
         }
+        return snapshot
     }
 
     /// Blocking open used by the self-test and snapshot mode. UI code must
