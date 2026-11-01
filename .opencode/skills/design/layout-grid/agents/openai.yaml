@@ -1,3 +1,0 @@
-interface:
-  display_name: "Layout Grid"
-  short_description: "4 pt grid rules with lint, layout probe, and overlay checks"

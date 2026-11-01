@@ -1,3 +1,0 @@
-interface:
-  display_name: "Design From App"
-  short_description: "Measure an app's screenshots and rebuild its look in SwiftUI"
