@@ -4,9 +4,8 @@ import SwiftUI
 
 struct BrowserView: View {
     @Environment(AppModel.self) private var model
-    @AppStorage("density") private var density: QZDensity = .compact
-    @AppStorage("showEmoji") private var showEmoji = true
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @AppStorage("density") private var density: QZDensity = .comfortable
+    @AppStorage("showEmoji") private var showEmoji = false
 
     var body: some View {
         @Bindable var model = model
@@ -35,17 +34,30 @@ struct BrowserView: View {
                     columnHeader
                     Divider()
                     List(selection: $model.selection) {
-                        ForEach(model.displayed) { entry in
-                            entryRow(entry)
-                                .listRowInsets(EdgeInsets(
-                                    top: QZTheme.Space.xxs,
-                                    leading: QZTheme.Space.m,
-                                    bottom: QZTheme.Space.xxs,
-                                    trailing: QZTheme.Space.m))
-                                .listRowSeparator(.hidden)
-                                .listRowBackground(rowBackground(
-                                    isSelected: model.selection.contains(entry.id)))
-                                .tag(entry.id)
+                        ForEach(model.visibleEntries) { entry in
+                            QZEntryRowView(
+                                entry: entry,
+                                isSelected: model.selection.contains(entry.id),
+                                showEmoji: showEmoji,
+                                metricsVisible: model.snapshot?.showsCompressionMetrics == true,
+                                rowHeight: density.rowHeight,
+                                actions: rowActions
+                            )
+                            .equatable()
+                            .listRowInsets(EdgeInsets(
+                                top: QZTheme.Space.xxs,
+                                leading: QZTheme.Space.m,
+                                bottom: QZTheme.Space.xxs,
+                                trailing: QZTheme.Space.m))
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(rowBackground(
+                                isSelected: model.selection.contains(entry.id)))
+                            .tag(entry.id)
+                            .onAppear {
+                                if entry.id == model.visibleEntries.last?.id {
+                                    model.loadMoreVisible()
+                                }
+                            }
                         }
                     }
                     .listStyle(.plain)
@@ -67,6 +79,21 @@ struct BrowserView: View {
                 }
             }
         }
+    }
+
+    private var rowActions: QZEntryRowActions {
+        QZEntryRowActions(
+            open: { model.enter($0) },
+            select: { model.selection = [$0.id] },
+            copyPath: {
+                model.selection = [$0.id]
+                model.copySelectedPaths()
+            },
+            copyName: {
+                model.selection = [$0.id]
+                model.copySelectedNames()
+            }
+        )
     }
 
     // MARK: - Header
@@ -104,108 +131,6 @@ struct BrowserView: View {
             .padding(.vertical, 1)
     }
 
-    private func entryRow(_ entry: ArchiveEntry) -> some View {
-        let category = EntryCategory.of(entry)
-        let isSelected = model.selection.contains(entry.id)
-        return HStack(spacing: QZTheme.Space.s) {
-            HStack(spacing: QZTheme.Space.xs) {
-                if showEmoji {
-                    QZEmoji(emoji: category.emoji)
-                }
-                Image(systemName: category.outlineSymbolName)
-                    .font(QZTheme.Typography.rowIcon)
-                    .foregroundStyle(QZTheme.Palette.category(category))
-                    .frame(width: 14)
-                    .accessibilityHidden(true)
-                Text(entry.name)
-                    .font(QZTheme.Typography.body)
-                    .foregroundStyle(QZTheme.Palette.primary)
-                    .lineLimit(1)
-                    .truncationMode(.middle)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .contentShape(Rectangle())
-
-            HStack(spacing: QZTheme.Space.xs) {
-                Circle()
-                    .fill(QZTheme.Palette.category(category))
-                    .frame(width: 6, height: 6)
-                Text(category.displayName)
-                    .font(QZTheme.Typography.badge)
-                    .foregroundStyle(QZTheme.Palette.textSecondary)
-                    .lineLimit(1)
-            }
-            .frame(width: 92, alignment: .leading)
-            .accessibilityHidden(showEmoji)
-
-            Text(entry.kind == .folder ? "—" : EntryFormat.bytes(entry.size))
-                .font(QZTheme.Typography.metric)
-                .foregroundStyle(QZTheme.Palette.textSecondary)
-                .frame(width: 76, alignment: .trailing)
-                .monospacedDigit()
-
-            Text(metricsVisible
-                ? EntryFormat.packed(entry.packedSize)
-                : "—")
-                .font(QZTheme.Typography.metric)
-                .foregroundStyle(QZTheme.Palette.textSecondary)
-                .frame(width: 76, alignment: .trailing)
-                .monospacedDigit()
-
-            ratioCell(entry)
-                .frame(width: 72, alignment: .trailing)
-
-            Text(EntryFormat.shortDate(entry.modified))
-                .font(QZTheme.Typography.caption)
-                .foregroundStyle(QZTheme.Palette.textSecondary)
-                .frame(width: 96, alignment: .leading)
-                .lineLimit(1)
-
-            methodCell(entry, isSelected: isSelected)
-                .frame(width: 88, alignment: .leading)
-
-            Group {
-                if entry.isEncrypted {
-                    Image(systemName: "lock.fill")
-                        .font(.system(size: 10, weight: .medium))
-                        .foregroundStyle(QZTheme.Palette.warning)
-                        .help("Encrypted entry")
-                        .accessibilityHidden(true)
-                } else {
-                    Color.clear.frame(width: 10, height: 10)
-                }
-            }
-            .frame(width: 20, alignment: .center)
-        }
-        .frame(height: density.rowHeight)
-        .contentShape(Rectangle())
-        .onTapGesture(count: 2) {
-            model.enter(entry)
-        }
-        .contextMenu {
-            if entry.kind == .folder {
-                Button("Open Folder") { model.enter(entry) }
-            }
-            Button("Show in Inspector") { model.selection = [entry.id] }
-            Divider()
-            Button("Copy Path") {
-                model.selection = [entry.id]
-                model.copySelectedPaths()
-            }
-            Button("Copy Name") {
-                model.selection = [entry.id]
-                model.copySelectedNames()
-            }
-        }
-        .help(entry.path.description)
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(entry.name), \(category.displayName)")
-    }
-
-    private var metricsVisible: Bool {
-        model.snapshot?.showsCompressionMetrics == true
-    }
-
     private var emptyState: some View {
         ContentUnavailableView(
             emptyTitle,
@@ -235,34 +160,5 @@ struct BrowserView: View {
             return "This folder has no entries for the \(model.filter.title) filter."
         }
         return "This folder has no entries."
-    }
-
-    private func ratioCell(_ entry: ArchiveEntry) -> some View {
-        let ratio = metricsVisible ? entry.compressionRatio : nil
-        return VStack(alignment: .trailing, spacing: QZTheme.Space.xxs) {
-            Text(EntryFormat.ratio(ratio))
-                .font(QZTheme.Typography.microMono)
-                .foregroundStyle(ratio == nil
-                    ? QZTheme.Palette.textFaint
-                    : QZTheme.Palette.textSecondary)
-            QZRatioBar(value: ratio, height: 4)
-                .frame(width: 44)
-        }
-        .accessibilityLabel("Compression ratio \(EntryFormat.ratio(ratio))")
-    }
-
-    private func methodCell(_ entry: ArchiveEntry, isSelected: Bool) -> some View {
-        Group {
-            if let method = entry.method, !method.isEmpty {
-                QZBadge(text: method,
-                        tint: QZMethodStyle.color(for: method),
-                        monospaced: true)
-            } else {
-                Text("—")
-                    .font(QZTheme.Typography.caption)
-                    .foregroundStyle(QZTheme.Palette.textFaint)
-            }
-        }
-        .opacity(isSelected ? 1 : 1)
     }
 }

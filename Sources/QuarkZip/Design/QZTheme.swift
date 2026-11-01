@@ -100,8 +100,8 @@ enum QZTheme {
         static let info = Color(nsColor: .systemBlue)
 
         static let hover = Color.primary.opacity(0.045)
-        static let selection = Color.accentColor.opacity(0.13)
-        static let selectionBorder = Color.accentColor.opacity(0.28)
+        static let selection = Color.accentColor.opacity(0.20)
+        static let selectionBorder = Color.accentColor.opacity(0.40)
         static let dataTrack = Color.primary.opacity(0.08)
         static let cardBorder = Color(nsColor: .separatorColor).opacity(0.55)
         static let headerBackground = Color(nsColor: .controlBackgroundColor)

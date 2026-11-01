@@ -7,7 +7,18 @@ import Foundation
 ///
 /// Sizes always use binary IEC units (1 KiB = 1,024 bytes) so a byte count
 /// never depends on Finder's decimal display.
+///
+/// Dates reuse one cached `DateFormatter` per locale/time zone/style. A new
+/// formatter per row costs ICU setup per row and stalls scrolling past a few
+/// thousand entries; the cache makes repeat formatting O(1).
 public enum EntryFormat {
+    /// One formatter per locale/time zone/style, guarded by a lock.
+    /// `DateFormatter` is not `Sendable`, so shared mutable state is the one
+    /// sanctioned exception here; every access goes through this lock.
+    /// Invariant: `formatterCache` is only ever touched while holding
+    /// `formatterCacheLock`, so `nonisolated(unsafe)` is sound.
+    private static let formatterCacheLock = NSLock()
+    nonisolated(unsafe) private static var formatterCache: [String: DateFormatter] = [:]
     /// File size in binary IEC units, for example `1.5 KiB` or `12.1 KiB`.
     public static func bytes(_ value: UInt64) -> String {
         if value == 0 { return "0 B" }
@@ -57,12 +68,8 @@ public enum EntryFormat {
                                  timeZone: TimeZone = .current,
                                  locale: Locale = .current) -> String {
         guard let value else { return "—" }
-        let formatter = DateFormatter()
-        formatter.locale = locale
-        formatter.timeZone = timeZone
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        return formatter.string(from: value)
+        return cachedFormatter(dateStyle: .medium, timeStyle: .none,
+                               timeZone: timeZone, locale: locale).string(from: value)
     }
 
     /// A short date and time, or an em dash when the entry has none.
@@ -70,11 +77,24 @@ public enum EntryFormat {
                             timeZone: TimeZone = .current,
                             locale: Locale = .current) -> String {
         guard let value else { return "—" }
+        return cachedFormatter(dateStyle: .medium, timeStyle: .short,
+                               timeZone: timeZone, locale: locale).string(from: value)
+    }
+
+    private static func cachedFormatter(dateStyle: DateFormatter.Style,
+                                        timeStyle: DateFormatter.Style,
+                                        timeZone: TimeZone,
+                                        locale: Locale) -> DateFormatter {
+        let key = "\(locale.identifier)|\(timeZone.secondsFromGMT())|\(dateStyle.rawValue)|\(timeStyle.rawValue)"
+        formatterCacheLock.lock()
+        defer { formatterCacheLock.unlock() }
+        if let hit = formatterCache[key] { return hit }
         let formatter = DateFormatter()
         formatter.locale = locale
         formatter.timeZone = timeZone
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
-        return formatter.string(from: value)
+        formatter.dateStyle = dateStyle
+        formatter.timeStyle = timeStyle
+        formatterCache[key] = formatter
+        return formatter
     }
 }
