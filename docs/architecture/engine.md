@@ -1,7 +1,8 @@
 # Engine
 
-Status: milestone 0. The C ABI below is the agreed contract; the first
-implementation covers open, list, close, and extract.
+Status: milestone 0. Implemented: open, entry count, entry at, format name,
+archive size, and close. Extract, create, test, and cancel follow in
+milestones 2 and 3.
 
 ## What is vendored
 
@@ -75,59 +76,51 @@ typedef enum {
   QZ_E_INTERNAL = 9
 } QzStatus;
 
-typedef struct {
-  const char *path;        /* UTF-8, owned by the call, valid until next call */
+typedef struct QzEntry {
+  const char *path;       /* UTF-8, session owned */
+  const char *method;     /* UTF-8, session owned, may be NULL */
   uint64_t size;
   uint64_t packed_size;
-  int64_t  modified_unix;  /* seconds, 0 when absent */
-  uint32_t crc;            /* 0 when absent */
+  int64_t  modified_unix; /* seconds since epoch, 0 when absent */
+  uint32_t crc;
   uint32_t attributes;
   uint8_t  is_dir;
   uint8_t  is_encrypted;
-  const char *method;      /* UTF-8, may be NULL */
+  uint8_t  size_defined;
+  uint8_t  packed_size_defined;
 } QzEntry;
 
-QzSession *qz_open(const char *path, const char *password,
+const char *qz_version(void);
+
+QzSession *qz_open(const char *path_utf8,
+                   const char *password_utf8_or_null,
+                   QzStatus *status_out,
                    char *err, size_t err_len);
 
-uint64_t qz_entry_count(const QzSession *s);
-
-/* Pull one entry. Strings live until qz_close or the next call on the same
-   session. Returns QZ_OK, QZ_E_CANCELLED, or QZ_E_INTERNAL. */
-QzStatus qz_entry_at(const QzSession *s, uint64_t index, QzEntry *out);
-
-typedef void (*QzProgressFn)(void *ctx, uint64_t done, uint64_t total);
-
-QzStatus qz_extract(QzSession *s,
-                    const uint64_t *indices, size_t index_count,
-                    const char *dest_dir,
-                    QzProgressFn progress, void *ctx,
-                    char *err, size_t err_len);
-
-QzStatus qz_create(const char *dest_path, const char *format,
-                   const char *const *sources, size_t source_count,
-                   int level, const char *password,
-                   QzProgressFn progress, void *ctx,
-                   char *err, size_t err_len);
-
-QzStatus qz_test(QzSession *s, QzProgressFn progress, void *ctx,
-                 char *err, size_t err_len);
-
-void qz_cancel(QzSession *s);
-void qz_close(QzSession *s);
+uint64_t qz_entry_count(const QzSession *session);
+QzStatus qz_entry_at(QzSession *session, uint64_t index, QzEntry *out);
+const char *qz_format_name(const QzSession *session);
+uint64_t qz_archive_size(const QzSession *session);
+void qz_close(QzSession *session);
 ```
 
 Rules:
 
-- `qz_open` returns `NULL` on failure and always writes a NUL-terminated
-  message when `err_len > 0`.
-- `qz_entry_at` reuses session-owned buffers. Swift copies immediately.
-- `qz_extract` with `indices == NULL` extracts everything. Indices are
-  zero-based entry positions from the current listing.
-- `qz_create` writes `dest_path` atomically through a sibling temp file.
-- `qz_cancel` may be called from any thread. It only sets an atomic flag.
-- `qz_close` waits for the worker if a call is in flight, then frees the
-  handle. The caller must not close while another thread uses it.
+- `qz_open` returns `NULL` on failure, writes the reason into `status_out`,
+  and always writes a NUL-terminated message when `err_len > 0`.
+- `qz_entry_at` reuses session-owned buffers. Swift copies the path and
+  method immediately and never keeps the pointers.
+- `qz_close` frees the session. The caller must not use it afterwards.
+- No C++ type appears in the header. No exception crosses the boundary.
+
+Planned for the same boundary, in milestone order:
+
+- `qz_extract(session, indices, count, destination, progress, ctx, ...)`
+  with a per-file result list.
+- `qz_create(destination, format, sources, options, progress, ctx, ...)`
+  writing through a sibling temp file.
+- `qz_test(session, progress, ctx, ...)`.
+- `qz_cancel(session)` setting an atomic flag checked by callbacks.
 
 ## Opening strategy
 

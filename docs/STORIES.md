@@ -8,7 +8,7 @@ Convention: `M0-03` is milestone 0, story 3. Keep the order.
 
 ## M0 - Foundation
 
-### [ ] M0-01 Package builds
+### [x] M0-01 Package builds
 
 As a maintainer, I can build all three targets with one command.
 
@@ -18,7 +18,7 @@ As a maintainer, I can build all three targets with one command.
 - `./build.sh` installs `~/Applications/QuarkZip.app` and it launches.
 - `./Scripts/verify.sh` exits 0 on a clean checkout.
 
-### [ ] M0-02 Design tokens
+### [x] M0-02 Design tokens
 
 As the designer, I have one source of colors, spacing, type, radii, and
 motion.
@@ -29,7 +29,7 @@ motion.
 - A unit test asserts no view file contains a literal color, radius, or
   duration. The check is `Scripts/token-lint.sh`.
 
-### [ ] M0-03 App shell
+### [x] M0-03 App shell
 
 As a user, I can open the app and understand what it is for.
 
@@ -41,7 +41,7 @@ As a user, I can open the app and understand what it is for.
 - Light and dark snapshots exist and were reviewed.
 - Every command has a menu item and a shortcut.
 
-### [ ] M0-04 Engine opens an archive
+### [x] M0-04 Engine opens an archive
 
 As the app, I can ask the engine for the entries of a real archive.
 
@@ -54,7 +54,7 @@ As the app, I can ask the engine for the entries of a real archive.
 - `qz_close` releases everything. 1,000 open/close cycles keep memory flat.
 - Sanitizer run is clean.
 
-### [ ] M0-05 Domain model and tree
+### [x] M0-05 Domain model and tree
 
 As the browser, I have a tested model to render.
 
@@ -68,7 +68,7 @@ As the browser, I have a tested model to render.
   an extraction plan.
 - Line coverage for these files is 100%.
 
-### [ ] M0-06 Browser lists entries
+### [x] M0-06 Browser lists entries
 
 As a user, I see the contents of an archive.
 
@@ -91,7 +91,7 @@ As a user, I get a sentence I can act on.
 - No error path prints a raw code without a sentence.
 - Error mapping from `QzStatus` to `ArchiveError` is table-tested.
 
-### [ ] M0-08 Self-test and snapshots
+### [x] M0-08 Self-test and snapshots
 
 As an agent, I can prove the app works without clicking.
 
@@ -101,7 +101,7 @@ As an agent, I can prove the app works without clicking.
   browser.
 - `Scripts/snapshot.sh` uses sample archives only, never user files.
 
-### [ ] M0-09 Coverage gate
+### [x] M0-09 Coverage gate
 
 As a maintainer, I cannot merge a coverage drop.
 

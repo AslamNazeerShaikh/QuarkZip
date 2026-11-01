@@ -23,13 +23,16 @@ Ark, and File Roller to the Mac, in an interface that belongs on macOS.
 
 ## Status
 
-Milestone 0, foundation. The repository was reset on purpose and the app is
-being rebuilt as a native Swift app. The engine bridge and the first browser
-slice are in progress. See [docs/roadmap.md](docs/roadmap.md) and
+Milestone 0 works. Open a 7z, zip, tar, gzip, xz, or bzip2 archive and browse
+its entries in a native window. The engine is linked into the app, the Swift
+core is at 100 percent line coverage, and `./Scripts/verify.sh` is green.
+
+Extraction, compression, archive editing, search, and the app icon are the
+next milestones. See [docs/roadmap.md](docs/roadmap.md) and
 [docs/STORIES.md](docs/STORIES.md).
 
-Nothing here is a released product yet. Do not point it at the only copy of
-an important archive.
+This is still pre-release software. Do not point it at the only copy of an
+important archive.
 
 ## Requirements
 

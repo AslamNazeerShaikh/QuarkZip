@@ -15,15 +15,14 @@ touching the bridge.
 
 ## Current state
 
-Milestone 0. The repo is a fresh start. The first slice is:
+Milestone 0 is done. The app opens a real 7z, zip, tar, gzip, xz, or bzip2
+archive through the linked engine and lists its entries in a native window.
+`QuarkZipKit` is at 100 percent line coverage, `./Scripts/verify.sh` passes,
+and `./Scripts/selftest.sh` runs the shipping binary against a real archive.
 
-1. Building app shell with the design tokens.
-2. `QZEngine` bridge that opens an archive and returns its entries.
-3. `QuarkZipKit` models, tree, sorting, and path safety with 100% line
-   coverage.
-4. A browser window that lists entries from a real archive.
-
-Do not build features out of order. Update `docs/STORIES.md` as work lands.
+Next: milestone 1, browse depth (folders, history, search, inspector, nested
+archives, Quick Look). Extraction starts milestone 2. Do not build features
+out of order; update `docs/STORIES.md` as work lands.
 
 ## Layout
 

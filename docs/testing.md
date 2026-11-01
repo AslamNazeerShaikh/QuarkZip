@@ -47,7 +47,9 @@ Excluded from the percentage:
 - Generated code and the `@main` entry point.
 - `fatalError` and process-exit paths, only with a written reason here.
 
-Current engine baseline: **not measured yet**. M0 records the first number.
+Current engine baseline: **60.48%** for `Sources/QZEngine/Bridge.cpp` at
+milestone 0 (open and list only). `Guids.cpp` is linker plumbing and is not
+gated. Extraction and creation raise the number in M2 and M3.
 
 Why 100% for the kit: the kit is small, pure, and owns the decisions that
 cost users data. Every branch there must be demonstrated. Views are visual;
@@ -88,11 +90,11 @@ Matrix:
 
 ## Self-test
 
-`QuarkZip --selftest` runs in a child process with:
-
-- `QUARKZIP_STORE=/tmp/QuarkZip-selftest-<uuid>/`
-- A temp archive created by the engine.
-- No access to the real Application Support folder.
+`QuarkZip --selftest <archive>` runs the shipping binary against a throwaway
+archive. `Scripts/selftest.sh` creates the archive in `/tmp` with `tar` and
+runs the checks: engine version, open, format, entries, tree, a known file, a
+nested folder, and formatting. No access to the real Application Support
+folder.
 
 It prints one PASS or FAIL per check and exits 1 on the first failure after
 printing the summary. The checks mirror the stories: open, list, tree, sort,
@@ -100,10 +102,11 @@ safe extract, bad password, cancel, create.
 
 ## Snapshots
 
-`Scripts/snapshot.sh` launches the app with `QUARKZIP_SNAPSHOT=1` and a temp
-store, switches appearance, and captures each page and Settings tab to
-`/tmp/QuarkZip-shots/<page>-<appearance>.png`. The script also writes layout
-JSON for the grid check.
+`Scripts/snapshot.sh` runs the shipping binary with `QUARKZIP_SNAPSHOT=1`.
+The app renders the welcome page and the browser offscreen in light and dark,
+writes `/tmp/QuarkZip-shots/<page>-<appearance>.png`, and quits. Set
+`QUARKZIP_SNAPSHOT_ARCHIVE=<path>` to render a real archive instead of the
+sample data.
 
 Look at every image. A snapshot that exists but was never opened does not
 count.

@@ -10,16 +10,18 @@ Goal: open a real archive and list its entries in a native window.
 
 - [x] Fresh repository, OpenCode 2.2.5 config, BAMA skills vendored.
 - [x] Product, architecture, design, and testing docs.
-- [ ] Swift package with `QZEngine`, `QuarkZipKit`, `QuarkZip`.
-- [ ] App shell: window, sidebar, toolbar, empty state, design tokens.
-- [ ] Engine: open, entry count, entry at, close.
-- [ ] Kit: `ArchiveEntry`, `ArchivePath`, `ArchiveTree`, sorting, path policy.
-- [ ] Browser: virtualized table from a real 7z, zip, and tar.
-- [ ] Coverage gate at 100% for the kit.
-- [ ] `build.sh`, `Scripts/verify.sh`, snapshots, self-test skeleton.
+- [x] Swift package with `QZEngine`, `QuarkZipKit`, `QuarkZip`.
+- [x] App shell: window, sidebar, toolbar, empty state, design tokens.
+- [x] Engine: open, entry count, entry at, close.
+- [x] Kit: `ArchiveEntry`, `ArchivePath`, `ArchiveTree`, sorting, path policy.
+- [x] Browser: virtualized table from a real 7z, zip, and tar.
+- [x] Coverage gate at 100% for the kit.
+- [x] `build.sh`, `Scripts/verify.sh`, snapshots, self-test.
 
 Exit: `./build.sh --open` opens a 7z and lists 10,000 entries in under
 150 ms for the first batch. A corrupted archive shows a typed error.
+`./Scripts/selftest.sh` passes on the shipping binary, and snapshots exist in
+light and dark. The icon is the one M0 item still open.
 
 ## M1 - Browse
 
