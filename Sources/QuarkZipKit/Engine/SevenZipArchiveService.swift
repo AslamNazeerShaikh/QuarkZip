@@ -26,7 +26,9 @@ public struct SevenZipArchiveService: ArchiveService {
         }
     }
 
-    static func openSynchronously(url: URL, password: String?) throws -> ArchiveSnapshot {
+    /// Blocking open used by the self-test and snapshot mode. UI code must
+    /// call `open(url:password:)` so the work stays off the main actor.
+    public static func openSynchronously(url: URL, password: String?) throws -> ArchiveSnapshot {
         var status = QZ_E_INTERNAL
         var messageBuffer = [CChar](repeating: 0, count: 1024)
 
@@ -81,7 +83,8 @@ public struct SevenZipArchiveService: ArchiveService {
                                message: "Entry \(index) has no path.")
         }
         let path = try archivePath(rawPath, index: index)
-        let kind: ArchiveEntry.Kind = raw.is_dir == 0 ? .file : .folder
+        let isFolder = raw.is_dir != 0
+        let kind: ArchiveEntry.Kind = isFolder ? .folder : .file
         let modified = raw.modified_unix > 0
             ? Date(timeIntervalSince1970: TimeInterval(raw.modified_unix))
             : nil
@@ -90,9 +93,9 @@ public struct SevenZipArchiveService: ArchiveService {
             path: path,
             kind: kind,
             size: raw.size,
-            packedSize: raw.packed_size_defined == 0 ? nil : raw.packed_size,
+            packedSize: isFolder || raw.packed_size_defined == 0 ? nil : raw.packed_size,
             modified: modified,
-            crc: raw.crc == 0 ? nil : raw.crc,
+            crc: isFolder || raw.crc == 0 ? nil : raw.crc,
             method: raw.method.map { String(cString: $0) },
             isEncrypted: raw.is_encrypted != 0,
             attributes: raw.attributes

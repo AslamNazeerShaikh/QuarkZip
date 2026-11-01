@@ -96,6 +96,24 @@ final class AppModel {
         error = nil
     }
 
+    /// Used by snapshot mode and previews to show a known archive without I/O.
+    func applySnapshot(_ snapshot: ArchiveSnapshot) {
+        self.snapshot = snapshot
+        currentFolder = .root
+        selection = []
+        searchText = ""
+        rebuildDisplayed()
+    }
+
+    /// Opens a file passed after `--open` on the command line.
+    func openLaunchArgumentIfNeeded() {
+        let arguments = ProcessInfo.processInfo.arguments
+        guard let flag = arguments.firstIndex(of: "--open"),
+              arguments.index(after: flag) < arguments.endIndex else { return }
+        let path = arguments[arguments.index(after: flag)]
+        open(URL(fileURLWithPath: path))
+    }
+
     func open(_ url: URL) {
         isLoading = true
         error = nil

@@ -3,6 +3,7 @@ import QuarkZipKit
 
 struct RootView: View {
     @Environment(AppModel.self) private var model
+    @State private var handledLaunchArgument = false
 
     var body: some View {
         @Bindable var model = model
@@ -39,6 +40,11 @@ struct RootView: View {
         .toolbar { toolbar }
         .frame(minWidth: QZTheme.Size.minWindowWidth,
                minHeight: QZTheme.Size.minWindowHeight)
+        .onAppear {
+            guard !handledLaunchArgument else { return }
+            handledLaunchArgument = true
+            model.openLaunchArgumentIfNeeded()
+        }
     }
 
     @ToolbarContentBuilder

@@ -1,7 +1,9 @@
+import AppKit
 import SwiftUI
 
 @main
 struct QuarkZipApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var model = AppModel()
     @AppStorage("appearance") private var appearance: AppearanceMode = .system
 
@@ -59,6 +61,15 @@ struct QuarkZipApp: App {
 
         Settings {
             SettingsView()
+        }
+    }
+}
+
+@MainActor
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        if SnapshotRunner.runIfRequested() {
+            NSApp.terminate(nil)
         }
     }
 }
