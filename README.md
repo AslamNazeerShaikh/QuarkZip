@@ -24,7 +24,8 @@ Ark, and File Roller to the Mac, in an interface that belongs on macOS.
 ## Status
 
 Milestone 0 works. Open a 7z, zip, tar, gzip, xz, or bzip2 archive and browse
-its entries in a native window. The engine is linked into the app, the Swift
+it in a dense, color-coded workspace with category filters, an entry
+inspector, and archive composition. Everything is native SwiftUI. The engine is linked into the app, the Swift
 core is at 100 percent line coverage, and `./Scripts/verify.sh` is green.
 
 Extraction, compression, archive editing, search, and the app icon are the

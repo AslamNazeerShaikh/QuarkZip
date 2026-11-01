@@ -121,10 +121,25 @@ As a user, the app looks finished in the Dock.
 
 ## M1 - Browse
 
+### [x] M1-00 Dense data workspace
+
+As a user, I can see the archive as a dense, color-coded record, not a plain
+file list.
+
+- Three panes: sidebar, archive surface, inspector.
+- Archive header with four KPI cards and format and encryption badges.
+- Filter bar with search, category chips with counts, sort, and density.
+- Table shows name, type, size, packed, ratio bar, date, method, and lock.
+- Inspector shows entry detail, multi-selection summary, or archive overview
+  with composition, largest entries, and method distribution.
+- Category colors have a word in the Type column, so color is never the only
+  signal.
+- Six snapshots reviewed: welcome, browser, details, light and dark.
+
 ### [ ] M1-01 Nested folders and history
 ### [ ] M1-02 Sidebar recents and favorites
-### [ ] M1-03 Inspector and archive properties
-### [ ] M1-04 Search and filter
+### [x] M1-03 Inspector and archive properties
+### [ ] M1-04 Search and filter (landed; benchmark pending)
 ### [ ] M1-05 Nested archive sessions
 ### [ ] M1-06 Quick Look preview
 ### [ ] M1-07 Password sheet and Keychain

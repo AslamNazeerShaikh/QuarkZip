@@ -16,7 +16,9 @@ touching the bridge.
 ## Current state
 
 Milestone 0 is done. The app opens a real 7z, zip, tar, gzip, xz, or bzip2
-archive through the linked engine and lists its entries in a native window.
+archive through the linked engine and presents it as a dense, color-coded
+three-pane workspace: sidebar filters, an archive header with KPIs, a
+filterable entry table, and a detail inspector.
 `QuarkZipKit` is at 100 percent line coverage, `./Scripts/verify.sh` passes,
 and `./Scripts/selftest.sh` runs the shipping binary against a real archive.
 

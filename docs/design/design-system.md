@@ -1,167 +1,219 @@
 # Design system
 
-Status: tokens are being implemented in `Sources/QuarkZip/Design/`. This page
-is the contract for the implementation.
+Status: implemented in `Sources/QuarkZip/Design/` and the browser views.
 
 ## Direction
 
-Native macOS, dense data, calm chrome. The archive surface is the hero. The
-chrome recedes. Color encodes state. Motion explains change.
+A CRM-grade archive workspace in Mac clothes.
 
-Not: a Windows dialog stretched to Mac size, a glass panel everywhere, a dark
-"pro app" costume, or a web dashboard.
+Dense, scannable, and color coded like a professional data tool, but built
+from system controls, system type, semantic color, and native window
+behavior. The archive is the record. The header is its profile. The table is
+its line items. The inspector is its detail rail.
+
+Not: a Windows dialog, a marketing dashboard, a glass panel on every surface,
+or a rainbow of decoration.
+
+## Layout
+
+Three panes, all resizable through native split behavior.
+
+```text
+┌────────────┬───────────────────────────────────────────┬──────────────┐
+│ Sidebar    │ Archive header          KPI KPI KPI KPI   │ Inspector    │
+│ 230        ├───────────────────────────────────────────┤ 310          │
+│            │ Search | filter chips | sort | density    │              │
+│ Filters    ├───────────────────────────────────────────┤ Overview or  │
+│ Categories │ Name  Type  Size  Packed  Ratio  Date ... │ entry detail │
+│ Recents    │ dense virtualized table                    │              │
+│ Locations  │                                            │              │
+├────────────┴───────────────────────────────────────────┴──────────────┤
+│ Status bar: view totals, selection count, engine version              │
+└───────────────────────────────────────────────────────────────────────┘
+```
+
+| Area | Size |
+| --- | --- |
+| Minimum window | 1120 x 640 |
+| Default window | 1360 x 820 |
+| Sidebar | 230 min and ideal, 310 max |
+| Header | 68 |
+| Filter bar | 44 |
+| Table row | 24 compact, 30 comfortable |
+| Inspector | 310 ideal, 280 to 380 |
+| Status bar | 26 |
+
+Spacing is a 4 pt grid. Content padding is 16. Dense groups use 8.
 
 ## Color
 
-Semantic first. All colors resolve through `QZTheme` and adapt to appearance
-and increased contrast.
+One accent for interactive controls, chosen in Settings. Category and method
+colors are semantic and do not change with the accent. Text is always
+`.primary`, `.secondary`, or `.tertiary`.
 
-| Token | Light | Dark | Use |
-| --- | --- | --- | --- |
-| `background` | system window | system window | Window |
-| `surface` | `NSColor.textBackgroundColor` | same | Lists, tables |
-| `surfaceRaised` | system control background | same | Cards, inspector |
-| `chrome` | `.regularMaterial` | `.regularMaterial` | Toolbar, floating bar |
-| `separator` | `separatorColor` | same | Dividers |
-| `textPrimary` | `labelColor` | same | Content |
-| `textSecondary` | `secondaryLabelColor` | same | Metadata |
-| `textTertiary` | `tertiaryLabelColor` | same | Hints |
-| `accent` | user accent | user accent | Selection, primary action |
-| `success` | `systemGreen` | same | Finished |
-| `warning` | `systemOrange` | same | Collision, slow |
-| `danger` | `systemRed` | same | Failure, destructive |
+### Accent choices
 
-Accents offered in Settings: Quark Blue (default), Graphite, Iris, Teal,
-Green, Amber, Rose, Coral. Each has a tuned `onAccent` so text on a filled
-button stays above 4.5:1.
+Blue (default), Indigo, Purple, Pink, Red, Orange, Green, Teal, Graphite.
+The accent applies to selection, focus, primary buttons, links, and the
+selected filter chip.
 
-Never use a fixed gray for text. Never use accent for large fills except the
-selection in a focused list and the primary button.
+### Category palette
+
+| Category | Symbol | Color |
+| --- | --- | --- |
+| Folder | `folder.fill` | systemBlue |
+| Document | `doc.text.fill` | systemIndigo |
+| Image | `photo.fill` | systemPink |
+| Video | `film.fill` | systemRed |
+| Audio | `waveform` | systemOrange |
+| Archive | `archivebox.fill` | systemTeal |
+| Code | `chevron.left.forwardslash.chevron.right` | systemGreen |
+| Other | `doc.fill` | systemGray |
+
+Category color appears as a 6 pt dot, a 10 pt icon, a soft 14 percent fill,
+or a 30 percent border. Never as body text color.
+
+### Method palette
+
+`LZMA2` purple, `Deflate` blue, `BZip2` orange, `PPMd` indigo, `ZSTD` teal,
+`Store` and `Copy` gray. Badges use a soft fill with the method color as
+text, checked in both appearances.
+
+### Ratio palette
+
+Green below 45 percent, orange below 80 percent, red at 80 percent and
+above. The number is always present, so color is never the only signal.
+
+### Status
+
+Encrypted and warnings use systemOrange with a lock icon. Failures use
+systemRed with a triangle. Success uses systemGreen with a check or a word.
+No status color without an icon or a label.
+
+### Surfaces
+
+| Token | Use |
+| --- | --- |
+| `background` | Window behind content |
+| `content` | Table, search field, drop area |
+| `card` | Header cards, inspector cards, dashboard cards |
+| `inspector` | Right rail background |
+| `headerBackground` | Archive header, status bar |
+| `filterBackground` | Filter strip |
+| `separator` | 1 pt dividers |
+| `hover` | 4.5 percent primary |
+| `selection` | 14 percent accent |
+| `dataTrack` | Ratio and composition track |
+
+No fixed grays. No `Color(red:)` or hex in views. `Scripts/token-lint.sh`
+enforces that.
 
 ## Type
 
 | Style | Size / weight | Use |
 | --- | --- | --- |
-| `title` | 22 / semibold | Sheet title, empty state |
-| `heading` | 15 / semibold | Section header |
-| `body` | 13 / regular | Rows, labels |
-| `callout` | 12 / regular | Secondary metadata |
-| `caption` | 11 / regular | Column headers, hints |
-| `mono` | 12 / regular, monospaced digits | Sizes, CRC, paths |
+| Display | 26 bold rounded | Welcome title |
+| Title | 22 semibold | Empty states |
+| Headline | 15 semibold | Archive name, entry name |
+| Body | 13 regular | Rows, labels |
+| Body strong | 13 medium | Inspector values |
+| Callout | 12 regular | Secondary text, dates |
+| Caption | 11 regular | Metadata |
+| Micro | 10 regular | Dense metadata, status |
+| Section | 10.5 semibold, tracked | Uppercase section labels |
+| Badge | 10.5 medium | Chips, type labels |
+| Metric | 12 monospaced | Sizes, dates, methods |
+| Micro mono | 10 monospaced | CRC, IDs |
+| Metric large | 18 semibold monospaced | KPI values |
 
-SF Pro through system text styles where possible. Metrics always use
-monospaced digits so values do not jitter during progress.
-
-## Spacing and layout
-
-- 4 pt grid: 2, 4, 8, 12, 16, 20, 24, 32, 40, 48.
-- Window: minimum 900 x 560. Sidebar 220. Inspector 280. List flexible.
-- Toolbar 52. Status bar 28. Row 28 (compact 24, comfortable 32).
-- Content padding 16. Section gap 24.
-- Radii: 6 control, 10 card, 14 panel, 20 floating chrome.
-- Elevation: 0 content, 1 sticky header, 2 floating bar, 3 sheet.
-
-## Motion
-
-| Token | Duration | Curve | Use |
-| --- | --- | --- | --- |
-| `instant` | 100 ms | easeOut | Hover, press |
-| `quick` | 160 ms | easeOut | Row insert, tag |
-| `standard` | 220 ms | spring(0.28, 0.86) | Sheet, panel |
-| `slow` | 320 ms | spring(0.42, 0.90) | Window resize, reveal |
-
-Rules:
-
-- Only animate transform, opacity, and progress.
-- Stagger at most 8 rows, 24 ms apart.
-- No looping animation except an indeterminate progress bar.
-- Reduce Motion: replace springs with a 120 ms fade, disable stagger and
-  scale, keep progress.
-- No animation longer than 320 ms in response to a click.
-
-## Glass
-
-Liquid Glass belongs to floating chrome over content:
-
-- Toolbar background when content scrolls under it.
-- Floating selection bar ("3 selected - Extract - Delete").
-- Drop target HUD.
-- Job pill in the corner.
-
-Never glass: the entry table, the inspector body, sheets, Settings forms.
-Those are solid for readability.
+Numeric columns always use monospaced digits. Nothing below 10 pt.
 
 ## Components
 
-Build each with every state: rest, hover, pressed, focused, selected,
-disabled, loading, error.
+One file per family, every state built: rest, hover, pressed, focused,
+selected, disabled, loading, error where applicable.
 
-- `QZToolbar` - back/forward, breadcrumb, search, view switch, actions.
-- `QZSidebar` - sections, rows with icon and count, drop highlight.
-- `QZEntryRow` - icon, name, size, packed, ratio, modified, CRC, method.
-- `QZColumnHeader` - label, sort indicator, resize handle, menu.
-- `QZBreadcrumb` - path segments, overflow menu, archive chips.
-- `QZDropZone` - empty state and drag target, one breathing pulse.
-- `QZEmptyState` - icon, title, one sentence, one primary action.
-- `QZProgressBar` - determinate, indeterminate, throughput, ETA, cancel.
-- `QZJobRow` - kind, archive name, progress, state, cancel.
-- `QZTag` - format, encrypted, solid, method.
-- `QZInspectorSection` - grouped facts, selectable values.
-- `QZSearchField` - scoped search, clear, result count.
-- `QZPasswordSheet` - archive name, header-encrypted note, remember toggle.
-- `QZExtractSheet` - destination, selection summary, collisions, options.
-- `QZCompressSheet` - format, preset, advanced disclosure, estimate.
+- `QZCard` - raised group with a 0.5 pt border.
+- `QZIconTile` - tinted rounded square for a category or method.
+- `QZBadge` - format, method, encryption, filter summary.
+- `QZStatCard` - icon, monospaced value, uppercase label, optional detail.
+- `QZFilterChip` - category dot, label, count, selected state, hover.
+- `QZSectionLabel` - uppercase group label with optional trailing count.
+- `QZRatioBar` - 2 to 9 pt track, colored fill, no animation on scroll.
+- `QZCompositionBar` - stacked category bar, 1 pt gaps, clipped capsule.
+- `QZInspectorField` - 76 pt label, value, optional color dot, selectable.
+- `QZSidebarRow` - 26 pt row, tinted icon, label, count capsule, selected
+  tint, hover.
+- `QZMethodStyle` and `QZFormatStyle` - one place for method and format
+  color.
+
+Header and filter controls are system `Button`, `Menu`, `Picker`, and
+`TextField`. No shape with a tap gesture.
 
 ## Screens
 
-1. **Welcome** - drop zone, recent archives, "Open Archive..." and "New
-   Archive...". No marketing copy.
-2. **Browser** - sidebar, toolbar with breadcrumb, table, inspector, status
-   bar.
-3. **Extract sheet** - plan first, then progress in the job pill.
-4. **Compress sheet** - source summary, format segmented control, preset,
-   advanced expansion, estimate, Create.
-5. **Jobs** - popover from the toolbar, list of running and finished jobs,
-   log per job.
-6. **Settings** - General, Appearance, Extraction, Compression, Advanced.
-   One grouped form per tab, sized to content.
-7. **About** - version, engine version, credits, license, source link.
+### Welcome dashboard
 
-## Keyboard
+- Section label, display title, one sentence.
+- Four KPI cards: Recent, Formats, Engine, Privacy.
+- Drop card with dashed border and a gradient icon disc, plus a supported
+  format strip with colored badges.
+- Recent archives card with colored format badges and paths.
+- Three capability cards: browse, filter, copy paths.
+- Footer: green engine dot, offline note, license.
 
-| Shortcut | Action |
-| --- | --- |
-| Cmd-O | Open archive |
-| Cmd-N | New archive |
-| Cmd-Shift-E | Extract selection |
-| Cmd-Shift-C | Compress selection in Finder |
-| Cmd-F | Search in archive |
-| Cmd-Up | Parent folder |
-| Cmd-[ / Cmd-] | Back / forward |
-| Return | Open folder or archive |
-| Space | Quick Look |
-| Cmd-A | Select all |
-| Cmd-Shift-T | Test archive |
-| Cmd-K | Command palette |
-| Escape | Cancel sheet or clear search |
+### Browser
 
-Every menu command also appears in the menu bar with the same title as the
-button and the same shortcut shown in help.
+- Archive header: icon tile, name, format badge, encrypted count, parent
+  path, four KPI cards (Files, Size, Packed, Ratio).
+- Breadcrumb only when inside a folder. The root is an archive icon.
+- Filter bar: search, All and category chips with counts, Encrypted and
+  Large chips, sort menu, density menu.
+- Table: Name, Type, Size, Packed, Ratio with mini bar, Modified date only,
+  Method badge, lock icon. No CRC in the table; it lives in the inspector.
+- Empty states name the active filter and offer the reset path.
+- Status bar shows the current view, not the whole archive.
+
+### Inspector
+
+- One entry: identity, path card, 2x2 mini stats, compression bar, details,
+  copy path and copy name.
+- Multiple entries: count, total size, encrypted count, folder count, a
+  preview list, copy paths.
+- No selection: archive identity, archive path, six mini stats, composition
+  bar with every category, largest entries, method distribution.
+
+### Settings
+
+General: theme, accent swatches, row density. About: version, engine,
+license, credits.
+
+## Motion
+
+| Token | Duration | Use |
+| --- | --- | --- |
+| Instant | 100 ms | Hover, press |
+| Quick | 160 ms | Chip, row, drop border |
+| Standard | 220 ms spring | Inspector, sheets |
+| Gentle | 320 ms spring | Reveal, resize |
+
+Only transform, opacity, and progress. Stagger at most 8 rows. Reduce Motion
+swaps springs for a 120 ms fade. No looping animation except indeterminate
+progress.
 
 ## Accessibility
 
-- Every icon-only control: `accessibilityLabel`, `accessibilityHelp`.
-- Table rows expose name, size, date, and kind as one element.
-- Progress announces at 25%, 50%, 75%, 100%, not every tick.
+- Every icon-only control has a label and help text.
+- Category always has a word in the Type column; color is redundant.
+- Ratio always has a number; color is redundant.
+- Contrast checked in light, dark, and Increase Contrast.
+- Table rows expose name, type, size, date, and method as one element.
 - Focus ring visible on keyboard focus, hidden on mouse click.
-- Reduce Motion and Reduce Transparency honored everywhere.
-- Contrast checked at 4.5:1 for body text in both appearances.
-- VoiceOver rotor: headings, tables, form controls.
+- The full flow works with the keyboard alone.
 
-## Copy
+## Snapshot review
 
-- Buttons: verb plus object. "Extract 3 Items", "Create Archive".
-- Errors: what failed, where, what to do. "The archive is password
-  protected. Enter the password to continue."
-- Empty: teach one next action. "Drop an archive here, or press Cmd-O."
-- Never "Oops", "Error", or a raw code alone.
+`Scripts/snapshot.sh` renders welcome, browser, and details in light and
+dark at 1360 x 820. Every UI change is reviewed on all six images. The
+window is inactive in offscreen renders, so the selection fill looks gray;
+check selection color in the running app.
