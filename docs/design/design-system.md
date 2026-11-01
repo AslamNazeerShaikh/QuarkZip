@@ -41,21 +41,34 @@ Three panes, all resizable through native split behavior.
 | --- | --- |
 | Minimum window | 1200 x 720 |
 | Default window | 1360 x 800 |
-| Sidebar | 230 min and ideal, 310 max |
+| Sidebar | 220 min, 264 ideal, 320 max |
 | Header | 68 |
 | Filter bar | 44 |
-| Table row | 24 compact, 30 comfortable |
+| List row | 28 compact, 32 comfortable |
 | Maximum window | 1680 x 1050, clamped to the screen |
-| Inspector | 310 ideal, 280 to 380 |
-| Status bar | 26 |
+| Inspector | 220 min, 264 ideal, 320 max |
+| Status bar | 28 |
+| Chip | 24 |
+| Emoji box | 20 |
 
-Spacing is a 4 pt grid. Content padding is 16. Dense groups use 8.
+Spacing is a 4 pt grid. Window and page margin is 20. Card padding is 16.
+Dense groups use 8. Group gaps are 12, section gaps 16 to 24. Raw numbers
+in views are only 0, 1, 2, or a multiple of 4. Sizes always use binary
+IEC units, where 1 KiB = 1,024 bytes.
+
+Both sidebars share the same width range and default. The left sidebar
+uses the system sidebar material; the right inspector column uses `.bar`
+glass over clear content, so both read as glass and both fill the full
+vertical height. Toggling the inspector animates the divider with the
+gentle spring; the center list keeps its fixed columns and only the
+flexible Name column resizes, so rows never flash.
 
 ## Color
 
-The app follows the system accent and appearance. There is no app-level
-accent or Light/Dark picker. People change those once, in System Settings.
-Category and method colors are semantic and do not change with the accent.
+The app follows the system accent by default, with a runtime Theme
+override in Settings (System, Light, Dark) that applies immediately to
+this app only. Category and method colors are semantic and do not change
+with the accent.
 
 ### Text hierarchy
 
@@ -118,7 +131,7 @@ No status color without an icon or a label.
 | `filterBackground` | Filter strip |
 | `separator` | 1 pt dividers |
 | `hover` | 4.5 percent primary |
-| `selection` | 14 percent accent |
+| `selection` | 13 percent accent, with a 28 percent accent border |
 | `dataTrack` | Ratio and composition track |
 
 No fixed grays. No `Color(red:)` or hex in views. `Scripts/token-lint.sh`
@@ -141,8 +154,16 @@ enforces that.
 | Metric | 12 monospaced | Sizes, dates, methods |
 | Micro mono | 10 monospaced | CRC, IDs |
 | Metric large | 18 semibold monospaced | KPI values |
+| Stat value | 15 semibold monospaced | Header and dashboard KPI values |
+| Mini value | 14 semibold monospaced | Inspector mini stats |
+| Row icon | 12 medium | Dense row SF Symbols |
+| Row glyph | 11 medium | Small row SF Symbols |
+| Emoji | 13 | Emoji glyphs in a 20 point box |
 
 Numeric columns always use monospaced digits. Nothing below 10 pt.
+Emoji is never the only signal: every emoji sits next to an icon or a
+word, lives in a fixed 20 point box with 4 to 8 point spacing, and can be
+turned off in Settings without moving rows.
 
 ## Components
 
@@ -158,12 +179,17 @@ selected, disabled, loading, error where applicable.
 - `QZSectionLabel` - uppercase group label with optional trailing count.
 - `QZRatioBar` - 2 to 9 pt track, colored fill, no animation on scroll.
 - `QZCompositionBar` - stacked category bar, 1 pt gaps, clipped capsule.
-- `QZInspectorField` - 76 pt label, value, optional color dot, selectable.
-- `QZSidebarRow` - 26 pt row, accent icon, optional category/format dot,
-  label, faint count capsule, accent selection tint, hover. Icons and dots
-  are hidden from VoiceOver.
+- `QZInspectorField` - 80 pt label, value, optional color dot, selectable.
+- `QZSidebarRow` - 28 pt row, accent icon plus optional fixed emoji,
+  optional category/format dot, label, faint count capsule, soft accent
+  selection tint with accent border, hover. Icons and dots are hidden
+  from VoiceOver.
+- `QZEmoji` - 13 pt glyph in a fixed 20 point box, decorative by default.
 - `QZMethodStyle` and `QZFormatStyle` - one place for method and format
   color.
+- `QZAboutView` - app icon, name, version, engine, license, credits,
+  copy-version and done actions, shown from the menu, the toolbar, the
+  sidebar, and Settings.
 
 Header and filter controls are system `Button`, `Menu`, `Picker`, and
 `TextField`. No shape with a tap gesture.
@@ -188,8 +214,11 @@ Header and filter controls are system `Button`, `Menu`, `Picker`, and
 - Breadcrumb only when inside a folder. The root is an archive icon.
 - Filter bar: search, All and category chips with counts, Encrypted and
   Large chips, sort menu, density menu.
-- Table: Name, Type, Size, Packed, Ratio with mini bar, Modified date only,
-  Method badge, lock icon. No CRC in the table; it lives in the inspector.
+- List, not Table: Name (flexible), Type 92, Size 76, Packed 76, Ratio
+  72 with mini bar, Modified 96 date only, Method 88 badge, lock 20.
+  No CRC in the list; it lives in the inspector. Fixed row heights keep
+  columns aligned; selection is a soft accent fill with an accent border,
+  so primary text and method pills stay readable in light and dark.
 - Empty states name the active filter and offer the reset path.
 - Status bar shows the current view, not the whole archive.
 
@@ -204,14 +233,20 @@ Header and filter controls are system `Button`, `Menu`, `Picker`, and
 
 ### Settings
 
-General: system appearance note, row density, file-type color note. About:
-version, engine, license, credits. There is no theme or accent picker.
+General: Theme (System, Light, Dark, applied at once), emoji toggle, row
+density, file-type color note with the IEC size note. About: version,
+engine, license, credits, plus a pointer to QuarkZip > About QuarkZip.
+The About card itself lives in the app menu, the toolbar, and the
+sidebar App section.
 
 ### Sidebar
 
-Calm navigation. Icons follow the system accent. Category rows carry a small
-fixed color dot. Fixed icon color is reserved for Encrypted (warning). Large
-Items is a filter, not a danger state, so it uses the accent.
+Calm navigation. Icons follow the system accent, with an optional fixed
+emoji per row in a 20 point box. Category rows carry a small fixed color
+dot. Fixed icon color is reserved for Encrypted (warning). Large Items is
+a filter, not a danger state, so it uses the accent. The sidebar and the
+inspector share the 220 to 320 range with a 264 default, resize natively,
+and both render over glass for the full height.
 
 ## Motion
 

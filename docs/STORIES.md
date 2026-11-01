@@ -110,7 +110,7 @@ As a maintainer, I cannot merge a coverage drop.
 - The report is written to `coverage/summary.txt` and printed.
 - The engine baseline is recorded in `docs/testing.md` and may only go up.
 
-### [ ] M0-10 Icon and About
+### [x] M0-10 Icon and About
 
 As a user, the app looks finished in the Dock.
 
@@ -118,6 +118,8 @@ As a user, the app looks finished in the Dock.
 - About shows the app version, engine version, credits, and license.
 - The 7-Zip name is credited, never used as the product name.
 - The icon is reviewed in light, dark, tinted, and clear.
+- About is also a sheet from the app menu, toolbar, sidebar, and Settings,
+  with copy-version and IEC size notes.
 
 ## M1 - Browse
 
@@ -171,6 +173,22 @@ resized into a broken layout.
 ### [ ] M1-02 Sidebar recents and favorites
 ### [x] M1-03 Inspector and archive properties
 ### [ ] M1-04 Search and filter (landed; benchmark pending)
+### [x] M1-09 Unified polish, IEC sizes, glass panes, About, emoji, theme
+
+As a user, sizes, spacing, sidebars, selection, About, emoji, and theme
+all behave the same everywhere.
+
+- Sizes use binary IEC units (1 KiB = 1,024 bytes) from `EntryFormat`.
+- Spacing and type come from `QZTheme` on a 4 pt grid with unified 20
+  margins, 16 card padding, 28/32 rows, and token-only text sizes.
+- Sidebar and inspector share 220/264/320 widths, resize natively, render
+  over glass full height, and toggle with the gentle spring.
+- List selection is a soft accent fill with border; primary text and
+  method pills stay readable in light and dark.
+- About is a sheet from the menu, toolbar, sidebar, and Settings.
+- Emoji is one fixed glyph per type in a 20 point box, toggleable.
+- Settings switches System, Light, and Dark at runtime.
+- `verify.sh` passes, snapshots were reviewed in light and dark.
 ### [ ] M1-05 Nested archive sessions
 ### [ ] M1-06 Quick Look preview
 ### [ ] M1-07 Password sheet and Keychain
