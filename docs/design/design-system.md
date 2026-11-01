@@ -4,9 +4,8 @@ Status: implemented in `Sources/QuarkZip/Design/` and the browser views.
 
 > Legacy audit: the two earlier design documents were compared against this
 > system, the implementation, and the current HIG in
-> [legacy-rules-review.md](legacy-rules-review.md). The contrast, accent,
-> appearance, sidebar-color, and badge-text decisions are pending. Do not
-> start the next visual pass until those are chosen.
+> [legacy-rules-review.md](legacy-rules-review.md). The recommended decisions
+> were accepted and implemented on 2026-11-01.
 
 ## Direction
 
@@ -53,37 +52,47 @@ Spacing is a 4 pt grid. Content padding is 16. Dense groups use 8.
 
 ## Color
 
-One accent for interactive controls, chosen in Settings. Category and method
-colors are semantic and do not change with the accent. Text is always
-`.primary`, `.secondary`, or `.tertiary`.
+The app follows the system accent and appearance. There is no app-level
+accent or Light/Dark picker. People change those once, in System Settings.
+Category and method colors are semantic and do not change with the accent.
 
-### Accent choices
+### Text hierarchy
 
-Blue (default), Indigo, Purple, Pink, Red, Orange, Green, Teal, Graphite.
-The accent applies to selection, focus, primary buttons, links, and the
-selected filter chip.
+| Token | Definition | Measured target |
+| --- | --- | --- |
+| `primary` | `labelColor` | 21.00 light, 16.67 dark |
+| `textSecondary` | primary at 70 percent | 8.52 light, 8.73 dark |
+| `textFaint` | primary at 56 percent | 4.94 light, 6.07 dark |
+
+Functional text never uses raw `secondaryLabelColor` or
+`tertiaryLabelColor`. System secondary is 3.95:1 in light and system tertiary
+is 1.88:1, below the 4.5:1 floor for text under 18 pt. The raw roles remain
+for decorative icons, separators, and dashes only.
 
 ### Category palette
 
-| Category | Symbol | Color |
-| --- | --- | --- |
-| Folder | `folder.fill` | systemBlue |
-| Document | `doc.text.fill` | systemIndigo |
-| Image | `photo.fill` | systemPink |
-| Video | `film.fill` | systemRed |
-| Audio | `waveform` | systemOrange |
-| Archive | `archivebox.fill` | systemTeal |
-| Code | `chevron.left.forwardslash.chevron.right` | systemGreen |
-| Other | `doc.fill` | systemGray |
+| Category | Outline (rows) | Filled (tiles) | Color |
+| --- | --- | --- | --- |
+| Folder | `folder` | `folder.fill` | systemBlue |
+| Document | `doc.text` | `doc.text.fill` | systemIndigo |
+| Image | `photo` | `photo.fill` | systemPink |
+| Video | `film` | `film.fill` | systemRed |
+| Audio | `waveform` | `waveform.circle.fill` | systemOrange |
+| Archive | `archivebox` | `archivebox.fill` | systemTeal |
+| Code | `chevron.left.forwardslash.chevron.right` | same | systemGreen |
+| Other | `doc` | `doc.fill` | systemGray |
 
-Category color appears as a 6 pt dot, a 10 pt icon, a soft 14 percent fill,
-or a 30 percent border. Never as body text color.
+Category color appears as a 5 to 6 pt dot, an outline icon in a dense row,
+a filled icon in a tile, a soft 14 percent fill, or a 30 percent border.
+Never as text color. Primary text on the same tint measures 12.7:1 to
+18.7:1, so the badge recipe keeps the color and passes contrast.
 
 ### Method palette
 
 `LZMA2` purple, `Deflate` blue, `BZip2` orange, `PPMd` indigo, `ZSTD` teal,
-`Store` and `Copy` gray. Badges use a soft fill with the method color as
-text, checked in both appearances.
+`Store` and `Copy` gray. A method badge is primary text plus a colored dot,
+on a 14 percent method tint with a 30 percent border. Colored text inside the
+badge is forbidden: it measures 1.92:1 to 4.20:1 in light.
 
 ### Ratio palette
 
@@ -118,7 +127,7 @@ enforces that.
 
 | Style | Size / weight | Use |
 | --- | --- | --- |
-| Display | 26 bold rounded | Welcome title |
+| Display | 26 bold | Welcome title |
 | Title | 22 semibold | Empty states |
 | Headline | 15 semibold | Archive name, entry name |
 | Body | 13 regular | Rows, labels |
@@ -141,15 +150,17 @@ selected, disabled, loading, error where applicable.
 
 - `QZCard` - raised group with a 0.5 pt border.
 - `QZIconTile` - tinted rounded square for a category or method.
-- `QZBadge` - format, method, encryption, filter summary.
-- `QZStatCard` - icon, monospaced value, uppercase label, optional detail.
-- `QZFilterChip` - category dot, label, count, selected state, hover.
+- `QZBadge` - primary text, colored dot or colored icon, soft tint, border.
+- `QZStatCard` - colored icon, monospaced primary value, faint uppercase label.
+- `QZFilterChip` - colored dot, primary or strong-secondary label, faint count,
+  selected tint and accent border.
 - `QZSectionLabel` - uppercase group label with optional trailing count.
 - `QZRatioBar` - 2 to 9 pt track, colored fill, no animation on scroll.
 - `QZCompositionBar` - stacked category bar, 1 pt gaps, clipped capsule.
 - `QZInspectorField` - 76 pt label, value, optional color dot, selectable.
-- `QZSidebarRow` - 26 pt row, tinted icon, label, count capsule, selected
-  tint, hover.
+- `QZSidebarRow` - 26 pt row, accent icon, optional category/format dot,
+  label, faint count capsule, accent selection tint, hover. Icons and dots
+  are hidden from VoiceOver.
 - `QZMethodStyle` and `QZFormatStyle` - one place for method and format
   color.
 
@@ -164,7 +175,8 @@ Header and filter controls are system `Button`, `Menu`, `Picker`, and
 - Four KPI cards: Recent, Formats, Engine, Privacy.
 - Drop card with dashed border and a gradient icon disc, plus a supported
   format strip with colored badges.
-- Recent archives card with colored format badges and paths.
+- Recent archives card with primary-text format badges, colored dots, and
+  faint paths.
 - Three capability cards: browse, filter, copy paths.
 - Footer: green engine dot, offline note, license.
 
@@ -191,35 +203,56 @@ Header and filter controls are system `Button`, `Menu`, `Picker`, and
 
 ### Settings
 
-General: theme, accent swatches, row density. About: version, engine,
-license, credits.
+General: system appearance note, row density, file-type color note. About:
+version, engine, license, credits. There is no theme or accent picker.
+
+### Sidebar
+
+Calm navigation. Icons follow the system accent. Category rows carry a small
+fixed color dot. Fixed icon color is reserved for Encrypted (warning). Large
+Items is a filter, not a danger state, so it uses the accent.
 
 ## Motion
 
-| Token | Duration | Use |
+| Token | Value | Use |
 | --- | --- | --- |
-| Instant | 100 ms | Hover, press |
-| Quick | 160 ms | Chip, row, drop border |
-| Standard | 220 ms spring | Inspector, sheets |
-| Gentle | 320 ms spring | Reveal, resize |
+| Instant | 100 ms easeOut | Hover, press |
+| Quick | 160 ms easeOut | Chip, row, drop border |
+| Standard | spring response 0.32, damping 0.94 | Inspector, sheets |
+| Gentle | spring response 0.42, damping 1.0 | Reveal, resize |
+| Reduced | 120 ms fade | Any animation under Reduce Motion |
 
-Only transform, opacity, and progress. Stagger at most 8 rows. Reduce Motion
-swaps springs for a 120 ms fade. No looping animation except indeterminate
-progress.
+Only transform, opacity, and progress. Stagger at most 8 rows. Every
+`withAnimation` and `.animation` goes through `QZMotion.animation(_:reduceMotion:)`.
+No looping animation except indeterminate progress.
 
 ## Accessibility
 
-- Every icon-only control has a label and help text.
+- Functional text meets 4.5:1 below 18 pt and 3:1 for 18 pt or bold.
+- Primary text on a 14 percent tint is the badge recipe. Colored text inside
+  a colored badge is forbidden.
 - Category always has a word in the Type column; color is redundant.
 - Ratio always has a number; color is redundant.
-- Contrast checked in light, dark, and Increase Contrast.
+- Decorative icons and dots are hidden from VoiceOver.
 - Table rows expose name, type, size, date, and method as one element.
 - Focus ring visible on keyboard focus, hidden on mouse click.
 - The full flow works with the keyboard alone.
+- Contrast is measured in light, dark, and Increase Contrast before a color
+  token changes. `Scripts/contrast-check.sh` is part of `verify` and checks
+  every functional text pair and every category/method tint.
 
 ## Snapshot review
 
-`Scripts/snapshot.sh` renders welcome, browser, and details in light and
-dark at 1360 x 820. Every UI change is reviewed on all six images. The
+`Scripts/snapshot.sh` renders welcome, browser, details, and Settings in
+light and dark. Every UI change is reviewed on all eight images. The
 window is inactive in offscreen renders, so the selection fill looks gray;
 check selection color in the running app.
+
+## Decisions
+
+The 2026-11-01 review accepted the recommended options from
+[legacy-rules-review.md](legacy-rules-review.md): neutral badge text with a
+color dot, system accent and appearance, a calm sidebar with category dots,
+SF Pro default, and damped motion with a full Reduce Motion path. The
+remaining P1 and P2 items are sortable table headings, sidebar size support,
+a layered app icon, and optional zebra rows.

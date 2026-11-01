@@ -117,8 +117,16 @@ version:
   only for the archive surface, and every state is built.
 - Tokens live in `Sources/QuarkZip/Design/`. No hard-coded colors, radii, or
   durations in views.
+- Follow the system accent and appearance. Do not add app-level accent or
+  Light/Dark pickers.
+- Functional text uses `primary`, `textSecondary`, or `textFaint`, never raw
+  `secondaryLabelColor` or `tertiaryLabelColor`. The measured targets are in
+  `docs/design/design-system.md`.
+- Category and method color lives in a dot, icon, bar, or soft fill. Never in
+  badge text or body text.
 - Spacing is a 4 pt grid. Type is a fixed scale. Sizes use monospaced digits.
-- Motion explains a change. Every animation has a Reduce Motion path.
+- Dense rows use outline SF Symbols; filled symbols belong in tiles.
+- Motion explains a change and goes through `QZMotion.animation(_:reduceMotion:)`.
 - Liquid Glass on floating chrome only, never on content.
 - Every command has a menu item and a shortcut. Every icon-only control has an
   accessibility label and help text.

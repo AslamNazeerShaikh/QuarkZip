@@ -132,6 +132,8 @@ handle misuse and callbacks that touch Swift state off the actor.
 3. `Scripts/coverage.sh`.
 4. `Scripts/vendor-check.sh` (7-Zip tree hash).
 5. `Scripts/token-lint.sh` (no literal colors in views).
+6. `Scripts/contrast-check.sh` (functional text stays at or above 4.5:1 in
+   light and dark, including every category and method tint).
 
 `Scripts/grid-lint.sh` lands with the first custom layout in milestone 1.
 Snapshots stay a manual step because they need eyes, not just pixels. The

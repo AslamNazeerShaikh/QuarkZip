@@ -1,6 +1,6 @@
 # Legacy design rules review
 
-Status: analysis only. No UI changes were made from this document.
+Status: decisions accepted 2026-11-01. The recommended options were implemented in the same pass.
 
 Sources reviewed:
 
@@ -331,16 +331,18 @@ Recommended options are first.
 
 | ID | Decision | Options |
 | --- | --- | --- |
-| D1 | Badge text | A. Primary text plus color dot/bar (recommended). B. Measured custom colored text. C. Solid fills with per-color on-color |
-| D2 | Accent | A. Follow system accent, no picker (recommended). B. Keep picker with System default. C. Keep current fixed picker |
-| D3 | Appearance | A. System only (recommended). B. System plus advanced override. C. Keep current picker |
-| D4 | Sidebar icons | A. Accent/neutral icons plus category dots (recommended). B. Keep full-color sidebar |
-| D5 | Display type | A. SF Pro default for display (recommended). B. Keep SF Pro Rounded |
-| D6 | Large Items color | A. Teal/indigo, not danger (recommended). B. Keep red |
-| D7 | Table rows | A. Separators now, AppKit zebra later (recommended). B. Native alternating rows now. C. Build the AppKit table bridge in M1 |
-| D8 | Motion | A. Damped springs plus full Reduce Motion (recommended). B. Keep current |
-| D9 | Contrast policy | A. 4.5:1 for small text, 7:1 target for secondary (recommended). B. Apple system label roles as-is |
-| D10 | App icon | A. Layered Icon Composer icon now (recommended). B. Defer to M4 |
+| ID | Decision | Chosen |
+| --- | --- | --- |
+| D1 | Badge text | A. Primary text plus color dot/bar |
+| D2 | Accent | A. Follow system accent, no picker |
+| D3 | Appearance | A. System only |
+| D4 | Sidebar icons | A. Accent/neutral icons plus category dots |
+| D5 | Display type | A. SF Pro default for display |
+| D6 | Large Items color | A. Accent, not danger |
+| D7 | Table rows | A. Separators now, AppKit zebra later |
+| D8 | Motion | A. Damped springs plus full Reduce Motion |
+| D9 | Contrast policy | A. 4.5:1 for small text, 7:1 target for secondary |
+| D10 | App icon | A. Layered Icon Composer icon, still to build in P2 |
 
 ## Recommended borrow list
 
@@ -385,6 +387,36 @@ Do not take:
    Contrast paths.
 5. **P2 identity:** layered Icon Composer app icon, optional zebra rows,
    final typography pass.
+
+## Outcome
+
+Implemented from this review:
+
+- `QZBadge` and `QZFilterChip` now use primary text with a colored dot or
+  icon. Colored text on a colored tint is gone.
+- `textSecondary` (70 percent primary) and `textFaint` (56 percent primary)
+  replace raw system secondary and tertiary for functional text.
+- The app follows the system accent and appearance. The app-level accent and
+  Light/Dark pickers are removed.
+- The sidebar uses accent navigation icons and a small category or format
+  dot. Fixed color remains for Encrypted; Large Items is no longer danger red.
+- Dense rows use outline SF Symbols. Filled symbols are reserved for tiles.
+- Display type is SF Pro default.
+- Motion uses 0.32/0.94 and 0.42/1.0 springs, with every animation gated by
+  Reduce Motion and a 120 ms fade.
+- The welcome CTA is bordered rather than white-on-accent.
+- The window title at the welcome screen is "Workspace", not the app name.
+- `Scripts/contrast-check.sh` is now part of `verify`. It checks primary,
+  secondary, and faint text on card, window, and inspector backgrounds, plus
+  primary text on every category and method tint, in light and dark.
+
+Still open, deliberately:
+
+- Sortable table headings and persisted column widths.
+- Sidebar icon-size preference support.
+- A layered Icon Composer app icon.
+- Optional zebra rows through an AppKit table bridge.
+- Increase Contrast-specific badge borders and soft-tint variants.
 
 The current visual direction survives. The next pass is about making the
 same dense, colorful workspace honest in light mode, honest with accessibility

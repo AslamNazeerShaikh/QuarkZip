@@ -136,6 +136,22 @@ file list.
   signal.
 - Six snapshots reviewed: welcome, browser, details, light and dark.
 
+### [x] M1-00a Contrast and native alignment
+
+As a user, the dense workspace is readable and behaves like a Mac app.
+
+- Functional text meets 4.5:1 in light and dark.
+- Category, format, and method badges use primary text plus a color dot or
+  icon; no colored text on a colored tint.
+- The app follows the system accent and appearance; no app-level pickers.
+- Sidebar navigation uses accent icons and category or format dots. Fixed
+  color remains only for Encrypted.
+- Dense rows use outline SF Symbols; tiles use filled symbols.
+- Display type is SF Pro default.
+- Every animation honors Reduce Motion with a 120 ms fade.
+- Large Items is no longer styled as danger red.
+- The welcome CTA no longer relies on white text over the accent fill.
+
 ### [ ] M1-01 Nested folders and history
 ### [ ] M1-02 Sidebar recents and favorites
 ### [x] M1-03 Inspector and archive properties

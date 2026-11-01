@@ -24,8 +24,8 @@ Start here, then read only what the task needs.
 - [Design system](design/design-system.md) - tokens, type, spacing, motion,
   components, accessibility.
 - [Legacy rules review](design/legacy-rules-review.md) - audit of the two old
-  design documents, measured contrast, HIG comparison, and the decisions
-  still open before the next UI pass.
+  design documents, measured contrast, HIG comparison, and the accepted
+  decisions.
 
 ## Quality
 
