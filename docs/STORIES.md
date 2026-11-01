@@ -189,6 +189,25 @@ all behave the same everywhere.
 - Emoji is one fixed glyph per type in a 20 point box, toggleable.
 - Settings switches System, Light, and Dark at runtime.
 - `verify.sh` passes, snapshots were reviewed in light and dark.
+
+### [x] M1-10 Equal glass, calm sidebars, working Reveal, 1M-ready list
+
+As a user, both sidebars look the same, expanding them never glitches,
+icons always render, and huge archives scroll and select instantly.
+
+- Both panes render over the system material with no custom tint, so
+  transparency matches; the inspector toggles on one gentle-spring
+  animation and toolbar items stay mounted while disabled.
+- Comfortable rows and no emoji are the defaults for new installs.
+- Every SF Symbol the UI can render is listed in `QZAppSymbols` and the
+  `--selftest` gate fails if any name stops resolving (this caught the
+  missing Reveal icon, now `magnifyingglass`).
+- The list renders a 500-row window with auto-load, rows are `Equatable`
+  value views, dates reuse a cached formatter, and filter/sort/counts run
+  off the main actor with only the newest generation publishing.
+- Selection is a 20 percent accent fill with a 40 percent border; primary
+  text and method pills stay readable in light and dark.
+- `verify.sh` passes, snapshots were reviewed in light and dark.
 ### [ ] M1-05 Nested archive sessions
 ### [ ] M1-06 Quick Look preview
 ### [ ] M1-07 Password sheet and Keychain

@@ -56,12 +56,13 @@ Dense groups use 8. Group gaps are 12, section gaps 16 to 24. Raw numbers
 in views are only 0, 1, 2, or a multiple of 4. Sizes always use binary
 IEC units, where 1 KiB = 1,024 bytes.
 
-Both sidebars share the same width range and default. The left sidebar
-uses the system sidebar material; the right inspector column uses `.bar`
-glass over clear content, so both read as glass and both fill the full
-vertical height. Toggling the inspector animates the divider with the
-gentle spring; the center list keeps its fixed columns and only the
-flexible Name column resizes, so rows never flash.
+Both sidebars share the same width range and default, resize natively, and
+both render over the system pane material for the full height — no custom
+`.bar` behind either pane, so transparency matches exactly. The inspector
+toggles with one gentle-spring animation on `showInspector`; toolbar items
+stay mounted (disabled when there is no archive) so opening an archive or
+expanding a pane never relayouts the chrome or flashes the center. The
+middle list keeps fixed columns and only the flexible Name column resizes.
 
 ## Color
 
@@ -131,7 +132,7 @@ No status color without an icon or a label.
 | `filterBackground` | Filter strip |
 | `separator` | 1 pt dividers |
 | `hover` | 4.5 percent primary |
-| `selection` | 13 percent accent, with a 28 percent accent border |
+| `selection` | 20 percent accent, with a 40 percent accent border |
 | `dataTrack` | Ratio and composition track |
 
 No fixed grays. No `Color(red:)` or hex in views. `Scripts/token-lint.sh`
@@ -216,11 +217,22 @@ Header and filter controls are system `Button`, `Menu`, `Picker`, and
   Large chips, sort menu, density menu.
 - List, not Table: Name (flexible), Type 92, Size 76, Packed 76, Ratio
   72 with mini bar, Modified 96 date only, Method 88 badge, lock 20.
-  No CRC in the list; it lives in the inspector. Fixed row heights keep
-  columns aligned; selection is a soft accent fill with an accent border,
+  No CRC in the list; it lives in the inspector. Fixed row heights
+  (28 compact, 32 comfortable, comfortable by default) keep columns
+  aligned; selection is a 20 percent accent fill with a 40 percent border,
   so primary text and method pills stay readable in light and dark.
+- The list renders a 500-row window and appends the next 500 as the user
+  reaches the bottom, so a 1M-entry folder scrolls without diffing 1M
+  views. Filtering, searching, and sorting run off the main actor; only
+  the newest generation publishes. Status totals are cached, never
+  re-scanned per frame.
+- Rows are value-typed and `Equatable` (`QZEntryRowView` + `.equatable()`),
+  so selection changes and keystrokes re-render only affected rows.
+  Dates reuse one cached `DateFormatter` per locale/time zone/style
+  (20k dates: ~1.04 s uncached, ~0.01 s cached, release build).
 - Empty states name the active filter and offer the reset path.
-- Status bar shows the current view, not the whole archive.
+- Status bar shows the current view, not the whole archive; while
+  windowing it reads "500 of 84,102 entries".
 
 ### Inspector
 
@@ -233,9 +245,10 @@ Header and filter controls are system `Button`, `Menu`, `Picker`, and
 
 ### Settings
 
-General: Theme (System, Light, Dark, applied at once), emoji toggle, row
-density, file-type color note with the IEC size note. About: version,
-engine, license, credits, plus a pointer to QuarkZip > About QuarkZip.
+General: Theme (System, Light, Dark, applied at once), emoji toggle (off
+by default), row density (Comfortable by default), file-type color note
+with the IEC size note. About: version, engine, license, credits, plus a
+pointer to QuarkZip > About QuarkZip.
 The About card itself lives in the app menu, the toolbar, and the
 sidebar App section.
 
@@ -246,7 +259,12 @@ emoji per row in a 20 point box. Category rows carry a small fixed color
 dot. Fixed icon color is reserved for Encrypted (warning). Large Items is
 a filter, not a danger state, so it uses the accent. The sidebar and the
 inspector share the 220 to 320 range with a 264 default, resize natively,
-and both render over glass for the full height.
+and both render over the system pane material for the full height, so
+their transparency matches.
+
+Every SF Symbol the UI can render is listed once in `QZAppSymbols`;
+`--selftest` fails the build gate if any name stops resolving, so a
+missing icon can never ship as an empty glass button again.
 
 ## Motion
 
